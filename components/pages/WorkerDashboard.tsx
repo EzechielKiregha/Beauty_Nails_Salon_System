@@ -1,3 +1,5 @@
+"use client"
+
 import { useState } from 'react';
 import { Card } from '../ui/card';
 import { Badge } from '../ui/badge';
@@ -236,8 +238,8 @@ export default function WorkerDashboard({ user }: WorkerDashboardProps) {
                       <Card
                         key={notification.id}
                         className={`p-4 rounded-xl border ${notification.unread
-                            ? 'bg-purple-50 border-purple-200'
-                            : 'bg-white border-gray-200'
+                          ? 'bg-purple-50 border-purple-200'
+                          : 'bg-white border-gray-200'
                           }`}
                       >
                         <div className="flex items-start gap-3">
@@ -348,10 +350,10 @@ export default function WorkerDashboard({ user }: WorkerDashboardProps) {
                   <Card
                     key={appointment.id}
                     className={`p-6 rounded-2xl border-0 transition-all hover:shadow-lg ${appointment.status === 'completed'
-                        ? 'bg-green-50 border-green-200'
-                        : appointment.status === 'in-progress'
-                          ? 'bg-blue-50 border-blue-200'
-                          : 'bg-white border-gray-200'
+                      ? 'bg-green-50 border-green-200'
+                      : appointment.status === 'in-progress'
+                        ? 'bg-blue-50 border-blue-200'
+                        : 'bg-white border-gray-200'
                       } border`}
                   >
                     <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
@@ -373,10 +375,10 @@ export default function WorkerDashboard({ user }: WorkerDashboardProps) {
                             <h3 className="text-lg text-gray-900">{appointment.client}</h3>
                             <Badge
                               className={`text-white ${appointment.status === 'completed'
-                                  ? 'bg-green-500'
-                                  : appointment.status === 'in-progress'
-                                    ? 'bg-blue-500'
-                                    : 'bg-gray-400'
+                                ? 'bg-green-500'
+                                : appointment.status === 'in-progress'
+                                  ? 'bg-blue-500'
+                                  : 'bg-gray-400'
                                 }`}
                             >
                               {appointment.status === 'completed'
