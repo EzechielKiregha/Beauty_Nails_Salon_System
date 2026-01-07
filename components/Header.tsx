@@ -1,0 +1,221 @@
+'use client';
+
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { Button } from './ui/button';
+import { Menu, X, Calendar, LogOut } from 'lucide-react';
+import { useState } from 'react';
+import { useAuth } from '@/lib/hooks/useAuth';
+import { ModeToggle } from './mode-toggle';
+import { Logo } from './Logo';
+
+export default function Header() {
+  const { user, logout } = useAuth();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const pathname = usePathname();
+
+  const isActive = (path: string) => {
+    return pathname === path;
+  };
+
+  const getDashboardPath = () => {
+    if (!user) return '/auth/login';
+    return `/dashboard/${user.role}`;
+  };
+
+  return (
+    <header className="sticky top-0 z-50 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md border-b border-pink-100 dark:border-pink-900 shadow-sm">
+      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-20">
+          {/* Logo */}
+          <Link href="/" className="flex items-center space-x-2 group">
+            <Logo width={200} height={60} />
+          </Link>
+
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center space-x-8">
+            <Link
+              href="/"
+              className={`transition-colors ${isActive('/') ? 'text-pink-500' : 'text-gray-700 dark:text-gray-300 hover:text-pink-500'
+                }`}
+            >
+              Accueil
+            </Link>
+            <Link
+              href="/services"
+              className={`transition-colors ${isActive('/services') ? 'text-pink-500' : 'text-gray-700 dark:text-gray-300 hover:text-pink-500'
+                }`}
+            >
+              Services
+            </Link>
+            <Link
+              href="/memberships"
+              className={`transition-colors ${isActive('/memberships') ? 'text-pink-500' : 'text-gray-700 dark:text-gray-300 hover:text-pink-500'
+                }`}
+            >
+              Abonnements
+            </Link>
+            <Link
+              href="/about"
+              className={`transition-colors ${isActive('/about') ? 'text-pink-500' : 'text-gray-700 dark:text-gray-300 hover:text-pink-500'
+                }`}
+            >
+              À Propos
+            </Link>
+            <Link
+              href="/contact"
+              className={`transition-colors ${isActive('/contact') ? 'text-pink-500' : 'text-gray-700 dark:text-gray-300 hover:text-pink-500'
+                }`}
+            >
+              Contact
+            </Link>
+          </div>
+
+          {/* Desktop Actions */}
+          <div className="hidden md:flex items-center space-x-4">
+            <ModeToggle />
+            {user ? (
+              <>
+                <Link href={getDashboardPath()}>
+                  <Button variant="outline" className="border-pink-200 text-pink-600 hover:bg-pink-50">
+                    {user.role === 'client' ? 'Mon Espace' : user.role === 'worker' ? 'Mes Tâches' : 'Admin'}
+                  </Button>
+                </Link>
+                <Button
+                  onClick={logout}
+                  variant="ghost"
+                  className="text-gray-600 dark:text-gray-400 hover:text-pink-100"
+                >
+                  <LogOut className="w-4 h-4 mr-2" />
+                  Déconnexion
+                </Button>
+              </>
+            ) : (
+              <>
+                <Link href="/auth/login">
+                  <Button variant="ghost" className="text-gray-700 dark:text-gray-300 hover:text-pink-100">
+                    Connexion
+                  </Button>
+                </Link>
+                <Link href="/appointments">
+                  <Button className="bg-linear-to-br from-gray-900 via-pink-800 to-pink-600 hover:from-pink-600 hover:via-pink-800 hover:to-gray-900 text-white rounded-full px-6">
+                    <Calendar className="w-4 h-4 mr-2" />
+                    Réserver
+                  </Button>
+                </Link>
+              </>
+            )}
+          </div>
+
+          {/* Mobile Menu Button */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="md:hidden p-2 rounded-lg hover:bg-pink-50 dark:hover:bg-gray-800 transition-colors"
+          >
+            {mobileMenuOpen ? (
+              <X className="w-6 h-6 text-gray-700 dark:text-gray-300" />
+            ) : (
+              <Menu className="w-6 h-6 text-gray-700 dark:text-gray-300" />
+            )}
+          </button>
+        </div>
+
+        {/* Mobile Menu */}
+        {mobileMenuOpen && (
+          <div className="md:hidden py-4 border-t border-pink-100 dark:border-pink-900">
+            <div className="flex flex-col space-y-4">
+              <div className="px-4 py-2 flex justify-between items-center">
+                <span className="text-sm text-gray-600 dark:text-gray-400">Thème</span>
+                <ModeToggle />
+              </div>
+              <Link
+                href="/"
+                onClick={() => setMobileMenuOpen(false)}
+                className={`px-4 py-2 rounded-lg transition-colors ${isActive('/') ? 'bg-pink-50 dark:bg-pink-900/20 text-pink-500' : 'text-gray-700 dark:text-gray-300 hover:bg-pink-50 dark:hover:bg-gray-800'
+                  }`}
+              >
+                Accueil
+              </Link>
+              <Link
+                href="/services"
+                onClick={() => setMobileMenuOpen(false)}
+                className={`px-4 py-2 rounded-lg transition-colors ${isActive('/services') ? 'bg-pink-50 dark:bg-pink-900/20 text-pink-500' : 'text-gray-700 dark:text-gray-300 hover:bg-pink-50 dark:hover:bg-gray-800'
+                  }`}
+              >
+                Services
+              </Link>
+              <Link
+                href="/memberships"
+                onClick={() => setMobileMenuOpen(false)}
+                className={`px-4 py-2 rounded-lg transition-colors ${isActive('/memberships') ? 'bg-pink-50 dark:bg-pink-900/20 text-pink-500' : 'text-gray-700 dark:text-gray-300 hover:bg-pink-50 dark:hover:bg-gray-800'
+                  }`}
+              >
+                Abonnements
+              </Link>
+              <Link
+                href="/about"
+                onClick={() => setMobileMenuOpen(false)}
+                className={`px-4 py-2 rounded-lg transition-colors ${isActive('/about') ? 'bg-pink-50 dark:bg-pink-900/20 text-pink-500' : 'text-gray-700 dark:text-gray-300 hover:bg-pink-50 dark:hover:bg-gray-800'
+                  }`}
+              >
+                À Propos
+              </Link>
+              <Link
+                href="/contact"
+                onClick={() => setMobileMenuOpen(false)}
+                className={`px-4 py-2 rounded-lg transition-colors ${isActive('/contact') ? 'bg-pink-50 dark:bg-pink-900/20 text-pink-500' : 'text-gray-700 dark:text-gray-300 hover:bg-pink-50 dark:hover:bg-gray-800'
+                  }`}
+              >
+                Contact
+              </Link>
+              {user ? (
+                <>
+                  <Link
+                    href={getDashboardPath()}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="px-4 py-2"
+                  >
+                    <Button variant="outline" className="w-full border-pink-200 text-pink-600">
+                      {user.role === 'client' ? 'Mon Espace' : user.role === 'worker' ? 'Mes Tâches' : 'Admin'}
+                    </Button>
+                  </Link>
+                  <button
+                    onClick={() => {
+                      logout();
+                      setMobileMenuOpen(false);
+                    }}
+                    className="px-4 py-2 text-left text-gray-700 dark:text-gray-300 hover:bg-pink-50 dark:hover:bg-gray-800 rounded-lg"
+                  >
+                    Déconnexion
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link
+                    href="/auth/login"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="px-4 py-2"
+                  >
+                    <Button variant="outline" className="w-full">
+                      Connexion
+                    </Button>
+                  </Link>
+                  <Link
+                    href="/appointments"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="px-4 py-2"
+                  >
+                    <Button className="w-full bg-gradient-to-r from-pink-500 to-amber-400 hover:from-pink-600 hover:to-amber-500 text-white rounded-full">
+                      <Calendar className="w-4 h-4 mr-2" />
+                      Réserver
+                    </Button>
+                  </Link>
+                </>
+              )}
+            </div>
+          </div>
+        )}
+      </nav>
+    </header>
+  );
+}

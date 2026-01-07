@@ -1,0 +1,25 @@
+import { NextRequest } from 'next/server';
+import prisma from '@/lib/prisma';
+import { getAuthenticatedUser, successResponse, handleApiError } from '@/lib/api/helpers';
+
+export async function PUT(
+  request: NextRequest,
+  params : Promise<{ params: { id: string } }>
+) {
+  try {
+    const id = (await params).params.id;
+    const user = await getAuthenticatedUser();
+
+    await prisma.notification.update({
+      where: {
+        id,
+        userId: user.id,
+      },
+      data: { isRead: true },
+    });
+
+    return successResponse({ message: 'Notification marquée comme lue' });
+  } catch (error) {
+    return handleApiError(error);
+  }
+}

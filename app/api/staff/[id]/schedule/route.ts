@@ -1,0 +1,72 @@
+import { NextRequest } from 'next/server';
+import prisma from '@/lib/prisma';
+import { requireRole, errorResponse, successResponse, handleApiError } from '@/lib/api/helpers';
+
+export async function GET(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    await requireRole(['admin', 'worker']);
+
+    const schedule = await prisma.workerSchedule.findMany({
+      where: { workerId: params.id },
+      orderBy: { dayOfWeek: 'asc' },
+    });
+
+    const worker = await prisma.workerProfile.findUnique({
+      where: { id: params.id },
+      select: {
+        workingHours: true,
+      },
+    });
+
+    return successResponse({
+      schedule,
+      workingHours: worker?.workingHours,
+    });
+  } catch (error) {
+    return handleApiError(error);
+  }
+}
+
+export async function PATCH(
+  request: NextRequest,
+  params : Promise<{ params: { id: string } }>
+  ) {
+    try {
+      const id = (await params).params.id;
+    await requireRole(['admin']);
+
+    const body = await request.json();
+    const { dayOfWeek, startTime, endTime, isAvailable } = body;
+
+    const schedule = await prisma.workerSchedule.upsert({
+      where: {
+        workerId_dayOfWeek: {
+          workerId: id,
+          dayOfWeek,
+        },
+      },
+      update: {
+        startTime,
+        endTime,
+        isAvailable,
+      },
+      create: {
+        workerId: id,
+        dayOfWeek,
+        startTime,
+        endTime,
+        isAvailable,
+      },
+    });
+
+    return successResponse({
+      message: 'Horaire mis à jour',
+      schedule,
+    });
+  } catch (error) {
+    return handleApiError(error);
+  }
+}
