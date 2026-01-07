@@ -3,13 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "postinstall": "prisma generate",
+    "postbuild": "prisma migrate deploy",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
     "type-check": "tsc --noEmit",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "db:gen": "prisma generate --no-engine",
     "db:studio": "prisma studio"
   },
   "dependencies": {
