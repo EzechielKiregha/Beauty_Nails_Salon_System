@@ -1,27 +1,11 @@
+"use client"
 import { useState } from 'react';
 import { Card } from './ui/card';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Badge } from './ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
-import { Package, AlertCircle, CheckCircle, TrendingUp, ShoppingCart, Phone, Mail, Search } from 'lucide-react';
-
-// Axios API calls (commented out for future use)
-// import axios from 'axios';
-// const fetchInventory = async () => {
-//   const response = await axios.get('/api/inventory');
-//   return response.data;
-// };
-// const updateStock = async (itemId: string, quantity: number) => {
-//   await axios.patch(`/api/inventory/${itemId}`, { quantity });
-// };
-// const createReorder = async (itemId: string, supplierId: string, quantity: number) => {
-//   await axios.post('/api/inventory/reorder', { itemId, supplierId, quantity });
-// };
-// const fetchUsageReport = async (period: string) => {
-//   const response = await axios.get(`/api/inventory/usage?period=${period}`);
-//   return response.data;
-// };
+import { Package, AlertCircle, TrendingUp, ShoppingCart, Phone, Mail, Search } from 'lucide-react';
 
 interface InventoryItem {
   id: string;
@@ -220,16 +204,16 @@ export default function InventoryManagement() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-3xl text-gray-900">Gestion de l'Inventaire</h2>
-        <Button className="bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-full">
+        <Button className="bg-linear-to-r from-amber-500 to-orange-500 text-white rounded-full">
           + Ajouter Produit
         </Button>
       </div>
 
       {/* Alert Panel */}
       {alertItems.length > 0 && (
-        <Card className="border-0 shadow-lg rounded-2xl p-6 bg-gradient-to-br from-red-50 to-orange-50">
+        <Card className="border-0 shadow-lg rounded-2xl p-6 bg-linear-to-br from-red-50 to-orange-50">
           <div className="flex items-start gap-4">
-            <AlertCircle className="w-8 h-8 text-red-600 flex-shrink-0 mt-1" />
+            <AlertCircle className="w-8 h-8 text-red-600 shrink-0 mt-1" />
             <div className="flex-1">
               <h3 className="text-xl text-gray-900 mb-2">Alertes Stock</h3>
               <p className="text-gray-700 mb-3">
@@ -237,10 +221,9 @@ export default function InventoryManagement() {
               </p>
               <div className="flex flex-wrap gap-2">
                 {alertItems.map((item) => (
-                  <Badge key={item.id} className={`${
-                    item.status === 'out' ? 'bg-red-600' :
+                  <Badge key={item.id} className={`${item.status === 'out' ? 'bg-red-600' :
                     item.status === 'critical' ? 'bg-orange-600' : 'bg-amber-600'
-                  } text-white`}>
+                    } text-white`}>
                     {item.name} ({item.stock} {item.unit})
                   </Badge>
                 ))}
@@ -295,23 +278,20 @@ export default function InventoryManagement() {
         <TabsContent value="stock">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {filteredInventory.map((item) => (
-              <Card key={item.id} className={`border-2 p-6 rounded-2xl ${
-                item.status === 'out' ? 'border-red-300 bg-red-50' :
+              <Card key={item.id} className={`border-2 p-6 rounded-2xl ${item.status === 'out' ? 'border-red-300 bg-red-50' :
                 item.status === 'critical' ? 'border-orange-300 bg-orange-50' :
-                item.status === 'low' ? 'border-amber-300 bg-amber-50' :
-                'border-green-300 bg-green-50'
-              }`}>
+                  item.status === 'low' ? 'border-amber-300 bg-amber-50' :
+                    'border-green-300 bg-green-50'
+                }`}>
                 <div className="flex items-start justify-between mb-4">
-                  <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
-                    item.status === 'out' ? 'bg-red-100' :
+                  <div className={`w-12 h-12 rounded-full flex items-center justify-center ${item.status === 'out' ? 'bg-red-100' :
                     item.status === 'critical' ? 'bg-orange-100' :
-                    item.status === 'low' ? 'bg-amber-100' : 'bg-green-100'
-                  }`}>
-                    <Package className={`w-6 h-6 ${
-                      item.status === 'out' ? 'text-red-600' :
+                      item.status === 'low' ? 'bg-amber-100' : 'bg-green-100'
+                    }`}>
+                    <Package className={`w-6 h-6 ${item.status === 'out' ? 'text-red-600' :
                       item.status === 'critical' ? 'text-orange-600' :
-                      item.status === 'low' ? 'text-amber-600' : 'text-green-600'
-                    }`} />
+                        item.status === 'low' ? 'text-amber-600' : 'text-green-600'
+                      }`} />
                   </div>
                   <Badge className="text-xs">
                     {item.category}
@@ -319,7 +299,7 @@ export default function InventoryManagement() {
                 </div>
 
                 <h3 className="text-lg text-gray-900 mb-2">{item.name}</h3>
-                
+
                 <div className="space-y-2 mb-4 text-sm text-gray-700">
                   <div className="flex justify-between">
                     <span>Stock actuel:</span>
@@ -344,12 +324,11 @@ export default function InventoryManagement() {
                 </div>
 
                 <div className="w-full bg-gray-200 rounded-full h-2 mb-4">
-                  <div 
-                    className={`h-2 rounded-full ${
-                      item.status === 'out' ? 'bg-red-600' :
+                  <div
+                    className={`h-2 rounded-full ${item.status === 'out' ? 'bg-red-600' :
                       item.status === 'critical' ? 'bg-orange-600' :
-                      item.status === 'low' ? 'bg-amber-600' : 'bg-green-600'
-                    }`}
+                        item.status === 'low' ? 'bg-amber-600' : 'bg-green-600'
+                      }`}
                     style={{ width: `${Math.min((item.stock / item.minStock) * 100, 100)}%` }}
                   />
                 </div>
@@ -418,7 +397,7 @@ export default function InventoryManagement() {
                 </div>
 
                 <div className="flex gap-2">
-                  <Button size="sm" className="flex-1 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-full">
+                  <Button size="sm" className="flex-1 bg-linear-to-r from-blue-500 to-cyan-500 text-white rounded-full">
                     Passer Commande
                   </Button>
                   <Button size="sm" variant="outline" className="rounded-full">
@@ -429,7 +408,7 @@ export default function InventoryManagement() {
             ))}
           </div>
 
-          <Button className="w-full mt-6 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full">
+          <Button className="w-full mt-6 bg-linear-to-r from-purple-500 to-pink-500 text-white rounded-full">
             + Ajouter Fournisseur
           </Button>
         </TabsContent>
@@ -453,9 +432,8 @@ export default function InventoryManagement() {
                       <p className="text-xs text-gray-600">Revenus générés</p>
                     </div>
                     <div className="flex items-center gap-2">
-                      <TrendingUp className={`w-5 h-5 ${
-                        report.trend === 'up' ? 'text-green-600' : 'text-gray-400'
-                      }`} />
+                      <TrendingUp className={`w-5 h-5 ${report.trend === 'up' ? 'text-green-600' : 'text-gray-400'
+                        }`} />
                       {report.trend === 'up' ? (
                         <Badge className="bg-green-500 text-white">↑ +12%</Badge>
                       ) : (
@@ -467,7 +445,7 @@ export default function InventoryManagement() {
               ))}
             </div>
 
-            <div className="mt-8 p-6 bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl">
+            <div className="mt-8 p-6 bg-linear-to-br from-blue-50 to-cyan-50 rounded-xl">
               <h4 className="text-lg text-gray-900 mb-4">Statistiques du Mois</h4>
               <div className="grid grid-cols-3 gap-6 text-center">
                 <div>
@@ -485,7 +463,7 @@ export default function InventoryManagement() {
               </div>
             </div>
 
-            <Button className="w-full mt-6 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-full">
+            <Button className="w-full mt-6 bg-linear-to-r from-amber-500 to-orange-500 text-white rounded-full">
               Télécharger Rapport Complet
             </Button>
           </Card>

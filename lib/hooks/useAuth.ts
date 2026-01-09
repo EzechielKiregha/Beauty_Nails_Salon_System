@@ -1,51 +1,85 @@
-'use client';
+"use client"
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { authApi } from '../api/auth';
+import { toast } from 'sonner';
+import { useRouter } from "next/navigation";
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-
-export interface User {
-  id: string;
-  name: string;
-  email: string;
-  role: 'client' | 'worker' | 'admin';
-}
 
 export function useAuth() {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
+  const queryClient = useQueryClient();
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const response = await fetch('/api/auth/me');
+  const navigate = useRouter();
 
-        if (response.ok) {
-          const data = await response.json();
-          setUser(data.user);
-        } else if (response.status === 401) {
-          setUser(null);
-        }
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to fetch user');
-      } finally {
-        setLoading(false);
-      }
-    };
+  // Get current user
+  const {
+    data: user,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ['auth', 'me'],
+    queryFn: authApi.getCurrentUser,
+    retry: false,
+    staleTime: Infinity,
+  });
 
-    fetchUser();
-  }, []);
+  // Login mutation
+  const loginMutation = useMutation({
+    mutationFn: authApi.login,
+    onSuccess: (data) => {
+      queryClient.setQueryData(['auth', 'me'], data.user);
+      toast.success(`Bienvenue, ${data.user.name} !`);
+      navigate.push(`/dashboard/${data.user.role}`);
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.error?.message || 'Erreur de connexion');
+    },
+  });
 
-  const logout = async () => {
-    try {
-      await fetch('/api/auth/logout', { method: 'POST' });
-      setUser(null);
-      router.push('/auth/login');
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Logout failed');
-    }
+  // Register mutation
+  const registerMutation = useMutation({
+    mutationFn: authApi.register,
+    onSuccess: (data) => {
+      queryClient.setQueryData(['auth', 'me'], data.user);
+      toast.success(data.message || 'Compte créé avec succès !');
+      navigate.push('/dashboard/client');
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.error?.message || 'Erreur lors de l\'inscription');
+    },
+  });
+
+  // Update profile mutation
+  const updateProfileMutation = useMutation({
+    mutationFn: authApi.updateProfile,
+    onSuccess: (data) => {
+      queryClient.setQueryData(['auth', 'me'], data.user);
+      toast.success(data.message);
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.error?.message || 'Erreur de mise à jour');
+    },
+  });
+
+  // Logout mutation
+  const logoutMutation = useMutation({
+    mutationFn: authApi.logout,
+    onSuccess: () => {
+      queryClient.clear();
+      toast.success('Déconnexion réussie');
+      navigate.push('/auth/login');
+    },
+  });
+
+  return {
+    user,
+    isLoading,
+    isAuthenticated: !!user,
+    error,
+    login: loginMutation.mutate,
+    register: registerMutation.mutate,
+    updateProfile: updateProfileMutation.mutate,
+    logout: logoutMutation.mutate,
+    isLoginLoading: loginMutation.isPending,
+    isRegisterLoading: registerMutation.isPending,
   };
-
-  return { user, loading, error, logout };
 }

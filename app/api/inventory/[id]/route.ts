@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server';
 import prisma from '@/lib/prisma';
 import { requireRole, errorResponse, successResponse, handleApiError } from '@/lib/api/helpers';
-import { StockStatus } from '@/prisma/generated/prisma/enums';
+import { StockStatus } from '@/prisma/generated/enums';
 
 export async function PATCH(
   request: NextRequest,

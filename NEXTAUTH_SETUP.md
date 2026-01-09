@@ -678,12 +678,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 Update your axios instance to use NextAuth session:
 
 ```typescript
-// lib/axios.ts
+// lib/axiosdb.ts
 import axios from 'axios';
 import { getSession } from 'next-auth/react';
 
 const baseurl = process.env.NEXT_PUBLIC_API_BASE_URL || '';
-const axiosdb = axios.create({
+const axiosdb = axiosdb.create({
   baseURL: baseurl,
   timeout: 30000,
   headers: {

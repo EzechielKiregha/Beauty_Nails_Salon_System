@@ -6,11 +6,11 @@ import { Calendar, Clock, DollarSign, Users, AlertCircle, UserCheck, Activity, P
 // Axios API calls (commented out for future use)
 // import axios from 'axios';
 // const fetchTodayOverview = async () => {
-//   const response = await axios.get('/api/dashboard/today');
+//   const response = await axiosdb.get('/api/dashboard/today');
 //   return response.data;
 // };
 // const updateOccupancy = async (status: string) => {
-//   await axios.patch('/api/salon/occupancy', { status });
+//   await axiosdb.patch('/api/salon/occupancy', { status });
 // };
 
 export default function TodayOverview() {
@@ -98,11 +98,10 @@ export default function TodayOverview() {
           </div>
         </Card>
 
-        <Card className={`border-0 shadow-lg p-6 ${
-          todayStats.walkInAvailable 
-            ? 'bg-gradient-to-br from-amber-50 to-orange-50' 
-            : 'bg-gradient-to-br from-red-50 to-pink-50'
-        }`}>
+        <Card className={`border-0 shadow-lg p-6 ${todayStats.walkInAvailable
+          ? 'bg-gradient-to-br from-amber-50 to-orange-50'
+          : 'bg-gradient-to-br from-red-50 to-pink-50'
+          }`}>
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600 mb-1">Sans RDV</p>
@@ -111,11 +110,10 @@ export default function TodayOverview() {
               </p>
               <p className="text-xs text-gray-600 mt-1">Attente: ~{todayStats.averageWaitTime} min</p>
             </div>
-            <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
-              todayStats.walkInAvailable
-                ? 'bg-gradient-to-br from-amber-400 to-orange-400'
-                : 'bg-gradient-to-br from-red-400 to-pink-400'
-            }`}>
+            <div className={`w-12 h-12 rounded-full flex items-center justify-center ${todayStats.walkInAvailable
+              ? 'bg-gradient-to-br from-amber-400 to-orange-400'
+              : 'bg-gradient-to-br from-red-400 to-pink-400'
+              }`}>
               <UserCheck className="w-6 h-6 text-white" />
             </div>
           </div>
@@ -129,20 +127,18 @@ export default function TodayOverview() {
             <Activity className="w-6 h-6 text-purple-600" />
             <h3 className="text-xl text-gray-900">Occupation Actuelle</h3>
           </div>
-          <Badge className={`${
-            todayStats.currentOccupancy >= 80 ? 'bg-red-500' :
+          <Badge className={`${todayStats.currentOccupancy >= 80 ? 'bg-red-500' :
             todayStats.currentOccupancy >= 60 ? 'bg-amber-500' : 'bg-green-500'
-          } text-white px-4 py-2`}>
+            } text-white px-4 py-2`}>
             {todayStats.currentOccupancy}% Occupé
           </Badge>
         </div>
         <div className="w-full bg-gray-200 rounded-full h-4">
-          <div 
-            className={`h-4 rounded-full ${
-              todayStats.currentOccupancy >= 80 ? 'bg-gradient-to-r from-red-500 to-pink-500' :
+          <div
+            className={`h-4 rounded-full ${todayStats.currentOccupancy >= 80 ? 'bg-gradient-to-r from-red-500 to-pink-500' :
               todayStats.currentOccupancy >= 60 ? 'bg-gradient-to-r from-amber-500 to-orange-500' :
-              'bg-gradient-to-r from-green-500 to-emerald-500'
-            }`}
+                'bg-gradient-to-r from-green-500 to-emerald-500'
+              }`}
             style={{ width: `${todayStats.currentOccupancy}%` }}
           />
         </div>
@@ -216,19 +212,17 @@ export default function TodayOverview() {
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {staffRoster.map((staff, idx) => (
-            <Card key={idx} className={`p-4 border-2 ${
-              staff.status === 'busy' ? 'bg-blue-50 border-blue-300' :
+            <Card key={idx} className={`p-4 border-2 ${staff.status === 'busy' ? 'bg-blue-50 border-blue-300' :
               staff.status === 'available' ? 'bg-green-50 border-green-300' :
-              'bg-amber-50 border-amber-300'
-            }`}>
+                'bg-amber-50 border-amber-300'
+              }`}>
               <div className="flex items-center justify-between mb-3">
                 <p className="text-gray-900">{staff.name}</p>
-                <Badge className={`${
-                  staff.status === 'busy' ? 'bg-blue-500' :
+                <Badge className={`${staff.status === 'busy' ? 'bg-blue-500' :
                   staff.status === 'available' ? 'bg-green-500' : 'bg-amber-500'
-                } text-white`}>
+                  } text-white`}>
                   {staff.status === 'busy' ? 'Occupée' :
-                   staff.status === 'available' ? 'Disponible' : 'Pause'}
+                    staff.status === 'available' ? 'Disponible' : 'Pause'}
                 </Badge>
               </div>
               {staff.currentClient ? (
@@ -261,18 +255,15 @@ export default function TodayOverview() {
               return (
                 <div key={idx} className="flex items-center justify-between p-4 bg-white rounded-xl">
                   <div className="flex items-center gap-3">
-                    <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                      alert.priority === 'high' ? 'bg-red-100' : 'bg-amber-100'
-                    }`}>
-                      <Icon className={`w-5 h-5 ${
-                        alert.priority === 'high' ? 'text-red-600' : 'text-amber-600'
-                      }`} />
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center ${alert.priority === 'high' ? 'bg-red-100' : 'bg-amber-100'
+                      }`}>
+                      <Icon className={`w-5 h-5 ${alert.priority === 'high' ? 'text-red-600' : 'text-amber-600'
+                        }`} />
                     </div>
                     <div>
                       <p className="text-gray-900">{alert.message}</p>
-                      <Badge className={`text-xs mt-1 ${
-                        alert.priority === 'high' ? 'bg-red-500' : 'bg-amber-500'
-                      } text-white`}>
+                      <Badge className={`text-xs mt-1 ${alert.priority === 'high' ? 'bg-red-500' : 'bg-amber-500'
+                        } text-white`}>
                         {alert.priority === 'high' ? 'Urgent' : 'Attention'}
                       </Badge>
                     </div>

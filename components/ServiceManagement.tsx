@@ -1,3 +1,4 @@
+"use client"
 import { useState } from 'react';
 import { Card } from './ui/card';
 import { Button } from './ui/button';
@@ -11,17 +12,17 @@ import { Scissors, Clock, DollarSign, Sparkles, Package, Percent, Globe } from '
 // Axios API calls (commented out for future use)
 // import axios from 'axios';
 // const fetchServices = async () => {
-//   const response = await axios.get('/api/services');
+//   const response = await axiosdb.get('/api/services');
 //   return response.data;
 // };
 // const updateService = async (serviceId: string, data: any) => {
-//   await axios.patch(`/api/services/${serviceId}`, data);
+//   await axiosdb.patch(`/api/services/${serviceId}`, data);
 // };
 // const createPackage = async (packageData: any) => {
-//   await axios.post('/api/packages', packageData);
+//   await axiosdb.post('/api/packages', packageData);
 // };
 // const createPromotion = async (promoData: any) => {
-//   await axios.post('/api/promotions', promoData);
+//   await axiosdb.post('/api/promotions', promoData);
 // };
 
 interface Service {
@@ -210,11 +211,10 @@ export default function ServiceManagement() {
                     {services.filter(s => s.category === category).map((service) => (
                       <Card
                         key={service.id}
-                        className={`p-4 cursor-pointer transition-all ${
-                          selectedService?.id === service.id
-                            ? 'bg-gradient-to-r from-pink-100 to-purple-100 border-2 border-pink-300'
-                            : 'bg-gray-50 hover:bg-gray-100'
-                        }`}
+                        className={`p-4 cursor-pointer transition-all ${selectedService?.id === service.id
+                          ? 'bg-gradient-to-r from-pink-100 to-purple-100 border-2 border-pink-300'
+                          : 'bg-gray-50 hover:bg-gray-100'
+                          }`}
                         onClick={() => setSelectedService(service)}
                       >
                         <div className="flex items-start justify-between">
@@ -325,9 +325,8 @@ export default function ServiceManagement() {
                     <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center">
                       <Package className="w-6 h-6 text-white" />
                     </div>
-                    <Badge className={`${
-                      pkg.active ? 'bg-green-500' : 'bg-gray-400'
-                    } text-white`}>
+                    <Badge className={`${pkg.active ? 'bg-green-500' : 'bg-gray-400'
+                      } text-white`}>
                       {pkg.active ? 'Actif' : 'Inactif'}
                     </Badge>
                   </div>
@@ -394,9 +393,8 @@ export default function ServiceManagement() {
                     <div>
                       <div className="flex items-center gap-3 mb-2">
                         <h4 className="text-lg text-gray-900">{promo.name}</h4>
-                        <Badge className={`${
-                          promo.status === 'active' ? 'bg-green-500' : 'bg-gray-400'
-                        } text-white`}>
+                        <Badge className={`${promo.status === 'active' ? 'bg-green-500' : 'bg-gray-400'
+                          } text-white`}>
                           {promo.status === 'active' ? 'Actif' : 'Inactif'}
                         </Badge>
                       </div>
@@ -424,7 +422,7 @@ export default function ServiceManagement() {
                   </div>
 
                   <div className="w-full bg-gray-200 rounded-full h-2 mt-4 mb-4">
-                    <div 
+                    <div
                       className="bg-gradient-to-r from-amber-500 to-orange-500 h-2 rounded-full"
                       style={{ width: `${(promo.usageCount / promo.usageLimit) * 100}%` }}
                     />

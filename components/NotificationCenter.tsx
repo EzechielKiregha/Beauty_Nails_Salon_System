@@ -1,3 +1,5 @@
+"use client"
+
 import { useState } from 'react';
 import { Card } from './ui/card';
 import { Button } from './ui/button';
@@ -7,14 +9,14 @@ import { Bell, AlertCircle, Calendar, Package, DollarSign, Users, MessageSquare,
 // Axios API calls (commented out for future use)
 // import axios from 'axios';
 // const fetchNotifications = async () => {
-//   const response = await axios.get('/api/notifications');
+//   const response = await axiosdb.get('/api/notifications');
 //   return response.data;
 // };
 // const markAsRead = async (notificationId: string) => {
-//   await axios.patch(`/api/notifications/${notificationId}/read`);
+//   await axiosdb.patch(`/api/notifications/${notificationId}/read`);
 // };
 // const dismissNotification = async (notificationId: string) => {
-//   await axios.delete(`/api/notifications/${notificationId}`);
+//   await axiosdb.delete(`/api/notifications/${notificationId}`);
 // };
 
 interface Notification {
@@ -151,7 +153,7 @@ export default function NotificationCenter() {
         )}
       </div>
 
-      <div className="space-y-3 max-h-[600px] overflow-y-auto">
+      <div className="space-y-3 max-h-150 overflow-y-auto">
         {notifications.length === 0 ? (
           <div className="text-center py-12 text-gray-500">
             <Bell className="w-16 h-16 mx-auto mb-4 text-gray-300" />
@@ -164,17 +166,17 @@ export default function NotificationCenter() {
               <Card
                 key={notification.id}
                 className={`p-4 rounded-xl cursor-pointer transition-all ${!notification.read
-                    ? 'bg-gradient-to-r from-pink-50 to-purple-50 border-2 border-pink-200'
-                    : 'bg-gray-50'
+                  ? 'bg-gradient-to-r from-pink-50 to-purple-50 border-2 border-pink-200'
+                  : 'bg-gray-50'
                   }`}
                 onClick={() => markAsRead(notification.id)}
               >
                 <div className="flex items-start gap-3">
                   <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${notification.priority === 'high' ? 'bg-red-100' :
-                      notification.priority === 'medium' ? 'bg-amber-100' : 'bg-blue-100'
+                    notification.priority === 'medium' ? 'bg-amber-100' : 'bg-blue-100'
                     }`}>
                     <Icon className={`w-5 h-5 ${notification.priority === 'high' ? 'text-red-600' :
-                        notification.priority === 'medium' ? 'text-amber-600' : 'text-blue-600'
+                      notification.priority === 'medium' ? 'text-amber-600' : 'text-blue-600'
                       }`} />
                   </div>
 
@@ -197,7 +199,7 @@ export default function NotificationCenter() {
                     <div className="flex items-center justify-between">
                       <p className="text-xs text-gray-500">{notification.time}</p>
                       <Badge className={`text-xs ${notification.priority === 'high' ? 'bg-red-500' :
-                          notification.priority === 'medium' ? 'bg-amber-500' : 'bg-blue-500'
+                        notification.priority === 'medium' ? 'bg-amber-500' : 'bg-blue-500'
                         } text-white`}>
                         {notification.priority === 'high' ? 'Urgent' :
                           notification.priority === 'medium' ? 'Important' : 'Info'}

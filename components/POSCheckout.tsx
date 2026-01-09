@@ -1,3 +1,5 @@
+"use client"
+
 import { useState } from 'react';
 import { Card } from './ui/card';
 import { Button } from './ui/button';
@@ -9,15 +11,15 @@ import { ShoppingCart, Trash2, Plus, Minus, CreditCard, Banknote, Smartphone, Gi
 // Axios API calls (commented out for future use)
 // import axios from 'axios';
 // const processPayment = async (paymentData: any) => {
-//   const response = await axios.post('/api/payments/process', paymentData);
+//   const response = await axiosdb.post('/api/payments/process', paymentData);
 //   return response.data;
 // };
 // const generateReceipt = async (saleId: string) => {
-//   const response = await axios.get(`/api/sales/${saleId}/receipt`);
+//   const response = await axiosdb.get(`/api/sales/${saleId}/receipt`);
 //   return response.data;
 // };
 // const closeDailyRegister = async (date: string) => {
-//   const response = await axios.post('/api/sales/close-register', { date });
+//   const response = await axiosdb.post('/api/sales/close-register', { date });
 //   return response.data;
 // };
 
@@ -61,7 +63,7 @@ export default function POSCheckout() {
   const addToCart = (item: typeof services[0] | typeof products[0]) => {
     const existingItem = cart.find(i => i.id === item.id);
     if (existingItem) {
-      setCart(cart.map(i => 
+      setCart(cart.map(i =>
         i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i
       ));
     } else {
@@ -110,7 +112,7 @@ export default function POSCheckout() {
     if (remaining <= 0 && cart.length > 0) {
       // API call would go here
       // await processPayment({ cart, paymentMethods, clientName, total });
-      
+
       alert('Paiement complété avec succès!');
       // Reset
       setCart([]);
@@ -299,14 +301,13 @@ export default function POSCheckout() {
               <div className="space-y-3 mb-4">
                 {paymentMethods.map((pm, index) => (
                   <div key={index} className="flex items-center gap-2 bg-white p-3 rounded-xl">
-                    <Badge className={`${
-                      pm.type === 'cash' ? 'bg-green-500' :
+                    <Badge className={`${pm.type === 'cash' ? 'bg-green-500' :
                       pm.type === 'card' ? 'bg-blue-500' :
-                      pm.type === 'mobile' ? 'bg-purple-500' : 'bg-amber-500'
-                    } text-white`}>
+                        pm.type === 'mobile' ? 'bg-purple-500' : 'bg-amber-500'
+                      } text-white`}>
                       {pm.type === 'cash' ? 'Espèces' :
-                       pm.type === 'card' ? 'Carte' :
-                       pm.type === 'mobile' ? 'Mobile Money' : 'Carte Cadeau'}
+                        pm.type === 'card' ? 'Carte' :
+                          pm.type === 'mobile' ? 'Mobile Money' : 'Carte Cadeau'}
                     </Badge>
                     <Input
                       type="number"
@@ -379,9 +380,8 @@ export default function POSCheckout() {
                   <span>{totalPaid.toLocaleString()} CDF</span>
                 </div>
                 <Separator />
-                <div className={`flex justify-between text-xl ${
-                  remaining > 0 ? 'text-red-600' : 'text-green-600'
-                }`}>
+                <div className={`flex justify-between text-xl ${remaining > 0 ? 'text-red-600' : 'text-green-600'
+                  }`}>
                   <span>{remaining > 0 ? 'Reste à payer:' : 'Monnaie:'}</span>
                   <span>{Math.abs(remaining).toLocaleString()} CDF</span>
                 </div>

@@ -1,8 +1,7 @@
-// lib/axios.ts
 import axios from 'axios';
 // import { getSession } from 'next-auth/react';
 
-const baseurl = process.env.NEXT_PUBLIC_API_BASE_URL || '';
+const baseurl = process.env.NEXT_PUBLIC_API_URL || '';
 const axiosdb = axios.create({
   baseURL: baseurl,
   timeout: 30000,

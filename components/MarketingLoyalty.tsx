@@ -1,3 +1,5 @@
+"use client"
+
 import { useState } from 'react';
 import { Card } from './ui/card';
 import { Button } from './ui/button';
@@ -10,16 +12,16 @@ import { Gift, Award, Mail, Send, Calendar, TrendingUp, Users, Cake, MessageSqua
 // Axios API calls (commented out for future use)
 // import axios from 'axios';
 // const createLoyaltyProgram = async (programData: any) => {
-//   await axios.post('/api/loyalty/programs', programData);
+//   await axiosdb.post('/api/loyalty/programs', programData);
 // };
 // const sendCampaign = async (campaignData: any) => {
-//   await axios.post('/api/marketing/campaigns', campaignData);
+//   await axiosdb.post('/api/marketing/campaigns', campaignData);
 // };
 // const scheduleBirthdayMessages = async (date: string) => {
-//   await axios.post('/api/marketing/birthday-scheduler', { date });
+//   await axiosdb.post('/api/marketing/birthday-scheduler', { date });
 // };
 // const fetchCampaignAnalytics = async (campaignId: string) => {
-//   const response = await axios.get(`/api/marketing/campaigns/${campaignId}/analytics`);
+//   const response = await axiosdb.get(`/api/marketing/campaigns/${campaignId}/analytics`);
 //   return response.data;
 // };
 
@@ -224,12 +226,11 @@ export default function MarketingLoyalty() {
                       <div>
                         <div className="flex items-center gap-3 mb-2">
                           <h4 className="text-lg text-gray-900">{campaign.name}</h4>
-                          <Badge className={`${
-                            campaign.status === 'active' ? 'bg-green-500' :
+                          <Badge className={`${campaign.status === 'active' ? 'bg-green-500' :
                             campaign.status === 'completed' ? 'bg-blue-500' : 'bg-amber-500'
-                          } text-white`}>
+                            } text-white`}>
                             {campaign.status === 'active' ? 'Active' :
-                             campaign.status === 'completed' ? 'Terminée' : 'Programmée'}
+                              campaign.status === 'completed' ? 'Terminée' : 'Programmée'}
                           </Badge>
                         </div>
                         <p className="text-sm text-gray-600">
@@ -383,23 +384,21 @@ export default function MarketingLoyalty() {
 
             <div className="space-y-3 mb-6">
               {topReferrers.map((referrer, idx) => (
-                <Card key={idx} className={`border-0 p-4 ${
-                  referrer.status === 'vip' ? 'bg-gradient-to-r from-amber-50 to-orange-50' :
+                <Card key={idx} className={`border-0 p-4 ${referrer.status === 'vip' ? 'bg-gradient-to-r from-amber-50 to-orange-50' :
                   referrer.status === 'eligible' ? 'bg-gradient-to-r from-green-50 to-emerald-50' :
-                  'bg-gradient-to-r from-blue-50 to-cyan-50'
-                }`}>
+                    'bg-gradient-to-r from-blue-50 to-cyan-50'
+                  }`}>
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-gray-900">{referrer.name}</p>
                       <p className="text-sm text-gray-600">{referrer.referrals} parrainages</p>
                     </div>
                     <div className="text-right">
-                      <Badge className={`${
-                        referrer.status === 'vip' ? 'bg-amber-500' :
+                      <Badge className={`${referrer.status === 'vip' ? 'bg-amber-500' :
                         referrer.status === 'eligible' ? 'bg-green-500' : 'bg-blue-500'
-                      } text-white mb-2`}>
+                        } text-white mb-2`}>
                         {referrer.status === 'vip' ? 'VIP' :
-                         referrer.status === 'eligible' ? 'Éligible' : 'En cours'}
+                          referrer.status === 'eligible' ? 'Éligible' : 'En cours'}
                       </Badge>
                       <p className="text-sm text-gray-700">{referrer.reward}</p>
                     </div>

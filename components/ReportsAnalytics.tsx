@@ -1,3 +1,5 @@
+"use client"
+
 import { useState } from 'react';
 import { Card } from './ui/card';
 import { Button } from './ui/button';
@@ -10,15 +12,15 @@ import { TrendingUp, Download, Calendar, DollarSign, Users, Award, Clock, Target
 // Axios API calls (commented out for future use)
 // import axios from 'axios';
 // const fetchRevenueReport = async (period: string) => {
-//   const response = await axios.get(`/api/reports/revenue?period=${period}`);
+//   const response = await axiosdb.get(`/api/reports/revenue?period=${period}`);
 //   return response.data;
 // };
 // const fetchClientAnalytics = async (period: string) => {
-//   const response = await axios.get(`/api/reports/clients?period=${period}`);
+//   const response = await axiosdb.get(`/api/reports/clients?period=${period}`);
 //   return response.data;
 // };
 // const generateCustomReport = async (filters: any) => {
-//   const response = await axios.post('/api/reports/custom', filters);
+//   const response = await axiosdb.post('/api/reports/custom', filters);
 //   return response.data;
 // };
 

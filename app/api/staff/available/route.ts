@@ -1,3 +1,4 @@
+"use server"
 import { NextRequest } from 'next/server';
 import prisma from '@/lib/prisma';
 import { successResponse, handleApiError } from '@/lib/api/helpers';
@@ -48,11 +49,21 @@ export async function GET(request: NextRequest) {
     });
 
     // Filter out staff who have conflicting appointments
-    const availableStaff = staff.filter((worker) => {
-      if (!dateStr || !timeStr || !worker.appointments) return true;
+    const availableStaff = staff.filter(async (worker) => {
+
+      const workerAppointments = await prisma.appointment.findMany({
+        where: {
+          workerId: worker.id,
+          date: dateStr ? new Date(dateStr) : undefined,
+          status: {
+            in: ['confirmed', 'in_progress'],
+          },
+      }})
+
+      if (!dateStr || !timeStr ) return true;
 
       const requestedTime = timeStr;
-      const hasConflict = worker.appointments.some((apt: any) => {
+      const hasConflict = workerAppointments.some((apt: any) => {
         // Check for time conflicts
         return apt.time === requestedTime;
       });

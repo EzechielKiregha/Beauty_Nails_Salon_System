@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { auth } from '@/lib/auth/auth';
-import { UserRole } from '@/prisma/generated/prisma/enums';
+import { UserRole } from '@/prisma/generated/enums';
 
 export async function getAuthenticatedUser() {
   const session = await auth();

@@ -7,41 +7,14 @@ import { Label } from '../ui/label';
 import { Input } from '../ui/input';
 import { Checkbox } from '../ui/checkbox';
 import { Button } from '../ui/button';
-import { redirect, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Logo } from '../Logo';
-import axiosdb from '@/lib/axios';
-import { auth, signIn } from '@/lib/auth/auth';
-// import axios from 'axios';
-
-// Axios API calls (commented out for future backend integration)
-/*
-const registerUser = async (userData: {
-  name: string;
-  email: string;
-  phone: string;
-  password: string;
-}) => {
-  try {
-    const response = await axios.post('/api/auth/register', {
-      ...userData,
-      role: 'client' // Default role for signup
-    });
-    return response.data; // { user: UserObject, token: string }
-  } catch (error) {
-    console.error('Registration error:', error);
-    throw error;
-  }
-};
-
-const storeAuthToken = (token: string) => {
-  localStorage.setItem('authToken', token);
-};
-*/
+import { useTransition } from "react";
+import { handleSignup } from '@/app/(auth)/auth/signup/actions';
+import { useRouter } from 'next/navigation';
 
 
 export default function Signup() {
-  const navigate = useRouter();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -50,72 +23,23 @@ export default function Signup() {
     confirmPassword: '',
     acceptTerms: false
   });
-
+  const [isPending, startTransition] = useTransition();
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setIsLoading(true);
 
-    const formData = new FormData(e.currentTarget);
-    const data = {
-      name: formData.get('name') as string,
-      email: formData.get('email') as string,
-      phone: formData.get('phone') as string,
-      password: formData.get('password') as string,
-      confirmPassword: formData.get('confirmPassword') as string,
-      acceptTerms: !!formData.get('acceptTerms'),
-      role: 'client', // Default role for public signup
-    };
-
-    if (!data.name || !data.email || !data.phone || !data.password) {
-      toast.error('Veuillez remplir tous les champs');
-      return;
-    }
-
-    if (data.password !== data.confirmPassword) {
-      toast.error('Les mots de passe ne correspondent pas');
-      return;
-    }
-
-    if (!data.acceptTerms) {
-      toast.error('Veuillez accepter les conditions d\'utilisation');
-      return;
-    }
-
-    try {
-      // Register user
-      await axiosdb.post('/api/auth/register', data);
-
-      // Auto-login after registration
-      const result = await signIn('credentials', {
-        email: data.email,
-        password: data.password,
-        redirect: false,
-      });
-
-      if (result?.error) {
+    startTransition(async () => {
+      const result = await handleSignup(new FormData(e.currentTarget));
+      if (result?.success) {
+        toast.success('Connecté avec succès');
+        router.push(result?.redirectUrl);
+        router.refresh();
+      }
+      else {
         toast.error(result.error);
-      } else {
-        toast.success('Compte créé avec succès !');
-
       }
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Erreur lors de l\'inscription');
-    } finally {
-      setIsLoading(false);
-    }
-
-    const session = await auth();
-    setTimeout(async () => {
-      if (!session?.user) {
-        redirect('/auth/login');
-      }
-      toast.success(`Bienvenue, ${session?.user.name} ! Votre compte a été créé avec succès.`);
-      navigate.push(`/dashboard/${session?.user.role}`);
-      router.refresh();
-    }, 1500); // Will redirect based on role
+    });
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -136,7 +60,7 @@ export default function Signup() {
           <p className="text-gray-600 dark:text-gray-400">Rejoignez notre communauté beauté</p>
         </div>
 
-        <Card className="p-8 border-0 shadow-2xl rounded-3xl">
+        <Card className="p-8 border-0 bg-card shadow-2xl rounded-3xl">
           <form onSubmit={onSubmit} className="space-y-4">
             <div>
               <Label htmlFor="name">Nom complet</Label>
@@ -230,7 +154,7 @@ export default function Signup() {
               type="submit"
               className="w-full bg-linear-to-r from-pink-500 to-amber-400 hover:from-pink-600 hover:to-amber-500 text-white rounded-full py-6 mt-6"
             >
-              {isLoading ? 'Création...' : 'Créer un compte'}
+              {isPending ? 'Création...' : 'Créer un compte'}
             </Button>
           </form>
 

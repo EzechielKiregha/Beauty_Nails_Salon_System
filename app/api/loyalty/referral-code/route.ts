@@ -1,3 +1,4 @@
+"use server"
 import { NextRequest } from 'next/server';
 import prisma from '@/lib/prisma';
 import { getAuthenticatedUser, successResponse, handleApiError, errorResponse } from '@/lib/api/helpers';

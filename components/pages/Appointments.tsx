@@ -28,13 +28,12 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import HeroSection from "../HeroSection";
 import { User } from "@/lib/auth/session";
-// import axios from 'axios';
 
 // Axios API calls (commented out for future backend integration)
 /*
 const fetchAvailableSlots = async (date: string, workerId: string) => {
   try {
-    const response = await axios.get(`/api/appointments/available-slots?date=${date}&workerId=${workerId}`);
+    const response = await axiosdb.get(`/api/appointments/available-slots?date=${date}&workerId=${workerId}`);
     return response.data;
   } catch (error) {
     console.error('Error fetching available slots:', error);
@@ -44,7 +43,7 @@ const fetchAvailableSlots = async (date: string, workerId: string) => {
 
 const createAppointment = async (appointmentData: any) => {
   try {
-    const response = await axios.post('/api/appointments', appointmentData);
+    const response = await axiosdb.post('/api/appointments', appointmentData);
     return response.data;
   } catch (error) {
     console.error('Error creating appointment:', error);
@@ -54,7 +53,7 @@ const createAppointment = async (appointmentData: any) => {
 
 const fetchServices = async () => {
   try {
-    const response = await axios.get('/api/services');
+    const response = await axiosdb.get('/api/services');
     return response.data;
   } catch (error) {
     console.error('Error fetching services:', error);
@@ -64,7 +63,7 @@ const fetchServices = async () => {
 
 const fetchWorkers = async (category?: string) => {
   try {
-    const response = await axios.get(`/api/staff/available${category ? `?category=${category}` : ''}`);
+    const response = await axiosdb.get(`/api/staff/available${category ? `?category=${category}` : ''}`);
     return response.data;
   } catch (error) {
     console.error('Error fetching workers:', error);
@@ -199,7 +198,7 @@ export default function Appointments({
             {/* Step 1: Service Category */}
             <Card className="p-8 border-0 shadow-xl rounded-2xl">
               <div className="flex items-center mb-6">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-pink-500 to-amber-400 flex items-center justify-center text-white mr-4">
+                <div className="w-10 h-10 rounded-full bg-linear-to-br from-pink-500 to-amber-400 flex items-center justify-center text-white mr-4">
                   1
                 </div>
                 <h2 className="text-2xl text-gray-900">
@@ -272,7 +271,7 @@ export default function Appointments({
             {/* Step 2: Worker */}
             <Card className="p-8 border-0 shadow-xl rounded-2xl">
               <div className="flex items-center mb-6">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-pink-500 to-amber-400 flex items-center justify-center text-white mr-4">
+                <div className="w-10 h-10 rounded-full bg-linear-to-br from-pink-500 to-amber-400 flex items-center justify-center text-white mr-4">
                   2
                 </div>
                 <h2 className="text-2xl text-gray-900">
@@ -303,7 +302,7 @@ export default function Appointments({
             {/* Step 3: Date & Time */}
             <Card className="p-8 border-0 shadow-xl rounded-2xl">
               <div className="flex items-center mb-6">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-pink-500 to-amber-400 flex items-center justify-center text-white mr-4">
+                <div className="w-10 h-10 rounded-full bg-linear-to-br from-pink-500 to-amber-400 flex items-center justify-center text-white mr-4">
                   3
                 </div>
                 <h2 className="text-2xl text-gray-900">
@@ -350,7 +349,7 @@ export default function Appointments({
             {/* Step 4: Location */}
             <Card className="p-8 border-0 shadow-xl rounded-2xl">
               <div className="flex items-center mb-6">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-pink-500 to-amber-400 flex items-center justify-center text-white mr-4">
+                <div className="w-10 h-10 rounded-full bg-linear-to-br from-pink-500 to-amber-400 flex items-center justify-center text-white mr-4">
                   4
                 </div>
                 <h2 className="text-2xl text-gray-900">
@@ -407,7 +406,7 @@ export default function Appointments({
             {/* Step 5: Add-ons */}
             <Card className="p-8 border-0 shadow-xl rounded-2xl">
               <div className="flex items-center mb-6">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-pink-500 to-amber-400 flex items-center justify-center text-white mr-4">
+                <div className="w-10 h-10 rounded-full bg-linear-to-br from-pink-500 to-amber-400 flex items-center justify-center text-white mr-4">
                   5
                 </div>
                 <h2 className="text-2xl text-gray-900">
@@ -552,7 +551,7 @@ export default function Appointments({
               <Button
                 onClick={handleSubmit}
                 disabled={!user}
-                className="w-full bg-gradient-to-r from-pink-500 to-amber-400 hover:from-pink-600 hover:to-amber-500 text-white rounded-full py-6"
+                className="w-full bg-linear-to-r from-pink-500 to-amber-400 hover:from-pink-600 hover:to-amber-500 text-white rounded-full py-6"
               >
                 Confirmer le rendez-vous
               </Button>

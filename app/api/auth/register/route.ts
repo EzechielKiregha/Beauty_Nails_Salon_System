@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { hash } from 'bcryptjs';
 import prisma from '@/lib/prisma';
 import { errorResponse, successResponse, handleApiError } from '@/lib/api/helpers';
@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
     });
 
     if (existingUser) {
-      return errorResponse('Email ou téléphone déjà utilisé', 409);
+      return successResponse('Email ou téléphone déjà utilisé', 201);
     }
 
     // Hash password

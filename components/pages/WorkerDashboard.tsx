@@ -137,7 +137,7 @@ export default function WorkerDashboard({ user }: WorkerDashboardProps) {
   /* 
   const fetchTodaySchedule = async () => {
     try {
-      const response = await axios.get('/api/worker/schedule/today');
+      const response = await axiosdb.get('/api/worker/schedule/today');
       // setTodaySchedule(response.data);
     } catch (error) {
       console.error('Error fetching schedule:', error);
@@ -146,7 +146,7 @@ export default function WorkerDashboard({ user }: WorkerDashboardProps) {
 
   const updateAppointmentStatus = async (appointmentId: number, status: string) => {
     try {
-      await axios.put(`/api/appointments/${appointmentId}/status`, { status });
+      await axiosdb.put(`/api/appointments/${appointmentId}/status`, { status });
       // Refresh schedule
     } catch (error) {
       console.error('Error updating appointment:', error);
@@ -155,7 +155,7 @@ export default function WorkerDashboard({ user }: WorkerDashboardProps) {
 
   const markNotificationAsRead = async (notificationId: number) => {
     try {
-      await axios.put(`/api/notifications/${notificationId}/read`);
+      await axiosdb.put(`/api/notifications/${notificationId}/read`);
       // Update notifications
     } catch (error) {
       console.error('Error marking notification as read:', error);

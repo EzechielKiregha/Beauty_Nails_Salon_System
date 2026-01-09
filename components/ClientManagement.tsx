@@ -1,3 +1,4 @@
+"use client"
 import { useState } from 'react';
 import { Card } from './ui/card';
 import { Button } from './ui/button';
@@ -9,15 +10,15 @@ import { Search, Phone, Calendar, DollarSign, Gift, Bell, CreditCard, Award, Mai
 // Axios API calls (commented out for future use)
 // import axios from 'axios';
 // const fetchClients = async () => {
-//   const response = await axios.get('/api/clients');
+//   const response = await axiosdb.get('/api/clients');
 //   return response.data;
 // };
 // const fetchClientProfile = async (clientId: string) => {
-//   const response = await axios.get(`/api/clients/${clientId}`);
+//   const response = await axiosdb.get(`/api/clients/${clientId}`);
 //   return response.data;
 // };
 // const updateClientNotes = async (clientId: string, notes: string) => {
-//   await axios.patch(`/api/clients/${clientId}/notes`, { notes });
+//   await axiosdb.patch(`/api/clients/${clientId}/notes`, { notes });
 // };
 
 interface Client {
@@ -150,7 +151,7 @@ export default function ClientManagement() {
         {/* Clients List */}
         <Card className="border-0 shadow-lg rounded-2xl p-6 lg:col-span-1">
           <h3 className="text-xl text-gray-900 dark:text-white mb-4">Liste des Clientes</h3>
-          <div className="space-y-3 max-h-[600px] overflow-y-auto">
+          <div className="space-y-3 max-h-150 overflow-y-auto">
             {filteredClients.map((client) => (
               <div
                 key={client.id}

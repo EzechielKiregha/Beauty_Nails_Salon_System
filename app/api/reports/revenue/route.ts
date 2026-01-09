@@ -1,3 +1,4 @@
+"use server"
 import { NextRequest } from 'next/server';
 import prisma from '@/lib/prisma';
 import { requireRole, successResponse, handleApiError, errorResponse } from '@/lib/api/helpers';
@@ -35,8 +36,15 @@ export async function GET(request: NextRequest) {
 
     // Group by service category
     const breakdown: Record<string, number> = {};
-    sales.forEach((sale) => {
-      sale.items.forEach((item : any) => {
+    sales.forEach(async (sale) => {
+
+      const saleItems = await prisma.saleItem.findMany({
+        where: {
+          saleId: sale.id,
+        },
+      })
+
+      saleItems.forEach((item : any) => {
         const category = item.service.category;
         breakdown[category] = (breakdown[category] || 0) + Number(item.price) * item.quantity;
       });

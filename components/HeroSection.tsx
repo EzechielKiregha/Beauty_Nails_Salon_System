@@ -1,10 +1,9 @@
 import React from 'react'
 import { ImageWithFallback } from './figma/ImageWithFallback'
 import { Badge } from './ui/badge'
-import { Award, BadgeDollarSign, CalendarIcon, MessageCircle, PhoneCall, Sparkles, Workflow } from 'lucide-react'
+import { Award, CalendarIcon, MessageCircle, Sparkles, Workflow } from 'lucide-react'
 import Link from 'next/link'
 import { Button } from './ui/button'
-import { Logo } from './Logo'
 import Image from 'next/image'
 
 interface HeroSectionProps {
@@ -73,7 +72,7 @@ function HeroSection({ imageUrl, badgeText, title, subtitle, description, isLogo
   }
 
   return (
-    <section className="relative h-[600px] flex items-center overflow-hidden">
+    <section className="relative h-150 flex items-center overflow-hidden">
       <div className="absolute inset-0">
         <ImageWithFallback
           src={imageUrl}

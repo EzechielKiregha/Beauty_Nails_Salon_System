@@ -1,3 +1,5 @@
+"use client"
+
 import { useState } from 'react';
 import { Card } from './ui/card';
 import { Button } from './ui/button';
@@ -8,14 +10,14 @@ import { Calendar as CalendarIcon, Clock, DollarSign, Star, TrendingUp, Award, C
 // Axios API calls (commented out for future use)
 // import axios from 'axios';
 // const fetchStaff = async () => {
-//   const response = await axios.get('/api/staff');
+//   const response = await axiosdb.get('/api/staff');
 //   return response.data;
 // };
 // const updateStaffSchedule = async (staffId: string, schedule: any) => {
-//   await axios.patch(`/api/staff/${staffId}/schedule`, { schedule });
+//   await axiosdb.patch(`/api/staff/${staffId}/schedule`, { schedule });
 // };
 // const calculateCommission = async (staffId: string, period: string) => {
-//   const response = await axios.get(`/api/staff/${staffId}/commission?period=${period}`);
+//   const response = await axiosdb.get(`/api/staff/${staffId}/commission?period=${period}`);
 //   return response.data;
 // };
 
@@ -137,25 +139,23 @@ export default function StaffManagement() {
         <h3 className="text-xl text-gray-900 mb-4">Personnel Aujourd'hui</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {staff.map((member) => (
-            <Card 
+            <Card
               key={member.id}
-              className={`border-2 p-4 rounded-xl cursor-pointer transition-all ${
-                member.status === 'active' ? 'border-green-300 bg-green-50' :
+              className={`border-2 p-4 rounded-xl cursor-pointer transition-all ${member.status === 'active' ? 'border-green-300 bg-green-50' :
                 member.status === 'busy' ? 'border-blue-300 bg-blue-50' :
-                'border-gray-300 bg-gray-50'
-              }`}
+                  'border-gray-300 bg-gray-50'
+                }`}
               onClick={() => setSelectedStaff(member)}
             >
               <div className="flex items-center justify-between mb-3">
                 <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center text-white text-lg">
                   {member.name.charAt(0)}
                 </div>
-                <Badge className={`${
-                  member.status === 'active' ? 'bg-green-500' :
+                <Badge className={`${member.status === 'active' ? 'bg-green-500' :
                   member.status === 'busy' ? 'bg-blue-500' : 'bg-gray-500'
-                } text-white`}>
+                  } text-white`}>
                   {member.status === 'active' ? 'Disponible' :
-                   member.status === 'busy' ? 'Occupée' : 'Absente'}
+                    member.status === 'busy' ? 'Occupée' : 'Absente'}
                 </Badge>
               </div>
               <h4 className="text-gray-900 mb-1">{member.name}</h4>
@@ -177,11 +177,10 @@ export default function StaffManagement() {
               <div
                 key={member.id}
                 onClick={() => setSelectedStaff(member)}
-                className={`p-4 rounded-xl cursor-pointer transition-all ${
-                  selectedStaff?.id === member.id
-                    ? 'bg-gradient-to-r from-purple-100 to-pink-100 border-2 border-purple-300'
-                    : 'bg-gray-50 hover:bg-gray-100'
-                }`}
+                className={`p-4 rounded-xl cursor-pointer transition-all ${selectedStaff?.id === member.id
+                  ? 'bg-gradient-to-r from-purple-100 to-pink-100 border-2 border-purple-300'
+                  : 'bg-gray-50 hover:bg-gray-100'
+                  }`}
               >
                 <div className="flex items-center justify-between mb-2">
                   <p className="text-gray-900">{member.name}</p>
@@ -382,18 +381,16 @@ export default function StaffManagement() {
         <h3 className="text-2xl text-gray-900 mb-6">Tableau des Tâches</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {tasks.map((task) => (
-            <Card key={task.id} className={`p-4 border-2 rounded-xl ${
-              task.status === 'completed' ? 'border-green-300 bg-green-50' :
+            <Card key={task.id} className={`p-4 border-2 rounded-xl ${task.status === 'completed' ? 'border-green-300 bg-green-50' :
               task.status === 'in-progress' ? 'border-blue-300 bg-blue-50' :
-              'border-gray-300 bg-gray-50'
-            }`}>
+                'border-gray-300 bg-gray-50'
+              }`}>
               <div className="flex items-start justify-between mb-3">
-                <Badge className={`${
-                  task.priority === 'high' ? 'bg-red-500' :
+                <Badge className={`${task.priority === 'high' ? 'bg-red-500' :
                   task.priority === 'medium' ? 'bg-amber-500' : 'bg-gray-500'
-                } text-white text-xs`}>
+                  } text-white text-xs`}>
                   {task.priority === 'high' ? 'Urgent' :
-                   task.priority === 'medium' ? 'Moyen' : 'Bas'}
+                    task.priority === 'medium' ? 'Moyen' : 'Bas'}
                 </Badge>
                 {task.status === 'completed' ? (
                   <CheckCircle className="w-5 h-5 text-green-600" />
@@ -407,7 +404,7 @@ export default function StaffManagement() {
               <p className="text-xs text-gray-600">Assignée: {task.assignedTo}</p>
               <Button size="sm" variant="outline" className="w-full mt-3 rounded-full">
                 {task.status === 'completed' ? 'Complété' :
-                 task.status === 'in-progress' ? 'En cours' : 'Commencer'}
+                  task.status === 'in-progress' ? 'En cours' : 'Commencer'}
               </Button>
             </Card>
           ))}

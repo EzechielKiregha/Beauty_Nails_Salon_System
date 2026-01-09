@@ -45,9 +45,9 @@ export const authConfig: NextAuthConfig = {
           throw new Error('Email ou mot de passe incorrect');
         }
 
-        if (!user.emailVerified) {
-          throw new Error('Veuillez vérifier votre email');
-        }
+        // if (!user.emailVerified) {
+        //   throw new Error('Veuillez vérifier votre email');
+        // }
 
         // Return user object with role-specific data
         return {
@@ -133,6 +133,7 @@ export const authConfig: NextAuthConfig = {
 
   pages: {
     signIn: '/auth/login',
+    newUser: '/auth/register',
     signOut: '/auth/logout',
     error: '/auth/error',
   },

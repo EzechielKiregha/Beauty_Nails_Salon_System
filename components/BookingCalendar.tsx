@@ -1,3 +1,4 @@
+"use client"
 import { useState } from 'react';
 import { Card } from './ui/card';
 import { Button } from './ui/button';
@@ -8,14 +9,14 @@ import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Clock, User, Phone
 // Axios API calls (commented out for future use)
 // import axios from 'axios';
 // const fetchAppointments = async (date: string) => {
-//   const response = await axios.get(`/api/appointments?date=${date}`);
+//   const response = await axiosdb.get(`/api/appointments?date=${date}`);
 //   return response.data;
 // };
 // const rescheduleAppointment = async (appointmentId: string, newTime: string, newStaffId: string) => {
-//   await axios.patch(`/api/appointments/${appointmentId}/reschedule`, { newTime, newStaffId });
+//   await axiosdb.patch(`/api/appointments/${appointmentId}/reschedule`, { newTime, newStaffId });
 // };
 // const sendReminder = async (appointmentId: string, type: 'sms' | 'email') => {
-//   await axios.post(`/api/appointments/${appointmentId}/reminder`, { type });
+//   await axiosdb.post(`/api/appointments/${appointmentId}/reminder`, { type });
 // };
 
 interface Appointment {

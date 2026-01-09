@@ -66,7 +66,7 @@ export default function Home() {
   ];
 
   return (
-    <div className="min-h-screen bg-white/90 dark:bg-gray-900/90">
+    <div className="min-h-screen bg-background">
       {/* Hero Section */}
       <HeroSection
         imageUrl='https://images.unsplash.com/photo-1632643746039-de953cb0f260?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxiZWF1dHklMjBzYWxvbiUyMGVsZWdhbnR8ZW58MXx8fHwxNzYyMjYzMDgyfDA&ixlib=rb-4.1.0&q=80&w=1080'
@@ -154,7 +154,7 @@ export default function Home() {
                     alt={service.name}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                   />
-                  <div className={`absolute inset-0 bg-gradient-to-t ${service.color} opacity-60 group-hover:opacity-40 transition-opacity`} />
+                  <div className={`absolute inset-0 bg-linear-to-t ${service.color} opacity-60 group-hover:opacity-40 transition-opacity`} />
                   <div className="absolute top-4 left-4 text-4xl">{service.icon}</div>
                 </div>
                 <div className="p-6">
@@ -186,7 +186,7 @@ export default function Home() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             <Card className="bg-white dark:bg-gray-900 border-b border-pink-100 dark:border-pink-900 shadow-2xl p-8 rounded-2xl">
-              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-pink-400 to-rose-400 flex items-center justify-center mb-6">
+              <div className="w-16 h-16 rounded-full bg-linear-to-br from-pink-400 to-rose-400 flex items-center justify-center mb-6">
                 <Gift className="w-8 h-8 text-white" />
               </div>
               <h3 className="text-2xl text-gray-900 dark:text-gray-200 mb-4">5 rendez-vous = 1 gratuit</h3>
@@ -201,7 +201,7 @@ export default function Home() {
             </Card>
 
             <Card className="bg-white dark:bg-gray-900 border-b border-pink-100 dark:border-pink-900 shadow-2xl p-8 rounded-2xl">
-              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-amber-400 to-orange-400 flex items-center justify-center mb-6">
+              <div className="w-16 h-16 rounded-full bg-linear-to-br from-amber-400 to-orange-400 flex items-center justify-center mb-6">
                 <Users className="w-8 h-8 text-white" />
               </div>
               <h3 className="text-2xl text-gray-900 dark:text-gray-200 mb-4">5 parrainages = 1 gratuit</h3>
@@ -225,7 +225,7 @@ export default function Home() {
             <Award className="w-4 h-4 mr-2" />
             Abonnements Premium
           </Badge>
-          <h2 className="text-4xl text-gray-900 mb-4">
+          <h2 className="text-4xl dark:text-gray-200 text-gray-900 mb-4">
             Rejoignez notre cercle de clientes privilégiées
           </h2>
           <p className="text-xl text-gray-600 dark:text-gray-200 max-w-2xl mx-auto">
@@ -235,7 +235,7 @@ export default function Home() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
           {/* 3 Months Plan */}
-          <Card className="bg-gradient-to-br from-pink-50 to-purple-50 border-2 border-pink-200 shadow-xl rounded-2xl overflow-hidden">
+          <Card className="bg-linear-to-br from-pink-50 to-purple-50 border-2 border-pink-200 shadow-xl rounded-2xl overflow-hidden">
             <div className="p-8">
               <Badge className="mb-4 bg-pink-500 text-white">Standard</Badge>
               <h3 className="text-3xl text-gray-900 mb-2">Abonnement 3 Mois</h3>
@@ -264,7 +264,7 @@ export default function Home() {
                 </li>
               </ul>
               <Link href="/memberships">
-                <Button className="w-full bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white rounded-full py-6">
+                <Button className="w-full bg-linear-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white rounded-full py-6">
                   S'abonner maintenant
                 </Button>
               </Link>
@@ -272,15 +272,15 @@ export default function Home() {
           </Card>
 
           {/* 6 Months Plan */}
-          <Card className="bg-gradient-to-br from-amber-50 to-orange-50 border-2 border-amber-300 shadow-2xl rounded-2xl overflow-hidden relative">
-            <div className="absolute top-0 right-0 bg-gradient-to-r from-amber-500 to-orange-500 text-white px-6 py-2 rounded-bl-2xl">
+          <Card className="bg-linear-to-br from-amber-50 to-orange-50 border-2 border-amber-300 shadow-2xl rounded-2xl overflow-hidden relative">
+            <div className="absolute top-0 right-0 bg-linear-to-r from-amber-500 to-orange-500 text-white px-6 py-2 rounded-bl-2xl">
               <span className="flex items-center">
                 <Star className="w-4 h-4 mr-1" />
                 Populaire
               </span>
             </div>
             <div className="p-8">
-              <Badge className="mb-4 bg-gradient-to-r from-amber-500 to-orange-500 text-white">Premium</Badge>
+              <Badge className="mb-4 bg-linear-to-r from-amber-500 to-orange-500 text-white">Premium</Badge>
               <h3 className="text-3xl text-gray-900 mb-2">Abonnement 6 Mois</h3>
               <div className="flex items-baseline mb-6">
                 <span className="text-5xl text-gray-900">210 000</span>
@@ -288,32 +288,32 @@ export default function Home() {
               </div>
               <ul className="space-y-4 mb-8">
                 <li className="flex items-start">
-                  <div className="w-6 h-6 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 flex items-center justify-center flex-shrink-0 mt-1">
+                  <div className="w-6 h-6 rounded-full bg-linear-to-r from-amber-500 to-orange-500 flex items-center justify-center flex-shrink-0 mt-1">
                     <span className="text-white text-xs">✓</span>
                   </div>
                   <span className="ml-3 text-gray-700">10 rendez-vous salon</span>
                 </li>
                 <li className="flex items-start">
-                  <div className="w-6 h-6 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 flex items-center justify-center flex-shrink-0 mt-1">
+                  <div className="w-6 h-6 rounded-full bg-linear-to-r from-amber-500 to-orange-500 flex items-center justify-center flex-shrink-0 mt-1">
                     <span className="text-white text-xs">✓</span>
                   </div>
                   <span className="ml-3 text-gray-700">6 prestations à domicile</span>
                 </li>
                 <li className="flex items-start">
-                  <div className="w-6 h-6 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 flex items-center justify-center flex-shrink-0 mt-1">
+                  <div className="w-6 h-6 rounded-full bg-linear-to-r from-amber-500 to-orange-500 flex items-center justify-center flex-shrink-0 mt-1">
                     <span className="text-white text-xs">✓</span>
                   </div>
                   <span className="ml-3 text-gray-700">20% de réduction sur les produits</span>
                 </li>
                 <li className="flex items-start">
-                  <div className="w-6 h-6 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 flex items-center justify-center flex-shrink-0 mt-1">
+                  <div className="w-6 h-6 rounded-full bg-linear-to-r from-amber-500 to-orange-500 flex items-center justify-center flex-shrink-0 mt-1">
                     <span className="text-white text-xs">✓</span>
                   </div>
                   <span className="ml-3 text-gray-700">Accès prioritaire Best Client Award</span>
                 </li>
               </ul>
               <Link href="/memberships">
-                <Button className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-full py-6">
+                <Button className="w-full bg-linear-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-full py-6">
                   Devenir membre Premium
                 </Button>
               </Link>
@@ -383,7 +383,7 @@ export default function Home() {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div className="relative">
-            <div className="absolute -inset-4 bg-gradient-to-r from-pink-400 to-amber-400 rounded-2xl opacity-20 blur-2xl" />
+            <div className="absolute -inset-4 bg-linear-to-r from-pink-400 to-amber-400 rounded-2xl opacity-20 blur-2xl" />
             <ImageWithFallback
               src="https://images.unsplash.com/photo-1595944024804-733665a112db?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxsdXh1cnklMjBuYWlsJTIwc2Fsb24lMjBpbnRlcmlvcnxlbnwxfHx8fDE3NjIzNjE1OTd8MA&ixlib=rb-4.1.0&q=80&w=1080"
               alt="Beauty Nails Salon Interior"
@@ -393,7 +393,7 @@ export default function Home() {
 
           <div>
             <Badge className="mb-4 bg-pink-100 text-pink-600">Notre Histoire</Badge>
-            <h2 className="text-4xl text-gray-900 mb-6">
+            <h2 className="text-4xl text-gray-900 dark:text-gray-200 mb-6">
               La beauté au service du bien-être
             </h2>
             <p className="text-lg text-gray-600 dark:text-gray-200 mb-6">
@@ -424,7 +424,7 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="bg-gradient-to-br from-pink-500 via-purple-500 to-amber-500 py-24">
+      <section className="bg-linear-to-br from-pink-500 via-purple-500 to-amber-500 py-24">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-4xl lg:text-5xl text-white mb-6">
             Prête à sublimer votre beauté ?

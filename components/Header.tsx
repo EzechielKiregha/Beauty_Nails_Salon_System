@@ -1,18 +1,19 @@
 'use client';
-
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { Button } from './ui/button';
 import { Menu, X, Calendar, LogOut } from 'lucide-react';
-import { useState } from 'react';
+import { use, useState } from 'react';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { ModeToggle } from './mode-toggle';
 import { Logo } from './Logo';
+// import { auth } from '@/lib/auth/auth';
 
 export default function Header() {
   const { user, logout } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
 
   const isActive = (path: string) => {
     return pathname === path;
@@ -82,9 +83,9 @@ export default function Header() {
                   </Button>
                 </Link>
                 <Button
-                  onClick={logout}
+                  onClick={() => logout()}
                   variant="ghost"
-                  className="text-gray-600 dark:text-gray-400 hover:text-pink-100"
+                  className="text-gray-600 dark:text-gray-400 hover:text-pink-600"
                 >
                   <LogOut className="w-4 h-4 mr-2" />
                   Déconnexion
@@ -170,18 +171,16 @@ export default function Header() {
               </Link>
               {user ? (
                 <>
-                  <Link
-                    href={getDashboardPath()}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="px-4 py-2"
-                  >
-                    <Button variant="outline" className="w-full border-pink-200 text-pink-600">
-                      {user.role === 'client' ? 'Mon Espace' : user.role === 'worker' ? 'Mes Tâches' : 'Admin'}
-                    </Button>
-                  </Link>
+
+                  <Button variant="outline" onClick={() => {
+                    router.push(getDashboardPath());
+                    () => setMobileMenuOpen(false)
+                  }} className="w-full px-4 py-2 border-pink-200 text-pink-600">
+                    {user.role === 'client' ? 'Mon Espace' : user.role === 'worker' ? 'Mes Tâches' : 'Admin'}
+                  </Button>
                   <button
                     onClick={() => {
-                      logout();
+                      logout()
                       setMobileMenuOpen(false);
                     }}
                     className="px-4 py-2 text-left text-gray-700 dark:text-gray-300 hover:bg-pink-50 dark:hover:bg-gray-800 rounded-lg"
@@ -205,7 +204,7 @@ export default function Header() {
                     onClick={() => setMobileMenuOpen(false)}
                     className="px-4 py-2"
                   >
-                    <Button className="w-full bg-gradient-to-r from-pink-500 to-amber-400 hover:from-pink-600 hover:to-amber-500 text-white rounded-full">
+                    <Button className="w-full bg-linear-to-r from-pink-500 to-amber-400 hover:from-pink-600 hover:to-amber-500 text-white rounded-full">
                       <Calendar className="w-4 h-4 mr-2" />
                       Réserver
                     </Button>

@@ -1,15 +1,14 @@
 import { useState } from 'react';
 import { Card } from '../ui/card';
-import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
 import { Sheet, SheetContent, SheetTrigger } from '../ui/sheet';
 import {
   Users, Calendar, DollarSign, TrendingUp, Award,
-  Package, AlertCircle, CheckCircle, Clock, Star,
+  Package, Star,
   Activity, BarChart3, Settings as SettingsIcon, MessageSquare, Scissors, ShoppingCart, Bell
 } from 'lucide-react';
-import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import { LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import TodayOverview from '../TodayOverview';
 import ClientManagement from '../ClientManagement';
 import StaffManagement from '../StaffManagement';
@@ -21,9 +20,10 @@ import MarketingLoyalty from '../MarketingLoyalty';
 import ServiceManagement from '../ServiceManagement';
 import SystemSettings from '../SystemSettings';
 import NotificationCenter from '../NotificationCenter';
+import { User } from '@/lib/auth/session';
 
 interface AdminDashboardProps {
-  user: any;
+  user: User;
 }
 
 export default function AdminDashboard({ user }: AdminDashboardProps) {
@@ -83,7 +83,7 @@ export default function AdminDashboard({ user }: AdminDashboardProps) {
   ];
 
   return (
-    <div className="min-h-screen py-24 bg-gradient-to-br from-amber-50 via-orange-50 to-white">
+    <div className="min-h-screen py-24 bg-linear-to-br from-amber-50 via-orange-50 to-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-12 flex items-start justify-between">
@@ -120,79 +120,79 @@ export default function AdminDashboard({ user }: AdminDashboardProps) {
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-          <Card className="bg-gradient-to-br from-blue-50 to-cyan-50 border-0 shadow-lg p-6 rounded-2xl">
+          <Card className="bg-linear-to-br from-blue-50 to-cyan-50 border-0 shadow-lg p-6 rounded-2xl">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600 mb-1">Total Clientes</p>
                 <p className="text-3xl text-gray-900">{stats.totalClients}</p>
                 <p className="text-xs text-green-600 mt-1">+12% ce mois</p>
               </div>
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-cyan-400 flex items-center justify-center">
+              <div className="w-12 h-12 rounded-full bg-linear-to-br from-blue-400 to-cyan-400 flex items-center justify-center">
                 <Users className="w-6 h-6 text-white" />
               </div>
             </div>
           </Card>
 
-          <Card className="bg-gradient-to-br from-purple-50 to-pink-50 border-0 shadow-lg p-6 rounded-2xl">
+          <Card className="bg-linear-to-br from-purple-50 to-pink-50 border-0 shadow-lg p-6 rounded-2xl">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600 mb-1">Employées Actives</p>
                 <p className="text-3xl text-gray-900">{stats.activeWorkers}</p>
                 <p className="text-xs text-gray-500 mt-1">Staff complet</p>
               </div>
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center">
+              <div className="w-12 h-12 rounded-full bg-linear-to-br from-purple-400 to-pink-400 flex items-center justify-center">
                 <Award className="w-6 h-6 text-white" />
               </div>
             </div>
           </Card>
 
-          <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-0 shadow-lg p-6 rounded-2xl">
+          <Card className="bg-linear-to-br from-green-50 to-emerald-50 border-0 shadow-lg p-6 rounded-2xl">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600 mb-1">Revenus Aujourd'hui</p>
                 <p className="text-2xl text-gray-900">{stats.todayRevenue}</p>
                 <p className="text-xs text-green-600 mt-1">+8% vs hier</p>
               </div>
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-green-400 to-emerald-400 flex items-center justify-center">
+              <div className="w-12 h-12 rounded-full bg-linear-to-br from-green-400 to-emerald-400 flex items-center justify-center">
                 <DollarSign className="w-6 h-6 text-white" />
               </div>
             </div>
           </Card>
 
-          <Card className="bg-gradient-to-br from-amber-50 to-orange-50 border-0 shadow-lg p-6 rounded-2xl">
+          <Card className="bg-linear-to-br from-amber-50 to-orange-50 border-0 shadow-lg p-6 rounded-2xl">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600 mb-1">RDV Aujourd'hui</p>
                 <p className="text-3xl text-gray-900">{stats.todayAppointments}</p>
                 <p className="text-xs text-gray-500 mt-1">Taux remplissage: 89%</p>
               </div>
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-amber-400 to-orange-400 flex items-center justify-center">
+              <div className="w-12 h-12 rounded-full bg-linear-to-br from-amber-400 to-orange-400 flex items-center justify-center">
                 <Calendar className="w-6 h-6 text-white" />
               </div>
             </div>
           </Card>
 
-          <Card className="bg-gradient-to-br from-pink-50 to-rose-50 border-0 shadow-lg p-6 rounded-2xl">
+          <Card className="bg-linear-to-br from-pink-50 to-rose-50 border-0 shadow-lg p-6 rounded-2xl">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600 mb-1">Revenus Mensuel</p>
                 <p className="text-2xl text-gray-900">{stats.monthlyRevenue}</p>
                 <p className="text-xs text-green-600 mt-1">+15% vs mois dernier</p>
               </div>
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-pink-400 to-rose-400 flex items-center justify-center">
+              <div className="w-12 h-12 rounded-full bg-linear-to-br from-pink-400 to-rose-400 flex items-center justify-center">
                 <TrendingUp className="w-6 h-6 text-white" />
               </div>
             </div>
           </Card>
 
-          <Card className="bg-gradient-to-br from-yellow-50 to-amber-50 border-0 shadow-lg p-6 rounded-2xl">
+          <Card className="bg-linear-to-br from-yellow-50 to-amber-50 border-0 shadow-lg p-6 rounded-2xl">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600 mb-1">Note Moyenne</p>
                 <p className="text-3xl text-gray-900">{stats.avgRating}/5</p>
                 <p className="text-xs text-gray-500 mt-1">247 avis</p>
               </div>
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-yellow-400 to-amber-400 flex items-center justify-center">
+              <div className="w-12 h-12 rounded-full bg-linear-to-br from-yellow-400 to-amber-400 flex items-center justify-center">
                 <Star className="w-6 h-6 text-white" />
               </div>
             </div>

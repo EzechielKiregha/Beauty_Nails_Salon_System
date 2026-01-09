@@ -1,3 +1,5 @@
+"use client"
+
 import { useState } from 'react';
 import { Card } from './ui/card';
 import { Button } from './ui/button';
@@ -11,16 +13,16 @@ import { Settings, Clock, Users, Bell, FileText, CreditCard, Globe } from 'lucid
 // Axios API calls (commented out for future use)
 // import axios from 'axios';
 // const updateSalonProfile = async (profileData: any) => {
-//   await axios.patch('/api/salon/profile', profileData);
+//   await axiosdb.patch('/api/salon/profile', profileData);
 // };
 // const updateUserRoles = async (userId: string, roles: string[]) => {
-//   await axios.patch(`/api/users/${userId}/roles`, { roles });
+//   await axiosdb.patch(`/api/users/${userId}/roles`, { roles });
 // };
 // const updateNotificationTemplates = async (templates: any) => {
-//   await axios.patch('/api/notifications/templates', templates);
+//   await axiosdb.patch('/api/notifications/templates', templates);
 // };
 // const updateIntegrations = async (integrations: any) => {
-//   await axios.patch('/api/integrations', integrations);
+//   await axiosdb.patch('/api/integrations', integrations);
 // };
 
 export default function SystemSettings() {
@@ -142,11 +144,11 @@ export default function SystemSettings() {
                   <div className="w-32">
                     <p className="text-gray-900 capitalize">{
                       day === 'monday' ? 'Lundi' :
-                      day === 'tuesday' ? 'Mardi' :
-                      day === 'wednesday' ? 'Mercredi' :
-                      day === 'thursday' ? 'Jeudi' :
-                      day === 'friday' ? 'Vendredi' :
-                      day === 'saturday' ? 'Samedi' : 'Dimanche'
+                        day === 'tuesday' ? 'Mardi' :
+                          day === 'wednesday' ? 'Mercredi' :
+                            day === 'thursday' ? 'Jeudi' :
+                              day === 'friday' ? 'Vendredi' :
+                                day === 'saturday' ? 'Samedi' : 'Dimanche'
                     }</p>
                   </div>
                   <div className="flex-1">
@@ -187,11 +189,10 @@ export default function SystemSettings() {
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
                         <p className="text-lg text-gray-900">{user.name}</p>
-                        <Badge className={`${
-                          user.role === 'Admin' ? 'bg-red-500' :
+                        <Badge className={`${user.role === 'Admin' ? 'bg-red-500' :
                           user.role === 'Manager' ? 'bg-purple-500' :
-                          user.role === 'Réceptionniste' ? 'bg-blue-500' : 'bg-green-500'
-                        } text-white`}>
+                            user.role === 'Réceptionniste' ? 'bg-blue-500' : 'bg-green-500'
+                          } text-white`}>
                           {user.role}
                         </Badge>
                       </div>
@@ -297,9 +298,8 @@ export default function SystemSettings() {
                       <p className="text-sm text-gray-600">{template.channel}</p>
                     </div>
                     <div className="flex items-center gap-3">
-                      <Badge className={`${
-                        template.status === 'active' ? 'bg-green-500' : 'bg-gray-400'
-                      } text-white`}>
+                      <Badge className={`${template.status === 'active' ? 'bg-green-500' : 'bg-gray-400'
+                        } text-white`}>
                         {template.status === 'active' ? 'Actif' : 'Inactif'}
                       </Badge>
                       <Button size="sm" variant="outline" className="rounded-full">
@@ -400,30 +400,26 @@ export default function SystemSettings() {
               {integrations.map((integration, idx) => {
                 const Icon = integration.icon;
                 return (
-                  <Card key={idx} className={`p-6 border-2 ${
-                    integration.status === 'connected' 
-                      ? 'bg-green-50 border-green-300' 
-                      : 'bg-gray-50 border-gray-300'
-                  }`}>
+                  <Card key={idx} className={`p-6 border-2 ${integration.status === 'connected'
+                    ? 'bg-green-50 border-green-300'
+                    : 'bg-gray-50 border-gray-300'
+                    }`}>
                     <div className="flex items-center justify-between mb-4">
                       <div className="flex items-center gap-3">
-                        <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                          integration.status === 'connected' ? 'bg-green-100' : 'bg-gray-200'
-                        }`}>
-                          <Icon className={`w-5 h-5 ${
-                            integration.status === 'connected' ? 'text-green-600' : 'text-gray-500'
-                          }`} />
+                        <div className={`w-10 h-10 rounded-full flex items-center justify-center ${integration.status === 'connected' ? 'bg-green-100' : 'bg-gray-200'
+                          }`}>
+                          <Icon className={`w-5 h-5 ${integration.status === 'connected' ? 'text-green-600' : 'text-gray-500'
+                            }`} />
                         </div>
                         <p className="text-gray-900">{integration.name}</p>
                       </div>
-                      <Badge className={`${
-                        integration.status === 'connected' ? 'bg-green-500' : 'bg-gray-400'
-                      } text-white`}>
+                      <Badge className={`${integration.status === 'connected' ? 'bg-green-500' : 'bg-gray-400'
+                        } text-white`}>
                         {integration.status === 'connected' ? 'Connecté' : 'Non connecté'}
                       </Badge>
                     </div>
-                    <Button 
-                      size="sm" 
+                    <Button
+                      size="sm"
                       variant={integration.status === 'connected' ? 'outline' : 'default'}
                       className="w-full rounded-full"
                     >

@@ -63,8 +63,13 @@ import {
   Crown,
   Sparkles,
   PartyPopper,
+  Loader2,
 } from "lucide-react";
 import Link from "next/link";
+import { useAppointments } from "@/lib/hooks/useAppointments";
+import { useLoyalty } from "@/lib/hooks/useLoyalty";
+import { useNotifications } from "@/lib/hooks/useNotifications";
+import axiosdb from "@/lib/axios";
 // import axios from 'axios';
 
 interface ClientDashboardProps {
@@ -85,104 +90,183 @@ export default function ClientDashboard({
   const [rating, setRating] = useState(0);
   const [reviewText, setReviewText] = useState("");
 
+  const {
+    appointments,
+    isLoading: isAppointmentsLoading,
+    cancelAppointment,
+  } = useAppointments({
+    clientId: user?.id,
+    status: 'confirmed',
+  });
+
+  // Get loyalty data
+  const {
+    points: loyaltyPoints,
+    tier,
+    transactions,
+    isLoading: isLoyaltyLoading,
+  } = useLoyalty();
+
+  // Get notifications
+  const {
+    notifications,
+    unreadCount,
+    markAsRead,
+  } = useNotifications({ unread: true });
+
+  // Handle cancel appointment
+  // const handleCancelAppointment = (id: string) => {
+  //   if (confirm('Voulez-vous annuler ce rendez-vous ?')) {
+  //     cancelAppointment({ id, reason: 'Annulé par le client' });
+  //   }
+  // };
+
+  // Loading state
+  if (isAppointmentsLoading || isLoyaltyLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <Loader2 className="w-8 h-8 animate-spin text-pink-500" />
+      </div>
+    );
+  }
+
   // Mock notifications
-  const notifications = [
-    {
-      id: 1,
-      type: "appointment",
-      title: "Rappel rendez-vous",
-      message: "Manucure Gel demain à 14:30",
-      time: "2h",
-      unread: true,
-    },
-    {
-      id: 2,
-      type: "promo",
-      title: "Nouvelle promotion!",
-      message: "20% sur les extensions de cils",
-      time: "1j",
-      unread: true,
-    },
-    {
-      id: 3,
-      type: "loyalty",
-      title: "Points gagnés!",
-      message: "+50 points de fidélité",
-      time: "2j",
-      unread: false,
-    },
-    {
-      id: 4,
-      type: "membership",
-      title: "Abonnement",
-      message: "Découvrez nos formules VIP",
-      time: "3j",
-      unread: false,
-    },
-  ];
+  // const notifications = [
+  //   {
+  //     id: 1,
+  //     type: "appointment",
+  //     title: "Rappel rendez-vous",
+  //     message: "Manucure Gel demain à 14:30",
+  //     time: "2h",
+  //     unread: true,
+  //   },
+  //   {
+  //     id: 2,
+  //     type: "promo",
+  //     title: "Nouvelle promotion!",
+  //     message: "20% sur les extensions de cils",
+  //     time: "1j",
+  //     unread: true,
+  //   },
+  //   {
+  //     id: 3,
+  //     type: "loyalty",
+  //     title: "Points gagnés!",
+  //     message: "+50 points de fidélité",
+  //     time: "2j",
+  //     unread: false,
+  //   },
+  //   {
+  //     id: 4,
+  //     type: "membership",
+  //     title: "Abonnement",
+  //     message: "Découvrez nos formules VIP",
+  //     time: "3j",
+  //     unread: false,
+  //   },
+  // ];
 
-  const upcomingAppointments = [
-    {
-      id: 1,
-      service: "Manucure Gel",
-      date: "10 Nov 2025",
-      time: "14:30",
-      worker: "Marie Nkumu",
-      workerRating: 4.9,
-      location: "Salon",
-      address: "Avenue de la Liberté, Kinshasa",
-      price: "15 000 CDF",
-      status: "confirmed",
-      canCancel: true,
-    },
-    {
-      id: 2,
-      service: "Extensions de Cils",
-      date: "15 Nov 2025",
-      time: "10:00",
-      worker: "Grace Lumière",
-      workerRating: 4.8,
-      location: "Domicile",
-      address: "Votre adresse",
-      price: "25 000 CDF",
-      status: "pending",
-      canCancel: true,
-    },
-  ];
+  // const upcomingAppointments = [
+  //   {
+  //     id: 1,
+  //     service: "Manucure Gel",
+  //     date: "10 Nov 2025",
+  //     time: "14:30",
+  //     worker: "Marie Nkumu",
+  //     workerRating: 4.9,
+  //     location: "Salon",
+  //     address: "Avenue de la Liberté, Kinshasa",
+  //     price: "15 000 CDF",
+  //     status: "confirmed",
+  //     canCancel: true,
+  //   },
+  //   {
+  //     id: 2,
+  //     service: "Extensions de Cils",
+  //     date: "15 Nov 2025",
+  //     time: "10:00",
+  //     worker: "Grace Lumière",
+  //     workerRating: 4.8,
+  //     location: "Domicile",
+  //     address: "Votre adresse",
+  //     price: "25 000 CDF",
+  //     status: "pending",
+  //     canCancel: true,
+  //   },
+  // ];
 
-  const appointmentHistory = [
-    {
-      id: 1,
-      service: "Maquillage Soirée",
-      date: "25 Oct 2025",
-      worker: "Élise Makala",
-      rating: 5,
-      cost: "30 000 CDF",
-      hasReviewed: true,
-    },
-    {
-      id: 2,
-      service: "Pédicure Spa",
-      date: "18 Oct 2025",
-      worker: "Marie Nkumu",
-      rating: 5,
-      cost: "20 000 CDF",
-      hasReviewed: true,
-    },
-    {
-      id: 3,
-      service: "Tresses Box Braids",
-      date: "10 Oct 2025",
-      worker: "Sophie Kabila",
-      rating: 4,
-      cost: "45 000 CDF",
-      hasReviewed: false,
-    },
-  ];
+  // const appointmentHistory = [
+  //   {
+  //     id: 1,
+  //     service: "Maquillage Soirée",
+  //     date: "25 Oct 2025",
+  //     worker: "Élise Makala",
+  //     rating: 5,
+  //     cost: "30 000 CDF",
+  //     hasReviewed: true,
+  //   },
+  //   {
+  //     id: 2,
+  //     service: "Pédicure Spa",
+  //     date: "18 Oct 2025",
+  //     worker: "Marie Nkumu",
+  //     rating: 5,
+  //     cost: "20 000 CDF",
+  //     hasReviewed: true,
+  //   },
+  //   {
+  //     id: 3,
+  //     service: "Tresses Box Braids",
+  //     date: "10 Oct 2025",
+  //     worker: "Sophie Kabila",
+  //     rating: 4,
+  //     cost: "45 000 CDF",
+  //     hasReviewed: false,
+  //   },
+  // ];
 
-  const loyaltyPoints = 450;
+  // API calls for future backend integration
+
+  const fetchAppointments = async () => {
+    try {
+      const response = await axiosdb.get('/api/client/appointments');
+      // setUpcomingAppointments(response.data.upcoming);
+      // setAppointmentHistory(response.data.history);
+    } catch (error) {
+      console.error('Error fetching appointments:', error);
+    }
+  };
+
+  // const cancelAppointment = async (appointmentId: number) => {
+  //   try {
+  //     await axiosdb.delete(`/api/appointments/${appointmentId}`);
+  //     // Refresh appointments
+  //   } catch (error) {
+  //     console.error('Error canceling appointment:', error);
+  //   }
+  // };
+
+  const submitReview = async (id: string, rating: number, review: string) => {
+    try {
+      await axiosdb.post(`/api/appointments/${id}/review`, { rating, review });
+      // Refresh appointments
+    } catch (error) {
+      console.error('Error submitting review:', error);
+    }
+  };
+
+  const shareReferralCode = async () => {
+    try {
+      const response = await axiosdb.get('/api/client/referral-code');
+      // Share code
+    } catch (error) {
+      console.error('Error fetching referral code:', error);
+    }
+  };
+
+  // const loyaltyPoints = 450;
   const pointsToNextReward = 550;
-  const totalAppointments = 8;
+  const totalAppointments = appointments.length;
   const referrals = 2;
 
   const stats = {
@@ -190,8 +274,7 @@ export default function ClientDashboard({
     totalAppointments,
     referrals,
     status: "VIP",
-    unreadNotifications: notifications.filter((n) => n.unread)
-      .length,
+    unreadNotifications: notifications.length,
     nextFreeService: Math.ceil(5 - (totalAppointments % 5)),
     nextFreeReferral: Math.ceil(5 - referrals),
   };
@@ -230,46 +313,6 @@ export default function ClientDashboard({
       color: "from-gray-300 to-gray-400",
     },
   ];
-
-  // API calls for future backend integration
-  /* 
-  const fetchAppointments = async () => {
-    try {
-      const response = await axios.get('/api/client/appointments');
-      // setUpcomingAppointments(response.data.upcoming);
-      // setAppointmentHistory(response.data.history);
-    } catch (error) {
-      console.error('Error fetching appointments:', error);
-    }
-  };
-
-  const cancelAppointment = async (appointmentId: number) => {
-    try {
-      await axios.delete(`/api/appointments/${appointmentId}`);
-      // Refresh appointments
-    } catch (error) {
-      console.error('Error canceling appointment:', error);
-    }
-  };
-
-  const submitReview = async (appointmentId: number, rating: number, review: string) => {
-    try {
-      await axios.post(`/api/appointments/${appointmentId}/review`, { rating, review });
-      // Refresh appointments
-    } catch (error) {
-      console.error('Error submitting review:', error);
-    }
-  };
-
-  const shareReferralCode = async () => {
-    try {
-      const response = await axios.get('/api/client/referral-code');
-      // Share code
-    } catch (error) {
-      console.error('Error fetching referral code:', error);
-    }
-  };
-  */
 
   const handleCancelAppointment = (appointment: any) => {
     setSelectedAppointment(appointment);
@@ -313,7 +356,7 @@ export default function ClientDashboard({
   };
 
   return (
-    <div className="min-h-screen py-24 bg-gradient-to-br from-pink-50 via-purple-50 to-white">
+    <div className="min-h-screen py-24 bg-linear-to-br from-pink-50 via-purple-50 to-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Welcome Section */}
         <div className="mb-12">
@@ -323,7 +366,7 @@ export default function ClientDashboard({
                 Bienvenue, {user?.name?.split(" ")[0]} ! 💖
               </h1>
               <p className="text-xl text-gray-600">
-                Votre espace beauté personnel
+                Bienvenue dans votre espace client
               </p>
             </div>
 
@@ -360,7 +403,7 @@ export default function ClientDashboard({
                         {notifications.map((notification) => (
                           <Card
                             key={notification.id}
-                            className={`p-4 rounded-xl border cursor-pointer hover:shadow-md transition-shadow ${notification.unread
+                            className={`p-4 rounded-xl border cursor-pointer hover:shadow-md transition-shadow ${notification.isRead
                               ? "bg-pink-50 border-pink-200"
                               : "bg-white border-gray-200"
                               }`}
@@ -376,7 +419,7 @@ export default function ClientDashboard({
                                   <h3 className="text-sm text-gray-900">
                                     {notification.title}
                                   </h3>
-                                  {notification.unread && (
+                                  {notification.isRead && (
                                     <div className="w-2 h-2 rounded-full bg-pink-500 mt-1" />
                                   )}
                                 </div>
@@ -384,7 +427,7 @@ export default function ClientDashboard({
                                   {notification.message}
                                 </p>
                                 <p className="text-xs text-gray-500 mt-2">
-                                  {notification.time}
+                                  {notification.createdAt}
                                 </p>
                               </div>
                             </div>
@@ -397,36 +440,58 @@ export default function ClientDashboard({
               </Sheet>
 
               <Link href="/appointments">
-                <Button className="bg-gradient-to-r from-pink-500 to-amber-400 hover:from-pink-600 hover:to-amber-500 text-white rounded-full px-6 shadow-lg hover:shadow-xl transition-shadow">
+                <Button className="bg-linear-to-r from-pink-500 to-amber-400 hover:from-pink-600 hover:to-amber-500 text-white rounded-full px-6 shadow-lg hover:shadow-xl transition-shadow">
                   <Calendar className="w-4 h-4 mr-2" />
                   Nouveau rendez-vous
                 </Button>
               </Link>
             </div>
+            <Card className="p-6 mb-8 bg-gradient-to-br from-pink-500 to-amber-400 text-white">
+              <div className="flex justify-between items-center">
+                <div>
+                  <h2 className="text-2xl font-bold mb-2">
+                    {loyaltyPoints} Points
+                  </h2>
+                  <Badge variant="secondary" className="bg-white/20">
+                    {tier}
+                  </Badge>
+                </div>
+                <div className="text-right">
+                  <p className="text-sm opacity-90">
+                    {5 - (appointments.length % 5)} rendez-vous avant service gratuit
+                  </p>
+                </div>
+              </div>
+            </Card>
           </div>
 
           {/* Stats Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <Card className="bg-gradient-to-br from-pink-50 to-rose-50 border-0 shadow-lg p-6 rounded-2xl hover:shadow-xl transition-shadow">
+            <Card className="bg-linear-to-br from-pink-50 to-rose-50 border-0 shadow-lg p-6 rounded-2xl hover:shadow-xl transition-shadow">
               <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600 mb-1">
-                    Points Fidélité
-                  </p>
-                  <p className="text-3xl text-gray-900">
-                    {loyaltyPoints}
-                  </p>
-                  <p className="text-xs text-pink-600 mt-1">
-                    +50 ce mois
-                  </p>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                  <Card className="p-6">
+                    <h3 className="text-sm text-gray-600 mb-2">Rendez-vous</h3>
+                    <p className="text-3xl font-bold">{appointments.length}</p>
+                  </Card>
+
+                  <Card className="p-6">
+                    <h3 className="text-sm text-gray-600 mb-2">Points de fidélité</h3>
+                    <p className="text-3xl font-bold">{loyaltyPoints}</p>
+                  </Card>
+
+                  <Card className="p-6">
+                    <h3 className="text-sm text-gray-600 mb-2">Notifications</h3>
+                    <p className="text-3xl font-bold">{unreadCount}</p>
+                  </Card>
                 </div>
-                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-pink-400 to-rose-400 flex items-center justify-center">
+                <div className="w-12 h-12 rounded-full bg-linear-to-br from-pink-400 to-rose-400 flex items-center justify-center">
                   <Gift className="w-6 h-6 text-white" />
                 </div>
               </div>
             </Card>
 
-            <Card className="bg-gradient-to-br from-purple-50 to-pink-50 border-0 shadow-lg p-6 rounded-2xl hover:shadow-xl transition-shadow">
+            <Card className="bg-linear-to-br from-purple-50 to-pink-50 border-0 shadow-lg p-6 rounded-2xl hover:shadow-xl transition-shadow">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-600 mb-1">
@@ -439,13 +504,13 @@ export default function ClientDashboard({
                     Depuis juin
                   </p>
                 </div>
-                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center">
+                <div className="w-12 h-12 rounded-full bg-linear-to-br from-purple-400 to-pink-400 flex items-center justify-center">
                   <Calendar className="w-6 h-6 text-white" />
                 </div>
               </div>
             </Card>
 
-            <Card className="bg-gradient-to-br from-amber-50 to-orange-50 border-0 shadow-lg p-6 rounded-2xl hover:shadow-xl transition-shadow">
+            <Card className="bg-linear-to-br from-amber-50 to-orange-50 border-0 shadow-lg p-6 rounded-2xl hover:shadow-xl transition-shadow">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-600 mb-1">
@@ -458,13 +523,13 @@ export default function ClientDashboard({
                     {stats.nextFreeReferral} pour cadeau
                   </p>
                 </div>
-                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-amber-400 to-orange-400 flex items-center justify-center">
+                <div className="w-12 h-12 rounded-full bg-linear-to-br from-amber-400 to-orange-400 flex items-center justify-center">
                   <TrendingUp className="w-6 h-6 text-white" />
                 </div>
               </div>
             </Card>
 
-            <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-0 shadow-lg p-6 rounded-2xl hover:shadow-xl transition-shadow">
+            <Card className="bg-linear-to-br from-green-50 to-emerald-50 border-0 shadow-lg p-6 rounded-2xl hover:shadow-xl transition-shadow">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-600 mb-1">
@@ -477,7 +542,7 @@ export default function ClientDashboard({
                     Privilèges actifs
                   </p>
                 </div>
-                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-green-400 to-emerald-400 flex items-center justify-center">
+                <div className="w-12 h-12 rounded-full bg-linear-to-br from-green-400 to-emerald-400 flex items-center justify-center">
                   <Award className="w-6 h-6 text-white" />
                 </div>
               </div>
@@ -486,7 +551,7 @@ export default function ClientDashboard({
         </div>
 
         {/* Loyalty Progress Banner */}
-        <Card className="bg-gradient-to-br from-pink-500 via-purple-500 to-amber-500 border-0 shadow-2xl p-8 rounded-3xl mb-12 text-white hover:shadow-3xl transition-shadow">
+        <Card className="bg-linear-to-br from-pink-500 via-purple-500 to-amber-500 border-0 shadow-2xl p-8 rounded-3xl mb-12 text-white hover:shadow-3xl transition-shadow">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
               <Gift className="w-8 h-8" />
@@ -541,6 +606,35 @@ export default function ClientDashboard({
           </div>
         </Card>
 
+        {/* Recent Loyalty Transactions */}
+        <Card className="p-6">
+          <h2 className="text-xl font-bold mb-4">
+            Historique de points
+          </h2>
+
+          <div className="space-y-3">
+            {transactions.slice(0, 5).map(transaction => (
+              <div
+                key={transaction.id}
+                className="flex items-center justify-between py-2 border-b last:border-0"
+              >
+                <div>
+                  <p className="font-medium">{transaction.description}</p>
+                  <p className="text-sm text-gray-500">
+                    {new Date(transaction.createdAt).toLocaleDateString('fr-FR')}
+                  </p>
+                </div>
+                <p
+                  className={`font-bold ${transaction.points > 0 ? 'text-green-600' : 'text-red-600'
+                    }`}
+                >
+                  {transaction.points > 0 ? '+' : ''}{transaction.points} pts
+                </p>
+              </div>
+            ))}
+          </div>
+        </Card>
+
         {/* Main Content Tabs */}
         <Tabs defaultValue="appointments" className="space-y-6">
           <TabsList className="bg-white border border-gray-200 p-1 rounded-xl shadow-sm">
@@ -576,20 +670,20 @@ export default function ClientDashboard({
               <h2 className="text-2xl text-gray-900 mb-6">
                 Rendez-vous à venir
               </h2>
-              {upcomingAppointments.length > 0 ? (
+              {appointments.length > 0 ? (
                 <div className="space-y-4">
-                  {upcomingAppointments.map((appointment) => (
+                  {appointments.map((appointment) => (
                     <Card
                       key={appointment.id}
-                      className="bg-gradient-to-br from-pink-50 to-purple-50 border-0 shadow-md p-6 rounded-2xl hover:shadow-xl transition-shadow"
+                      className="bg-linear-to-br from-pink-50 to-purple-50 border-0 shadow-md p-6 rounded-2xl hover:shadow-xl transition-shadow"
                     >
                       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                         <div className="flex items-start gap-4 flex-1">
                           <Avatar className="w-14 h-14">
-                            <AvatarFallback className="bg-gradient-to-br from-pink-400 to-purple-400 text-white text-lg">
-                              {appointment.worker
+                            <AvatarFallback className="bg-linear-to-br from-pink-400 to-purple-400 text-white text-lg">
+                              {appointment.worker?.name
                                 .split(" ")
-                                .map((n) => n[0])
+                                .map((n: any) => n[0])
                                 .join("")}
                             </AvatarFallback>
                           </Avatar>
@@ -597,15 +691,18 @@ export default function ClientDashboard({
                           <div className="flex-1">
                             <div className="flex items-center gap-3 mb-3">
                               <h3 className="text-xl text-gray-900">
-                                {appointment.service}
+                                {appointment.service?.name}
                               </h3>
                               <Badge
-                                className={`${appointment.status === "confirmed" ? "bg-green-500" : "bg-amber-500"} text-white`}
+                                variant={
+                                  appointment.status === 'confirmed' ? 'default' :
+                                    appointment.status === 'pending' ? 'secondary' :
+                                      'destructive'
+                                }
                               >
-                                {appointment.status ===
-                                  "confirmed"
-                                  ? "Confirmé"
-                                  : "En attente"}
+                                {appointment.status === 'confirmed' ? 'Confirmé' :
+                                  appointment.status === 'pending' ? 'En attente' :
+                                    'Annulé'}
                               </Badge>
                             </div>
 
@@ -627,12 +724,12 @@ export default function ClientDashboard({
                               <div className="flex items-center">
                                 <User className="w-4 h-4 mr-2 text-pink-500" />
                                 <span>
-                                  {appointment.worker}
+                                  {appointment?.worker?.name}
                                 </span>
                                 <div className="flex items-center ml-2">
                                   <Star className="w-3 h-3 fill-amber-400 text-amber-400 mr-1" />
                                   <span className="text-sm">
-                                    {appointment.workerRating}
+                                    {appointment.notes}
                                   </span>
                                 </div>
                               </div>
@@ -640,7 +737,7 @@ export default function ClientDashboard({
                                 <MapPin className="w-4 h-4 mr-2 text-pink-500" />
                                 <span>
                                   {appointment.location} -{" "}
-                                  {appointment.address}
+                                  {appointment.location}
                                 </span>
                               </div>
                               <div className="flex items-center">
@@ -670,28 +767,28 @@ export default function ClientDashboard({
                                   Détails du Rendez-vous
                                 </DialogTitle>
                                 <DialogDescription>
-                                  {appointment.service}
+                                  {appointment.service?.name}
                                 </DialogDescription>
                               </DialogHeader>
                               <div className="space-y-4 py-4">
                                 <div className="flex items-center gap-3">
                                   <Avatar className="w-16 h-16">
-                                    <AvatarFallback className="bg-gradient-to-br from-pink-400 to-purple-400 text-white text-xl">
-                                      {appointment.worker
+                                    <AvatarFallback className="bg-linear-to-br from-pink-400 to-purple-400 text-white text-xl">
+                                      {appointment.worker?.name
                                         .split(" ")
-                                        .map((n) => n[0])
+                                        .map((n: any) => n[0])
                                         .join("")}
                                     </AvatarFallback>
                                   </Avatar>
                                   <div>
                                     <h3 className="text-lg text-gray-900">
-                                      {appointment.worker}
+                                      {appointment.worker?.name}
                                     </h3>
                                     <div className="flex items-center gap-1">
                                       <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
                                       <span className="text-sm text-gray-600">
                                         {
-                                          appointment.workerRating
+                                          appointment.notes
                                         }
                                         /5
                                       </span>
@@ -713,7 +810,7 @@ export default function ClientDashboard({
                                     <MapPin className="w-4 h-4 text-pink-500" />
                                     <span className="text-gray-600">
                                       {appointment.location} -{" "}
-                                      {appointment.address}
+                                      {appointment.location}
                                     </span>
                                   </div>
                                 </div>
@@ -803,7 +900,7 @@ export default function ClientDashboard({
                     Aucun rendez-vous à venir
                   </p>
                   <Link href="/appointments">
-                    <Button className="bg-gradient-to-r from-pink-500 to-amber-400 hover:from-pink-600 hover:to-amber-500 text-white rounded-full px-6">
+                    <Button className="bg-linear-to-r from-pink-500 to-amber-400 hover:from-pink-600 hover:to-amber-500 text-white rounded-full px-6">
                       Réserver maintenant
                     </Button>
                   </Link>
@@ -819,7 +916,7 @@ export default function ClientDashboard({
                 Historique des rendez-vous
               </h2>
               <div className="space-y-4">
-                {appointmentHistory.map((appointment) => (
+                {appointments.map((appointment) => (
                   <Card
                     key={appointment.id}
                     className="bg-white border border-gray-200 p-6 rounded-2xl hover:shadow-lg transition-shadow"
@@ -827,17 +924,17 @@ export default function ClientDashboard({
                     <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                       <div className="flex items-start gap-4 flex-1">
                         <Avatar className="w-12 h-12">
-                          <AvatarFallback className="bg-gradient-to-br from-purple-400 to-pink-400 text-white">
-                            {appointment.worker
+                          <AvatarFallback className="bg-linear-to-br from-purple-400 to-pink-400 text-white">
+                            {appointment.worker?.name
                               .split(" ")
-                              .map((n) => n[0])
+                              .map((n: any) => n[0])
                               .join("")}
                           </AvatarFallback>
                         </Avatar>
 
                         <div className="flex-1">
                           <h3 className="text-lg text-gray-900 mb-2">
-                            {appointment.service}
+                            {appointment.service?.name}
                           </h3>
                           <div className="space-y-1 text-sm text-gray-600">
                             <div className="flex items-center">
@@ -846,19 +943,19 @@ export default function ClientDashboard({
                             </div>
                             <div className="flex items-center">
                               <User className="w-4 h-4 mr-2 text-gray-400" />
-                              <span>{appointment.worker}</span>
+                              <span>{appointment.worker?.name}</span>
                             </div>
                           </div>
                         </div>
                       </div>
 
                       <div className="flex flex-col items-end gap-2">
-                        {appointment.hasReviewed ? (
+                        {appointment.review ? (
                           <div className="flex items-center gap-1">
                             {[...Array(5)].map((_, i) => (
                               <Star
                                 key={i}
-                                className={`w-4 h-4 ${i < appointment.rating
+                                className={`w-4 h-4 ${i < appointment.price
                                   ? "fill-amber-400 text-amber-400"
                                   : "text-gray-300"
                                   }`}
@@ -879,7 +976,7 @@ export default function ClientDashboard({
                           </Button>
                         )}
                         <p className="text-gray-900">
-                          {appointment.cost}
+                          {appointment.price}
                         </p>
                         <Link href="/appointments">
                           <Button
@@ -950,7 +1047,7 @@ export default function ClientDashboard({
 
                 <Separator className="my-6" />
 
-                <div className="bg-gradient-to-br from-pink-50 to-purple-50 rounded-xl p-4 mb-4">
+                <div className="bg-linear-to-br from-pink-50 to-purple-50 rounded-xl p-4 mb-4">
                   <div className="flex items-center gap-2 mb-2">
                     <Share2 className="w-5 h-5 text-pink-600" />
                     <h3 className="text-gray-900">
@@ -971,13 +1068,13 @@ export default function ClientDashboard({
                   </div>
                 </div>
 
-                <Button className="w-full bg-gradient-to-r from-pink-500 to-amber-400 hover:from-pink-600 hover:to-amber-500 text-white rounded-full">
+                <Button className="w-full bg-linear-to-r from-pink-500 to-amber-400 hover:from-pink-600 hover:to-amber-500 text-white rounded-full">
                   <Share2 className="w-4 h-4 mr-2" />
                   Parrainer une amie
                 </Button>
               </Card>
 
-              <Card className="border-0 shadow-xl rounded-2xl p-8 bg-gradient-to-br from-amber-50 to-orange-50">
+              <Card className="border-0 shadow-xl rounded-2xl p-8 bg-linear-to-br from-amber-50 to-orange-50">
                 <h2 className="text-2xl text-gray-900 mb-6">
                   Badges & Récompenses
                 </h2>
@@ -993,7 +1090,7 @@ export default function ClientDashboard({
                           }`}
                       >
                         <div
-                          className={`w-12 h-12 rounded-full bg-gradient-to-br ${reward.color} flex items-center justify-center`}
+                          className={`w-12 h-12 rounded-full bg-linear-to-br ${reward.color} flex items-center justify-center`}
                         >
                           <Icon className="w-6 h-6 text-white" />
                         </div>
@@ -1030,9 +1127,9 @@ export default function ClientDashboard({
               <h2 className="text-2xl text-gray-900 mb-6">
                 Mon Abonnement
               </h2>
-              <div className="bg-gradient-to-br from-pink-50 to-purple-50 rounded-2xl p-8 mb-6">
+              <div className="bg-linear-to-br from-pink-50 to-purple-50 rounded-2xl p-8 mb-6">
                 <div className="flex items-center gap-4 mb-4">
-                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-pink-400 to-purple-400 flex items-center justify-center">
+                  <div className="w-16 h-16 rounded-full bg-linear-to-br from-pink-400 to-purple-400 flex items-center justify-center">
                     <Crown className="w-8 h-8 text-white" />
                   </div>
                   <div>
@@ -1068,7 +1165,7 @@ export default function ClientDashboard({
                 </div>
 
                 <Link href="/memberships">
-                  <Button className="w-full bg-gradient-to-r from-pink-500 to-amber-400 hover:from-pink-600 hover:to-amber-500 text-white rounded-full px-8 shadow-lg hover:shadow-xl transition-shadow">
+                  <Button className="w-full bg-linear-to-r from-pink-500 to-amber-400 hover:from-pink-600 hover:to-amber-500 text-white rounded-full px-8 shadow-lg hover:shadow-xl transition-shadow">
                     <Crown className="w-4 h-4 mr-2" />
                     Découvrir les abonnements
                   </Button>
@@ -1096,14 +1193,14 @@ export default function ClientDashboard({
             <div className="py-4">
               <div className="bg-pink-50 rounded-lg p-4">
                 <p className="text-sm text-gray-900 mb-1">
-                  {selectedAppointment.service}
+                  {selectedAppointment.service?.name}
                 </p>
                 <p className="text-sm text-gray-600">
                   {selectedAppointment.date} à{" "}
                   {selectedAppointment.time}
                 </p>
                 <p className="text-sm text-gray-600">
-                  Avec {selectedAppointment.worker}
+                  Avec {selectedAppointment.worker?.name}
                 </p>
               </div>
             </div>
@@ -1184,7 +1281,7 @@ export default function ClientDashboard({
             </Button>
             <Button
               onClick={submitReviewHandler}
-              className="bg-gradient-to-r from-pink-500 to-amber-400 hover:from-pink-600 hover:to-amber-500 text-white"
+              className="bg-linear-to-r from-pink-500 to-amber-400 hover:from-pink-600 hover:to-amber-500 text-white"
               disabled={rating === 0}
             >
               Envoyer l'évaluation
