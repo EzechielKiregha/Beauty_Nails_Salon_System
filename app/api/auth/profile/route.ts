@@ -1,7 +1,7 @@
 "use server"
 import { NextRequest } from 'next/server';
 import prisma from '@/lib/prisma';
-import { getAuthenticatedUser, errorResponse, successResponse, handleApiError } from '@/lib/api/helpers';
+import { getAuthenticatedUser, successResponse, handleApiError } from '@/lib/api/helpers';
 
 export async function PATCH(request: NextRequest) {
   try {

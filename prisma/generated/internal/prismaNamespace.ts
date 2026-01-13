@@ -392,6 +392,7 @@ export const ModelName = {
   WorkerProfile: 'WorkerProfile',
   WorkerSchedule: 'WorkerSchedule',
   WorkerLeave: 'WorkerLeave',
+  Task: 'Task',
   Service: 'Service',
   ServiceAddOn: 'ServiceAddOn',
   ServicePackage: 'ServicePackage',
@@ -433,7 +434,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "account" | "session" | "verificationToken" | "clientProfile" | "workerProfile" | "workerSchedule" | "workerLeave" | "service" | "serviceAddOn" | "servicePackage" | "appointment" | "review" | "membership" | "membershipPurchase" | "loyaltyTransaction" | "referral" | "sale" | "saleItem" | "payment" | "dailyRegister" | "commission" | "inventoryItem" | "inventoryTransaction" | "inventoryUsage" | "reorderRequest" | "notification" | "marketingCampaign" | "discountCode" | "report" | "salonProfile" | "systemSetting" | "integration" | "auditLog"
+    modelProps: "user" | "account" | "session" | "verificationToken" | "clientProfile" | "workerProfile" | "workerSchedule" | "workerLeave" | "task" | "service" | "serviceAddOn" | "servicePackage" | "appointment" | "review" | "membership" | "membershipPurchase" | "loyaltyTransaction" | "referral" | "sale" | "saleItem" | "payment" | "dailyRegister" | "commission" | "inventoryItem" | "inventoryTransaction" | "inventoryUsage" | "reorderRequest" | "notification" | "marketingCampaign" | "discountCode" | "report" | "salonProfile" | "systemSetting" | "integration" | "auditLog"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1026,6 +1027,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.WorkerLeaveCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.WorkerLeaveCountAggregateOutputType> | number
+        }
+      }
+    }
+    Task: {
+      payload: Prisma.$TaskPayload<ExtArgs>
+      fields: Prisma.TaskFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TaskFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TaskPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TaskFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TaskPayload>
+        }
+        findFirst: {
+          args: Prisma.TaskFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TaskPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TaskFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TaskPayload>
+        }
+        findMany: {
+          args: Prisma.TaskFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TaskPayload>[]
+        }
+        create: {
+          args: Prisma.TaskCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TaskPayload>
+        }
+        createMany: {
+          args: Prisma.TaskCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.TaskCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TaskPayload>[]
+        }
+        delete: {
+          args: Prisma.TaskDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TaskPayload>
+        }
+        update: {
+          args: Prisma.TaskUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TaskPayload>
+        }
+        deleteMany: {
+          args: Prisma.TaskDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TaskUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.TaskUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TaskPayload>[]
+        }
+        upsert: {
+          args: Prisma.TaskUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TaskPayload>
+        }
+        aggregate: {
+          args: Prisma.TaskAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTask>
+        }
+        groupBy: {
+          args: Prisma.TaskGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TaskGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TaskCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TaskCountAggregateOutputType> | number
         }
       }
     }
@@ -3057,6 +3132,13 @@ export const ClientProfileScalarFieldEnum = {
   referredBy: 'referredBy',
   preferences: 'preferences',
   notes: 'notes',
+  birthday: 'birthday',
+  address: 'address',
+  favoriteServices: 'favoriteServices',
+  allergies: 'allergies',
+  prepaymentBalance: 'prepaymentBalance',
+  giftCardBalance: 'giftCardBalance',
+  referrals: 'referrals',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -3108,6 +3190,29 @@ export const WorkerLeaveScalarFieldEnum = {
 } as const
 
 export type WorkerLeaveScalarFieldEnum = (typeof WorkerLeaveScalarFieldEnum)[keyof typeof WorkerLeaveScalarFieldEnum]
+
+
+export const TaskScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  type: 'type',
+  status: 'status',
+  priority: 'priority',
+  assignedToWorkerId: 'assignedToWorkerId',
+  clientId: 'clientId',
+  appointmentId: 'appointmentId',
+  createdById: 'createdById',
+  dueAt: 'dueAt',
+  scheduledAt: 'scheduledAt',
+  completedAt: 'completedAt',
+  metadata: 'metadata',
+  isPrivate: 'isPrivate',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TaskScalarFieldEnum = (typeof TaskScalarFieldEnum)[keyof typeof TaskScalarFieldEnum]
 
 
 export const ServiceScalarFieldEnum = {
@@ -3655,16 +3760,16 @@ export type ListEnumTierFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaM
 
 
 /**
- * Reference to a field of type 'Decimal'
+ * Reference to a field of type 'Float'
  */
-export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
+export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
     
 
 
 /**
- * Reference to a field of type 'Decimal[]'
+ * Reference to a field of type 'Float[]'
  */
-export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
+export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
 
 
@@ -3693,6 +3798,48 @@ export type EnumLeaveStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$Pris
  * Reference to a field of type 'LeaveStatus[]'
  */
 export type ListEnumLeaveStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LeaveStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'TaskType'
+ */
+export type EnumTaskTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TaskType'>
+    
+
+
+/**
+ * Reference to a field of type 'TaskType[]'
+ */
+export type ListEnumTaskTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TaskType[]'>
+    
+
+
+/**
+ * Reference to a field of type 'TaskStatus'
+ */
+export type EnumTaskStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TaskStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'TaskStatus[]'
+ */
+export type ListEnumTaskStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TaskStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'TaskPriority'
+ */
+export type EnumTaskPriorityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TaskPriority'>
+    
+
+
+/**
+ * Reference to a field of type 'TaskPriority[]'
+ */
+export type ListEnumTaskPriorityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TaskPriority[]'>
     
 
 
@@ -3851,6 +3998,20 @@ export type ListEnumTransactionTypeFieldRefInput<$PrismaModel> = FieldRefInputTy
 
 
 /**
+ * Reference to a field of type 'Decimal'
+ */
+export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
+    
+
+
+/**
+ * Reference to a field of type 'Decimal[]'
+ */
+export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
+    
+
+
+/**
  * Reference to a field of type 'ReorderStatus'
  */
 export type EnumReorderStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ReorderStatus'>
@@ -3931,20 +4092,6 @@ export type EnumReportTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$Prism
  * Reference to a field of type 'ReportType[]'
  */
 export type ListEnumReportTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ReportType[]'>
-    
-
-
-/**
- * Reference to a field of type 'Float'
- */
-export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
-    
-
-
-/**
- * Reference to a field of type 'Float[]'
- */
-export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
 
 /**
@@ -4050,6 +4197,7 @@ export type GlobalOmitConfig = {
   workerProfile?: Prisma.WorkerProfileOmit
   workerSchedule?: Prisma.WorkerScheduleOmit
   workerLeave?: Prisma.WorkerLeaveOmit
+  task?: Prisma.TaskOmit
   service?: Prisma.ServiceOmit
   serviceAddOn?: Prisma.ServiceAddOnOmit
   servicePackage?: Prisma.ServicePackageOmit

@@ -4,7 +4,7 @@ import prisma from '@/lib/prisma';
 import { requireRole, errorResponse, successResponse, handleApiError } from '@/lib/api/helpers';
 
 export async function GET(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {

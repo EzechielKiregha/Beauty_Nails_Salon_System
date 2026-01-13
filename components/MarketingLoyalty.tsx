@@ -115,28 +115,28 @@ export default function MarketingLoyalty() {
             {/* Current Program */}
             <Card className="border-0 shadow-lg rounded-2xl p-8">
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-amber-400 to-orange-400 flex items-center justify-center">
+                <div className="w-12 h-12 rounded-full bg-linear-to-br from-amber-400 to-orange-400 flex items-center justify-center">
                   <Award className="w-6 h-6 text-white" />
                 </div>
                 <h3 className="text-2xl text-gray-900">Programme Actuel</h3>
               </div>
 
               <div className="space-y-4">
-                <Card className="bg-gradient-to-br from-purple-50 to-pink-50 border-0 p-4">
+                <Card className="bg-linear-to-br from-purple-50 to-pink-50 border-0 p-4">
                   <p className="text-sm text-gray-700 mb-1">Points par dépense</p>
                   <p className="text-2xl text-gray-900">
                     {loyaltyRules.pointsPerSpend} point / 1 000 CDF dépensé
                   </p>
                 </Card>
 
-                <Card className="bg-gradient-to-br from-blue-50 to-cyan-50 border-0 p-4">
+                <Card className="bg-linear-to-br from-blue-50 to-cyan-50 border-0 p-4">
                   <p className="text-sm text-gray-700 mb-1">Récompense par visites</p>
                   <p className="text-2xl text-gray-900">
                     Service gratuit après {loyaltyRules.appointmentsForReward} rendez-vous
                   </p>
                 </Card>
 
-                <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-0 p-4">
+                <Card className="bg-linear-to-br from-green-50 to-emerald-50 border-0 p-4">
                   <p className="text-sm text-gray-700 mb-1">Récompense par parrainages</p>
                   <p className="text-2xl text-gray-900">
                     Service gratuit après {loyaltyRules.referralsForReward} parrainages
@@ -144,7 +144,7 @@ export default function MarketingLoyalty() {
                 </Card>
               </div>
 
-              <Button className="w-full mt-6 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full">
+              <Button className="w-full mt-6 bg-linear-to-r from-purple-500 to-pink-500 text-white rounded-full">
                 Modifier Programme
               </Button>
             </Card>
@@ -152,7 +152,7 @@ export default function MarketingLoyalty() {
             {/* Rewards Tiers */}
             <Card className="border-0 shadow-lg rounded-2xl p-8">
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-green-400 to-emerald-400 flex items-center justify-center">
+                <div className="w-12 h-12 rounded-full bg-linear-to-br from-green-400 to-emerald-400 flex items-center justify-center">
                   <Gift className="w-6 h-6 text-white" />
                 </div>
                 <h3 className="text-2xl text-gray-900">Paliers de Récompenses</h3>
@@ -160,7 +160,7 @@ export default function MarketingLoyalty() {
 
               <div className="space-y-3">
                 {loyaltyRules.rewards.map((reward, idx) => (
-                  <Card key={idx} className="bg-gradient-to-r from-amber-50 to-orange-50 border-0 p-4">
+                  <Card key={idx} className="bg-linear-to-r from-amber-50 to-orange-50 border-0 p-4">
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-gray-900">{reward.reward}</p>
@@ -183,22 +183,22 @@ export default function MarketingLoyalty() {
             <Card className="border-0 shadow-lg rounded-2xl p-8 lg:col-span-2">
               <h3 className="text-2xl text-gray-900 mb-6">Statistiques Programme Fidélité</h3>
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <Card className="bg-gradient-to-br from-blue-50 to-cyan-50 border-0 p-6">
+                <Card className="bg-linear-to-br from-blue-50 to-cyan-50 border-0 p-6">
                   <Users className="w-8 h-8 text-blue-600 mb-2" />
                   <p className="text-3xl text-gray-900">247</p>
                   <p className="text-sm text-gray-600">Membres Actifs</p>
                 </Card>
-                <Card className="bg-gradient-to-br from-purple-50 to-pink-50 border-0 p-6">
+                <Card className="bg-linear-to-br from-purple-50 to-pink-50 border-0 p-6">
                   <Award className="w-8 h-8 text-purple-600 mb-2" />
                   <p className="text-3xl text-gray-900">1,245</p>
                   <p className="text-sm text-gray-600">Points Distribués</p>
                 </Card>
-                <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-0 p-6">
+                <Card className="bg-linear-to-br from-green-50 to-emerald-50 border-0 p-6">
                   <Gift className="w-8 h-8 text-green-600 mb-2" />
                   <p className="text-3xl text-gray-900">38</p>
                   <p className="text-sm text-gray-600">Récompenses Utilisées</p>
                 </Card>
-                <Card className="bg-gradient-to-br from-amber-50 to-orange-50 border-0 p-6">
+                <Card className="bg-linear-to-br from-amber-50 to-orange-50 border-0 p-6">
                   <TrendingUp className="w-8 h-8 text-amber-600 mb-2" />
                   <p className="text-3xl text-gray-900">+15%</p>
                   <p className="text-sm text-gray-600">Rétention Clients</p>
@@ -214,7 +214,7 @@ export default function MarketingLoyalty() {
             <Card className="border-0 shadow-lg rounded-2xl p-8">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-2xl text-gray-900">Campagnes Marketing</h3>
-                <Button className="bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-full">
+                <Button className="bg-linear-to-r from-pink-500 to-purple-500 text-white rounded-full">
                   + Nouvelle Campagne
                 </Button>
               </div>
@@ -291,22 +291,22 @@ export default function MarketingLoyalty() {
 
             {/* Campaign Performance */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <Card className="bg-gradient-to-br from-blue-50 to-cyan-50 border-0 p-6">
+              <Card className="bg-linear-to-br from-blue-50 to-cyan-50 border-0 p-6">
                 <Send className="w-8 h-8 text-blue-600 mb-2" />
                 <p className="text-3xl text-gray-900">392</p>
                 <p className="text-sm text-gray-600">Total Envois</p>
               </Card>
-              <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-0 p-6">
+              <Card className="bg-linear-to-br from-green-50 to-emerald-50 border-0 p-6">
                 <Target className="w-8 h-8 text-green-600 mb-2" />
                 <p className="text-3xl text-gray-900">35</p>
                 <p className="text-sm text-gray-600">Conversions</p>
               </Card>
-              <Card className="bg-gradient-to-br from-purple-50 to-pink-50 border-0 p-6">
+              <Card className="bg-linear-to-br from-purple-50 to-pink-50 border-0 p-6">
                 <TrendingUp className="w-8 h-8 text-purple-600 mb-2" />
                 <p className="text-3xl text-gray-900">8.9%</p>
                 <p className="text-sm text-gray-600">Taux Conversion</p>
               </Card>
-              <Card className="bg-gradient-to-br from-amber-50 to-orange-50 border-0 p-6">
+              <Card className="bg-linear-to-br from-amber-50 to-orange-50 border-0 p-6">
                 <p className="text-sm text-gray-600 mb-1">ROI Campagnes</p>
                 <p className="text-2xl text-green-600">1 050 000 CDF</p>
               </Card>
@@ -318,7 +318,7 @@ export default function MarketingLoyalty() {
         <TabsContent value="birthday">
           <Card className="border-0 shadow-lg rounded-2xl p-8">
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-pink-400 to-rose-400 flex items-center justify-center">
+              <div className="w-12 h-12 rounded-full bg-linear-to-br from-pink-400 to-rose-400 flex items-center justify-center">
                 <Cake className="w-6 h-6 text-white" />
               </div>
               <div>
@@ -329,7 +329,7 @@ export default function MarketingLoyalty() {
 
             <div className="space-y-3 mb-6">
               {birthdayClients.map((client, idx) => (
-                <Card key={idx} className="bg-gradient-to-r from-pink-50 to-purple-50 border-0 p-4">
+                <Card key={idx} className="bg-linear-to-r from-pink-50 to-purple-50 border-0 p-4">
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-gray-900">{client.name}</p>
@@ -350,7 +350,7 @@ export default function MarketingLoyalty() {
               ))}
             </div>
 
-            <Card className="bg-gradient-to-br from-amber-50 to-orange-50 border-0 p-6">
+            <Card className="bg-linear-to-br from-amber-50 to-orange-50 border-0 p-6">
               <h4 className="text-lg text-gray-900 mb-4">Message d'Anniversaire Par Défaut</h4>
               <Textarea
                 placeholder="Chère [NOM], Joyeux Anniversaire! 🎉 Profitez de 20% de réduction sur tous nos services ce mois-ci. L'équipe Beauty Nails vous souhaite une merveilleuse journée!"
@@ -358,7 +358,7 @@ export default function MarketingLoyalty() {
                 className="mb-4 rounded-xl"
               />
               <div className="flex gap-3">
-                <Button className="flex-1 bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-full">
+                <Button className="flex-1 bg-linear-to-r from-pink-500 to-purple-500 text-white rounded-full">
                   Sauvegarder Message
                 </Button>
                 <Button variant="outline" className="rounded-full">
@@ -373,7 +373,7 @@ export default function MarketingLoyalty() {
         <TabsContent value="referral">
           <Card className="border-0 shadow-lg rounded-2xl p-8">
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-cyan-400 flex items-center justify-center">
+              <div className="w-12 h-12 rounded-full bg-linear-to-br from-blue-400 to-cyan-400 flex items-center justify-center">
                 <Users className="w-6 h-6 text-white" />
               </div>
               <div>
@@ -384,9 +384,9 @@ export default function MarketingLoyalty() {
 
             <div className="space-y-3 mb-6">
               {topReferrers.map((referrer, idx) => (
-                <Card key={idx} className={`border-0 p-4 ${referrer.status === 'vip' ? 'bg-gradient-to-r from-amber-50 to-orange-50' :
-                  referrer.status === 'eligible' ? 'bg-gradient-to-r from-green-50 to-emerald-50' :
-                    'bg-gradient-to-r from-blue-50 to-cyan-50'
+                <Card key={idx} className={`border-0 p-4 ${referrer.status === 'vip' ? 'bg-linear-to-r from-amber-50 to-orange-50' :
+                  referrer.status === 'eligible' ? 'bg-linear-to-r from-green-50 to-emerald-50' :
+                    'bg-linear-to-r from-blue-50 to-cyan-50'
                   }`}>
                   <div className="flex items-center justify-between">
                     <div>
@@ -408,16 +408,16 @@ export default function MarketingLoyalty() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <Card className="bg-gradient-to-br from-blue-50 to-cyan-50 border-0 p-6">
+              <Card className="bg-linear-to-br from-blue-50 to-cyan-50 border-0 p-6">
                 <p className="text-sm text-gray-600 mb-1">Total Parrainages</p>
                 <p className="text-3xl text-gray-900">87</p>
               </Card>
-              <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-0 p-6">
+              <Card className="bg-linear-to-br from-green-50 to-emerald-50 border-0 p-6">
                 <p className="text-sm text-gray-600 mb-1">Nouvelles Clientes</p>
                 <p className="text-3xl text-gray-900">63</p>
                 <p className="text-xs text-green-600">Taux conversion: 72%</p>
               </Card>
-              <Card className="bg-gradient-to-br from-purple-50 to-pink-50 border-0 p-6">
+              <Card className="bg-linear-to-br from-purple-50 to-pink-50 border-0 p-6">
                 <p className="text-sm text-gray-600 mb-1">Récompenses Données</p>
                 <p className="text-3xl text-gray-900">17</p>
               </Card>
@@ -467,7 +467,7 @@ export default function MarketingLoyalty() {
                 </div>
 
                 <div className="flex gap-3">
-                  <Button className="flex-1 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-full">
+                  <Button className="flex-1 bg-linear-to-r from-blue-500 to-cyan-500 text-white rounded-full">
                     <Send className="w-4 h-4 mr-2" />
                     Envoyer Maintenant
                   </Button>
@@ -516,7 +516,7 @@ export default function MarketingLoyalty() {
                 </Card>
 
                 <div className="flex gap-3">
-                  <Button className="flex-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full">
+                  <Button className="flex-1 bg-linear-to-r from-purple-500 to-pink-500 text-white rounded-full">
                     <Send className="w-4 h-4 mr-2" />
                     Envoyer SMS
                   </Button>

@@ -1,7 +1,7 @@
 "use server"
 import { NextRequest } from 'next/server';
 import prisma from '@/lib/prisma';
-import { requireRole, errorResponse, successResponse, handleApiError } from '@/lib/api/helpers';
+import { requireRole, successResponse, errorResponse, handleApiError } from '@/lib/api/helpers';
 
 export async function GET(request: NextRequest) {
   try {
@@ -66,3 +66,65 @@ export async function GET(request: NextRequest) {
     return handleApiError(error);
   }
 }
+
+export async function POST(request: NextRequest) {
+  try {
+    await requireRole(['admin']);
+
+    const body = await request.json();
+    const {
+      name,
+      email,
+      phone,
+      tier,
+      notes,
+      birthday,
+      address,
+      allergies,
+      favoriteServices,
+      prepaymentBalance,
+      giftCardBalance,
+      referrals,
+      password,
+    } = body;
+
+    if (!name || !email || !phone) {
+      throw new Error('Name, email and phone are required');
+    }
+
+    const pwd = password || Math.random().toString(36).slice(2, 10);
+    const referralCode = 'ref_' + Math.random().toString(36).slice(2, 8);
+
+    const user = await prisma.user.create({
+      data: {
+        name,
+        email,
+        phone,
+        password: pwd,
+        role: 'client',
+        clientProfile: {
+          create: {
+            tier: tier || 'Regular',
+            referralCode,
+            notes,
+            birthday: birthday ? new Date(birthday) : undefined,
+            address: address || undefined,
+            allergies: allergies || undefined,
+            favoriteServices: Array.isArray(favoriteServices) ? favoriteServices : (favoriteServices ? String(favoriteServices).split(',').map(s=>s.trim()).filter(Boolean) : []),
+            prepaymentBalance: prepaymentBalance ? Number(prepaymentBalance) : undefined,
+            giftCardBalance: giftCardBalance ? Number(giftCardBalance) : undefined,
+            referrals: referrals ? Number(referrals) : undefined,
+          },
+        },
+      },
+      include: { clientProfile: true },
+    });
+
+    return successResponse({ message: 'Client créé', client: user.clientProfile }, 201);
+  } catch (error: any) {
+    if (error?.code === 'P2002') {
+      return errorResponse('Email ou téléphone déjà utilisé', 400);
+    }
+    return handleApiError(error);
+  }
+} 

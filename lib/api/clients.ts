@@ -5,11 +5,20 @@ export interface Client {
   tier: 'Regular' | 'VIP' | 'Premium';
   loyaltyPoints: number;
   totalAppointments: number;
-  totalSpent: number;
+  // totalSpent may be a number from the server; UI may display as string
+  totalSpent: number | string;
   referralCode: string;
   referredBy?: string;
   preferences?: any;
   notes?: string;
+  // new profile fields
+  birthday?: string;
+  address?: string;
+  favoriteServices?: string[];
+  allergies?: string;
+  prepaymentBalance?: number | string;
+  giftCardBalance?: number | string;
+  referrals?: number;
   createdAt: string;
   updatedAt: string;
   user?: {
@@ -58,6 +67,12 @@ export const clientsApi = {
   // Update client notes
   updateClientNotes: async (id: string, notes: string): Promise<{ client: Client; message: string }> => {
     const { data } = await axiosdb.patch(`/clients/${id}/notes`, { notes });
+    return data;
+  },
+
+  // Create client (admin)
+  createClient: async (payload: { name: string; email: string; phone: string; tier?: string; notes?: string; password?: string; birthday?: string; address?: string; allergies?: string; favoriteServices?: string[]; prepaymentBalance?: number | string; giftCardBalance?: number | string; referrals?: number; }) => {
+    const { data } = await axiosdb.post('/clients', payload);
     return data;
   },
 

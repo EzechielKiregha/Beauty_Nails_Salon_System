@@ -108,7 +108,7 @@ export default function ReportsAnalytics() {
               <SelectItem value="year">Cette Année</SelectItem>
             </SelectContent>
           </Select>
-          <Button className="bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-full">
+          <Button className="bg-linear-to-r from-green-500 to-emerald-500 text-white rounded-full">
             <Download className="w-4 h-4 mr-2" />
             Exporter PDF
           </Button>
@@ -117,7 +117,7 @@ export default function ReportsAnalytics() {
 
       {/* Key Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-0 shadow-lg p-6">
+        <Card className="bg-linear-to-br from-green-50 to-emerald-50 border-0 shadow-lg p-6">
           <DollarSign className="w-8 h-8 text-green-600 mb-2" />
           <p className="text-sm text-gray-600 mb-1">Revenus Mensuels</p>
           <p className="text-3xl text-gray-900">30,2M CDF</p>
@@ -127,7 +127,7 @@ export default function ReportsAnalytics() {
           </div>
         </Card>
 
-        <Card className="bg-gradient-to-br from-blue-50 to-cyan-50 border-0 shadow-lg p-6">
+        <Card className="bg-linear-to-br from-blue-50 to-cyan-50 border-0 shadow-lg p-6">
           <Calendar className="w-8 h-8 text-blue-600 mb-2" />
           <p className="text-sm text-gray-600 mb-1">Rendez-vous</p>
           <p className="text-3xl text-gray-900">258</p>
@@ -137,7 +137,7 @@ export default function ReportsAnalytics() {
           </div>
         </Card>
 
-        <Card className="bg-gradient-to-br from-purple-50 to-pink-50 border-0 shadow-lg p-6">
+        <Card className="bg-linear-to-br from-purple-50 to-pink-50 border-0 shadow-lg p-6">
           <Users className="w-8 h-8 text-purple-600 mb-2" />
           <p className="text-sm text-gray-600 mb-1">Nouvelles Clientes</p>
           <p className="text-3xl text-gray-900">32</p>
@@ -147,7 +147,7 @@ export default function ReportsAnalytics() {
           </div>
         </Card>
 
-        <Card className="bg-gradient-to-br from-amber-50 to-orange-50 border-0 shadow-lg p-6">
+        <Card className="bg-linear-to-br from-amber-50 to-orange-50 border-0 shadow-lg p-6">
           <Award className="w-8 h-8 text-amber-600 mb-2" />
           <p className="text-sm text-gray-600 mb-1">Rétention</p>
           <p className="text-3xl text-gray-900">87%</p>
@@ -222,7 +222,7 @@ export default function ReportsAnalytics() {
             <h3 className="text-2xl text-gray-900 mb-6">Performance des Services</h3>
             <div className="space-y-4">
               {servicePerformance.map((service, idx) => (
-                <Card key={idx} className="bg-gradient-to-r from-purple-50 to-pink-50 border-0 p-6 rounded-xl">
+                <Card key={idx} className="bg-linear-to-r from-purple-50 to-pink-50 border-0 p-6 rounded-xl">
                   <div className="flex items-center justify-between mb-4">
                     <h4 className="text-lg text-gray-900">{service.service}</h4>
                     <Badge className="bg-green-500 text-white">
@@ -249,7 +249,7 @@ export default function ReportsAnalytics() {
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-2 mt-4">
                     <div
-                      className="bg-gradient-to-r from-purple-500 to-pink-500 h-2 rounded-full"
+                      className="bg-linear-to-r from-purple-500 to-pink-500 h-2 rounded-full"
                       style={{ width: `${(service.revenue / 13500000) * 100}%` }}
                     />
                   </div>
@@ -289,17 +289,17 @@ export default function ReportsAnalytics() {
               <h3 className="text-xl text-gray-900 mb-6">Analyse Membres vs Non-Membres</h3>
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
-                  <Card className="bg-gradient-to-br from-amber-50 to-orange-50 border-0 p-4">
+                  <Card className="bg-linear-to-br from-amber-50 to-orange-50 border-0 p-4">
                     <p className="text-sm text-gray-600 mb-1">Membres VIP</p>
                     <p className="text-3xl text-gray-900">{membershipAnalytics.vip}</p>
                   </Card>
-                  <Card className="bg-gradient-to-br from-purple-50 to-pink-50 border-0 p-4">
+                  <Card className="bg-linear-to-br from-purple-50 to-pink-50 border-0 p-4">
                     <p className="text-sm text-gray-600 mb-1">Membres Premium</p>
                     <p className="text-3xl text-gray-900">{membershipAnalytics.premium}</p>
                   </Card>
                 </div>
 
-                <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-0 p-6">
+                <Card className="bg-linear-to-br from-green-50 to-emerald-50 border-0 p-6">
                   <p className="text-sm text-gray-700 mb-3">Revenus Membres</p>
                   <p className="text-3xl text-gray-900 mb-2">
                     {(membershipAnalytics.memberRevenue / 1000000).toFixed(1)}M CDF
@@ -309,7 +309,7 @@ export default function ReportsAnalytics() {
                   </p>
                 </Card>
 
-                <Card className="bg-gradient-to-br from-blue-50 to-cyan-50 border-0 p-6">
+                <Card className="bg-linear-to-br from-blue-50 to-cyan-50 border-0 p-6">
                   <p className="text-sm text-gray-700 mb-3">Revenus Non-Membres</p>
                   <p className="text-3xl text-gray-900 mb-2">
                     {(membershipAnalytics.nonMemberRevenue / 1000000).toFixed(1)}M CDF
@@ -319,7 +319,7 @@ export default function ReportsAnalytics() {
                   </p>
                 </Card>
 
-                <Card className="bg-gradient-to-br from-pink-50 to-rose-50 border-0 p-4">
+                <Card className="bg-linear-to-br from-pink-50 to-rose-50 border-0 p-4">
                   <p className="text-sm text-gray-700">💡 Les membres dépensent 114% de plus que les non-membres!</p>
                 </Card>
               </div>
@@ -346,9 +346,9 @@ export default function ReportsAnalytics() {
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-3 mb-3">
                     <div
-                      className={`h-3 rounded-full ${staff.utilization >= 85 ? 'bg-gradient-to-r from-green-500 to-emerald-500' :
-                        staff.utilization >= 75 ? 'bg-gradient-to-r from-blue-500 to-cyan-500' :
-                          'bg-gradient-to-r from-amber-500 to-orange-500'
+                      className={`h-3 rounded-full ${staff.utilization >= 85 ? 'bg-linear-to-r from-green-500 to-emerald-500' :
+                        staff.utilization >= 75 ? 'bg-linear-to-r from-blue-500 to-cyan-500' :
+                          'bg-linear-to-r from-amber-500 to-orange-500'
                         }`}
                       style={{ width: `${staff.utilization}%` }}
                     />
@@ -360,7 +360,7 @@ export default function ReportsAnalytics() {
                 </Card>
               ))}
             </div>
-            <div className="mt-6 p-6 bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl">
+            <div className="mt-6 p-6 bg-linear-to-br from-blue-50 to-cyan-50 rounded-xl">
               <h4 className="text-lg text-gray-900 mb-2">Statistiques Moyennes</h4>
               <div className="grid grid-cols-3 gap-4 text-center">
                 <div>
@@ -386,7 +386,7 @@ export default function ReportsAnalytics() {
             <h3 className="text-2xl text-gray-900 mb-6">Performance des Campagnes Marketing</h3>
             <div className="space-y-4">
               {marketingCampaigns.map((campaign, idx) => (
-                <Card key={idx} className="bg-gradient-to-r from-green-50 to-emerald-50 border-0 p-6 rounded-xl">
+                <Card key={idx} className="bg-linear-to-r from-green-50 to-emerald-50 border-0 p-6 rounded-xl">
                   <div className="flex items-center justify-between mb-4">
                     <div>
                       <p className="text-lg text-gray-900">{campaign.name}</p>
@@ -408,15 +408,15 @@ export default function ReportsAnalytics() {
             </div>
 
             <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-              <Card className="bg-gradient-to-br from-purple-50 to-pink-50 border-0 p-6">
+              <Card className="bg-linear-to-br from-purple-50 to-pink-50 border-0 p-6">
                 <p className="text-sm text-gray-600 mb-1">Total Conversions</p>
                 <p className="text-3xl text-gray-900">58</p>
               </Card>
-              <Card className="bg-gradient-to-br from-blue-50 to-cyan-50 border-0 p-6">
+              <Card className="bg-linear-to-br from-blue-50 to-cyan-50 border-0 p-6">
                 <p className="text-sm text-gray-600 mb-1">Total Revenus Marketing</p>
                 <p className="text-2xl text-gray-900">1,74M CDF</p>
               </Card>
-              <Card className="bg-gradient-to-br from-amber-50 to-orange-50 border-0 p-6">
+              <Card className="bg-linear-to-br from-amber-50 to-orange-50 border-0 p-6">
                 <p className="text-sm text-gray-600 mb-1">ROI Moyen</p>
                 <p className="text-3xl text-green-600">355%</p>
               </Card>
@@ -426,7 +426,7 @@ export default function ReportsAnalytics() {
       </Tabs>
 
       {/* Custom Report Generator */}
-      <Card className="border-0 shadow-lg rounded-2xl p-8 bg-gradient-to-br from-indigo-50 to-purple-50">
+      <Card className="border-0 shadow-lg rounded-2xl p-8 bg-linear-to-br from-indigo-50 to-purple-50">
         <div className="flex items-center gap-3 mb-6">
           <Clock className="w-8 h-8 text-indigo-600" />
           <div>
@@ -444,7 +444,7 @@ export default function ReportsAnalytics() {
           <Button variant="outline" className="rounded-full">
             ⭐ Performance Personnel
           </Button>
-          <Button className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-full">
+          <Button className="bg-linear-to-r from-indigo-500 to-purple-500 text-white rounded-full">
             + Rapport Personnalisé
           </Button>
         </div>

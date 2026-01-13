@@ -50,7 +50,7 @@ export default function Signup() {
   };
 
   return (
-    <div className="min-h-screen py-24">
+    <div className="min-h-screen py-10">
       <div className="max-w-md mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center justify-center mb-6">

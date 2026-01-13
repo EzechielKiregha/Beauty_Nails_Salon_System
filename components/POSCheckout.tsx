@@ -2,6 +2,9 @@
 
 import { useState } from 'react';
 import { Card } from './ui/card';
+import { useServices } from '@/lib/hooks/useServices';
+import { useInventory } from '@/lib/hooks/useInventory';
+import POSOperationModal from '@/components/modals/POSOperationModal';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Badge } from './ui/badge';
@@ -36,31 +39,28 @@ interface PaymentMethod {
   amount: number;
 }
 
-export default function POSCheckout() {
+export default function POSCheckout({ showMock }: { showMock?: boolean }) {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [clientName, setClientName] = useState('');
+
+  const { services: apiServices = [] } = useServices();
+  const { inventory: apiInventory = [] } = useInventory();
+
+  const MOCK_SERVICES = [
+    { id: 's1', name: 'Manucure Gel', price: 30000, type: 'service' as const },
+  ];
+  const MOCK_PRODUCTS = [
+    { id: 'p1', name: 'Vernis Gel', price: 15000, type: 'product' as const },
+  ];
+
+  type ItemSource = { id: string; name: string; price: number; type: 'service' | 'product' };
+  const services: ItemSource[] = (apiServices && apiServices.length) ? (apiServices as any as ItemSource[]) : (showMock ? MOCK_SERVICES : []);
+  const products: ItemSource[] = (apiInventory && apiInventory.length) ? apiInventory.map((i: any) => ({ id: i.id, name: i.name, price: Number(i.cost || 0), type: 'product' as const })) : (showMock ? MOCK_PRODUCTS : []);
   const [discountPercent, setDiscountPercent] = useState(0);
   const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([]);
   const [showPayment, setShowPayment] = useState(false);
 
-  // Available services and products
-  const services = [
-    { id: 's1', name: 'Manucure Gel', price: 30000, type: 'service' as const },
-    { id: 's2', name: 'Extension Cils Volume', price: 45000, type: 'service' as const },
-    { id: 's3', name: 'Tresses Box Braids', price: 50000, type: 'service' as const },
-    { id: 's4', name: 'Maquillage Soirée', price: 40000, type: 'service' as const },
-    { id: 's5', name: 'Pédicure Spa', price: 25000, type: 'service' as const },
-    { id: 's6', name: 'Manucure Française', price: 35000, type: 'service' as const }
-  ];
-
-  const products = [
-    { id: 'p1', name: 'Vernis Gel', price: 15000, type: 'product' as const },
-    { id: 'p2', name: 'Huile Cuticules', price: 8000, type: 'product' as const },
-    { id: 'p3', name: 'Crème Mains', price: 12000, type: 'product' as const },
-    { id: 'p4', name: 'Démaquillant', price: 10000, type: 'product' as const }
-  ];
-
-  const addToCart = (item: typeof services[0] | typeof products[0]) => {
+  const addToCart = (item: ItemSource) => {
     const existingItem = cart.find(i => i.id === item.id);
     if (existingItem) {
       setCart(cart.map(i =>
@@ -127,9 +127,12 @@ export default function POSCheckout() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-3xl text-gray-900">Caisse (POS)</h2>
-        <Badge className="bg-gradient-to-r from-green-500 to-emerald-500 text-white px-4 py-2">
-          Caisse Ouverte
-        </Badge>
+        <div className="flex items-center gap-3">
+          <Badge className="bg-linear-to-r from-green-500 to-emerald-500 text-white px-4 py-2">
+            Caisse Ouverte
+          </Badge>
+          <POSOperationModal triggerLabel="Opération POS" />
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -286,7 +289,7 @@ export default function POSCheckout() {
             <Button
               onClick={() => setShowPayment(true)}
               disabled={cart.length === 0}
-              className="w-full bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white rounded-full py-6"
+              className="w-full bg-linear-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white rounded-full py-6"
             >
               Procéder au Paiement
             </Button>
@@ -294,7 +297,7 @@ export default function POSCheckout() {
 
           {/* Payment Section */}
           {showPayment && cart.length > 0 && (
-            <Card className="border-0 shadow-lg rounded-2xl p-6 bg-gradient-to-br from-green-50 to-emerald-50">
+            <Card className="border-0 shadow-lg rounded-2xl p-6 bg-linear-to-br from-green-50 to-emerald-50">
               <h3 className="text-xl text-gray-900 mb-4">Mode de Paiement</h3>
 
               {/* Payment Methods */}
@@ -390,7 +393,7 @@ export default function POSCheckout() {
               <Button
                 onClick={completeTransaction}
                 disabled={remaining > 0}
-                className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white rounded-full py-6"
+                className="w-full bg-linear-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white rounded-full py-6"
               >
                 Finaliser la Transaction
               </Button>
@@ -401,20 +404,20 @@ export default function POSCheckout() {
 
       {/* Daily Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card className="bg-gradient-to-br from-blue-50 to-cyan-50 border-0 p-6">
+        <Card className="bg-linear-to-br from-blue-50 to-cyan-50 border-0 p-6">
           <p className="text-sm text-gray-600 mb-1">Transactions Aujourd'hui</p>
           <p className="text-3xl text-gray-900">32</p>
         </Card>
-        <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-0 p-6">
+        <Card className="bg-linear-to-br from-green-50 to-emerald-50 border-0 p-6">
           <p className="text-sm text-gray-600 mb-1">Revenus Journée</p>
           <p className="text-2xl text-gray-900">1 250 000 CDF</p>
         </Card>
-        <Card className="bg-gradient-to-br from-purple-50 to-pink-50 border-0 p-6">
+        <Card className="bg-linear-to-br from-purple-50 to-pink-50 border-0 p-6">
           <p className="text-sm text-gray-600 mb-1">Ticket Moyen</p>
           <p className="text-2xl text-gray-900">39 063 CDF</p>
         </Card>
-        <Card className="bg-gradient-to-br from-amber-50 to-orange-50 border-0 p-6">
-          <Button className="w-full bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-full">
+        <Card className="bg-linear-to-br from-amber-50 to-orange-50 border-0 p-6">
+          <Button className="w-full bg-linear-to-r from-amber-500 to-orange-500 text-white rounded-full">
             Clôture de Caisse
           </Button>
         </Card>

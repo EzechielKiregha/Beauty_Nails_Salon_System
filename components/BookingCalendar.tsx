@@ -5,19 +5,8 @@ import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Clock, User, Phone, Mail } from 'lucide-react';
-
-// Axios API calls (commented out for future use)
-// import axios from 'axios';
-// const fetchAppointments = async (date: string) => {
-//   const response = await axiosdb.get(`/api/appointments?date=${date}`);
-//   return response.data;
-// };
-// const rescheduleAppointment = async (appointmentId: string, newTime: string, newStaffId: string) => {
-//   await axiosdb.patch(`/api/appointments/${appointmentId}/reschedule`, { newTime, newStaffId });
-// };
-// const sendReminder = async (appointmentId: string, type: 'sms' | 'email') => {
-//   await axiosdb.post(`/api/appointments/${appointmentId}/reminder`, { type });
-// };
+import { useAppointments } from '@/lib/hooks/useAppointments';
+import { useStaff } from '@/lib/hooks/useStaff';
 
 interface Appointment {
   id: string;
@@ -33,20 +22,26 @@ interface Appointment {
   notes: string;
 }
 
-export default function BookingCalendar() {
+export default function BookingCalendar({ showMock }: { showMock?: boolean }) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [view, setView] = useState<'day' | 'week'>('day');
   const [selectedStaff, setSelectedStaff] = useState<string>('all');
 
-  const staff = [
+  const dateStr = currentDate.toISOString().split('T')[0];
+
+  // Hooks (prefer API data)
+  const { staff: apiStaff = [] } = useStaff();
+  const { appointments: apiAppointments = [] } = useAppointments({ date: dateStr });
+
+  // Fallback mock staff (used only if showMock=true and API returned nothing)
+  const MOCK_STAFF = [
     { id: '1', name: 'Marie Nkumu', color: '#ec4899' },
     { id: '2', name: 'Grace Lumière', color: '#a855f7' },
     { id: '3', name: 'Sophie Kabila', color: '#f59e0b' },
     { id: '4', name: 'Élise Makala', color: '#f43f5e' }
   ];
 
-  // Mock appointments data
-  const appointments: Appointment[] = [
+  const MOCK_APPOINTMENTS: Appointment[] = [
     {
       id: '1',
       time: '09:00',
@@ -72,47 +67,29 @@ export default function BookingCalendar() {
       status: 'confirmed',
       reminderSent: true,
       notes: 'Sensible, utiliser produits hypoallergéniques'
-    },
-    {
-      id: '3',
-      time: '10:00',
-      duration: 120,
-      clientName: 'Sophie Makala',
-      clientPhone: '+243 834 567 890',
-      clientEmail: 'sophie.m@email.com',
-      service: 'Tresses Box Braids',
-      staff: 'Sophie Kabila',
-      status: 'pending',
-      reminderSent: false,
-      notes: 'Première visite'
-    },
-    {
-      id: '4',
-      time: '10:30',
-      duration: 45,
-      clientName: 'Élise Nkumu',
-      clientPhone: '+243 845 678 901',
-      clientEmail: 'elise.n@email.com',
-      service: 'Maquillage Journée',
-      staff: 'Élise Makala',
-      status: 'confirmed',
-      reminderSent: true,
-      notes: 'Maquillage naturel demandé'
-    },
-    {
-      id: '5',
-      time: '14:00',
-      duration: 75,
-      clientName: 'Rose Mbala',
-      clientPhone: '+243 856 789 012',
-      clientEmail: 'rose.m@email.com',
-      service: 'Pédicure Spa',
-      staff: 'Marie Nkumu',
-      status: 'confirmed',
-      reminderSent: false,
-      notes: ''
     }
   ];
+
+  // Use API lists if available, otherwise fallback to mocks only when showMock is true
+  const staff = (apiStaff && apiStaff.length > 0)
+    ? apiStaff.map((s: any) => ({ id: s.id || s._id || s.staffId || s.name, name: s.name || s.fullName || s, color: '#a855f7' }))
+    : (showMock ? MOCK_STAFF : []);
+
+  const appointments: Appointment[] = (apiAppointments && apiAppointments.length > 0)
+    ? apiAppointments.map((apt: any) => ({
+      id: apt.id || apt._id || `${apt.date}_${apt.time}`,
+      time: apt.time || apt.startTime || new Date(apt.startsAt || apt.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      duration: apt.duration || 60,
+      clientName: apt.client?.name || apt.clientName || apt.client || 'Client',
+      clientPhone: apt.client?.phone || apt.clientPhone || '',
+      clientEmail: apt.client?.email || apt.clientEmail || '',
+      service: apt.service?.name || apt.service || apt.serviceName || 'Service',
+      staff: apt.staff?.name || apt.staff || apt.staffName || 'Staff',
+      status: apt.status || 'confirmed',
+      reminderSent: !!apt.reminderSent,
+      notes: apt.notes || ''
+    }))
+    : (showMock ? MOCK_APPOINTMENTS : []);
 
   const timeSlots = [
     '08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
@@ -197,7 +174,7 @@ export default function BookingCalendar() {
               </Button>
             </div>
 
-            <Button className="bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-full">
+            <Button className="bg-linear-to-r from-pink-500 to-purple-500 text-white rounded-full">
               + Nouveau RDV
             </Button>
           </div>
@@ -247,7 +224,7 @@ export default function BookingCalendar() {
                       <div
                         key={s.id}
                         className={`min-h-[60px] rounded-lg border-2 border-dashed p-2 ${appointment
-                          ? 'bg-gradient-to-br from-pink-50 to-purple-50 dark:from-pink-950 dark:to-purple-950 border-pink-300 dark:border-pink-700'
+                          ? 'bg-linear-to-br from-pink-50 to-purple-50 dark:from-pink-950 dark:to-purple-950 border-pink-300 dark:border-pink-700'
                           : 'border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800'
                           } cursor-pointer transition-all`}
                       >
@@ -362,26 +339,26 @@ export default function BookingCalendar() {
 
       {/* Quick Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card className="bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-950 dark:to-cyan-950 border-0 p-6">
+        <Card className="bg-linear-to-br from-blue-50 to-cyan-50 dark:from-blue-950 dark:to-cyan-950 border-0 p-6">
           <CalendarIcon className="w-8 h-8 text-blue-600 dark:text-blue-400 mb-2" />
           <p className="text-3xl text-gray-900 dark:text-white">{appointments.length}</p>
           <p className="text-sm text-gray-600 dark:text-gray-400">RDV Aujourd'hui</p>
         </Card>
-        <Card className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950 dark:to-emerald-950 border-0 p-6">
+        <Card className="bg-linear-to-br from-green-50 to-emerald-50 dark:from-green-950 dark:to-emerald-950 border-0 p-6">
           <Clock className="w-8 h-8 text-green-600 dark:text-green-400 mb-2" />
           <p className="text-3xl text-gray-900 dark:text-white">
             {appointments.filter(a => a.status === 'confirmed').length}
           </p>
           <p className="text-sm text-gray-600 dark:text-gray-400">Confirmés</p>
         </Card>
-        <Card className="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950 dark:to-orange-950 border-0 p-6">
+        <Card className="bg-linear-to-br from-amber-50 to-orange-50 dark:from-amber-950 dark:to-orange-950 border-0 p-6">
           <Mail className="w-8 h-8 text-amber-600 dark:text-amber-400 mb-2" />
           <p className="text-3xl text-gray-900 dark:text-white">
             {appointments.filter(a => a.reminderSent).length}
           </p>
           <p className="text-sm text-gray-600 dark:text-gray-400">Rappels Envoyés</p>
         </Card>
-        <Card className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-950 dark:to-pink-950 border-0 p-6">
+        <Card className="bg-linear-to-br from-purple-50 to-pink-50 dark:from-purple-950 dark:to-pink-950 border-0 p-6">
           <User className="w-8 h-8 text-purple-600 dark:text-purple-400 mb-2" />
           <p className="text-3xl text-gray-900 dark:text-white">{staff.length}</p>
           <p className="text-sm text-gray-600 dark:text-gray-400">Personnel Disponible</p>

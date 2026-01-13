@@ -27,38 +27,38 @@ export type AggregateDailyRegister = {
 }
 
 export type DailyRegisterAvgAggregateOutputType = {
-  openingCash: runtime.Decimal | null
-  closingCash: runtime.Decimal | null
-  expectedCash: runtime.Decimal | null
-  discrepancy: runtime.Decimal | null
-  totalSales: runtime.Decimal | null
-  cashSales: runtime.Decimal | null
-  cardSales: runtime.Decimal | null
-  mobileSales: runtime.Decimal | null
+  openingCash: number | null
+  closingCash: number | null
+  expectedCash: number | null
+  discrepancy: number | null
+  totalSales: number | null
+  cashSales: number | null
+  cardSales: number | null
+  mobileSales: number | null
 }
 
 export type DailyRegisterSumAggregateOutputType = {
-  openingCash: runtime.Decimal | null
-  closingCash: runtime.Decimal | null
-  expectedCash: runtime.Decimal | null
-  discrepancy: runtime.Decimal | null
-  totalSales: runtime.Decimal | null
-  cashSales: runtime.Decimal | null
-  cardSales: runtime.Decimal | null
-  mobileSales: runtime.Decimal | null
+  openingCash: number | null
+  closingCash: number | null
+  expectedCash: number | null
+  discrepancy: number | null
+  totalSales: number | null
+  cashSales: number | null
+  cardSales: number | null
+  mobileSales: number | null
 }
 
 export type DailyRegisterMinAggregateOutputType = {
   id: string | null
   date: Date | null
-  openingCash: runtime.Decimal | null
-  closingCash: runtime.Decimal | null
-  expectedCash: runtime.Decimal | null
-  discrepancy: runtime.Decimal | null
-  totalSales: runtime.Decimal | null
-  cashSales: runtime.Decimal | null
-  cardSales: runtime.Decimal | null
-  mobileSales: runtime.Decimal | null
+  openingCash: number | null
+  closingCash: number | null
+  expectedCash: number | null
+  discrepancy: number | null
+  totalSales: number | null
+  cashSales: number | null
+  cardSales: number | null
+  mobileSales: number | null
   notes: string | null
   closedBy: string | null
   closedAt: Date | null
@@ -68,14 +68,14 @@ export type DailyRegisterMinAggregateOutputType = {
 export type DailyRegisterMaxAggregateOutputType = {
   id: string | null
   date: Date | null
-  openingCash: runtime.Decimal | null
-  closingCash: runtime.Decimal | null
-  expectedCash: runtime.Decimal | null
-  discrepancy: runtime.Decimal | null
-  totalSales: runtime.Decimal | null
-  cashSales: runtime.Decimal | null
-  cardSales: runtime.Decimal | null
-  mobileSales: runtime.Decimal | null
+  openingCash: number | null
+  closingCash: number | null
+  expectedCash: number | null
+  discrepancy: number | null
+  totalSales: number | null
+  cashSales: number | null
+  cardSales: number | null
+  mobileSales: number | null
   notes: string | null
   closedBy: string | null
   closedAt: Date | null
@@ -264,14 +264,14 @@ export type DailyRegisterGroupByArgs<ExtArgs extends runtime.Types.Extensions.In
 export type DailyRegisterGroupByOutputType = {
   id: string
   date: Date
-  openingCash: runtime.Decimal
-  closingCash: runtime.Decimal
-  expectedCash: runtime.Decimal
-  discrepancy: runtime.Decimal
-  totalSales: runtime.Decimal
-  cashSales: runtime.Decimal
-  cardSales: runtime.Decimal
-  mobileSales: runtime.Decimal
+  openingCash: number
+  closingCash: number
+  expectedCash: number
+  discrepancy: number
+  totalSales: number
+  cashSales: number
+  cardSales: number
+  mobileSales: number
   notes: string | null
   closedBy: string | null
   closedAt: Date | null
@@ -304,14 +304,14 @@ export type DailyRegisterWhereInput = {
   NOT?: Prisma.DailyRegisterWhereInput | Prisma.DailyRegisterWhereInput[]
   id?: Prisma.StringFilter<"DailyRegister"> | string
   date?: Prisma.DateTimeFilter<"DailyRegister"> | Date | string
-  openingCash?: Prisma.DecimalFilter<"DailyRegister"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  closingCash?: Prisma.DecimalFilter<"DailyRegister"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  expectedCash?: Prisma.DecimalFilter<"DailyRegister"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  discrepancy?: Prisma.DecimalFilter<"DailyRegister"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  totalSales?: Prisma.DecimalFilter<"DailyRegister"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  cashSales?: Prisma.DecimalFilter<"DailyRegister"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  cardSales?: Prisma.DecimalFilter<"DailyRegister"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  mobileSales?: Prisma.DecimalFilter<"DailyRegister"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  openingCash?: Prisma.FloatFilter<"DailyRegister"> | number
+  closingCash?: Prisma.FloatFilter<"DailyRegister"> | number
+  expectedCash?: Prisma.FloatFilter<"DailyRegister"> | number
+  discrepancy?: Prisma.FloatFilter<"DailyRegister"> | number
+  totalSales?: Prisma.FloatFilter<"DailyRegister"> | number
+  cashSales?: Prisma.FloatFilter<"DailyRegister"> | number
+  cardSales?: Prisma.FloatFilter<"DailyRegister"> | number
+  mobileSales?: Prisma.FloatFilter<"DailyRegister"> | number
   notes?: Prisma.StringNullableFilter<"DailyRegister"> | string | null
   closedBy?: Prisma.StringNullableFilter<"DailyRegister"> | string | null
   closedAt?: Prisma.DateTimeNullableFilter<"DailyRegister"> | Date | string | null
@@ -341,14 +341,14 @@ export type DailyRegisterWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.DailyRegisterWhereInput | Prisma.DailyRegisterWhereInput[]
   OR?: Prisma.DailyRegisterWhereInput[]
   NOT?: Prisma.DailyRegisterWhereInput | Prisma.DailyRegisterWhereInput[]
-  openingCash?: Prisma.DecimalFilter<"DailyRegister"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  closingCash?: Prisma.DecimalFilter<"DailyRegister"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  expectedCash?: Prisma.DecimalFilter<"DailyRegister"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  discrepancy?: Prisma.DecimalFilter<"DailyRegister"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  totalSales?: Prisma.DecimalFilter<"DailyRegister"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  cashSales?: Prisma.DecimalFilter<"DailyRegister"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  cardSales?: Prisma.DecimalFilter<"DailyRegister"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  mobileSales?: Prisma.DecimalFilter<"DailyRegister"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  openingCash?: Prisma.FloatFilter<"DailyRegister"> | number
+  closingCash?: Prisma.FloatFilter<"DailyRegister"> | number
+  expectedCash?: Prisma.FloatFilter<"DailyRegister"> | number
+  discrepancy?: Prisma.FloatFilter<"DailyRegister"> | number
+  totalSales?: Prisma.FloatFilter<"DailyRegister"> | number
+  cashSales?: Prisma.FloatFilter<"DailyRegister"> | number
+  cardSales?: Prisma.FloatFilter<"DailyRegister"> | number
+  mobileSales?: Prisma.FloatFilter<"DailyRegister"> | number
   notes?: Prisma.StringNullableFilter<"DailyRegister"> | string | null
   closedBy?: Prisma.StringNullableFilter<"DailyRegister"> | string | null
   closedAt?: Prisma.DateTimeNullableFilter<"DailyRegister"> | Date | string | null
@@ -383,14 +383,14 @@ export type DailyRegisterScalarWhereWithAggregatesInput = {
   NOT?: Prisma.DailyRegisterScalarWhereWithAggregatesInput | Prisma.DailyRegisterScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"DailyRegister"> | string
   date?: Prisma.DateTimeWithAggregatesFilter<"DailyRegister"> | Date | string
-  openingCash?: Prisma.DecimalWithAggregatesFilter<"DailyRegister"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  closingCash?: Prisma.DecimalWithAggregatesFilter<"DailyRegister"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  expectedCash?: Prisma.DecimalWithAggregatesFilter<"DailyRegister"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  discrepancy?: Prisma.DecimalWithAggregatesFilter<"DailyRegister"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  totalSales?: Prisma.DecimalWithAggregatesFilter<"DailyRegister"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  cashSales?: Prisma.DecimalWithAggregatesFilter<"DailyRegister"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  cardSales?: Prisma.DecimalWithAggregatesFilter<"DailyRegister"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  mobileSales?: Prisma.DecimalWithAggregatesFilter<"DailyRegister"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  openingCash?: Prisma.FloatWithAggregatesFilter<"DailyRegister"> | number
+  closingCash?: Prisma.FloatWithAggregatesFilter<"DailyRegister"> | number
+  expectedCash?: Prisma.FloatWithAggregatesFilter<"DailyRegister"> | number
+  discrepancy?: Prisma.FloatWithAggregatesFilter<"DailyRegister"> | number
+  totalSales?: Prisma.FloatWithAggregatesFilter<"DailyRegister"> | number
+  cashSales?: Prisma.FloatWithAggregatesFilter<"DailyRegister"> | number
+  cardSales?: Prisma.FloatWithAggregatesFilter<"DailyRegister"> | number
+  mobileSales?: Prisma.FloatWithAggregatesFilter<"DailyRegister"> | number
   notes?: Prisma.StringNullableWithAggregatesFilter<"DailyRegister"> | string | null
   closedBy?: Prisma.StringNullableWithAggregatesFilter<"DailyRegister"> | string | null
   closedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"DailyRegister"> | Date | string | null
@@ -400,14 +400,14 @@ export type DailyRegisterScalarWhereWithAggregatesInput = {
 export type DailyRegisterCreateInput = {
   id?: string
   date: Date | string
-  openingCash: runtime.Decimal | runtime.DecimalJsLike | number | string
-  closingCash: runtime.Decimal | runtime.DecimalJsLike | number | string
-  expectedCash: runtime.Decimal | runtime.DecimalJsLike | number | string
-  discrepancy: runtime.Decimal | runtime.DecimalJsLike | number | string
-  totalSales: runtime.Decimal | runtime.DecimalJsLike | number | string
-  cashSales: runtime.Decimal | runtime.DecimalJsLike | number | string
-  cardSales: runtime.Decimal | runtime.DecimalJsLike | number | string
-  mobileSales: runtime.Decimal | runtime.DecimalJsLike | number | string
+  openingCash: number
+  closingCash: number
+  expectedCash: number
+  discrepancy: number
+  totalSales: number
+  cashSales: number
+  cardSales: number
+  mobileSales: number
   notes?: string | null
   closedBy?: string | null
   closedAt?: Date | string | null
@@ -417,14 +417,14 @@ export type DailyRegisterCreateInput = {
 export type DailyRegisterUncheckedCreateInput = {
   id?: string
   date: Date | string
-  openingCash: runtime.Decimal | runtime.DecimalJsLike | number | string
-  closingCash: runtime.Decimal | runtime.DecimalJsLike | number | string
-  expectedCash: runtime.Decimal | runtime.DecimalJsLike | number | string
-  discrepancy: runtime.Decimal | runtime.DecimalJsLike | number | string
-  totalSales: runtime.Decimal | runtime.DecimalJsLike | number | string
-  cashSales: runtime.Decimal | runtime.DecimalJsLike | number | string
-  cardSales: runtime.Decimal | runtime.DecimalJsLike | number | string
-  mobileSales: runtime.Decimal | runtime.DecimalJsLike | number | string
+  openingCash: number
+  closingCash: number
+  expectedCash: number
+  discrepancy: number
+  totalSales: number
+  cashSales: number
+  cardSales: number
+  mobileSales: number
   notes?: string | null
   closedBy?: string | null
   closedAt?: Date | string | null
@@ -434,14 +434,14 @@ export type DailyRegisterUncheckedCreateInput = {
 export type DailyRegisterUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  openingCash?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  closingCash?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  expectedCash?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  discrepancy?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  totalSales?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  cashSales?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  cardSales?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  mobileSales?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  openingCash?: Prisma.FloatFieldUpdateOperationsInput | number
+  closingCash?: Prisma.FloatFieldUpdateOperationsInput | number
+  expectedCash?: Prisma.FloatFieldUpdateOperationsInput | number
+  discrepancy?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalSales?: Prisma.FloatFieldUpdateOperationsInput | number
+  cashSales?: Prisma.FloatFieldUpdateOperationsInput | number
+  cardSales?: Prisma.FloatFieldUpdateOperationsInput | number
+  mobileSales?: Prisma.FloatFieldUpdateOperationsInput | number
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   closedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -451,14 +451,14 @@ export type DailyRegisterUpdateInput = {
 export type DailyRegisterUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  openingCash?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  closingCash?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  expectedCash?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  discrepancy?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  totalSales?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  cashSales?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  cardSales?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  mobileSales?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  openingCash?: Prisma.FloatFieldUpdateOperationsInput | number
+  closingCash?: Prisma.FloatFieldUpdateOperationsInput | number
+  expectedCash?: Prisma.FloatFieldUpdateOperationsInput | number
+  discrepancy?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalSales?: Prisma.FloatFieldUpdateOperationsInput | number
+  cashSales?: Prisma.FloatFieldUpdateOperationsInput | number
+  cardSales?: Prisma.FloatFieldUpdateOperationsInput | number
+  mobileSales?: Prisma.FloatFieldUpdateOperationsInput | number
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   closedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -468,14 +468,14 @@ export type DailyRegisterUncheckedUpdateInput = {
 export type DailyRegisterCreateManyInput = {
   id?: string
   date: Date | string
-  openingCash: runtime.Decimal | runtime.DecimalJsLike | number | string
-  closingCash: runtime.Decimal | runtime.DecimalJsLike | number | string
-  expectedCash: runtime.Decimal | runtime.DecimalJsLike | number | string
-  discrepancy: runtime.Decimal | runtime.DecimalJsLike | number | string
-  totalSales: runtime.Decimal | runtime.DecimalJsLike | number | string
-  cashSales: runtime.Decimal | runtime.DecimalJsLike | number | string
-  cardSales: runtime.Decimal | runtime.DecimalJsLike | number | string
-  mobileSales: runtime.Decimal | runtime.DecimalJsLike | number | string
+  openingCash: number
+  closingCash: number
+  expectedCash: number
+  discrepancy: number
+  totalSales: number
+  cashSales: number
+  cardSales: number
+  mobileSales: number
   notes?: string | null
   closedBy?: string | null
   closedAt?: Date | string | null
@@ -485,14 +485,14 @@ export type DailyRegisterCreateManyInput = {
 export type DailyRegisterUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  openingCash?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  closingCash?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  expectedCash?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  discrepancy?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  totalSales?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  cashSales?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  cardSales?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  mobileSales?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  openingCash?: Prisma.FloatFieldUpdateOperationsInput | number
+  closingCash?: Prisma.FloatFieldUpdateOperationsInput | number
+  expectedCash?: Prisma.FloatFieldUpdateOperationsInput | number
+  discrepancy?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalSales?: Prisma.FloatFieldUpdateOperationsInput | number
+  cashSales?: Prisma.FloatFieldUpdateOperationsInput | number
+  cardSales?: Prisma.FloatFieldUpdateOperationsInput | number
+  mobileSales?: Prisma.FloatFieldUpdateOperationsInput | number
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   closedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -502,14 +502,14 @@ export type DailyRegisterUpdateManyMutationInput = {
 export type DailyRegisterUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  openingCash?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  closingCash?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  expectedCash?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  discrepancy?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  totalSales?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  cashSales?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  cardSales?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  mobileSales?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  openingCash?: Prisma.FloatFieldUpdateOperationsInput | number
+  closingCash?: Prisma.FloatFieldUpdateOperationsInput | number
+  expectedCash?: Prisma.FloatFieldUpdateOperationsInput | number
+  discrepancy?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalSales?: Prisma.FloatFieldUpdateOperationsInput | number
+  cashSales?: Prisma.FloatFieldUpdateOperationsInput | number
+  cardSales?: Prisma.FloatFieldUpdateOperationsInput | number
+  mobileSales?: Prisma.FloatFieldUpdateOperationsInput | number
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   closedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -667,14 +667,14 @@ export type $DailyRegisterPayload<ExtArgs extends runtime.Types.Extensions.Inter
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     date: Date
-    openingCash: runtime.Decimal
-    closingCash: runtime.Decimal
-    expectedCash: runtime.Decimal
-    discrepancy: runtime.Decimal
-    totalSales: runtime.Decimal
-    cashSales: runtime.Decimal
-    cardSales: runtime.Decimal
-    mobileSales: runtime.Decimal
+    openingCash: number
+    closingCash: number
+    expectedCash: number
+    discrepancy: number
+    totalSales: number
+    cashSales: number
+    cardSales: number
+    mobileSales: number
     notes: string | null
     closedBy: string | null
     closedAt: Date | null
@@ -1104,14 +1104,14 @@ export interface Prisma__DailyRegisterClient<T, Null = never, ExtArgs extends ru
 export interface DailyRegisterFieldRefs {
   readonly id: Prisma.FieldRef<"DailyRegister", 'String'>
   readonly date: Prisma.FieldRef<"DailyRegister", 'DateTime'>
-  readonly openingCash: Prisma.FieldRef<"DailyRegister", 'Decimal'>
-  readonly closingCash: Prisma.FieldRef<"DailyRegister", 'Decimal'>
-  readonly expectedCash: Prisma.FieldRef<"DailyRegister", 'Decimal'>
-  readonly discrepancy: Prisma.FieldRef<"DailyRegister", 'Decimal'>
-  readonly totalSales: Prisma.FieldRef<"DailyRegister", 'Decimal'>
-  readonly cashSales: Prisma.FieldRef<"DailyRegister", 'Decimal'>
-  readonly cardSales: Prisma.FieldRef<"DailyRegister", 'Decimal'>
-  readonly mobileSales: Prisma.FieldRef<"DailyRegister", 'Decimal'>
+  readonly openingCash: Prisma.FieldRef<"DailyRegister", 'Float'>
+  readonly closingCash: Prisma.FieldRef<"DailyRegister", 'Float'>
+  readonly expectedCash: Prisma.FieldRef<"DailyRegister", 'Float'>
+  readonly discrepancy: Prisma.FieldRef<"DailyRegister", 'Float'>
+  readonly totalSales: Prisma.FieldRef<"DailyRegister", 'Float'>
+  readonly cashSales: Prisma.FieldRef<"DailyRegister", 'Float'>
+  readonly cardSales: Prisma.FieldRef<"DailyRegister", 'Float'>
+  readonly mobileSales: Prisma.FieldRef<"DailyRegister", 'Float'>
   readonly notes: Prisma.FieldRef<"DailyRegister", 'String'>
   readonly closedBy: Prisma.FieldRef<"DailyRegister", 'String'>
   readonly closedAt: Prisma.FieldRef<"DailyRegister", 'DateTime'>

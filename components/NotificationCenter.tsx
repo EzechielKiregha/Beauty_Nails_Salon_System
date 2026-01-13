@@ -166,7 +166,7 @@ export default function NotificationCenter() {
               <Card
                 key={notification.id}
                 className={`p-4 rounded-xl cursor-pointer transition-all ${!notification.read
-                  ? 'bg-gradient-to-r from-pink-50 to-purple-50 border-2 border-pink-200'
+                  ? 'bg-linear-to-r from-pink-50 to-purple-50 border-2 border-pink-200'
                   : 'bg-gray-50'
                   }`}
                 onClick={() => markAsRead(notification.id)}
@@ -231,7 +231,7 @@ export default function NotificationCenter() {
       )}
 
       {/* Alert Summary */}
-      <Card className="bg-gradient-to-r from-red-50 to-orange-50 border-0 p-4 mt-6">
+      <Card className="bg-linear-to-r from-red-50 to-orange-50 border-0 p-4 mt-6">
         <div className="flex items-center gap-2 mb-2">
           <AlertCircle className="w-5 h-5 text-red-600" />
           <p className="text-sm text-gray-900">Alertes Actives</p>

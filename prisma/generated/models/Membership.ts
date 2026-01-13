@@ -28,15 +28,15 @@ export type AggregateMembership = {
 
 export type MembershipAvgAggregateOutputType = {
   duration: number | null
-  price: runtime.Decimal | null
-  discount: runtime.Decimal | null
+  price: number | null
+  discount: number | null
   displayOrder: number | null
 }
 
 export type MembershipSumAggregateOutputType = {
   duration: number | null
-  price: runtime.Decimal | null
-  discount: runtime.Decimal | null
+  price: number | null
+  discount: number | null
   displayOrder: number | null
 }
 
@@ -44,8 +44,8 @@ export type MembershipMinAggregateOutputType = {
   id: string | null
   name: string | null
   duration: number | null
-  price: runtime.Decimal | null
-  discount: runtime.Decimal | null
+  price: number | null
+  discount: number | null
   isActive: boolean | null
   displayOrder: number | null
   createdAt: Date | null
@@ -56,8 +56,8 @@ export type MembershipMaxAggregateOutputType = {
   id: string | null
   name: string | null
   duration: number | null
-  price: runtime.Decimal | null
-  discount: runtime.Decimal | null
+  price: number | null
+  discount: number | null
   isActive: boolean | null
   displayOrder: number | null
   createdAt: Date | null
@@ -221,8 +221,8 @@ export type MembershipGroupByOutputType = {
   id: string
   name: string
   duration: number
-  price: runtime.Decimal
-  discount: runtime.Decimal
+  price: number
+  discount: number
   benefits: runtime.JsonValue
   isActive: boolean
   displayOrder: number
@@ -257,8 +257,8 @@ export type MembershipWhereInput = {
   id?: Prisma.StringFilter<"Membership"> | string
   name?: Prisma.StringFilter<"Membership"> | string
   duration?: Prisma.IntFilter<"Membership"> | number
-  price?: Prisma.DecimalFilter<"Membership"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  discount?: Prisma.DecimalFilter<"Membership"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  price?: Prisma.FloatFilter<"Membership"> | number
+  discount?: Prisma.FloatFilter<"Membership"> | number
   benefits?: Prisma.JsonFilter<"Membership">
   isActive?: Prisma.BoolFilter<"Membership"> | boolean
   displayOrder?: Prisma.IntFilter<"Membership"> | number
@@ -288,8 +288,8 @@ export type MembershipWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.MembershipWhereInput | Prisma.MembershipWhereInput[]
   name?: Prisma.StringFilter<"Membership"> | string
   duration?: Prisma.IntFilter<"Membership"> | number
-  price?: Prisma.DecimalFilter<"Membership"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  discount?: Prisma.DecimalFilter<"Membership"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  price?: Prisma.FloatFilter<"Membership"> | number
+  discount?: Prisma.FloatFilter<"Membership"> | number
   benefits?: Prisma.JsonFilter<"Membership">
   isActive?: Prisma.BoolFilter<"Membership"> | boolean
   displayOrder?: Prisma.IntFilter<"Membership"> | number
@@ -323,8 +323,8 @@ export type MembershipScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"Membership"> | string
   name?: Prisma.StringWithAggregatesFilter<"Membership"> | string
   duration?: Prisma.IntWithAggregatesFilter<"Membership"> | number
-  price?: Prisma.DecimalWithAggregatesFilter<"Membership"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  discount?: Prisma.DecimalWithAggregatesFilter<"Membership"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  price?: Prisma.FloatWithAggregatesFilter<"Membership"> | number
+  discount?: Prisma.FloatWithAggregatesFilter<"Membership"> | number
   benefits?: Prisma.JsonWithAggregatesFilter<"Membership">
   isActive?: Prisma.BoolWithAggregatesFilter<"Membership"> | boolean
   displayOrder?: Prisma.IntWithAggregatesFilter<"Membership"> | number
@@ -336,8 +336,8 @@ export type MembershipCreateInput = {
   id?: string
   name: string
   duration: number
-  price: runtime.Decimal | runtime.DecimalJsLike | number | string
-  discount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  price: number
+  discount: number
   benefits: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isActive?: boolean
   displayOrder?: number
@@ -350,8 +350,8 @@ export type MembershipUncheckedCreateInput = {
   id?: string
   name: string
   duration: number
-  price: runtime.Decimal | runtime.DecimalJsLike | number | string
-  discount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  price: number
+  discount: number
   benefits: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isActive?: boolean
   displayOrder?: number
@@ -364,8 +364,8 @@ export type MembershipUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   duration?: Prisma.IntFieldUpdateOperationsInput | number
-  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  discount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
   benefits?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   displayOrder?: Prisma.IntFieldUpdateOperationsInput | number
@@ -378,8 +378,8 @@ export type MembershipUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   duration?: Prisma.IntFieldUpdateOperationsInput | number
-  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  discount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
   benefits?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   displayOrder?: Prisma.IntFieldUpdateOperationsInput | number
@@ -392,8 +392,8 @@ export type MembershipCreateManyInput = {
   id?: string
   name: string
   duration: number
-  price: runtime.Decimal | runtime.DecimalJsLike | number | string
-  discount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  price: number
+  discount: number
   benefits: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isActive?: boolean
   displayOrder?: number
@@ -405,8 +405,8 @@ export type MembershipUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   duration?: Prisma.IntFieldUpdateOperationsInput | number
-  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  discount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
   benefits?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   displayOrder?: Prisma.IntFieldUpdateOperationsInput | number
@@ -418,8 +418,8 @@ export type MembershipUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   duration?: Prisma.IntFieldUpdateOperationsInput | number
-  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  discount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
   benefits?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   displayOrder?: Prisma.IntFieldUpdateOperationsInput | number
@@ -501,8 +501,8 @@ export type MembershipCreateWithoutPurchasesInput = {
   id?: string
   name: string
   duration: number
-  price: runtime.Decimal | runtime.DecimalJsLike | number | string
-  discount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  price: number
+  discount: number
   benefits: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isActive?: boolean
   displayOrder?: number
@@ -514,8 +514,8 @@ export type MembershipUncheckedCreateWithoutPurchasesInput = {
   id?: string
   name: string
   duration: number
-  price: runtime.Decimal | runtime.DecimalJsLike | number | string
-  discount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  price: number
+  discount: number
   benefits: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isActive?: boolean
   displayOrder?: number
@@ -543,8 +543,8 @@ export type MembershipUpdateWithoutPurchasesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   duration?: Prisma.IntFieldUpdateOperationsInput | number
-  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  discount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
   benefits?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   displayOrder?: Prisma.IntFieldUpdateOperationsInput | number
@@ -556,8 +556,8 @@ export type MembershipUncheckedUpdateWithoutPurchasesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   duration?: Prisma.IntFieldUpdateOperationsInput | number
-  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  discount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
   benefits?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   displayOrder?: Prisma.IntFieldUpdateOperationsInput | number
@@ -667,8 +667,8 @@ export type $MembershipPayload<ExtArgs extends runtime.Types.Extensions.Internal
     id: string
     name: string
     duration: number
-    price: runtime.Decimal
-    discount: runtime.Decimal
+    price: number
+    discount: number
     benefits: runtime.JsonValue
     isActive: boolean
     displayOrder: number
@@ -1101,8 +1101,8 @@ export interface MembershipFieldRefs {
   readonly id: Prisma.FieldRef<"Membership", 'String'>
   readonly name: Prisma.FieldRef<"Membership", 'String'>
   readonly duration: Prisma.FieldRef<"Membership", 'Int'>
-  readonly price: Prisma.FieldRef<"Membership", 'Decimal'>
-  readonly discount: Prisma.FieldRef<"Membership", 'Decimal'>
+  readonly price: Prisma.FieldRef<"Membership", 'Float'>
+  readonly discount: Prisma.FieldRef<"Membership", 'Float'>
   readonly benefits: Prisma.FieldRef<"Membership", 'Json'>
   readonly isActive: Prisma.FieldRef<"Membership", 'Boolean'>
   readonly displayOrder: Prisma.FieldRef<"Membership", 'Int'>

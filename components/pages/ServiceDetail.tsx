@@ -145,7 +145,7 @@ export default function ServiceDetail() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl text-gray-900 mb-6">Service non trouvé</h1>
           <Link href="/services">
-            <Button className="bg-gradient-to-r from-pink-500 to-amber-400 hover:from-pink-600 hover:to-amber-500 text-white rounded-full px-8">
+            <Button className="bg-linear-to-r from-pink-500 to-amber-400 hover:from-pink-600 hover:to-amber-500 text-white rounded-full px-8">
               Retour aux services
             </Button>
           </Link>
@@ -166,7 +166,7 @@ export default function ServiceDetail() {
         {/* Header */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16 items-center">
           <div className="relative">
-            <div className="absolute -inset-4 bg-gradient-to-r from-pink-400 to-amber-400 rounded-2xl opacity-20 blur-2xl" />
+            <div className="absolute -inset-4 bg-linear-to-r from-pink-400 to-amber-400 rounded-2xl opacity-20 blur-2xl" />
             <ImageWithFallback
               src={service.image}
               alt={service.name}
@@ -187,7 +187,7 @@ export default function ServiceDetail() {
               <span className="text-gray-600">4.9/5 (158 avis)</span>
             </div>
             <Link href="/appointments">
-              <Button size="lg" className="bg-gradient-to-r from-pink-500 to-amber-400 hover:from-pink-600 hover:to-amber-500 text-white rounded-full px-8">
+              <Button size="lg" className="bg-linear-to-r from-pink-500 to-amber-400 hover:from-pink-600 hover:to-amber-500 text-white rounded-full px-8">
                 Réserver maintenant
               </Button>
             </Link>
@@ -231,7 +231,7 @@ export default function ServiceDetail() {
                       </div>
                     </div>
                     <Link href="/appointments" className="w-full">
-                      <Button className="w-full bg-gradient-to-r from-pink-500 to-amber-400 hover:from-pink-600 hover:to-amber-500 text-white rounded-full">
+                      <Button className="w-full bg-linear-to-r from-pink-500 to-amber-400 hover:from-pink-600 hover:to-amber-500 text-white rounded-full">
                         Réserver
                       </Button>
                     </Link>
@@ -243,32 +243,32 @@ export default function ServiceDetail() {
         </div>
 
         {/* Benefits Section */}
-        <div className="mt-16 bg-gradient-to-br from-pink-50 to-purple-50 rounded-3xl p-12">
+        <div className="mt-16 bg-linear-to-br from-pink-50 to-purple-50 rounded-3xl p-12">
           <h2 className="text-3xl text-gray-900 mb-8 text-center">Pourquoi choisir Beauty Nails ?</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <div className="text-center">
-              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-pink-400 to-rose-400 flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 rounded-full bg-linear-to-br from-pink-400 to-rose-400 flex items-center justify-center mx-auto mb-4">
                 <Star className="w-8 h-8 text-white" />
               </div>
               <h3 className="text-lg text-gray-900 mb-2">Expertes Qualifiées</h3>
               <p className="text-gray-600 text-sm">Techniciennes certifiées et expérimentées</p>
             </div>
             <div className="text-center">
-              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 rounded-full bg-linear-to-br from-purple-400 to-pink-400 flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl">✨</span>
               </div>
               <h3 className="text-lg text-gray-900 mb-2">Produits Premium</h3>
               <p className="text-gray-600 text-sm">Marques reconnues et de qualité</p>
             </div>
             <div className="text-center">
-              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-amber-400 to-orange-400 flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 rounded-full bg-linear-to-br from-amber-400 to-orange-400 flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl">🏆</span>
               </div>
               <h3 className="text-lg text-gray-900 mb-2">Hygiène Stricte</h3>
               <p className="text-gray-600 text-sm">Stérilisation et protocoles sanitaires</p>
             </div>
             <div className="text-center">
-              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-rose-400 to-pink-400 flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 rounded-full bg-linear-to-br from-rose-400 to-pink-400 flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl">💝</span>
               </div>
               <h3 className="text-lg text-gray-900 mb-2">Ambiance Luxueuse</h3>
@@ -281,7 +281,7 @@ export default function ServiceDetail() {
         <div className="mt-16 text-center">
           <h2 className="text-3xl text-gray-900 mb-6">Prête à réserver votre prestation ?</h2>
           <Link href="/appointments">
-            <Button size="lg" className="bg-gradient-to-r from-pink-500 to-amber-400 hover:from-pink-600 hover:to-amber-500 text-white rounded-full px-12">
+            <Button size="lg" className="bg-linear-to-r from-pink-500 to-amber-400 hover:from-pink-600 hover:to-amber-500 text-white rounded-full px-12">
               Prendre rendez-vous
             </Button>
           </Link>

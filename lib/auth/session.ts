@@ -29,6 +29,7 @@ export interface User {
   name?: string | null | undefined ;
   email?: string | null | undefined;
   phone?: string | null | undefined;
+  emailVerified?: Date | null | undefined;
   role: 'client' | 'worker' | 'admin';
   avatar?: string | null | undefined ;
   isActive: boolean;

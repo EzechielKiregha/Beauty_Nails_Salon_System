@@ -40,6 +40,7 @@ model User {
   workerProfile  WorkerProfile?
   notifications  Notification[]
   createdReports Report[]       @relation("ReportCreatedBy")
+  tasks          Task[]      @relation("TaskAssignedBy") // new: tasks assigned to this user
 
   // Indexes
   @@index([email])
@@ -105,11 +106,20 @@ model ClientProfile {
   tier               Tier     @default(Regular)
   loyaltyPoints      Int      @default(0)
   totalAppointments  Int      @default(0)
-  totalSpent         Decimal  @default(0) @db.Decimal(10, 2)
+  totalSpent         Float    @default(0)
   referralCode       String   @unique
   referredBy         String?
   preferences        Json?
   notes              String?  @db.Text
+  // Additional profile fields used by the UI
+  birthday           DateTime?
+  address            String?
+  favoriteServices   String[]
+  allergies          String?
+  prepaymentBalance  Float    @default(0)
+  giftCardBalance    Float    @default(0)
+  referrals          Int      @default(0)
+
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
 
@@ -118,10 +128,11 @@ model ClientProfile {
   appointments       Appointment[]
   reviews            Review[]
   loyaltyTransactions LoyaltyTransaction[]
-  referrals          Referral[]           @relation("ReferredClients")
+  referralsRel       Referral[]           @relation("ReferredClients")
   referrer           Referral?            @relation("Referrer")
   membershipPurchases MembershipPurchase[]
   sales              Sale[]
+  tasks              Task[]
 
   @@index([tier])
   @@index([referralCode])
@@ -143,8 +154,8 @@ model WorkerProfile {
   userId         String   @unique
   position       String
   specialties    String[]
-  commissionRate Decimal  @default(0) @db.Decimal(5, 2)
-  rating         Decimal  @default(0) @db.Decimal(3, 2)
+  commissionRate Float @default(0)
+  rating         Float @default(0)
   totalReviews   Int      @default(0)
   isAvailable    Boolean  @default(true)
   workingHours   Json?
@@ -159,6 +170,7 @@ model WorkerProfile {
   commissions   Commission[]
   reviews       Review[]
   leaves        WorkerLeave[]
+  tasks         Task[]       // new: tasks assigned to this worker
 
   @@index([isAvailable])
   @@index([position])
@@ -206,6 +218,59 @@ enum LeaveStatus {
   rejected
 }
 
+enum TaskType {
+  general
+  client_followup
+  inventory
+  maintenance
+  appointment
+  admin
+}
+
+enum TaskStatus {
+  open
+  in_progress
+  blocked
+  completed
+  cancelled
+}
+
+enum TaskPriority {
+  low
+  medium
+  high
+  urgent
+}
+
+model Task {
+  id                   String         @id @default(cuid())
+  title                String
+  description          String?        @db.Text
+  type                 TaskType       @default(general)
+  status               TaskStatus     @default(open)
+  priority             TaskPriority   @default(medium)
+  assignedToWorkerId   String? 
+  assignedTo           WorkerProfile? @relation(fields: [assignedToWorkerId], references: [id])
+  clientId             String?
+  client               ClientProfile? @relation(fields: [clientId], references: [id])
+  appointmentId        String?
+  appointment          Appointment?   @relation(fields: [appointmentId], references: [id])
+  createdById          String?
+  createdBy            User?          @relation("TaskAssignedBy", fields: [createdById], references: [id])
+  dueAt                DateTime?
+  scheduledAt          DateTime?
+  completedAt          DateTime?
+  metadata             Json?
+  isPrivate            Boolean        @default(false)
+  createdAt            DateTime       @default(now())
+  updatedAt            DateTime       @updatedAt
+
+  @@index([assignedToWorkerId])
+  @@index([status])
+  @@index([priority])
+  @@map("tasks")
+}
+
 // ============================================
 // SERVICES & CATEGORIES
 // ============================================
@@ -214,7 +279,7 @@ model Service {
   id              String   @id @default(cuid())
   name            String
   category        Category
-  price           Decimal  @db.Decimal(10, 2)
+  price           Float 
   duration        Int // in minutes
   description     String   @db.Text
   imageUrl        String?
@@ -248,7 +313,7 @@ model ServiceAddOn {
   id          String  @id @default(cuid())
   serviceId   String
   name        String
-  price       Decimal @db.Decimal(10, 2)
+  price       Float 
   duration    Int // in minutes
   description String?
 
@@ -263,8 +328,8 @@ model ServicePackage {
   id          String   @id @default(cuid())
   name        String
   description String   @db.Text
-  price       Decimal  @db.Decimal(10, 2)
-  discount    Decimal  @default(0) @db.Decimal(5, 2)
+  price       Float 
+  discount    Float @default(0)
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -289,7 +354,7 @@ model Appointment {
   duration  Int // in minutes
   status    AppointmentStatus @default(pending)
   location  Location          @default(salon)
-  price     Decimal           @db.Decimal(10, 2)
+  price     Float          
   addOns    String[] // Array of add-on IDs
   notes     String?           @db.Text
   cancelReason String?        @db.Text
@@ -302,6 +367,7 @@ model Appointment {
   worker  WorkerProfile @relation(fields: [workerId], references: [id])
   review  Review?
   sale    Sale?
+  tasks   Task[]       // new: tasks assigned to this worker
 
   @@index([clientId])
   @@index([workerId])
@@ -360,8 +426,8 @@ model Membership {
   id                String   @id @default(cuid())
   name              String
   duration          Int // in months (3 or 6)
-  price             Decimal  @db.Decimal(10, 2)
-  discount          Decimal  @db.Decimal(5, 2) // percentage discount
+  price             Float 
+  discount          Float // percentage discount
   benefits          Json
   isActive          Boolean  @default(true)
   displayOrder      Int      @default(0)
@@ -465,11 +531,11 @@ model Sale {
   id                String        @id @default(cuid())
   appointmentId     String?       @unique
   clientId          String
-  total             Decimal       @db.Decimal(10, 2)
-  subtotal          Decimal       @db.Decimal(10, 2)
-  discount          Decimal       @default(0) @db.Decimal(10, 2)
-  tax               Decimal       @default(0) @db.Decimal(10, 2)
-  tip               Decimal       @default(0) @db.Decimal(10, 2)
+  total             Float      
+  subtotal          Float      
+  discount          Float      @default(0) 
+  tax               Float      @default(0) 
+  tip               Float      @default(0) 
   paymentMethod     PaymentMethod
   paymentStatus     PaymentStatus @default(pending)
   discountCode      String?
@@ -497,8 +563,8 @@ model SaleItem {
   saleId    String
   serviceId String
   quantity  Int     @default(1)
-  price     Decimal @db.Decimal(10, 2)
-  discount  Decimal @default(0) @db.Decimal(10, 2)
+  price     Float
+  discount  Float@default(0) 
 
   // Relations
   sale    Sale    @relation(fields: [saleId], references: [id], onDelete: Cascade)
@@ -511,7 +577,7 @@ model SaleItem {
 model Payment {
   id            String        @id @default(cuid())
   saleId        String
-  amount        Decimal       @db.Decimal(10, 2)
+  amount        Float      
   method        PaymentMethod
   transactionId String?       @unique
   status        PaymentStatus @default(completed)
@@ -542,14 +608,14 @@ enum PaymentStatus {
 model DailyRegister {
   id           String   @id @default(cuid())
   date         DateTime @unique
-  openingCash  Decimal  @db.Decimal(10, 2)
-  closingCash  Decimal  @db.Decimal(10, 2)
-  expectedCash Decimal  @db.Decimal(10, 2)
-  discrepancy  Decimal  @db.Decimal(10, 2)
-  totalSales   Decimal  @db.Decimal(10, 2)
-  cashSales    Decimal  @db.Decimal(10, 2)
-  cardSales    Decimal  @db.Decimal(10, 2)
-  mobileSales  Decimal  @db.Decimal(10, 2)
+  openingCash  Float 
+  closingCash  Float 
+  expectedCash Float 
+  discrepancy  Float 
+  totalSales   Float 
+  cashSales    Float 
+  cardSales    Float 
+  mobileSales  Float 
   notes        String?  @db.Text
   closedBy     String?
   closedAt     DateTime?
@@ -567,9 +633,9 @@ model Commission {
   id                String   @id @default(cuid())
   workerId          String
   period            String // "2024-01"
-  totalRevenue      Decimal  @db.Decimal(10, 2)
-  commissionRate    Decimal  @db.Decimal(5, 2)
-  commissionAmount  Decimal  @db.Decimal(10, 2)
+  totalRevenue      Float 
+  commissionRate    Float
+  commissionAmount  Float 
   appointmentsCount Int
   status            CommissionStatus @default(pending)
   paidAt            DateTime?
@@ -604,7 +670,7 @@ model InventoryItem {
   minStock      Int
   maxStock      Int?
   unit          String // "pièce", "ml", "kg"
-  cost          Decimal       @db.Decimal(10, 2)
+  cost          Float      
   supplier      String?
   sku           String?       @unique
   lastRestocked DateTime?
@@ -635,7 +701,7 @@ model InventoryTransaction {
   itemId      String
   quantity    Int
   type        TransactionType
-  cost        Decimal?            @db.Decimal(10, 2)
+  cost        Decimal?            
   notes       String?
   performedBy String?
   createdAt   DateTime            @default(now())
@@ -677,7 +743,7 @@ model ReorderRequest {
   itemId       String
   quantity     Int
   supplier     String
-  estimatedCost Decimal?     @db.Decimal(10, 2)
+  estimatedCost Decimal?     
   status       ReorderStatus @default(pending)
   orderedAt    DateTime?
   receivedAt   DateTime?
@@ -748,8 +814,8 @@ model MarketingCampaign {
   scheduledDate DateTime?
   sentDate      DateTime?
   recipients    Int            @default(0)
-  openRate      Decimal?       @default(0) @db.Decimal(5, 2)
-  clickRate     Decimal?       @default(0) @db.Decimal(5, 2)
+  openRate      Decimal?       @default(0)
+  clickRate     Decimal?       @default(0)
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
 
@@ -776,8 +842,8 @@ model DiscountCode {
   id          String       @id @default(cuid())
   code        String       @unique
   type        DiscountType
-  value       Decimal      @db.Decimal(10, 2)
-  minPurchase Decimal?     @db.Decimal(10, 2)
+  value       Float     
+  minPurchase Decimal?     
   maxUses     Int?
   usedCount   Int          @default(0)
   startDate   DateTime

@@ -22,30 +22,31 @@ export async function POST(request: NextRequest) {
     });
 
     if (existingUser) {
-      return successResponse('Email ou téléphone déjà utilisé', 201);
+      return successResponse('Email ou téléphone déjà utilisé', 202);
     }
 
+    
     // Hash password
     const hashedPassword = await hash(password, 10);
+    
+    let dataClause: any = {
+      name,
+      email,
+      phone,
+      password: hashedPassword,
+      role,
+      emailVerified: new Date(), // For demo purposes; implement proper email verification in production
+      clientProfile: {
+          create: {
+            referralCode: nanoid(8).toUpperCase(),
+            tier: 'Regular',
+          },
+        }
+    };
 
     // Create user with profile
     const user = await prisma.user.create({
-      data: {
-        name,
-        email,
-        phone,
-        password: hashedPassword,
-        role,
-        emailVerified: new Date(), // Auto-verify for now
-        ...(role === 'client' && {
-          clientProfile: {
-            create: {
-              referralCode: nanoid(8).toUpperCase(),
-              tier: 'Regular',
-            },
-          },
-        }),
-      },
+      data: dataClause,
       include: {
         clientProfile: true,
         workerProfile: true,

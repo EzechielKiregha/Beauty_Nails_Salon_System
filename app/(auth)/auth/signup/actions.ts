@@ -33,8 +33,8 @@ export async function handleSignup(formData: FormData) {
       role
     })
 
-    if(res.status !== 201){
-      return { error: "Une erreur est survenue lors de la création du compte : "+res.data.message };
+    if(res.status === 202){
+      return { error: "Email ou téléphone déjà utilisé" };
     }
 
     // Auto login
@@ -47,7 +47,7 @@ export async function handleSignup(formData: FormData) {
       return { error: result.error };
     }
   }catch(e) {
-    return { error: "Une erreur est survenue lors de la création du compte : ", e };
+    return { error: "Une erreur est survenue, ", e };
   }
 
   return {

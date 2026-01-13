@@ -1,5 +1,5 @@
 'use client'
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Card } from "../ui/card";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
@@ -27,7 +27,8 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import HeroSection from "../HeroSection";
-import { User } from "@/lib/auth/session";
+import { useAuth } from "@/lib/hooks/useAuth";
+import { useAppointments, useAvailableSlots } from "@/lib/hooks/useAppointments";
 
 // Axios API calls (commented out for future backend integration)
 /*
@@ -72,14 +73,9 @@ const fetchWorkers = async (category?: string) => {
 };
 */
 
-interface AppointmentsProps {
-  user: User
-}
-
-export default function Appointments({
-  user,
-}: AppointmentsProps) {
+export default function Appointments() {
   const navigate = useRouter();
+  const { user } = useAuth();
   const [selectedDate, setSelectedDate] = useState<
     Date | undefined
   >(new Date());
@@ -92,29 +88,56 @@ export default function Appointments({
   );
   const [addOns, setAddOns] = useState<string[]>([]);
 
+  const { createAppointment, isCreating } = useAppointments();
+
+  const formattedDate = selectedDate ? selectedDate.toISOString().split('T')[0] : "";
+  const workerIdForSlots = selectedWorker && selectedWorker !== "any" ? selectedWorker : "";
+
+  const { data: availableSlotsData, isLoading: isLoadingSlots } = useAvailableSlots({
+    date: formattedDate,
+    workerId: workerIdForSlots,
+  });
+
+  const availableMap = useMemo(() => {
+    if (!availableSlotsData?.slots) return null;
+    return new Map(availableSlotsData.slots.map((s: any) => [s.time, s.available]));
+  }, [availableSlotsData]);
+
+
+  if (!user) {
+    toast.error("Veuillez vous connecter pour réserver");
+  }
+
   const services = {
     onglerie: [
-      "Manucure Classique (15 000 CDF)",
-      "Manucure Gel (25 000 CDF)",
-      "Pédicure Spa (20 000 CDF)",
-      "Extensions Ongles (35 000 CDF)",
+      { id: "manucure-classique", label: "Manucure Classique (15 000 CDF)" },
+      { id: "manucure-gel", label: "Manucure Gel (25 000 CDF)" },
+      { id: "pedicure-spa", label: "Pédicure Spa (20 000 CDF)" },
+      { id: "extensions-ongles", label: "Extensions Ongles (35 000 CDF)" },
     ],
     cils: [
-      "Extensions Volume Naturel (40 000 CDF)",
-      "Extensions Volume Russe (60 000 CDF)",
-      "Rehaussement de Cils (25 000 CDF)",
+      { id: "extensions-volume-naturel", label: "Extensions Volume Naturel (40 000 CDF)" },
+      { id: "extensions-volume-russe", label: "Extensions Volume Russe (60 000 CDF)" },
+      { id: "rehaussement-de-cils", label: "Rehaussement de Cils (25 000 CDF)" },
     ],
     tresses: [
-      "Tresses Box Braids (45 000 CDF)",
-      "Tissage avec Closure (50 000 CDF)",
-      "Crochet Braids (35 000 CDF)",
+      { id: "tresses-box-braids", label: "Tresses Box Braids (45 000 CDF)" },
+      { id: "tissage-closure", label: "Tissage avec Closure (50 000 CDF)" },
+      { id: "crochet-braids", label: "Crochet Braids (35 000 CDF)" },
     ],
     maquillage: [
-      "Maquillage Soirée (30 000 CDF)",
-      "Maquillage Mariage (50 000 CDF)",
-      "Maquillage Quotidien (20 000 CDF)",
+      { id: "maquillage-soiree", label: "Maquillage Soirée (30 000 CDF)" },
+      { id: "maquillage-mariage", label: "Maquillage Mariage (50 000 CDF)" },
+      { id: "maquillage-quotidien", label: "Maquillage Quotidien (20 000 CDF)" },
     ],
   };
+
+  const selectedServiceObj = useMemo(() => {
+    if (!selectedCategory || !selectedService) return null;
+    return (services as any)[selectedCategory].find((s: any) => s.id === selectedService) ?? null;
+  }, [selectedCategory, selectedService]);
+
+  const reserveHref = `/appointments?service=${encodeURIComponent(selectedServiceObj?.id ?? "")}&date=${encodeURIComponent(formattedDate)}&time=${encodeURIComponent(selectedTime)}`;
 
   const workers = [
     "Marie Nkumu - Spécialiste Ongles",
@@ -159,19 +182,21 @@ export default function Appointments({
       !selectedDate ||
       !selectedTime
     ) {
-      toast.error(
-        "Veuillez remplir tous les champs obligatoires",
-      );
+      toast.error("Veuillez remplir tous les champs obligatoires");
       return;
     }
 
-    toast.success("Rendez-vous confirmé !", {
-      description: `Votre rendez-vous est prévu le ${selectedDate.toLocaleDateString("fr-FR")} à ${selectedTime}`,
-    });
+    const payload = {
+      clientId: (user as any)?.id,
+      serviceId: selectedService,
+      workerId: selectedWorker === "any" ? undefined : selectedWorker,
+      date: formattedDate,
+      time: selectedTime,
+      location,
+      addOns,
+    };
 
-    setTimeout(() => {
-      navigate.push("/dashboard/client");
-    }, 2000);
+    createAppointment(payload as any);
   };
 
   return (
@@ -255,10 +280,10 @@ export default function Appointments({
                           selectedCategory as keyof typeof services
                         ]?.map((service) => (
                           <SelectItem
-                            key={service}
-                            value={service}
+                            key={service.id}
+                            value={service.id}
                           >
-                            {service}
+                            {service.label}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -329,18 +354,24 @@ export default function Appointments({
                     Heure
                   </Label>
                   <div className="grid grid-cols-3 gap-2">
-                    {timeSlots.map((time) => (
-                      <button
-                        key={time}
-                        onClick={() => setSelectedTime(time)}
-                        className={`px-4 py-3 rounded-xl border-2 transition-all ${selectedTime === time
-                          ? "border-pink-500 bg-pink-50 text-pink-600"
-                          : "border-gray-200 hover:border-pink-300 text-gray-700"
-                          }`}
-                      >
-                        {time}
-                      </button>
-                    ))}
+                    {timeSlots.map((time) => {
+                      const isAvailable = availableMap ? !!availableMap.get(time) : true;
+                      return (
+                        <button
+                          key={time}
+                          onClick={() => isAvailable && setSelectedTime(time)}
+                          disabled={!isAvailable || isLoadingSlots}
+                          className={`px-4 py-3 rounded-xl border-2 transition-all ${selectedTime === time
+                            ? "border-pink-500 bg-pink-50 text-pink-600"
+                            : isAvailable
+                              ? "border-gray-200 hover:border-pink-300 text-gray-700"
+                              : "border-gray-100 text-gray-400 opacity-50 cursor-not-allowed"
+                            }`}
+                        >
+                          {time}
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
               </div>
@@ -459,10 +490,15 @@ export default function Appointments({
                       Service
                     </p>
                     <p className="text-gray-900">
-                      {selectedService}
+                      {selectedServiceObj?.label ?? selectedService}
                     </p>
                   </div>
                 )}
+
+                {/* Reserve link (generated href) */}
+                <div className="mt-2 text-xs text-gray-400">
+                  <p>Lien de réservation: <span className="break-all">{reserveHref}</span></p>
+                </div>
 
                 {selectedWorker && (
                   <div className="pb-4 border-b border-gray-200">
@@ -550,10 +586,10 @@ export default function Appointments({
 
               <Button
                 onClick={handleSubmit}
-                disabled={!user}
+                disabled={!user || isCreating}
                 className="w-full bg-linear-to-r from-pink-500 to-amber-400 hover:from-pink-600 hover:to-amber-500 text-white rounded-full py-6"
               >
-                Confirmer le rendez-vous
+                {isCreating ? "Réservation..." : "Confirmer le rendez-vous"}
               </Button>
 
               <p className="text-xs text-gray-500 text-center mt-4">

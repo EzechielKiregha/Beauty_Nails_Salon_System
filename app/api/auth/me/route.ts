@@ -2,7 +2,7 @@ import { NextRequest } from 'next/server';
 import prisma from '@/lib/prisma';
 import { getAuthenticatedUser, errorResponse, successResponse, handleApiError } from '@/lib/api/helpers';
 
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   try {
     const sessionUser = await getAuthenticatedUser();
 

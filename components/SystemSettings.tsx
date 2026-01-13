@@ -123,7 +123,7 @@ export default function SystemSettings() {
                 <Input defaultValue={salonProfile.website} className="rounded-xl" />
               </div>
 
-              <Button className="w-full bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-full">
+              <Button className="w-full bg-linear-to-r from-pink-500 to-purple-500 text-white rounded-full">
                 Sauvegarder les Modifications
               </Button>
             </div>
@@ -163,7 +163,7 @@ export default function SystemSettings() {
               ))}
             </div>
 
-            <Button className="w-full mt-6 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-full">
+            <Button className="w-full mt-6 bg-linear-to-r from-blue-500 to-cyan-500 text-white rounded-full">
               Sauvegarder Horaires
             </Button>
           </Card>
@@ -177,7 +177,7 @@ export default function SystemSettings() {
                 <Users className="w-8 h-8 text-purple-500" />
                 <h3 className="text-2xl text-gray-900">Utilisateurs & Permissions</h3>
               </div>
-              <Button className="bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full">
+              <Button className="bg-linear-to-r from-purple-500 to-pink-500 text-white rounded-full">
                 + Nouvel Utilisateur
               </Button>
             </div>
@@ -220,7 +220,7 @@ export default function SystemSettings() {
               ))}
             </div>
 
-            <Card className="bg-gradient-to-br from-amber-50 to-orange-50 border-0 p-6 mt-6">
+            <Card className="bg-linear-to-br from-amber-50 to-orange-50 border-0 p-6 mt-6">
               <h4 className="text-lg text-gray-900 mb-4">Rôles et Permissions</h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                 <div>
@@ -381,7 +381,7 @@ export default function SystemSettings() {
                 </div>
               </div>
 
-              <Button className="w-full bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-full">
+              <Button className="w-full bg-linear-to-r from-amber-500 to-orange-500 text-white rounded-full">
                 Sauvegarder Personnalisation
               </Button>
             </div>
@@ -430,7 +430,7 @@ export default function SystemSettings() {
               })}
             </div>
 
-            <Card className="bg-gradient-to-br from-blue-50 to-cyan-50 border-0 p-6 mt-6">
+            <Card className="bg-linear-to-br from-blue-50 to-cyan-50 border-0 p-6 mt-6">
               <h4 className="text-lg text-gray-900 mb-2">API & Webhooks</h4>
               <p className="text-sm text-gray-700 mb-4">
                 Intégrez Beauty Nails avec vos propres systèmes ou applications tierces

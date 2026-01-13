@@ -1,25 +1,13 @@
 "use client"
 import { useState } from 'react';
+import CreateClientModal from '@/components/modals/CreateClientModal';
 import { Card } from './ui/card';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Badge } from './ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Search, Phone, Calendar, DollarSign, Gift, Bell, CreditCard, Award, Mail, MapPin, Cake } from 'lucide-react';
-
-// Axios API calls (commented out for future use)
-// import axios from 'axios';
-// const fetchClients = async () => {
-//   const response = await axiosdb.get('/api/clients');
-//   return response.data;
-// };
-// const fetchClientProfile = async (clientId: string) => {
-//   const response = await axiosdb.get(`/api/clients/${clientId}`);
-//   return response.data;
-// };
-// const updateClientNotes = async (clientId: string, notes: string) => {
-//   await axiosdb.patch(`/api/clients/${clientId}/notes`, { notes });
-// };
+import { useClients } from '@/lib/hooks/useClients';
 
 interface Client {
   id: string;
@@ -41,12 +29,15 @@ interface Client {
   referrals: number;
 }
 
-export default function ClientManagement() {
+export default function ClientManagement({ showMock }: { showMock?: boolean }) {
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedClient, setSelectedClient] = useState<Client | null>(null);
+  const [selectedClient, setSelectedClient] = useState<any | null>(null);
 
-  // Mock data - replace with API call
-  const clients: Client[] = [
+  // API hook
+  const { clients: apiClients = [] } = useClients() // placeholder
+
+  // Fallback mock data (used only if showMock=true)
+  const MOCK_CLIENTS: Client[] = [
     {
       id: '1',
       name: 'Marie Kabila',
@@ -106,6 +97,29 @@ export default function ClientManagement() {
     }
   ];
 
+  // Use API data first, fallback to mock only when showMock is true
+  const clients = (apiClients && apiClients.length > 0)
+    ? apiClients.map((c) => ({
+      id: c.id || c.user?.id || String(c.user?.name ?? c.user?.email ?? 'unknown'),
+      name: c.user?.name || c.user?.email || 'Eze',
+      phone: c.user?.phone || '',
+      email: c.user?.email || '',
+      birthday: c.birthday ? new Date(c.birthday).toISOString().split('T')[0] : undefined,
+      address: c.address || undefined,
+      totalAppointments: c.totalAppointments || 0,
+      totalSpent: typeof c.totalSpent === 'number' ? `${c.totalSpent}` : (c.totalSpent || '0'),
+      loyaltyPoints: c.loyaltyPoints || 0,
+      membershipStatus: c.tier || 'Standard',
+      lastVisit: (c as any).lastVisit || undefined,
+      preferences: typeof c.preferences === 'string' ? c.preferences : JSON.stringify(c.preferences || ''),
+      allergies: c.allergies || undefined,
+      favoriteServices: c.favoriteServices || [],
+      prepaymentBalance: c.prepaymentBalance ?? '0',
+      giftCardBalance: c.giftCardBalance ?? '0',
+      referrals: c.referrals || 0
+    }))
+    : (showMock ? MOCK_CLIENTS : []);
+
   const appointmentHistory = [
     { date: '2024-11-28', service: 'Manucure Gel', worker: 'Marie N.', amount: '30 000 CDF', status: 'Complété' },
     { date: '2024-11-15', service: 'Extension Cils', worker: 'Grace L.', amount: '45 000 CDF', status: 'Complété' },
@@ -129,11 +143,11 @@ export default function ClientManagement() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-3xl text-gray-900 dark:text-white">Gestion des Clientes</h2>
-        <Button className="bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-full">
-          + Nouvelle Cliente
-        </Button>
+        <div className="flex items-center gap-2">
+          <CreateClientModal triggerLabel="+ Nouvelle Cliente" />
+          <Button variant="ghost" size="sm">Importer</Button>
+        </div>
       </div>
-
       {/* Search Bar */}
       <Card className="border-0 shadow-lg rounded-2xl p-6">
         <div className="relative">
@@ -157,7 +171,7 @@ export default function ClientManagement() {
                 key={client.id}
                 onClick={() => setSelectedClient(client)}
                 className={`p-4 rounded-xl cursor-pointer transition-all ${selectedClient?.id === client.id
-                  ? 'bg-gradient-to-r from-pink-100 to-purple-100 dark:from-pink-900 dark:to-purple-900 border-2 border-pink-300 dark:border-pink-700'
+                  ? 'bg-linear-to-r from-pink-100 to-purple-100 dark:from-pink-900 dark:to-purple-900 border-2 border-pink-300 dark:border-pink-700'
                   : 'bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700'
                   }`}
               >
@@ -216,29 +230,29 @@ export default function ClientManagement() {
                       </p>
                     </div>
                   </div>
-                  <Badge className="bg-gradient-to-r from-amber-500 to-orange-500 text-white px-4 py-2">
+                  <Badge className="bg-linear-to-r from-amber-500 to-orange-500 text-white px-4 py-2">
                     {selectedClient.membershipStatus}
                   </Badge>
                 </div>
 
                 {/* Quick Stats */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <Card className="bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-950 dark:to-cyan-950 border-0 p-4">
+                  <Card className="bg-linear-to-br from-blue-50 to-cyan-50 dark:from-blue-950 dark:to-cyan-950 border-0 p-4">
                     <Calendar className="w-6 h-6 text-blue-600 dark:text-blue-400 mb-2" />
                     <p className="text-2xl text-gray-900 dark:text-white">{selectedClient.totalAppointments}</p>
                     <p className="text-xs text-gray-600 dark:text-gray-400">Visites</p>
                   </Card>
-                  <Card className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950 dark:to-emerald-950 border-0 p-4">
+                  <Card className="bg-linear-to-br from-green-50 to-emerald-50 dark:from-green-950 dark:to-emerald-950 border-0 p-4">
                     <DollarSign className="w-6 h-6 text-green-600 dark:text-green-400 mb-2" />
                     <p className="text-lg text-gray-900 dark:text-white">{selectedClient.totalSpent}</p>
                     <p className="text-xs text-gray-600 dark:text-gray-400">Dépensé</p>
                   </Card>
-                  <Card className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-950 dark:to-pink-950 border-0 p-4">
+                  <Card className="bg-linear-to-br from-purple-50 to-pink-50 dark:from-purple-950 dark:to-pink-950 border-0 p-4">
                     <Award className="w-6 h-6 text-purple-600 dark:text-purple-400 mb-2" />
                     <p className="text-2xl text-gray-900 dark:text-white">{selectedClient.loyaltyPoints}</p>
                     <p className="text-xs text-gray-600 dark:text-gray-400">Points Fidélité</p>
                   </Card>
-                  <Card className="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950 dark:to-orange-950 border-0 p-4">
+                  <Card className="bg-linear-to-br from-amber-50 to-orange-50 dark:from-amber-950 dark:to-orange-950 border-0 p-4">
                     <Gift className="w-6 h-6 text-amber-600 dark:text-amber-400 mb-2" />
                     <p className="text-2xl text-gray-900 dark:text-white">{selectedClient.referrals}</p>
                     <p className="text-xs text-gray-600 dark:text-gray-400">Parrainages</p>
@@ -258,7 +272,7 @@ export default function ClientManagement() {
                   <div className="bg-pink-50 dark:bg-pink-900/20 p-4 rounded-xl">
                     <h4 className="text-gray-900 dark:text-white mb-2">Services Favoris</h4>
                     <div className="flex flex-wrap gap-2 mt-2">
-                      {selectedClient.favoriteServices.map((service, idx) => (
+                      {selectedClient.favoriteServices.map((service: any, idx: any) => (
                         <Badge key={idx} className="bg-pink-500 text-white">
                           {service}
                         </Badge>
@@ -268,7 +282,7 @@ export default function ClientManagement() {
                 </div>
 
                 <div className="flex gap-3">
-                  <Button className="flex-1 bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-full">
+                  <Button className="flex-1 bg-linear-to-r from-pink-500 to-purple-500 text-white rounded-full">
                     Prendre RDV
                   </Button>
                   <Button variant="outline" className="rounded-full">
@@ -327,7 +341,7 @@ export default function ClientManagement() {
               <TabsContent value="finances">
                 <div className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <Card className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950 dark:to-emerald-950 border-0 p-6">
+                    <Card className="bg-linear-to-br from-green-50 to-emerald-50 dark:from-green-950 dark:to-emerald-950 border-0 p-6">
                       <div className="flex items-center gap-3 mb-4">
                         <CreditCard className="w-6 h-6 text-green-600 dark:text-green-400" />
                         <h4 className="text-lg text-gray-900 dark:text-white">Solde Prépaiement</h4>
@@ -338,7 +352,7 @@ export default function ClientManagement() {
                       </Button>
                     </Card>
 
-                    <Card className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-950 dark:to-pink-950 border-0 p-6">
+                    <Card className="bg-linear-to-br from-purple-50 to-pink-50 dark:from-purple-950 dark:to-pink-950 border-0 p-6">
                       <div className="flex items-center gap-3 mb-4">
                         <Gift className="w-6 h-6 text-purple-600 dark:text-purple-400" />
                         <h4 className="text-lg text-gray-900 dark:text-white">Carte Cadeau</h4>
@@ -350,7 +364,7 @@ export default function ClientManagement() {
                     </Card>
                   </div>
 
-                  <Card className="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950 dark:to-orange-950 border-0 p-6">
+                  <Card className="bg-linear-to-br from-amber-50 to-orange-50 dark:from-amber-950 dark:to-orange-950 border-0 p-6">
                     <h4 className="text-lg text-gray-900 dark:text-white mb-4">Programme de Fidélité</h4>
                     <div className="space-y-3">
                       <div className="flex justify-between items-center">
@@ -363,7 +377,7 @@ export default function ClientManagement() {
                       </div>
                       <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3">
                         <div
-                          className="bg-gradient-to-r from-amber-500 to-orange-500 h-3 rounded-full"
+                          className="bg-linear-to-r from-amber-500 to-orange-500 h-3 rounded-full"
                           style={{ width: `${(selectedClient.loyaltyPoints / 500) * 100}%` }}
                         />
                       </div>

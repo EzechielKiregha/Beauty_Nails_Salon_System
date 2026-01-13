@@ -29,13 +29,19 @@ export type AggregateClientProfile = {
 export type ClientProfileAvgAggregateOutputType = {
   loyaltyPoints: number | null
   totalAppointments: number | null
-  totalSpent: runtime.Decimal | null
+  totalSpent: number | null
+  prepaymentBalance: number | null
+  giftCardBalance: number | null
+  referrals: number | null
 }
 
 export type ClientProfileSumAggregateOutputType = {
   loyaltyPoints: number | null
   totalAppointments: number | null
-  totalSpent: runtime.Decimal | null
+  totalSpent: number | null
+  prepaymentBalance: number | null
+  giftCardBalance: number | null
+  referrals: number | null
 }
 
 export type ClientProfileMinAggregateOutputType = {
@@ -44,10 +50,16 @@ export type ClientProfileMinAggregateOutputType = {
   tier: $Enums.Tier | null
   loyaltyPoints: number | null
   totalAppointments: number | null
-  totalSpent: runtime.Decimal | null
+  totalSpent: number | null
   referralCode: string | null
   referredBy: string | null
   notes: string | null
+  birthday: Date | null
+  address: string | null
+  allergies: string | null
+  prepaymentBalance: number | null
+  giftCardBalance: number | null
+  referrals: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -58,10 +70,16 @@ export type ClientProfileMaxAggregateOutputType = {
   tier: $Enums.Tier | null
   loyaltyPoints: number | null
   totalAppointments: number | null
-  totalSpent: runtime.Decimal | null
+  totalSpent: number | null
   referralCode: string | null
   referredBy: string | null
   notes: string | null
+  birthday: Date | null
+  address: string | null
+  allergies: string | null
+  prepaymentBalance: number | null
+  giftCardBalance: number | null
+  referrals: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -77,6 +95,13 @@ export type ClientProfileCountAggregateOutputType = {
   referredBy: number
   preferences: number
   notes: number
+  birthday: number
+  address: number
+  favoriteServices: number
+  allergies: number
+  prepaymentBalance: number
+  giftCardBalance: number
+  referrals: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -87,12 +112,18 @@ export type ClientProfileAvgAggregateInputType = {
   loyaltyPoints?: true
   totalAppointments?: true
   totalSpent?: true
+  prepaymentBalance?: true
+  giftCardBalance?: true
+  referrals?: true
 }
 
 export type ClientProfileSumAggregateInputType = {
   loyaltyPoints?: true
   totalAppointments?: true
   totalSpent?: true
+  prepaymentBalance?: true
+  giftCardBalance?: true
+  referrals?: true
 }
 
 export type ClientProfileMinAggregateInputType = {
@@ -105,6 +136,12 @@ export type ClientProfileMinAggregateInputType = {
   referralCode?: true
   referredBy?: true
   notes?: true
+  birthday?: true
+  address?: true
+  allergies?: true
+  prepaymentBalance?: true
+  giftCardBalance?: true
+  referrals?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -119,6 +156,12 @@ export type ClientProfileMaxAggregateInputType = {
   referralCode?: true
   referredBy?: true
   notes?: true
+  birthday?: true
+  address?: true
+  allergies?: true
+  prepaymentBalance?: true
+  giftCardBalance?: true
+  referrals?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -134,6 +177,13 @@ export type ClientProfileCountAggregateInputType = {
   referredBy?: true
   preferences?: true
   notes?: true
+  birthday?: true
+  address?: true
+  favoriteServices?: true
+  allergies?: true
+  prepaymentBalance?: true
+  giftCardBalance?: true
+  referrals?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -231,11 +281,18 @@ export type ClientProfileGroupByOutputType = {
   tier: $Enums.Tier
   loyaltyPoints: number
   totalAppointments: number
-  totalSpent: runtime.Decimal
+  totalSpent: number
   referralCode: string
   referredBy: string | null
   preferences: runtime.JsonValue | null
   notes: string | null
+  birthday: Date | null
+  address: string | null
+  favoriteServices: string[]
+  allergies: string | null
+  prepaymentBalance: number
+  giftCardBalance: number
+  referrals: number
   createdAt: Date
   updatedAt: Date
   _count: ClientProfileCountAggregateOutputType | null
@@ -269,21 +326,29 @@ export type ClientProfileWhereInput = {
   tier?: Prisma.EnumTierFilter<"ClientProfile"> | $Enums.Tier
   loyaltyPoints?: Prisma.IntFilter<"ClientProfile"> | number
   totalAppointments?: Prisma.IntFilter<"ClientProfile"> | number
-  totalSpent?: Prisma.DecimalFilter<"ClientProfile"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalSpent?: Prisma.FloatFilter<"ClientProfile"> | number
   referralCode?: Prisma.StringFilter<"ClientProfile"> | string
   referredBy?: Prisma.StringNullableFilter<"ClientProfile"> | string | null
   preferences?: Prisma.JsonNullableFilter<"ClientProfile">
   notes?: Prisma.StringNullableFilter<"ClientProfile"> | string | null
+  birthday?: Prisma.DateTimeNullableFilter<"ClientProfile"> | Date | string | null
+  address?: Prisma.StringNullableFilter<"ClientProfile"> | string | null
+  favoriteServices?: Prisma.StringNullableListFilter<"ClientProfile">
+  allergies?: Prisma.StringNullableFilter<"ClientProfile"> | string | null
+  prepaymentBalance?: Prisma.FloatFilter<"ClientProfile"> | number
+  giftCardBalance?: Prisma.FloatFilter<"ClientProfile"> | number
+  referrals?: Prisma.IntFilter<"ClientProfile"> | number
   createdAt?: Prisma.DateTimeFilter<"ClientProfile"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ClientProfile"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   appointments?: Prisma.AppointmentListRelationFilter
   reviews?: Prisma.ReviewListRelationFilter
   loyaltyTransactions?: Prisma.LoyaltyTransactionListRelationFilter
-  referrals?: Prisma.ReferralListRelationFilter
+  referralsRel?: Prisma.ReferralListRelationFilter
   referrer?: Prisma.XOR<Prisma.ReferralNullableScalarRelationFilter, Prisma.ReferralWhereInput> | null
   membershipPurchases?: Prisma.MembershipPurchaseListRelationFilter
   sales?: Prisma.SaleListRelationFilter
+  tasks?: Prisma.TaskListRelationFilter
 }
 
 export type ClientProfileOrderByWithRelationInput = {
@@ -297,16 +362,24 @@ export type ClientProfileOrderByWithRelationInput = {
   referredBy?: Prisma.SortOrderInput | Prisma.SortOrder
   preferences?: Prisma.SortOrderInput | Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
+  birthday?: Prisma.SortOrderInput | Prisma.SortOrder
+  address?: Prisma.SortOrderInput | Prisma.SortOrder
+  favoriteServices?: Prisma.SortOrder
+  allergies?: Prisma.SortOrderInput | Prisma.SortOrder
+  prepaymentBalance?: Prisma.SortOrder
+  giftCardBalance?: Prisma.SortOrder
+  referrals?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
   appointments?: Prisma.AppointmentOrderByRelationAggregateInput
   reviews?: Prisma.ReviewOrderByRelationAggregateInput
   loyaltyTransactions?: Prisma.LoyaltyTransactionOrderByRelationAggregateInput
-  referrals?: Prisma.ReferralOrderByRelationAggregateInput
+  referralsRel?: Prisma.ReferralOrderByRelationAggregateInput
   referrer?: Prisma.ReferralOrderByWithRelationInput
   membershipPurchases?: Prisma.MembershipPurchaseOrderByRelationAggregateInput
   sales?: Prisma.SaleOrderByRelationAggregateInput
+  tasks?: Prisma.TaskOrderByRelationAggregateInput
 }
 
 export type ClientProfileWhereUniqueInput = Prisma.AtLeast<{
@@ -319,20 +392,28 @@ export type ClientProfileWhereUniqueInput = Prisma.AtLeast<{
   tier?: Prisma.EnumTierFilter<"ClientProfile"> | $Enums.Tier
   loyaltyPoints?: Prisma.IntFilter<"ClientProfile"> | number
   totalAppointments?: Prisma.IntFilter<"ClientProfile"> | number
-  totalSpent?: Prisma.DecimalFilter<"ClientProfile"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalSpent?: Prisma.FloatFilter<"ClientProfile"> | number
   referredBy?: Prisma.StringNullableFilter<"ClientProfile"> | string | null
   preferences?: Prisma.JsonNullableFilter<"ClientProfile">
   notes?: Prisma.StringNullableFilter<"ClientProfile"> | string | null
+  birthday?: Prisma.DateTimeNullableFilter<"ClientProfile"> | Date | string | null
+  address?: Prisma.StringNullableFilter<"ClientProfile"> | string | null
+  favoriteServices?: Prisma.StringNullableListFilter<"ClientProfile">
+  allergies?: Prisma.StringNullableFilter<"ClientProfile"> | string | null
+  prepaymentBalance?: Prisma.FloatFilter<"ClientProfile"> | number
+  giftCardBalance?: Prisma.FloatFilter<"ClientProfile"> | number
+  referrals?: Prisma.IntFilter<"ClientProfile"> | number
   createdAt?: Prisma.DateTimeFilter<"ClientProfile"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ClientProfile"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   appointments?: Prisma.AppointmentListRelationFilter
   reviews?: Prisma.ReviewListRelationFilter
   loyaltyTransactions?: Prisma.LoyaltyTransactionListRelationFilter
-  referrals?: Prisma.ReferralListRelationFilter
+  referralsRel?: Prisma.ReferralListRelationFilter
   referrer?: Prisma.XOR<Prisma.ReferralNullableScalarRelationFilter, Prisma.ReferralWhereInput> | null
   membershipPurchases?: Prisma.MembershipPurchaseListRelationFilter
   sales?: Prisma.SaleListRelationFilter
+  tasks?: Prisma.TaskListRelationFilter
 }, "id" | "userId" | "referralCode">
 
 export type ClientProfileOrderByWithAggregationInput = {
@@ -346,6 +427,13 @@ export type ClientProfileOrderByWithAggregationInput = {
   referredBy?: Prisma.SortOrderInput | Prisma.SortOrder
   preferences?: Prisma.SortOrderInput | Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
+  birthday?: Prisma.SortOrderInput | Prisma.SortOrder
+  address?: Prisma.SortOrderInput | Prisma.SortOrder
+  favoriteServices?: Prisma.SortOrder
+  allergies?: Prisma.SortOrderInput | Prisma.SortOrder
+  prepaymentBalance?: Prisma.SortOrder
+  giftCardBalance?: Prisma.SortOrder
+  referrals?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.ClientProfileCountOrderByAggregateInput
@@ -364,11 +452,18 @@ export type ClientProfileScalarWhereWithAggregatesInput = {
   tier?: Prisma.EnumTierWithAggregatesFilter<"ClientProfile"> | $Enums.Tier
   loyaltyPoints?: Prisma.IntWithAggregatesFilter<"ClientProfile"> | number
   totalAppointments?: Prisma.IntWithAggregatesFilter<"ClientProfile"> | number
-  totalSpent?: Prisma.DecimalWithAggregatesFilter<"ClientProfile"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalSpent?: Prisma.FloatWithAggregatesFilter<"ClientProfile"> | number
   referralCode?: Prisma.StringWithAggregatesFilter<"ClientProfile"> | string
   referredBy?: Prisma.StringNullableWithAggregatesFilter<"ClientProfile"> | string | null
   preferences?: Prisma.JsonNullableWithAggregatesFilter<"ClientProfile">
   notes?: Prisma.StringNullableWithAggregatesFilter<"ClientProfile"> | string | null
+  birthday?: Prisma.DateTimeNullableWithAggregatesFilter<"ClientProfile"> | Date | string | null
+  address?: Prisma.StringNullableWithAggregatesFilter<"ClientProfile"> | string | null
+  favoriteServices?: Prisma.StringNullableListFilter<"ClientProfile">
+  allergies?: Prisma.StringNullableWithAggregatesFilter<"ClientProfile"> | string | null
+  prepaymentBalance?: Prisma.FloatWithAggregatesFilter<"ClientProfile"> | number
+  giftCardBalance?: Prisma.FloatWithAggregatesFilter<"ClientProfile"> | number
+  referrals?: Prisma.IntWithAggregatesFilter<"ClientProfile"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"ClientProfile"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"ClientProfile"> | Date | string
 }
@@ -378,21 +473,29 @@ export type ClientProfileCreateInput = {
   tier?: $Enums.Tier
   loyaltyPoints?: number
   totalAppointments?: number
-  totalSpent?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalSpent?: number
   referralCode: string
   referredBy?: string | null
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: string | null
+  birthday?: Date | string | null
+  address?: string | null
+  favoriteServices?: Prisma.ClientProfileCreatefavoriteServicesInput | string[]
+  allergies?: string | null
+  prepaymentBalance?: number
+  giftCardBalance?: number
+  referrals?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutClientProfileInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutClientInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutClientInput
   loyaltyTransactions?: Prisma.LoyaltyTransactionCreateNestedManyWithoutClientInput
-  referrals?: Prisma.ReferralCreateNestedManyWithoutReferredInput
+  referralsRel?: Prisma.ReferralCreateNestedManyWithoutReferredInput
   referrer?: Prisma.ReferralCreateNestedOneWithoutReferrerInput
   membershipPurchases?: Prisma.MembershipPurchaseCreateNestedManyWithoutClientInput
   sales?: Prisma.SaleCreateNestedManyWithoutClientInput
+  tasks?: Prisma.TaskCreateNestedManyWithoutClientInput
 }
 
 export type ClientProfileUncheckedCreateInput = {
@@ -401,20 +504,28 @@ export type ClientProfileUncheckedCreateInput = {
   tier?: $Enums.Tier
   loyaltyPoints?: number
   totalAppointments?: number
-  totalSpent?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalSpent?: number
   referralCode: string
   referredBy?: string | null
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: string | null
+  birthday?: Date | string | null
+  address?: string | null
+  favoriteServices?: Prisma.ClientProfileCreatefavoriteServicesInput | string[]
+  allergies?: string | null
+  prepaymentBalance?: number
+  giftCardBalance?: number
+  referrals?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutClientInput
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutClientInput
   loyaltyTransactions?: Prisma.LoyaltyTransactionUncheckedCreateNestedManyWithoutClientInput
-  referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutReferredInput
+  referralsRel?: Prisma.ReferralUncheckedCreateNestedManyWithoutReferredInput
   referrer?: Prisma.ReferralUncheckedCreateNestedOneWithoutReferrerInput
   membershipPurchases?: Prisma.MembershipPurchaseUncheckedCreateNestedManyWithoutClientInput
   sales?: Prisma.SaleUncheckedCreateNestedManyWithoutClientInput
+  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutClientInput
 }
 
 export type ClientProfileUpdateInput = {
@@ -422,21 +533,29 @@ export type ClientProfileUpdateInput = {
   tier?: Prisma.EnumTierFieldUpdateOperationsInput | $Enums.Tier
   loyaltyPoints?: Prisma.IntFieldUpdateOperationsInput | number
   totalAppointments?: Prisma.IntFieldUpdateOperationsInput | number
-  totalSpent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalSpent?: Prisma.FloatFieldUpdateOperationsInput | number
   referralCode?: Prisma.StringFieldUpdateOperationsInput | string
   referredBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthday?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  favoriteServices?: Prisma.ClientProfileUpdatefavoriteServicesInput | string[]
+  allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  prepaymentBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  giftCardBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  referrals?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutClientProfileNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutClientNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutClientNestedInput
   loyaltyTransactions?: Prisma.LoyaltyTransactionUpdateManyWithoutClientNestedInput
-  referrals?: Prisma.ReferralUpdateManyWithoutReferredNestedInput
+  referralsRel?: Prisma.ReferralUpdateManyWithoutReferredNestedInput
   referrer?: Prisma.ReferralUpdateOneWithoutReferrerNestedInput
   membershipPurchases?: Prisma.MembershipPurchaseUpdateManyWithoutClientNestedInput
   sales?: Prisma.SaleUpdateManyWithoutClientNestedInput
+  tasks?: Prisma.TaskUpdateManyWithoutClientNestedInput
 }
 
 export type ClientProfileUncheckedUpdateInput = {
@@ -445,20 +564,28 @@ export type ClientProfileUncheckedUpdateInput = {
   tier?: Prisma.EnumTierFieldUpdateOperationsInput | $Enums.Tier
   loyaltyPoints?: Prisma.IntFieldUpdateOperationsInput | number
   totalAppointments?: Prisma.IntFieldUpdateOperationsInput | number
-  totalSpent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalSpent?: Prisma.FloatFieldUpdateOperationsInput | number
   referralCode?: Prisma.StringFieldUpdateOperationsInput | string
   referredBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthday?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  favoriteServices?: Prisma.ClientProfileUpdatefavoriteServicesInput | string[]
+  allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  prepaymentBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  giftCardBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  referrals?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutClientNestedInput
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutClientNestedInput
   loyaltyTransactions?: Prisma.LoyaltyTransactionUncheckedUpdateManyWithoutClientNestedInput
-  referrals?: Prisma.ReferralUncheckedUpdateManyWithoutReferredNestedInput
+  referralsRel?: Prisma.ReferralUncheckedUpdateManyWithoutReferredNestedInput
   referrer?: Prisma.ReferralUncheckedUpdateOneWithoutReferrerNestedInput
   membershipPurchases?: Prisma.MembershipPurchaseUncheckedUpdateManyWithoutClientNestedInput
   sales?: Prisma.SaleUncheckedUpdateManyWithoutClientNestedInput
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutClientNestedInput
 }
 
 export type ClientProfileCreateManyInput = {
@@ -467,11 +594,18 @@ export type ClientProfileCreateManyInput = {
   tier?: $Enums.Tier
   loyaltyPoints?: number
   totalAppointments?: number
-  totalSpent?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalSpent?: number
   referralCode: string
   referredBy?: string | null
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: string | null
+  birthday?: Date | string | null
+  address?: string | null
+  favoriteServices?: Prisma.ClientProfileCreatefavoriteServicesInput | string[]
+  allergies?: string | null
+  prepaymentBalance?: number
+  giftCardBalance?: number
+  referrals?: number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -481,11 +615,18 @@ export type ClientProfileUpdateManyMutationInput = {
   tier?: Prisma.EnumTierFieldUpdateOperationsInput | $Enums.Tier
   loyaltyPoints?: Prisma.IntFieldUpdateOperationsInput | number
   totalAppointments?: Prisma.IntFieldUpdateOperationsInput | number
-  totalSpent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalSpent?: Prisma.FloatFieldUpdateOperationsInput | number
   referralCode?: Prisma.StringFieldUpdateOperationsInput | string
   referredBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthday?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  favoriteServices?: Prisma.ClientProfileUpdatefavoriteServicesInput | string[]
+  allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  prepaymentBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  giftCardBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  referrals?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -496,11 +637,18 @@ export type ClientProfileUncheckedUpdateManyInput = {
   tier?: Prisma.EnumTierFieldUpdateOperationsInput | $Enums.Tier
   loyaltyPoints?: Prisma.IntFieldUpdateOperationsInput | number
   totalAppointments?: Prisma.IntFieldUpdateOperationsInput | number
-  totalSpent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalSpent?: Prisma.FloatFieldUpdateOperationsInput | number
   referralCode?: Prisma.StringFieldUpdateOperationsInput | string
   referredBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthday?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  favoriteServices?: Prisma.ClientProfileUpdatefavoriteServicesInput | string[]
+  allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  prepaymentBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  giftCardBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  referrals?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -508,6 +656,14 @@ export type ClientProfileUncheckedUpdateManyInput = {
 export type ClientProfileNullableScalarRelationFilter = {
   is?: Prisma.ClientProfileWhereInput | null
   isNot?: Prisma.ClientProfileWhereInput | null
+}
+
+export type StringNullableListFilter<$PrismaModel = never> = {
+  equals?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel> | null
+  has?: string | Prisma.StringFieldRefInput<$PrismaModel> | null
+  hasEvery?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
+  hasSome?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
+  isEmpty?: boolean
 }
 
 export type ClientProfileCountOrderByAggregateInput = {
@@ -521,6 +677,13 @@ export type ClientProfileCountOrderByAggregateInput = {
   referredBy?: Prisma.SortOrder
   preferences?: Prisma.SortOrder
   notes?: Prisma.SortOrder
+  birthday?: Prisma.SortOrder
+  address?: Prisma.SortOrder
+  favoriteServices?: Prisma.SortOrder
+  allergies?: Prisma.SortOrder
+  prepaymentBalance?: Prisma.SortOrder
+  giftCardBalance?: Prisma.SortOrder
+  referrals?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -529,6 +692,9 @@ export type ClientProfileAvgOrderByAggregateInput = {
   loyaltyPoints?: Prisma.SortOrder
   totalAppointments?: Prisma.SortOrder
   totalSpent?: Prisma.SortOrder
+  prepaymentBalance?: Prisma.SortOrder
+  giftCardBalance?: Prisma.SortOrder
+  referrals?: Prisma.SortOrder
 }
 
 export type ClientProfileMaxOrderByAggregateInput = {
@@ -541,6 +707,12 @@ export type ClientProfileMaxOrderByAggregateInput = {
   referralCode?: Prisma.SortOrder
   referredBy?: Prisma.SortOrder
   notes?: Prisma.SortOrder
+  birthday?: Prisma.SortOrder
+  address?: Prisma.SortOrder
+  allergies?: Prisma.SortOrder
+  prepaymentBalance?: Prisma.SortOrder
+  giftCardBalance?: Prisma.SortOrder
+  referrals?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -555,6 +727,12 @@ export type ClientProfileMinOrderByAggregateInput = {
   referralCode?: Prisma.SortOrder
   referredBy?: Prisma.SortOrder
   notes?: Prisma.SortOrder
+  birthday?: Prisma.SortOrder
+  address?: Prisma.SortOrder
+  allergies?: Prisma.SortOrder
+  prepaymentBalance?: Prisma.SortOrder
+  giftCardBalance?: Prisma.SortOrder
+  referrals?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -563,6 +741,9 @@ export type ClientProfileSumOrderByAggregateInput = {
   loyaltyPoints?: Prisma.SortOrder
   totalAppointments?: Prisma.SortOrder
   totalSpent?: Prisma.SortOrder
+  prepaymentBalance?: Prisma.SortOrder
+  giftCardBalance?: Prisma.SortOrder
+  referrals?: Prisma.SortOrder
 }
 
 export type ClientProfileScalarRelationFilter = {
@@ -602,6 +783,10 @@ export type ClientProfileUncheckedUpdateOneWithoutUserNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ClientProfileUpdateToOneWithWhereWithoutUserInput, Prisma.ClientProfileUpdateWithoutUserInput>, Prisma.ClientProfileUncheckedUpdateWithoutUserInput>
 }
 
+export type ClientProfileCreatefavoriteServicesInput = {
+  set: string[]
+}
+
 export type EnumTierFieldUpdateOperationsInput = {
   set?: $Enums.Tier
 }
@@ -614,12 +799,33 @@ export type IntFieldUpdateOperationsInput = {
   divide?: number
 }
 
-export type DecimalFieldUpdateOperationsInput = {
-  set?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  increment?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  decrement?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  multiply?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  divide?: runtime.Decimal | runtime.DecimalJsLike | number | string
+export type FloatFieldUpdateOperationsInput = {
+  set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
+export type ClientProfileUpdatefavoriteServicesInput = {
+  set?: string[]
+  push?: string | string[]
+}
+
+export type ClientProfileCreateNestedOneWithoutTasksInput = {
+  create?: Prisma.XOR<Prisma.ClientProfileCreateWithoutTasksInput, Prisma.ClientProfileUncheckedCreateWithoutTasksInput>
+  connectOrCreate?: Prisma.ClientProfileCreateOrConnectWithoutTasksInput
+  connect?: Prisma.ClientProfileWhereUniqueInput
+}
+
+export type ClientProfileUpdateOneWithoutTasksNestedInput = {
+  create?: Prisma.XOR<Prisma.ClientProfileCreateWithoutTasksInput, Prisma.ClientProfileUncheckedCreateWithoutTasksInput>
+  connectOrCreate?: Prisma.ClientProfileCreateOrConnectWithoutTasksInput
+  upsert?: Prisma.ClientProfileUpsertWithoutTasksInput
+  disconnect?: Prisma.ClientProfileWhereInput | boolean
+  delete?: Prisma.ClientProfileWhereInput | boolean
+  connect?: Prisma.ClientProfileWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ClientProfileUpdateToOneWithWhereWithoutTasksInput, Prisma.ClientProfileUpdateWithoutTasksInput>, Prisma.ClientProfileUncheckedUpdateWithoutTasksInput>
 }
 
 export type ClientProfileCreateNestedOneWithoutAppointmentsInput = {
@@ -684,9 +890,9 @@ export type ClientProfileCreateNestedOneWithoutReferrerInput = {
   connect?: Prisma.ClientProfileWhereUniqueInput
 }
 
-export type ClientProfileCreateNestedOneWithoutReferralsInput = {
-  create?: Prisma.XOR<Prisma.ClientProfileCreateWithoutReferralsInput, Prisma.ClientProfileUncheckedCreateWithoutReferralsInput>
-  connectOrCreate?: Prisma.ClientProfileCreateOrConnectWithoutReferralsInput
+export type ClientProfileCreateNestedOneWithoutReferralsRelInput = {
+  create?: Prisma.XOR<Prisma.ClientProfileCreateWithoutReferralsRelInput, Prisma.ClientProfileUncheckedCreateWithoutReferralsRelInput>
+  connectOrCreate?: Prisma.ClientProfileCreateOrConnectWithoutReferralsRelInput
   connect?: Prisma.ClientProfileWhereUniqueInput
 }
 
@@ -698,12 +904,12 @@ export type ClientProfileUpdateOneRequiredWithoutReferrerNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ClientProfileUpdateToOneWithWhereWithoutReferrerInput, Prisma.ClientProfileUpdateWithoutReferrerInput>, Prisma.ClientProfileUncheckedUpdateWithoutReferrerInput>
 }
 
-export type ClientProfileUpdateOneRequiredWithoutReferralsNestedInput = {
-  create?: Prisma.XOR<Prisma.ClientProfileCreateWithoutReferralsInput, Prisma.ClientProfileUncheckedCreateWithoutReferralsInput>
-  connectOrCreate?: Prisma.ClientProfileCreateOrConnectWithoutReferralsInput
-  upsert?: Prisma.ClientProfileUpsertWithoutReferralsInput
+export type ClientProfileUpdateOneRequiredWithoutReferralsRelNestedInput = {
+  create?: Prisma.XOR<Prisma.ClientProfileCreateWithoutReferralsRelInput, Prisma.ClientProfileUncheckedCreateWithoutReferralsRelInput>
+  connectOrCreate?: Prisma.ClientProfileCreateOrConnectWithoutReferralsRelInput
+  upsert?: Prisma.ClientProfileUpsertWithoutReferralsRelInput
   connect?: Prisma.ClientProfileWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.ClientProfileUpdateToOneWithWhereWithoutReferralsInput, Prisma.ClientProfileUpdateWithoutReferralsInput>, Prisma.ClientProfileUncheckedUpdateWithoutReferralsInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ClientProfileUpdateToOneWithWhereWithoutReferralsRelInput, Prisma.ClientProfileUpdateWithoutReferralsRelInput>, Prisma.ClientProfileUncheckedUpdateWithoutReferralsRelInput>
 }
 
 export type ClientProfileCreateNestedOneWithoutSalesInput = {
@@ -725,20 +931,28 @@ export type ClientProfileCreateWithoutUserInput = {
   tier?: $Enums.Tier
   loyaltyPoints?: number
   totalAppointments?: number
-  totalSpent?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalSpent?: number
   referralCode: string
   referredBy?: string | null
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: string | null
+  birthday?: Date | string | null
+  address?: string | null
+  favoriteServices?: Prisma.ClientProfileCreatefavoriteServicesInput | string[]
+  allergies?: string | null
+  prepaymentBalance?: number
+  giftCardBalance?: number
+  referrals?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   appointments?: Prisma.AppointmentCreateNestedManyWithoutClientInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutClientInput
   loyaltyTransactions?: Prisma.LoyaltyTransactionCreateNestedManyWithoutClientInput
-  referrals?: Prisma.ReferralCreateNestedManyWithoutReferredInput
+  referralsRel?: Prisma.ReferralCreateNestedManyWithoutReferredInput
   referrer?: Prisma.ReferralCreateNestedOneWithoutReferrerInput
   membershipPurchases?: Prisma.MembershipPurchaseCreateNestedManyWithoutClientInput
   sales?: Prisma.SaleCreateNestedManyWithoutClientInput
+  tasks?: Prisma.TaskCreateNestedManyWithoutClientInput
 }
 
 export type ClientProfileUncheckedCreateWithoutUserInput = {
@@ -746,20 +960,28 @@ export type ClientProfileUncheckedCreateWithoutUserInput = {
   tier?: $Enums.Tier
   loyaltyPoints?: number
   totalAppointments?: number
-  totalSpent?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalSpent?: number
   referralCode: string
   referredBy?: string | null
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: string | null
+  birthday?: Date | string | null
+  address?: string | null
+  favoriteServices?: Prisma.ClientProfileCreatefavoriteServicesInput | string[]
+  allergies?: string | null
+  prepaymentBalance?: number
+  giftCardBalance?: number
+  referrals?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutClientInput
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutClientInput
   loyaltyTransactions?: Prisma.LoyaltyTransactionUncheckedCreateNestedManyWithoutClientInput
-  referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutReferredInput
+  referralsRel?: Prisma.ReferralUncheckedCreateNestedManyWithoutReferredInput
   referrer?: Prisma.ReferralUncheckedCreateNestedOneWithoutReferrerInput
   membershipPurchases?: Prisma.MembershipPurchaseUncheckedCreateNestedManyWithoutClientInput
   sales?: Prisma.SaleUncheckedCreateNestedManyWithoutClientInput
+  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutClientInput
 }
 
 export type ClientProfileCreateOrConnectWithoutUserInput = {
@@ -783,20 +1005,28 @@ export type ClientProfileUpdateWithoutUserInput = {
   tier?: Prisma.EnumTierFieldUpdateOperationsInput | $Enums.Tier
   loyaltyPoints?: Prisma.IntFieldUpdateOperationsInput | number
   totalAppointments?: Prisma.IntFieldUpdateOperationsInput | number
-  totalSpent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalSpent?: Prisma.FloatFieldUpdateOperationsInput | number
   referralCode?: Prisma.StringFieldUpdateOperationsInput | string
   referredBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthday?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  favoriteServices?: Prisma.ClientProfileUpdatefavoriteServicesInput | string[]
+  allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  prepaymentBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  giftCardBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  referrals?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   appointments?: Prisma.AppointmentUpdateManyWithoutClientNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutClientNestedInput
   loyaltyTransactions?: Prisma.LoyaltyTransactionUpdateManyWithoutClientNestedInput
-  referrals?: Prisma.ReferralUpdateManyWithoutReferredNestedInput
+  referralsRel?: Prisma.ReferralUpdateManyWithoutReferredNestedInput
   referrer?: Prisma.ReferralUpdateOneWithoutReferrerNestedInput
   membershipPurchases?: Prisma.MembershipPurchaseUpdateManyWithoutClientNestedInput
   sales?: Prisma.SaleUpdateManyWithoutClientNestedInput
+  tasks?: Prisma.TaskUpdateManyWithoutClientNestedInput
 }
 
 export type ClientProfileUncheckedUpdateWithoutUserInput = {
@@ -804,17 +1034,157 @@ export type ClientProfileUncheckedUpdateWithoutUserInput = {
   tier?: Prisma.EnumTierFieldUpdateOperationsInput | $Enums.Tier
   loyaltyPoints?: Prisma.IntFieldUpdateOperationsInput | number
   totalAppointments?: Prisma.IntFieldUpdateOperationsInput | number
-  totalSpent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalSpent?: Prisma.FloatFieldUpdateOperationsInput | number
   referralCode?: Prisma.StringFieldUpdateOperationsInput | string
   referredBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthday?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  favoriteServices?: Prisma.ClientProfileUpdatefavoriteServicesInput | string[]
+  allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  prepaymentBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  giftCardBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  referrals?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutClientNestedInput
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutClientNestedInput
   loyaltyTransactions?: Prisma.LoyaltyTransactionUncheckedUpdateManyWithoutClientNestedInput
-  referrals?: Prisma.ReferralUncheckedUpdateManyWithoutReferredNestedInput
+  referralsRel?: Prisma.ReferralUncheckedUpdateManyWithoutReferredNestedInput
+  referrer?: Prisma.ReferralUncheckedUpdateOneWithoutReferrerNestedInput
+  membershipPurchases?: Prisma.MembershipPurchaseUncheckedUpdateManyWithoutClientNestedInput
+  sales?: Prisma.SaleUncheckedUpdateManyWithoutClientNestedInput
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutClientNestedInput
+}
+
+export type ClientProfileCreateWithoutTasksInput = {
+  id?: string
+  tier?: $Enums.Tier
+  loyaltyPoints?: number
+  totalAppointments?: number
+  totalSpent?: number
+  referralCode: string
+  referredBy?: string | null
+  preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  notes?: string | null
+  birthday?: Date | string | null
+  address?: string | null
+  favoriteServices?: Prisma.ClientProfileCreatefavoriteServicesInput | string[]
+  allergies?: string | null
+  prepaymentBalance?: number
+  giftCardBalance?: number
+  referrals?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutClientProfileInput
+  appointments?: Prisma.AppointmentCreateNestedManyWithoutClientInput
+  reviews?: Prisma.ReviewCreateNestedManyWithoutClientInput
+  loyaltyTransactions?: Prisma.LoyaltyTransactionCreateNestedManyWithoutClientInput
+  referralsRel?: Prisma.ReferralCreateNestedManyWithoutReferredInput
+  referrer?: Prisma.ReferralCreateNestedOneWithoutReferrerInput
+  membershipPurchases?: Prisma.MembershipPurchaseCreateNestedManyWithoutClientInput
+  sales?: Prisma.SaleCreateNestedManyWithoutClientInput
+}
+
+export type ClientProfileUncheckedCreateWithoutTasksInput = {
+  id?: string
+  userId: string
+  tier?: $Enums.Tier
+  loyaltyPoints?: number
+  totalAppointments?: number
+  totalSpent?: number
+  referralCode: string
+  referredBy?: string | null
+  preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  notes?: string | null
+  birthday?: Date | string | null
+  address?: string | null
+  favoriteServices?: Prisma.ClientProfileCreatefavoriteServicesInput | string[]
+  allergies?: string | null
+  prepaymentBalance?: number
+  giftCardBalance?: number
+  referrals?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutClientInput
+  reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutClientInput
+  loyaltyTransactions?: Prisma.LoyaltyTransactionUncheckedCreateNestedManyWithoutClientInput
+  referralsRel?: Prisma.ReferralUncheckedCreateNestedManyWithoutReferredInput
+  referrer?: Prisma.ReferralUncheckedCreateNestedOneWithoutReferrerInput
+  membershipPurchases?: Prisma.MembershipPurchaseUncheckedCreateNestedManyWithoutClientInput
+  sales?: Prisma.SaleUncheckedCreateNestedManyWithoutClientInput
+}
+
+export type ClientProfileCreateOrConnectWithoutTasksInput = {
+  where: Prisma.ClientProfileWhereUniqueInput
+  create: Prisma.XOR<Prisma.ClientProfileCreateWithoutTasksInput, Prisma.ClientProfileUncheckedCreateWithoutTasksInput>
+}
+
+export type ClientProfileUpsertWithoutTasksInput = {
+  update: Prisma.XOR<Prisma.ClientProfileUpdateWithoutTasksInput, Prisma.ClientProfileUncheckedUpdateWithoutTasksInput>
+  create: Prisma.XOR<Prisma.ClientProfileCreateWithoutTasksInput, Prisma.ClientProfileUncheckedCreateWithoutTasksInput>
+  where?: Prisma.ClientProfileWhereInput
+}
+
+export type ClientProfileUpdateToOneWithWhereWithoutTasksInput = {
+  where?: Prisma.ClientProfileWhereInput
+  data: Prisma.XOR<Prisma.ClientProfileUpdateWithoutTasksInput, Prisma.ClientProfileUncheckedUpdateWithoutTasksInput>
+}
+
+export type ClientProfileUpdateWithoutTasksInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tier?: Prisma.EnumTierFieldUpdateOperationsInput | $Enums.Tier
+  loyaltyPoints?: Prisma.IntFieldUpdateOperationsInput | number
+  totalAppointments?: Prisma.IntFieldUpdateOperationsInput | number
+  totalSpent?: Prisma.FloatFieldUpdateOperationsInput | number
+  referralCode?: Prisma.StringFieldUpdateOperationsInput | string
+  referredBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthday?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  favoriteServices?: Prisma.ClientProfileUpdatefavoriteServicesInput | string[]
+  allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  prepaymentBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  giftCardBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  referrals?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutClientProfileNestedInput
+  appointments?: Prisma.AppointmentUpdateManyWithoutClientNestedInput
+  reviews?: Prisma.ReviewUpdateManyWithoutClientNestedInput
+  loyaltyTransactions?: Prisma.LoyaltyTransactionUpdateManyWithoutClientNestedInput
+  referralsRel?: Prisma.ReferralUpdateManyWithoutReferredNestedInput
+  referrer?: Prisma.ReferralUpdateOneWithoutReferrerNestedInput
+  membershipPurchases?: Prisma.MembershipPurchaseUpdateManyWithoutClientNestedInput
+  sales?: Prisma.SaleUpdateManyWithoutClientNestedInput
+}
+
+export type ClientProfileUncheckedUpdateWithoutTasksInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  tier?: Prisma.EnumTierFieldUpdateOperationsInput | $Enums.Tier
+  loyaltyPoints?: Prisma.IntFieldUpdateOperationsInput | number
+  totalAppointments?: Prisma.IntFieldUpdateOperationsInput | number
+  totalSpent?: Prisma.FloatFieldUpdateOperationsInput | number
+  referralCode?: Prisma.StringFieldUpdateOperationsInput | string
+  referredBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthday?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  favoriteServices?: Prisma.ClientProfileUpdatefavoriteServicesInput | string[]
+  allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  prepaymentBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  giftCardBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  referrals?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutClientNestedInput
+  reviews?: Prisma.ReviewUncheckedUpdateManyWithoutClientNestedInput
+  loyaltyTransactions?: Prisma.LoyaltyTransactionUncheckedUpdateManyWithoutClientNestedInput
+  referralsRel?: Prisma.ReferralUncheckedUpdateManyWithoutReferredNestedInput
   referrer?: Prisma.ReferralUncheckedUpdateOneWithoutReferrerNestedInput
   membershipPurchases?: Prisma.MembershipPurchaseUncheckedUpdateManyWithoutClientNestedInput
   sales?: Prisma.SaleUncheckedUpdateManyWithoutClientNestedInput
@@ -825,20 +1195,28 @@ export type ClientProfileCreateWithoutAppointmentsInput = {
   tier?: $Enums.Tier
   loyaltyPoints?: number
   totalAppointments?: number
-  totalSpent?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalSpent?: number
   referralCode: string
   referredBy?: string | null
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: string | null
+  birthday?: Date | string | null
+  address?: string | null
+  favoriteServices?: Prisma.ClientProfileCreatefavoriteServicesInput | string[]
+  allergies?: string | null
+  prepaymentBalance?: number
+  giftCardBalance?: number
+  referrals?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutClientProfileInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutClientInput
   loyaltyTransactions?: Prisma.LoyaltyTransactionCreateNestedManyWithoutClientInput
-  referrals?: Prisma.ReferralCreateNestedManyWithoutReferredInput
+  referralsRel?: Prisma.ReferralCreateNestedManyWithoutReferredInput
   referrer?: Prisma.ReferralCreateNestedOneWithoutReferrerInput
   membershipPurchases?: Prisma.MembershipPurchaseCreateNestedManyWithoutClientInput
   sales?: Prisma.SaleCreateNestedManyWithoutClientInput
+  tasks?: Prisma.TaskCreateNestedManyWithoutClientInput
 }
 
 export type ClientProfileUncheckedCreateWithoutAppointmentsInput = {
@@ -847,19 +1225,27 @@ export type ClientProfileUncheckedCreateWithoutAppointmentsInput = {
   tier?: $Enums.Tier
   loyaltyPoints?: number
   totalAppointments?: number
-  totalSpent?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalSpent?: number
   referralCode: string
   referredBy?: string | null
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: string | null
+  birthday?: Date | string | null
+  address?: string | null
+  favoriteServices?: Prisma.ClientProfileCreatefavoriteServicesInput | string[]
+  allergies?: string | null
+  prepaymentBalance?: number
+  giftCardBalance?: number
+  referrals?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutClientInput
   loyaltyTransactions?: Prisma.LoyaltyTransactionUncheckedCreateNestedManyWithoutClientInput
-  referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutReferredInput
+  referralsRel?: Prisma.ReferralUncheckedCreateNestedManyWithoutReferredInput
   referrer?: Prisma.ReferralUncheckedCreateNestedOneWithoutReferrerInput
   membershipPurchases?: Prisma.MembershipPurchaseUncheckedCreateNestedManyWithoutClientInput
   sales?: Prisma.SaleUncheckedCreateNestedManyWithoutClientInput
+  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutClientInput
 }
 
 export type ClientProfileCreateOrConnectWithoutAppointmentsInput = {
@@ -883,20 +1269,28 @@ export type ClientProfileUpdateWithoutAppointmentsInput = {
   tier?: Prisma.EnumTierFieldUpdateOperationsInput | $Enums.Tier
   loyaltyPoints?: Prisma.IntFieldUpdateOperationsInput | number
   totalAppointments?: Prisma.IntFieldUpdateOperationsInput | number
-  totalSpent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalSpent?: Prisma.FloatFieldUpdateOperationsInput | number
   referralCode?: Prisma.StringFieldUpdateOperationsInput | string
   referredBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthday?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  favoriteServices?: Prisma.ClientProfileUpdatefavoriteServicesInput | string[]
+  allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  prepaymentBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  giftCardBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  referrals?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutClientProfileNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutClientNestedInput
   loyaltyTransactions?: Prisma.LoyaltyTransactionUpdateManyWithoutClientNestedInput
-  referrals?: Prisma.ReferralUpdateManyWithoutReferredNestedInput
+  referralsRel?: Prisma.ReferralUpdateManyWithoutReferredNestedInput
   referrer?: Prisma.ReferralUpdateOneWithoutReferrerNestedInput
   membershipPurchases?: Prisma.MembershipPurchaseUpdateManyWithoutClientNestedInput
   sales?: Prisma.SaleUpdateManyWithoutClientNestedInput
+  tasks?: Prisma.TaskUpdateManyWithoutClientNestedInput
 }
 
 export type ClientProfileUncheckedUpdateWithoutAppointmentsInput = {
@@ -905,19 +1299,27 @@ export type ClientProfileUncheckedUpdateWithoutAppointmentsInput = {
   tier?: Prisma.EnumTierFieldUpdateOperationsInput | $Enums.Tier
   loyaltyPoints?: Prisma.IntFieldUpdateOperationsInput | number
   totalAppointments?: Prisma.IntFieldUpdateOperationsInput | number
-  totalSpent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalSpent?: Prisma.FloatFieldUpdateOperationsInput | number
   referralCode?: Prisma.StringFieldUpdateOperationsInput | string
   referredBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthday?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  favoriteServices?: Prisma.ClientProfileUpdatefavoriteServicesInput | string[]
+  allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  prepaymentBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  giftCardBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  referrals?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutClientNestedInput
   loyaltyTransactions?: Prisma.LoyaltyTransactionUncheckedUpdateManyWithoutClientNestedInput
-  referrals?: Prisma.ReferralUncheckedUpdateManyWithoutReferredNestedInput
+  referralsRel?: Prisma.ReferralUncheckedUpdateManyWithoutReferredNestedInput
   referrer?: Prisma.ReferralUncheckedUpdateOneWithoutReferrerNestedInput
   membershipPurchases?: Prisma.MembershipPurchaseUncheckedUpdateManyWithoutClientNestedInput
   sales?: Prisma.SaleUncheckedUpdateManyWithoutClientNestedInput
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutClientNestedInput
 }
 
 export type ClientProfileCreateWithoutReviewsInput = {
@@ -925,20 +1327,28 @@ export type ClientProfileCreateWithoutReviewsInput = {
   tier?: $Enums.Tier
   loyaltyPoints?: number
   totalAppointments?: number
-  totalSpent?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalSpent?: number
   referralCode: string
   referredBy?: string | null
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: string | null
+  birthday?: Date | string | null
+  address?: string | null
+  favoriteServices?: Prisma.ClientProfileCreatefavoriteServicesInput | string[]
+  allergies?: string | null
+  prepaymentBalance?: number
+  giftCardBalance?: number
+  referrals?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutClientProfileInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutClientInput
   loyaltyTransactions?: Prisma.LoyaltyTransactionCreateNestedManyWithoutClientInput
-  referrals?: Prisma.ReferralCreateNestedManyWithoutReferredInput
+  referralsRel?: Prisma.ReferralCreateNestedManyWithoutReferredInput
   referrer?: Prisma.ReferralCreateNestedOneWithoutReferrerInput
   membershipPurchases?: Prisma.MembershipPurchaseCreateNestedManyWithoutClientInput
   sales?: Prisma.SaleCreateNestedManyWithoutClientInput
+  tasks?: Prisma.TaskCreateNestedManyWithoutClientInput
 }
 
 export type ClientProfileUncheckedCreateWithoutReviewsInput = {
@@ -947,19 +1357,27 @@ export type ClientProfileUncheckedCreateWithoutReviewsInput = {
   tier?: $Enums.Tier
   loyaltyPoints?: number
   totalAppointments?: number
-  totalSpent?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalSpent?: number
   referralCode: string
   referredBy?: string | null
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: string | null
+  birthday?: Date | string | null
+  address?: string | null
+  favoriteServices?: Prisma.ClientProfileCreatefavoriteServicesInput | string[]
+  allergies?: string | null
+  prepaymentBalance?: number
+  giftCardBalance?: number
+  referrals?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutClientInput
   loyaltyTransactions?: Prisma.LoyaltyTransactionUncheckedCreateNestedManyWithoutClientInput
-  referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutReferredInput
+  referralsRel?: Prisma.ReferralUncheckedCreateNestedManyWithoutReferredInput
   referrer?: Prisma.ReferralUncheckedCreateNestedOneWithoutReferrerInput
   membershipPurchases?: Prisma.MembershipPurchaseUncheckedCreateNestedManyWithoutClientInput
   sales?: Prisma.SaleUncheckedCreateNestedManyWithoutClientInput
+  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutClientInput
 }
 
 export type ClientProfileCreateOrConnectWithoutReviewsInput = {
@@ -983,20 +1401,28 @@ export type ClientProfileUpdateWithoutReviewsInput = {
   tier?: Prisma.EnumTierFieldUpdateOperationsInput | $Enums.Tier
   loyaltyPoints?: Prisma.IntFieldUpdateOperationsInput | number
   totalAppointments?: Prisma.IntFieldUpdateOperationsInput | number
-  totalSpent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalSpent?: Prisma.FloatFieldUpdateOperationsInput | number
   referralCode?: Prisma.StringFieldUpdateOperationsInput | string
   referredBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthday?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  favoriteServices?: Prisma.ClientProfileUpdatefavoriteServicesInput | string[]
+  allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  prepaymentBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  giftCardBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  referrals?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutClientProfileNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutClientNestedInput
   loyaltyTransactions?: Prisma.LoyaltyTransactionUpdateManyWithoutClientNestedInput
-  referrals?: Prisma.ReferralUpdateManyWithoutReferredNestedInput
+  referralsRel?: Prisma.ReferralUpdateManyWithoutReferredNestedInput
   referrer?: Prisma.ReferralUpdateOneWithoutReferrerNestedInput
   membershipPurchases?: Prisma.MembershipPurchaseUpdateManyWithoutClientNestedInput
   sales?: Prisma.SaleUpdateManyWithoutClientNestedInput
+  tasks?: Prisma.TaskUpdateManyWithoutClientNestedInput
 }
 
 export type ClientProfileUncheckedUpdateWithoutReviewsInput = {
@@ -1005,19 +1431,27 @@ export type ClientProfileUncheckedUpdateWithoutReviewsInput = {
   tier?: Prisma.EnumTierFieldUpdateOperationsInput | $Enums.Tier
   loyaltyPoints?: Prisma.IntFieldUpdateOperationsInput | number
   totalAppointments?: Prisma.IntFieldUpdateOperationsInput | number
-  totalSpent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalSpent?: Prisma.FloatFieldUpdateOperationsInput | number
   referralCode?: Prisma.StringFieldUpdateOperationsInput | string
   referredBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthday?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  favoriteServices?: Prisma.ClientProfileUpdatefavoriteServicesInput | string[]
+  allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  prepaymentBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  giftCardBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  referrals?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutClientNestedInput
   loyaltyTransactions?: Prisma.LoyaltyTransactionUncheckedUpdateManyWithoutClientNestedInput
-  referrals?: Prisma.ReferralUncheckedUpdateManyWithoutReferredNestedInput
+  referralsRel?: Prisma.ReferralUncheckedUpdateManyWithoutReferredNestedInput
   referrer?: Prisma.ReferralUncheckedUpdateOneWithoutReferrerNestedInput
   membershipPurchases?: Prisma.MembershipPurchaseUncheckedUpdateManyWithoutClientNestedInput
   sales?: Prisma.SaleUncheckedUpdateManyWithoutClientNestedInput
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutClientNestedInput
 }
 
 export type ClientProfileCreateWithoutMembershipPurchasesInput = {
@@ -1025,20 +1459,28 @@ export type ClientProfileCreateWithoutMembershipPurchasesInput = {
   tier?: $Enums.Tier
   loyaltyPoints?: number
   totalAppointments?: number
-  totalSpent?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalSpent?: number
   referralCode: string
   referredBy?: string | null
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: string | null
+  birthday?: Date | string | null
+  address?: string | null
+  favoriteServices?: Prisma.ClientProfileCreatefavoriteServicesInput | string[]
+  allergies?: string | null
+  prepaymentBalance?: number
+  giftCardBalance?: number
+  referrals?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutClientProfileInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutClientInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutClientInput
   loyaltyTransactions?: Prisma.LoyaltyTransactionCreateNestedManyWithoutClientInput
-  referrals?: Prisma.ReferralCreateNestedManyWithoutReferredInput
+  referralsRel?: Prisma.ReferralCreateNestedManyWithoutReferredInput
   referrer?: Prisma.ReferralCreateNestedOneWithoutReferrerInput
   sales?: Prisma.SaleCreateNestedManyWithoutClientInput
+  tasks?: Prisma.TaskCreateNestedManyWithoutClientInput
 }
 
 export type ClientProfileUncheckedCreateWithoutMembershipPurchasesInput = {
@@ -1047,19 +1489,27 @@ export type ClientProfileUncheckedCreateWithoutMembershipPurchasesInput = {
   tier?: $Enums.Tier
   loyaltyPoints?: number
   totalAppointments?: number
-  totalSpent?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalSpent?: number
   referralCode: string
   referredBy?: string | null
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: string | null
+  birthday?: Date | string | null
+  address?: string | null
+  favoriteServices?: Prisma.ClientProfileCreatefavoriteServicesInput | string[]
+  allergies?: string | null
+  prepaymentBalance?: number
+  giftCardBalance?: number
+  referrals?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutClientInput
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutClientInput
   loyaltyTransactions?: Prisma.LoyaltyTransactionUncheckedCreateNestedManyWithoutClientInput
-  referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutReferredInput
+  referralsRel?: Prisma.ReferralUncheckedCreateNestedManyWithoutReferredInput
   referrer?: Prisma.ReferralUncheckedCreateNestedOneWithoutReferrerInput
   sales?: Prisma.SaleUncheckedCreateNestedManyWithoutClientInput
+  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutClientInput
 }
 
 export type ClientProfileCreateOrConnectWithoutMembershipPurchasesInput = {
@@ -1083,20 +1533,28 @@ export type ClientProfileUpdateWithoutMembershipPurchasesInput = {
   tier?: Prisma.EnumTierFieldUpdateOperationsInput | $Enums.Tier
   loyaltyPoints?: Prisma.IntFieldUpdateOperationsInput | number
   totalAppointments?: Prisma.IntFieldUpdateOperationsInput | number
-  totalSpent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalSpent?: Prisma.FloatFieldUpdateOperationsInput | number
   referralCode?: Prisma.StringFieldUpdateOperationsInput | string
   referredBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthday?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  favoriteServices?: Prisma.ClientProfileUpdatefavoriteServicesInput | string[]
+  allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  prepaymentBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  giftCardBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  referrals?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutClientProfileNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutClientNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutClientNestedInput
   loyaltyTransactions?: Prisma.LoyaltyTransactionUpdateManyWithoutClientNestedInput
-  referrals?: Prisma.ReferralUpdateManyWithoutReferredNestedInput
+  referralsRel?: Prisma.ReferralUpdateManyWithoutReferredNestedInput
   referrer?: Prisma.ReferralUpdateOneWithoutReferrerNestedInput
   sales?: Prisma.SaleUpdateManyWithoutClientNestedInput
+  tasks?: Prisma.TaskUpdateManyWithoutClientNestedInput
 }
 
 export type ClientProfileUncheckedUpdateWithoutMembershipPurchasesInput = {
@@ -1105,19 +1563,27 @@ export type ClientProfileUncheckedUpdateWithoutMembershipPurchasesInput = {
   tier?: Prisma.EnumTierFieldUpdateOperationsInput | $Enums.Tier
   loyaltyPoints?: Prisma.IntFieldUpdateOperationsInput | number
   totalAppointments?: Prisma.IntFieldUpdateOperationsInput | number
-  totalSpent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalSpent?: Prisma.FloatFieldUpdateOperationsInput | number
   referralCode?: Prisma.StringFieldUpdateOperationsInput | string
   referredBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthday?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  favoriteServices?: Prisma.ClientProfileUpdatefavoriteServicesInput | string[]
+  allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  prepaymentBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  giftCardBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  referrals?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutClientNestedInput
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutClientNestedInput
   loyaltyTransactions?: Prisma.LoyaltyTransactionUncheckedUpdateManyWithoutClientNestedInput
-  referrals?: Prisma.ReferralUncheckedUpdateManyWithoutReferredNestedInput
+  referralsRel?: Prisma.ReferralUncheckedUpdateManyWithoutReferredNestedInput
   referrer?: Prisma.ReferralUncheckedUpdateOneWithoutReferrerNestedInput
   sales?: Prisma.SaleUncheckedUpdateManyWithoutClientNestedInput
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutClientNestedInput
 }
 
 export type ClientProfileCreateWithoutLoyaltyTransactionsInput = {
@@ -1125,20 +1591,28 @@ export type ClientProfileCreateWithoutLoyaltyTransactionsInput = {
   tier?: $Enums.Tier
   loyaltyPoints?: number
   totalAppointments?: number
-  totalSpent?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalSpent?: number
   referralCode: string
   referredBy?: string | null
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: string | null
+  birthday?: Date | string | null
+  address?: string | null
+  favoriteServices?: Prisma.ClientProfileCreatefavoriteServicesInput | string[]
+  allergies?: string | null
+  prepaymentBalance?: number
+  giftCardBalance?: number
+  referrals?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutClientProfileInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutClientInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutClientInput
-  referrals?: Prisma.ReferralCreateNestedManyWithoutReferredInput
+  referralsRel?: Prisma.ReferralCreateNestedManyWithoutReferredInput
   referrer?: Prisma.ReferralCreateNestedOneWithoutReferrerInput
   membershipPurchases?: Prisma.MembershipPurchaseCreateNestedManyWithoutClientInput
   sales?: Prisma.SaleCreateNestedManyWithoutClientInput
+  tasks?: Prisma.TaskCreateNestedManyWithoutClientInput
 }
 
 export type ClientProfileUncheckedCreateWithoutLoyaltyTransactionsInput = {
@@ -1147,19 +1621,27 @@ export type ClientProfileUncheckedCreateWithoutLoyaltyTransactionsInput = {
   tier?: $Enums.Tier
   loyaltyPoints?: number
   totalAppointments?: number
-  totalSpent?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalSpent?: number
   referralCode: string
   referredBy?: string | null
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: string | null
+  birthday?: Date | string | null
+  address?: string | null
+  favoriteServices?: Prisma.ClientProfileCreatefavoriteServicesInput | string[]
+  allergies?: string | null
+  prepaymentBalance?: number
+  giftCardBalance?: number
+  referrals?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutClientInput
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutClientInput
-  referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutReferredInput
+  referralsRel?: Prisma.ReferralUncheckedCreateNestedManyWithoutReferredInput
   referrer?: Prisma.ReferralUncheckedCreateNestedOneWithoutReferrerInput
   membershipPurchases?: Prisma.MembershipPurchaseUncheckedCreateNestedManyWithoutClientInput
   sales?: Prisma.SaleUncheckedCreateNestedManyWithoutClientInput
+  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutClientInput
 }
 
 export type ClientProfileCreateOrConnectWithoutLoyaltyTransactionsInput = {
@@ -1183,20 +1665,28 @@ export type ClientProfileUpdateWithoutLoyaltyTransactionsInput = {
   tier?: Prisma.EnumTierFieldUpdateOperationsInput | $Enums.Tier
   loyaltyPoints?: Prisma.IntFieldUpdateOperationsInput | number
   totalAppointments?: Prisma.IntFieldUpdateOperationsInput | number
-  totalSpent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalSpent?: Prisma.FloatFieldUpdateOperationsInput | number
   referralCode?: Prisma.StringFieldUpdateOperationsInput | string
   referredBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthday?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  favoriteServices?: Prisma.ClientProfileUpdatefavoriteServicesInput | string[]
+  allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  prepaymentBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  giftCardBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  referrals?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutClientProfileNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutClientNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutClientNestedInput
-  referrals?: Prisma.ReferralUpdateManyWithoutReferredNestedInput
+  referralsRel?: Prisma.ReferralUpdateManyWithoutReferredNestedInput
   referrer?: Prisma.ReferralUpdateOneWithoutReferrerNestedInput
   membershipPurchases?: Prisma.MembershipPurchaseUpdateManyWithoutClientNestedInput
   sales?: Prisma.SaleUpdateManyWithoutClientNestedInput
+  tasks?: Prisma.TaskUpdateManyWithoutClientNestedInput
 }
 
 export type ClientProfileUncheckedUpdateWithoutLoyaltyTransactionsInput = {
@@ -1205,19 +1695,27 @@ export type ClientProfileUncheckedUpdateWithoutLoyaltyTransactionsInput = {
   tier?: Prisma.EnumTierFieldUpdateOperationsInput | $Enums.Tier
   loyaltyPoints?: Prisma.IntFieldUpdateOperationsInput | number
   totalAppointments?: Prisma.IntFieldUpdateOperationsInput | number
-  totalSpent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalSpent?: Prisma.FloatFieldUpdateOperationsInput | number
   referralCode?: Prisma.StringFieldUpdateOperationsInput | string
   referredBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthday?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  favoriteServices?: Prisma.ClientProfileUpdatefavoriteServicesInput | string[]
+  allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  prepaymentBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  giftCardBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  referrals?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutClientNestedInput
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutClientNestedInput
-  referrals?: Prisma.ReferralUncheckedUpdateManyWithoutReferredNestedInput
+  referralsRel?: Prisma.ReferralUncheckedUpdateManyWithoutReferredNestedInput
   referrer?: Prisma.ReferralUncheckedUpdateOneWithoutReferrerNestedInput
   membershipPurchases?: Prisma.MembershipPurchaseUncheckedUpdateManyWithoutClientNestedInput
   sales?: Prisma.SaleUncheckedUpdateManyWithoutClientNestedInput
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutClientNestedInput
 }
 
 export type ClientProfileCreateWithoutReferrerInput = {
@@ -1225,20 +1723,28 @@ export type ClientProfileCreateWithoutReferrerInput = {
   tier?: $Enums.Tier
   loyaltyPoints?: number
   totalAppointments?: number
-  totalSpent?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalSpent?: number
   referralCode: string
   referredBy?: string | null
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: string | null
+  birthday?: Date | string | null
+  address?: string | null
+  favoriteServices?: Prisma.ClientProfileCreatefavoriteServicesInput | string[]
+  allergies?: string | null
+  prepaymentBalance?: number
+  giftCardBalance?: number
+  referrals?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutClientProfileInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutClientInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutClientInput
   loyaltyTransactions?: Prisma.LoyaltyTransactionCreateNestedManyWithoutClientInput
-  referrals?: Prisma.ReferralCreateNestedManyWithoutReferredInput
+  referralsRel?: Prisma.ReferralCreateNestedManyWithoutReferredInput
   membershipPurchases?: Prisma.MembershipPurchaseCreateNestedManyWithoutClientInput
   sales?: Prisma.SaleCreateNestedManyWithoutClientInput
+  tasks?: Prisma.TaskCreateNestedManyWithoutClientInput
 }
 
 export type ClientProfileUncheckedCreateWithoutReferrerInput = {
@@ -1247,19 +1753,27 @@ export type ClientProfileUncheckedCreateWithoutReferrerInput = {
   tier?: $Enums.Tier
   loyaltyPoints?: number
   totalAppointments?: number
-  totalSpent?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalSpent?: number
   referralCode: string
   referredBy?: string | null
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: string | null
+  birthday?: Date | string | null
+  address?: string | null
+  favoriteServices?: Prisma.ClientProfileCreatefavoriteServicesInput | string[]
+  allergies?: string | null
+  prepaymentBalance?: number
+  giftCardBalance?: number
+  referrals?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutClientInput
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutClientInput
   loyaltyTransactions?: Prisma.LoyaltyTransactionUncheckedCreateNestedManyWithoutClientInput
-  referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutReferredInput
+  referralsRel?: Prisma.ReferralUncheckedCreateNestedManyWithoutReferredInput
   membershipPurchases?: Prisma.MembershipPurchaseUncheckedCreateNestedManyWithoutClientInput
   sales?: Prisma.SaleUncheckedCreateNestedManyWithoutClientInput
+  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutClientInput
 }
 
 export type ClientProfileCreateOrConnectWithoutReferrerInput = {
@@ -1267,16 +1781,23 @@ export type ClientProfileCreateOrConnectWithoutReferrerInput = {
   create: Prisma.XOR<Prisma.ClientProfileCreateWithoutReferrerInput, Prisma.ClientProfileUncheckedCreateWithoutReferrerInput>
 }
 
-export type ClientProfileCreateWithoutReferralsInput = {
+export type ClientProfileCreateWithoutReferralsRelInput = {
   id?: string
   tier?: $Enums.Tier
   loyaltyPoints?: number
   totalAppointments?: number
-  totalSpent?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalSpent?: number
   referralCode: string
   referredBy?: string | null
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: string | null
+  birthday?: Date | string | null
+  address?: string | null
+  favoriteServices?: Prisma.ClientProfileCreatefavoriteServicesInput | string[]
+  allergies?: string | null
+  prepaymentBalance?: number
+  giftCardBalance?: number
+  referrals?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutClientProfileInput
@@ -1286,19 +1807,27 @@ export type ClientProfileCreateWithoutReferralsInput = {
   referrer?: Prisma.ReferralCreateNestedOneWithoutReferrerInput
   membershipPurchases?: Prisma.MembershipPurchaseCreateNestedManyWithoutClientInput
   sales?: Prisma.SaleCreateNestedManyWithoutClientInput
+  tasks?: Prisma.TaskCreateNestedManyWithoutClientInput
 }
 
-export type ClientProfileUncheckedCreateWithoutReferralsInput = {
+export type ClientProfileUncheckedCreateWithoutReferralsRelInput = {
   id?: string
   userId: string
   tier?: $Enums.Tier
   loyaltyPoints?: number
   totalAppointments?: number
-  totalSpent?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalSpent?: number
   referralCode: string
   referredBy?: string | null
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: string | null
+  birthday?: Date | string | null
+  address?: string | null
+  favoriteServices?: Prisma.ClientProfileCreatefavoriteServicesInput | string[]
+  allergies?: string | null
+  prepaymentBalance?: number
+  giftCardBalance?: number
+  referrals?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutClientInput
@@ -1307,11 +1836,12 @@ export type ClientProfileUncheckedCreateWithoutReferralsInput = {
   referrer?: Prisma.ReferralUncheckedCreateNestedOneWithoutReferrerInput
   membershipPurchases?: Prisma.MembershipPurchaseUncheckedCreateNestedManyWithoutClientInput
   sales?: Prisma.SaleUncheckedCreateNestedManyWithoutClientInput
+  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutClientInput
 }
 
-export type ClientProfileCreateOrConnectWithoutReferralsInput = {
+export type ClientProfileCreateOrConnectWithoutReferralsRelInput = {
   where: Prisma.ClientProfileWhereUniqueInput
-  create: Prisma.XOR<Prisma.ClientProfileCreateWithoutReferralsInput, Prisma.ClientProfileUncheckedCreateWithoutReferralsInput>
+  create: Prisma.XOR<Prisma.ClientProfileCreateWithoutReferralsRelInput, Prisma.ClientProfileUncheckedCreateWithoutReferralsRelInput>
 }
 
 export type ClientProfileUpsertWithoutReferrerInput = {
@@ -1330,20 +1860,28 @@ export type ClientProfileUpdateWithoutReferrerInput = {
   tier?: Prisma.EnumTierFieldUpdateOperationsInput | $Enums.Tier
   loyaltyPoints?: Prisma.IntFieldUpdateOperationsInput | number
   totalAppointments?: Prisma.IntFieldUpdateOperationsInput | number
-  totalSpent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalSpent?: Prisma.FloatFieldUpdateOperationsInput | number
   referralCode?: Prisma.StringFieldUpdateOperationsInput | string
   referredBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthday?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  favoriteServices?: Prisma.ClientProfileUpdatefavoriteServicesInput | string[]
+  allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  prepaymentBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  giftCardBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  referrals?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutClientProfileNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutClientNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutClientNestedInput
   loyaltyTransactions?: Prisma.LoyaltyTransactionUpdateManyWithoutClientNestedInput
-  referrals?: Prisma.ReferralUpdateManyWithoutReferredNestedInput
+  referralsRel?: Prisma.ReferralUpdateManyWithoutReferredNestedInput
   membershipPurchases?: Prisma.MembershipPurchaseUpdateManyWithoutClientNestedInput
   sales?: Prisma.SaleUpdateManyWithoutClientNestedInput
+  tasks?: Prisma.TaskUpdateManyWithoutClientNestedInput
 }
 
 export type ClientProfileUncheckedUpdateWithoutReferrerInput = {
@@ -1352,42 +1890,57 @@ export type ClientProfileUncheckedUpdateWithoutReferrerInput = {
   tier?: Prisma.EnumTierFieldUpdateOperationsInput | $Enums.Tier
   loyaltyPoints?: Prisma.IntFieldUpdateOperationsInput | number
   totalAppointments?: Prisma.IntFieldUpdateOperationsInput | number
-  totalSpent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalSpent?: Prisma.FloatFieldUpdateOperationsInput | number
   referralCode?: Prisma.StringFieldUpdateOperationsInput | string
   referredBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthday?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  favoriteServices?: Prisma.ClientProfileUpdatefavoriteServicesInput | string[]
+  allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  prepaymentBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  giftCardBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  referrals?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutClientNestedInput
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutClientNestedInput
   loyaltyTransactions?: Prisma.LoyaltyTransactionUncheckedUpdateManyWithoutClientNestedInput
-  referrals?: Prisma.ReferralUncheckedUpdateManyWithoutReferredNestedInput
+  referralsRel?: Prisma.ReferralUncheckedUpdateManyWithoutReferredNestedInput
   membershipPurchases?: Prisma.MembershipPurchaseUncheckedUpdateManyWithoutClientNestedInput
   sales?: Prisma.SaleUncheckedUpdateManyWithoutClientNestedInput
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutClientNestedInput
 }
 
-export type ClientProfileUpsertWithoutReferralsInput = {
-  update: Prisma.XOR<Prisma.ClientProfileUpdateWithoutReferralsInput, Prisma.ClientProfileUncheckedUpdateWithoutReferralsInput>
-  create: Prisma.XOR<Prisma.ClientProfileCreateWithoutReferralsInput, Prisma.ClientProfileUncheckedCreateWithoutReferralsInput>
+export type ClientProfileUpsertWithoutReferralsRelInput = {
+  update: Prisma.XOR<Prisma.ClientProfileUpdateWithoutReferralsRelInput, Prisma.ClientProfileUncheckedUpdateWithoutReferralsRelInput>
+  create: Prisma.XOR<Prisma.ClientProfileCreateWithoutReferralsRelInput, Prisma.ClientProfileUncheckedCreateWithoutReferralsRelInput>
   where?: Prisma.ClientProfileWhereInput
 }
 
-export type ClientProfileUpdateToOneWithWhereWithoutReferralsInput = {
+export type ClientProfileUpdateToOneWithWhereWithoutReferralsRelInput = {
   where?: Prisma.ClientProfileWhereInput
-  data: Prisma.XOR<Prisma.ClientProfileUpdateWithoutReferralsInput, Prisma.ClientProfileUncheckedUpdateWithoutReferralsInput>
+  data: Prisma.XOR<Prisma.ClientProfileUpdateWithoutReferralsRelInput, Prisma.ClientProfileUncheckedUpdateWithoutReferralsRelInput>
 }
 
-export type ClientProfileUpdateWithoutReferralsInput = {
+export type ClientProfileUpdateWithoutReferralsRelInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   tier?: Prisma.EnumTierFieldUpdateOperationsInput | $Enums.Tier
   loyaltyPoints?: Prisma.IntFieldUpdateOperationsInput | number
   totalAppointments?: Prisma.IntFieldUpdateOperationsInput | number
-  totalSpent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalSpent?: Prisma.FloatFieldUpdateOperationsInput | number
   referralCode?: Prisma.StringFieldUpdateOperationsInput | string
   referredBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthday?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  favoriteServices?: Prisma.ClientProfileUpdatefavoriteServicesInput | string[]
+  allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  prepaymentBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  giftCardBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  referrals?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutClientProfileNestedInput
@@ -1397,19 +1950,27 @@ export type ClientProfileUpdateWithoutReferralsInput = {
   referrer?: Prisma.ReferralUpdateOneWithoutReferrerNestedInput
   membershipPurchases?: Prisma.MembershipPurchaseUpdateManyWithoutClientNestedInput
   sales?: Prisma.SaleUpdateManyWithoutClientNestedInput
+  tasks?: Prisma.TaskUpdateManyWithoutClientNestedInput
 }
 
-export type ClientProfileUncheckedUpdateWithoutReferralsInput = {
+export type ClientProfileUncheckedUpdateWithoutReferralsRelInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   tier?: Prisma.EnumTierFieldUpdateOperationsInput | $Enums.Tier
   loyaltyPoints?: Prisma.IntFieldUpdateOperationsInput | number
   totalAppointments?: Prisma.IntFieldUpdateOperationsInput | number
-  totalSpent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalSpent?: Prisma.FloatFieldUpdateOperationsInput | number
   referralCode?: Prisma.StringFieldUpdateOperationsInput | string
   referredBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthday?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  favoriteServices?: Prisma.ClientProfileUpdatefavoriteServicesInput | string[]
+  allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  prepaymentBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  giftCardBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  referrals?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutClientNestedInput
@@ -1418,6 +1979,7 @@ export type ClientProfileUncheckedUpdateWithoutReferralsInput = {
   referrer?: Prisma.ReferralUncheckedUpdateOneWithoutReferrerNestedInput
   membershipPurchases?: Prisma.MembershipPurchaseUncheckedUpdateManyWithoutClientNestedInput
   sales?: Prisma.SaleUncheckedUpdateManyWithoutClientNestedInput
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutClientNestedInput
 }
 
 export type ClientProfileCreateWithoutSalesInput = {
@@ -1425,20 +1987,28 @@ export type ClientProfileCreateWithoutSalesInput = {
   tier?: $Enums.Tier
   loyaltyPoints?: number
   totalAppointments?: number
-  totalSpent?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalSpent?: number
   referralCode: string
   referredBy?: string | null
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: string | null
+  birthday?: Date | string | null
+  address?: string | null
+  favoriteServices?: Prisma.ClientProfileCreatefavoriteServicesInput | string[]
+  allergies?: string | null
+  prepaymentBalance?: number
+  giftCardBalance?: number
+  referrals?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutClientProfileInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutClientInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutClientInput
   loyaltyTransactions?: Prisma.LoyaltyTransactionCreateNestedManyWithoutClientInput
-  referrals?: Prisma.ReferralCreateNestedManyWithoutReferredInput
+  referralsRel?: Prisma.ReferralCreateNestedManyWithoutReferredInput
   referrer?: Prisma.ReferralCreateNestedOneWithoutReferrerInput
   membershipPurchases?: Prisma.MembershipPurchaseCreateNestedManyWithoutClientInput
+  tasks?: Prisma.TaskCreateNestedManyWithoutClientInput
 }
 
 export type ClientProfileUncheckedCreateWithoutSalesInput = {
@@ -1447,19 +2017,27 @@ export type ClientProfileUncheckedCreateWithoutSalesInput = {
   tier?: $Enums.Tier
   loyaltyPoints?: number
   totalAppointments?: number
-  totalSpent?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalSpent?: number
   referralCode: string
   referredBy?: string | null
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: string | null
+  birthday?: Date | string | null
+  address?: string | null
+  favoriteServices?: Prisma.ClientProfileCreatefavoriteServicesInput | string[]
+  allergies?: string | null
+  prepaymentBalance?: number
+  giftCardBalance?: number
+  referrals?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutClientInput
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutClientInput
   loyaltyTransactions?: Prisma.LoyaltyTransactionUncheckedCreateNestedManyWithoutClientInput
-  referrals?: Prisma.ReferralUncheckedCreateNestedManyWithoutReferredInput
+  referralsRel?: Prisma.ReferralUncheckedCreateNestedManyWithoutReferredInput
   referrer?: Prisma.ReferralUncheckedCreateNestedOneWithoutReferrerInput
   membershipPurchases?: Prisma.MembershipPurchaseUncheckedCreateNestedManyWithoutClientInput
+  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutClientInput
 }
 
 export type ClientProfileCreateOrConnectWithoutSalesInput = {
@@ -1483,20 +2061,28 @@ export type ClientProfileUpdateWithoutSalesInput = {
   tier?: Prisma.EnumTierFieldUpdateOperationsInput | $Enums.Tier
   loyaltyPoints?: Prisma.IntFieldUpdateOperationsInput | number
   totalAppointments?: Prisma.IntFieldUpdateOperationsInput | number
-  totalSpent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalSpent?: Prisma.FloatFieldUpdateOperationsInput | number
   referralCode?: Prisma.StringFieldUpdateOperationsInput | string
   referredBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthday?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  favoriteServices?: Prisma.ClientProfileUpdatefavoriteServicesInput | string[]
+  allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  prepaymentBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  giftCardBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  referrals?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutClientProfileNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutClientNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutClientNestedInput
   loyaltyTransactions?: Prisma.LoyaltyTransactionUpdateManyWithoutClientNestedInput
-  referrals?: Prisma.ReferralUpdateManyWithoutReferredNestedInput
+  referralsRel?: Prisma.ReferralUpdateManyWithoutReferredNestedInput
   referrer?: Prisma.ReferralUpdateOneWithoutReferrerNestedInput
   membershipPurchases?: Prisma.MembershipPurchaseUpdateManyWithoutClientNestedInput
+  tasks?: Prisma.TaskUpdateManyWithoutClientNestedInput
 }
 
 export type ClientProfileUncheckedUpdateWithoutSalesInput = {
@@ -1505,19 +2091,27 @@ export type ClientProfileUncheckedUpdateWithoutSalesInput = {
   tier?: Prisma.EnumTierFieldUpdateOperationsInput | $Enums.Tier
   loyaltyPoints?: Prisma.IntFieldUpdateOperationsInput | number
   totalAppointments?: Prisma.IntFieldUpdateOperationsInput | number
-  totalSpent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalSpent?: Prisma.FloatFieldUpdateOperationsInput | number
   referralCode?: Prisma.StringFieldUpdateOperationsInput | string
   referredBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthday?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  favoriteServices?: Prisma.ClientProfileUpdatefavoriteServicesInput | string[]
+  allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  prepaymentBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  giftCardBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  referrals?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutClientNestedInput
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutClientNestedInput
   loyaltyTransactions?: Prisma.LoyaltyTransactionUncheckedUpdateManyWithoutClientNestedInput
-  referrals?: Prisma.ReferralUncheckedUpdateManyWithoutReferredNestedInput
+  referralsRel?: Prisma.ReferralUncheckedUpdateManyWithoutReferredNestedInput
   referrer?: Prisma.ReferralUncheckedUpdateOneWithoutReferrerNestedInput
   membershipPurchases?: Prisma.MembershipPurchaseUncheckedUpdateManyWithoutClientNestedInput
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutClientNestedInput
 }
 
 
@@ -1529,18 +2123,20 @@ export type ClientProfileCountOutputType = {
   appointments: number
   reviews: number
   loyaltyTransactions: number
-  referrals: number
+  referralsRel: number
   membershipPurchases: number
   sales: number
+  tasks: number
 }
 
 export type ClientProfileCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   appointments?: boolean | ClientProfileCountOutputTypeCountAppointmentsArgs
   reviews?: boolean | ClientProfileCountOutputTypeCountReviewsArgs
   loyaltyTransactions?: boolean | ClientProfileCountOutputTypeCountLoyaltyTransactionsArgs
-  referrals?: boolean | ClientProfileCountOutputTypeCountReferralsArgs
+  referralsRel?: boolean | ClientProfileCountOutputTypeCountReferralsRelArgs
   membershipPurchases?: boolean | ClientProfileCountOutputTypeCountMembershipPurchasesArgs
   sales?: boolean | ClientProfileCountOutputTypeCountSalesArgs
+  tasks?: boolean | ClientProfileCountOutputTypeCountTasksArgs
 }
 
 /**
@@ -1577,7 +2173,7 @@ export type ClientProfileCountOutputTypeCountLoyaltyTransactionsArgs<ExtArgs ext
 /**
  * ClientProfileCountOutputType without action
  */
-export type ClientProfileCountOutputTypeCountReferralsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type ClientProfileCountOutputTypeCountReferralsRelArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.ReferralWhereInput
 }
 
@@ -1595,6 +2191,13 @@ export type ClientProfileCountOutputTypeCountSalesArgs<ExtArgs extends runtime.T
   where?: Prisma.SaleWhereInput
 }
 
+/**
+ * ClientProfileCountOutputType without action
+ */
+export type ClientProfileCountOutputTypeCountTasksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TaskWhereInput
+}
+
 
 export type ClientProfileSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1607,16 +2210,24 @@ export type ClientProfileSelect<ExtArgs extends runtime.Types.Extensions.Interna
   referredBy?: boolean
   preferences?: boolean
   notes?: boolean
+  birthday?: boolean
+  address?: boolean
+  favoriteServices?: boolean
+  allergies?: boolean
+  prepaymentBalance?: boolean
+  giftCardBalance?: boolean
+  referrals?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   appointments?: boolean | Prisma.ClientProfile$appointmentsArgs<ExtArgs>
   reviews?: boolean | Prisma.ClientProfile$reviewsArgs<ExtArgs>
   loyaltyTransactions?: boolean | Prisma.ClientProfile$loyaltyTransactionsArgs<ExtArgs>
-  referrals?: boolean | Prisma.ClientProfile$referralsArgs<ExtArgs>
+  referralsRel?: boolean | Prisma.ClientProfile$referralsRelArgs<ExtArgs>
   referrer?: boolean | Prisma.ClientProfile$referrerArgs<ExtArgs>
   membershipPurchases?: boolean | Prisma.ClientProfile$membershipPurchasesArgs<ExtArgs>
   sales?: boolean | Prisma.ClientProfile$salesArgs<ExtArgs>
+  tasks?: boolean | Prisma.ClientProfile$tasksArgs<ExtArgs>
   _count?: boolean | Prisma.ClientProfileCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["clientProfile"]>
 
@@ -1631,6 +2242,13 @@ export type ClientProfileSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   referredBy?: boolean
   preferences?: boolean
   notes?: boolean
+  birthday?: boolean
+  address?: boolean
+  favoriteServices?: boolean
+  allergies?: boolean
+  prepaymentBalance?: boolean
+  giftCardBalance?: boolean
+  referrals?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1647,6 +2265,13 @@ export type ClientProfileSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   referredBy?: boolean
   preferences?: boolean
   notes?: boolean
+  birthday?: boolean
+  address?: boolean
+  favoriteServices?: boolean
+  allergies?: boolean
+  prepaymentBalance?: boolean
+  giftCardBalance?: boolean
+  referrals?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1663,20 +2288,28 @@ export type ClientProfileSelectScalar = {
   referredBy?: boolean
   preferences?: boolean
   notes?: boolean
+  birthday?: boolean
+  address?: boolean
+  favoriteServices?: boolean
+  allergies?: boolean
+  prepaymentBalance?: boolean
+  giftCardBalance?: boolean
+  referrals?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ClientProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "tier" | "loyaltyPoints" | "totalAppointments" | "totalSpent" | "referralCode" | "referredBy" | "preferences" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["clientProfile"]>
+export type ClientProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "tier" | "loyaltyPoints" | "totalAppointments" | "totalSpent" | "referralCode" | "referredBy" | "preferences" | "notes" | "birthday" | "address" | "favoriteServices" | "allergies" | "prepaymentBalance" | "giftCardBalance" | "referrals" | "createdAt" | "updatedAt", ExtArgs["result"]["clientProfile"]>
 export type ClientProfileInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   appointments?: boolean | Prisma.ClientProfile$appointmentsArgs<ExtArgs>
   reviews?: boolean | Prisma.ClientProfile$reviewsArgs<ExtArgs>
   loyaltyTransactions?: boolean | Prisma.ClientProfile$loyaltyTransactionsArgs<ExtArgs>
-  referrals?: boolean | Prisma.ClientProfile$referralsArgs<ExtArgs>
+  referralsRel?: boolean | Prisma.ClientProfile$referralsRelArgs<ExtArgs>
   referrer?: boolean | Prisma.ClientProfile$referrerArgs<ExtArgs>
   membershipPurchases?: boolean | Prisma.ClientProfile$membershipPurchasesArgs<ExtArgs>
   sales?: boolean | Prisma.ClientProfile$salesArgs<ExtArgs>
+  tasks?: boolean | Prisma.ClientProfile$tasksArgs<ExtArgs>
   _count?: boolean | Prisma.ClientProfileCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ClientProfileIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1693,10 +2326,11 @@ export type $ClientProfilePayload<ExtArgs extends runtime.Types.Extensions.Inter
     appointments: Prisma.$AppointmentPayload<ExtArgs>[]
     reviews: Prisma.$ReviewPayload<ExtArgs>[]
     loyaltyTransactions: Prisma.$LoyaltyTransactionPayload<ExtArgs>[]
-    referrals: Prisma.$ReferralPayload<ExtArgs>[]
+    referralsRel: Prisma.$ReferralPayload<ExtArgs>[]
     referrer: Prisma.$ReferralPayload<ExtArgs> | null
     membershipPurchases: Prisma.$MembershipPurchasePayload<ExtArgs>[]
     sales: Prisma.$SalePayload<ExtArgs>[]
+    tasks: Prisma.$TaskPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1704,11 +2338,18 @@ export type $ClientProfilePayload<ExtArgs extends runtime.Types.Extensions.Inter
     tier: $Enums.Tier
     loyaltyPoints: number
     totalAppointments: number
-    totalSpent: runtime.Decimal
+    totalSpent: number
     referralCode: string
     referredBy: string | null
     preferences: runtime.JsonValue | null
     notes: string | null
+    birthday: Date | null
+    address: string | null
+    favoriteServices: string[]
+    allergies: string | null
+    prepaymentBalance: number
+    giftCardBalance: number
+    referrals: number
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["clientProfile"]>
@@ -2109,10 +2750,11 @@ export interface Prisma__ClientProfileClient<T, Null = never, ExtArgs extends ru
   appointments<T extends Prisma.ClientProfile$appointmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ClientProfile$appointmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AppointmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   reviews<T extends Prisma.ClientProfile$reviewsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ClientProfile$reviewsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   loyaltyTransactions<T extends Prisma.ClientProfile$loyaltyTransactionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ClientProfile$loyaltyTransactionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LoyaltyTransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  referrals<T extends Prisma.ClientProfile$referralsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ClientProfile$referralsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  referralsRel<T extends Prisma.ClientProfile$referralsRelArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ClientProfile$referralsRelArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   referrer<T extends Prisma.ClientProfile$referrerArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ClientProfile$referrerArgs<ExtArgs>>): Prisma.Prisma__ReferralClient<runtime.Types.Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   membershipPurchases<T extends Prisma.ClientProfile$membershipPurchasesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ClientProfile$membershipPurchasesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MembershipPurchasePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   sales<T extends Prisma.ClientProfile$salesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ClientProfile$salesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SalePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  tasks<T extends Prisma.ClientProfile$tasksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ClientProfile$tasksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2147,11 +2789,18 @@ export interface ClientProfileFieldRefs {
   readonly tier: Prisma.FieldRef<"ClientProfile", 'Tier'>
   readonly loyaltyPoints: Prisma.FieldRef<"ClientProfile", 'Int'>
   readonly totalAppointments: Prisma.FieldRef<"ClientProfile", 'Int'>
-  readonly totalSpent: Prisma.FieldRef<"ClientProfile", 'Decimal'>
+  readonly totalSpent: Prisma.FieldRef<"ClientProfile", 'Float'>
   readonly referralCode: Prisma.FieldRef<"ClientProfile", 'String'>
   readonly referredBy: Prisma.FieldRef<"ClientProfile", 'String'>
   readonly preferences: Prisma.FieldRef<"ClientProfile", 'Json'>
   readonly notes: Prisma.FieldRef<"ClientProfile", 'String'>
+  readonly birthday: Prisma.FieldRef<"ClientProfile", 'DateTime'>
+  readonly address: Prisma.FieldRef<"ClientProfile", 'String'>
+  readonly favoriteServices: Prisma.FieldRef<"ClientProfile", 'String[]'>
+  readonly allergies: Prisma.FieldRef<"ClientProfile", 'String'>
+  readonly prepaymentBalance: Prisma.FieldRef<"ClientProfile", 'Float'>
+  readonly giftCardBalance: Prisma.FieldRef<"ClientProfile", 'Float'>
+  readonly referrals: Prisma.FieldRef<"ClientProfile", 'Int'>
   readonly createdAt: Prisma.FieldRef<"ClientProfile", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"ClientProfile", 'DateTime'>
 }
@@ -2622,9 +3271,9 @@ export type ClientProfile$loyaltyTransactionsArgs<ExtArgs extends runtime.Types.
 }
 
 /**
- * ClientProfile.referrals
+ * ClientProfile.referralsRel
  */
-export type ClientProfile$referralsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type ClientProfile$referralsRelArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
    * Select specific fields to fetch from the Referral
    */
@@ -2710,6 +3359,30 @@ export type ClientProfile$salesArgs<ExtArgs extends runtime.Types.Extensions.Int
   take?: number
   skip?: number
   distinct?: Prisma.SaleScalarFieldEnum | Prisma.SaleScalarFieldEnum[]
+}
+
+/**
+ * ClientProfile.tasks
+ */
+export type ClientProfile$tasksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Task
+   */
+  select?: Prisma.TaskSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Task
+   */
+  omit?: Prisma.TaskOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TaskInclude<ExtArgs> | null
+  where?: Prisma.TaskWhereInput
+  orderBy?: Prisma.TaskOrderByWithRelationInput | Prisma.TaskOrderByWithRelationInput[]
+  cursor?: Prisma.TaskWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TaskScalarFieldEnum | Prisma.TaskScalarFieldEnum[]
 }
 
 /**

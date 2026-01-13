@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { Button } from './ui/button';
 import { Menu, X, Calendar, LogOut } from 'lucide-react';
-import { use, useState } from 'react';
+import { useState } from 'react';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { ModeToggle } from './mode-toggle';
 import { Logo } from './Logo';

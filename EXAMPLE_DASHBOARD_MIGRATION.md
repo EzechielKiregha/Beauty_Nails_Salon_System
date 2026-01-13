@@ -170,7 +170,7 @@ function ClientDashboard() {
       </div>
 
       {/* Loyalty Card */}
-      <Card className="p-6 mb-8 bg-gradient-to-br from-pink-500 to-amber-400 text-white">
+      <Card className="p-6 mb-8 bg-linear-to-br from-pink-500 to-amber-400 text-white">
         <div className="flex justify-between items-center">
           <div>
             <h2 className="text-2xl font-bold mb-2">

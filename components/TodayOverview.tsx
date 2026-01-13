@@ -2,105 +2,128 @@ import { Card } from './ui/card';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { Calendar, Clock, DollarSign, Users, AlertCircle, UserCheck, Activity, Plus, CreditCard, Package } from 'lucide-react';
+import { useAppointments } from '@/lib/hooks/useAppointments';
+import { useRevenueReport, useServicePerformance } from '@/lib/hooks/useReports';
+import { useStaff } from '@/lib/hooks/useStaff';
+import { useInventory } from '@/lib/hooks/useInventory';
 
-// Axios API calls (commented out for future use)
-// import axios from 'axios';
-// const fetchTodayOverview = async () => {
-//   const response = await axiosdb.get('/api/dashboard/today');
-//   return response.data;
-// };
-// const updateOccupancy = async (status: string) => {
-//   await axiosdb.patch('/api/salon/occupancy', { status });
-// };
 
-export default function TodayOverview() {
-  // Mock data
-  const todayStats = {
+export default function TodayOverview({ showMock }: { showMock?: boolean }) {
+  const today = new Date().toISOString().split('T')[0];
+
+  // Hooks
+  const { appointments: apiAppointments = [] } = useAppointments({ date: today });
+  const { data: revenueData } = useRevenueReport({ from: today, to: today });
+  const { staff: apiStaff = [] } = useStaff();
+  const { inventory: apiInventory = [] } = useInventory();
+  const { data: servicePerformance } = useServicePerformance('daily');
+
+  // Local mocks (used only when showMock=true)
+  const MOCK_STATS = {
     upcomingAppointments: 8,
     completedAppointments: 12,
     walkInAvailable: true,
-    currentOccupancy: 75, // percentage
+    currentOccupancy: 75,
     dailyRevenue: 1250000,
     clientsServed: 12,
     staffOnDuty: 6,
-    averageWaitTime: 15 // minutes
+    averageWaitTime: 15,
   };
 
-  const upcomingAppointments = [
+  const MOCK_UPCOMING = [
     { time: '14:00', client: 'Marie Kabila', service: 'Manucure Gel', staff: 'Marie N.', duration: 60 },
     { time: '14:30', client: 'Grace Lumière', service: 'Extensions Cils', staff: 'Grace L.', duration: 90 },
     { time: '15:00', client: 'Sophie Makala', service: 'Tresses', staff: 'Sophie K.', duration: 120 },
     { time: '15:30', client: 'Élise Nkumu', service: 'Maquillage', staff: 'Élise M.', duration: 45 }
   ];
 
-  const staffRoster = [
+  const MOCK_STAFF = [
     { name: 'Marie Nkumu', status: 'busy', currentClient: 'Rose Mbala', service: 'Manucure', nextAvailable: '14:00' },
     { name: 'Grace Lumière', status: 'busy', currentClient: 'Annie Bokele', service: 'Extension Cils', nextAvailable: '15:00' },
     { name: 'Sophie Kabila', status: 'available', currentClient: null, service: null, nextAvailable: 'Maintenant' },
-    { name: 'Élise Makala', status: 'break', currentClient: null, service: null, nextAvailable: '13:30' },
-    { name: 'Patricia Kala', status: 'available', currentClient: null, service: null, nextAvailable: 'Maintenant' },
-    { name: 'Joséphine Nzuzi', status: 'busy', currentClient: 'Claire Mukendi', service: 'Pédicure', nextAvailable: '13:45' }
+    { name: 'Élise Makala', status: 'break', currentClient: null, service: null, nextAvailable: '13:30' }
   ];
 
-  const urgentAlerts = [
-    { type: 'stock', message: 'Colle Cils - Stock épuisé', priority: 'high', icon: Package },
-    { type: 'appointment', message: '2 rendez-vous annulés aujourd\'hui', priority: 'medium', icon: Calendar },
-    { type: 'payment', message: '3 factures impayées à relancer', priority: 'high', icon: CreditCard }
-  ];
+  // Compose data using API first; fall back to mocks only if showMock is true
+  const upcomingAppointments = (apiAppointments && apiAppointments.length > 0)
+    ? apiAppointments.map((apt: any) => ({
+      time: apt.time || apt.startTime || new Date(apt.startsAt || apt.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      client: apt.client?.name || apt.clientName || apt.client || 'Client',
+      service: apt.service?.name || apt.serviceName || apt.service || 'Service',
+      staff: apt.staff?.name || apt.staffName || apt.staff || 'Staff',
+      duration: apt.duration || 60,
+    }))
+    : (showMock ? MOCK_UPCOMING : []);
 
-  const popularServices = [
-    { name: 'Manucure Gel', count: 8, revenue: '240 000 CDF' },
-    { name: 'Extension Cils', count: 6, revenue: '270 000 CDF' },
-    { name: 'Tresses', count: 4, revenue: '200 000 CDF' },
-    { name: 'Maquillage', count: 5, revenue: '200 000 CDF' }
-  ];
+  const staffRoster = (apiStaff && apiStaff.length > 0)
+    ? apiStaff.map((s: any) => ({ name: s.name || s.fullName || 'Employé', status: s.isAvailable ? 'available' : 'busy', currentClient: null, service: null, nextAvailable: 'Maintenant' }))
+    : (showMock ? MOCK_STAFF : []);
+
+  const urgentAlerts = [] as any[];
+  const lowStock = (apiInventory || []).filter((i: any) => i.status === 'low' || i.status === 'critical' || i.status === 'out');
+  if (lowStock.length > 0) urgentAlerts.push({ type: 'stock', message: `${lowStock.length} article(s) avec stock bas`, priority: 'high', icon: Package });
+
+  const popularServices = (servicePerformance && servicePerformance.services && servicePerformance.services.length > 0)
+    ? servicePerformance.services.slice(0, 4).map((s: any) => ({ name: s.name, count: s.count || 0, revenue: `${(s.revenue || 0).toLocaleString()} CDF` }))
+    : (showMock ? [{ name: 'Manucure Gel', count: 8, revenue: '240 000 CDF' }] : []);
+
+  const todayStats = {
+    upcomingAppointments: upcomingAppointments.length,
+    completedAppointments: apiAppointments ? apiAppointments.filter((a: any) => a.status === 'completed').length : (showMock ? MOCK_STATS.completedAppointments : 0),
+    walkInAvailable: showMock ? MOCK_STATS.walkInAvailable : false,
+    currentOccupancy: showMock ? MOCK_STATS.currentOccupancy : Math.round((staffRoster.filter(s => s.status === 'busy').length / Math.max(1, staffRoster.length)) * 100),
+    dailyRevenue: revenueData?.totalRevenue ?? (showMock ? MOCK_STATS.dailyRevenue : 0),
+    clientsServed: apiAppointments ? apiAppointments.length : (showMock ? MOCK_STATS.clientsServed : 0),
+    staffOnDuty: staffRoster.length,
+    averageWaitTime: showMock ? MOCK_STATS.averageWaitTime : 0,
+  };
 
   return (
     <div className="space-y-6">
       {/* Quick Stats */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="bg-gradient-to-br from-blue-50 to-cyan-50 border-0 shadow-lg p-6">
+        <Card className="bg-linear-to-br from-blue-50 to-cyan-50 border-0 shadow-lg p-6">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600 mb-1">RDV Aujourd'hui</p>
               <p className="text-3xl text-gray-900">{todayStats.upcomingAppointments}</p>
               <p className="text-xs text-blue-600 mt-1">+ {todayStats.completedAppointments} complétés</p>
             </div>
-            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-cyan-400 flex items-center justify-center">
+            <div className="w-12 h-12 rounded-full bg-linear-to-br from-blue-400 to-cyan-400 flex items-center justify-center">
               <Calendar className="w-6 h-6 text-white" />
             </div>
           </div>
         </Card>
 
-        <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-0 shadow-lg p-6">
+        <Card className="bg-linear-to-br from-green-50 to-emerald-50 border-0 shadow-lg p-6">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600 mb-1">Revenus du Jour</p>
               <p className="text-2xl text-gray-900">{todayStats.dailyRevenue.toLocaleString()} CDF</p>
               <p className="text-xs text-green-600 mt-1">+8% vs hier</p>
             </div>
-            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-green-400 to-emerald-400 flex items-center justify-center">
+            <div className="w-12 h-12 rounded-full bg-linear-to-br from-green-400 to-emerald-400 flex items-center justify-center">
               <DollarSign className="w-6 h-6 text-white" />
             </div>
           </div>
         </Card>
 
-        <Card className="bg-gradient-to-br from-purple-50 to-pink-50 border-0 shadow-lg p-6">
+        <Card className="bg-linear-to-br from-purple-50 to-pink-50 border-0 shadow-lg p-6">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600 mb-1">Clientes Servies</p>
               <p className="text-3xl text-gray-900">{todayStats.clientsServed}</p>
               <p className="text-xs text-gray-500 mt-1">En cours: 3</p>
             </div>
-            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center">
+            <div className="w-12 h-12 rounded-full bg-linear-to-br from-purple-400 to-pink-400 flex items-center justify-center">
               <Users className="w-6 h-6 text-white" />
             </div>
           </div>
         </Card>
 
         <Card className={`border-0 shadow-lg p-6 ${todayStats.walkInAvailable
-          ? 'bg-gradient-to-br from-amber-50 to-orange-50'
-          : 'bg-gradient-to-br from-red-50 to-pink-50'
+          ? 'bg-linear-to-br from-amber-50 to-orange-50'
+          : 'bg-linear-to-br from-red-50 to-pink-50'
           }`}>
           <div className="flex items-center justify-between">
             <div>
@@ -111,8 +134,8 @@ export default function TodayOverview() {
               <p className="text-xs text-gray-600 mt-1">Attente: ~{todayStats.averageWaitTime} min</p>
             </div>
             <div className={`w-12 h-12 rounded-full flex items-center justify-center ${todayStats.walkInAvailable
-              ? 'bg-gradient-to-br from-amber-400 to-orange-400'
-              : 'bg-gradient-to-br from-red-400 to-pink-400'
+              ? 'bg-linear-to-br from-amber-400 to-orange-400'
+              : 'bg-linear-to-br from-red-400 to-pink-400'
               }`}>
               <UserCheck className="w-6 h-6 text-white" />
             </div>
@@ -135,9 +158,9 @@ export default function TodayOverview() {
         </div>
         <div className="w-full bg-gray-200 rounded-full h-4">
           <div
-            className={`h-4 rounded-full ${todayStats.currentOccupancy >= 80 ? 'bg-gradient-to-r from-red-500 to-pink-500' :
-              todayStats.currentOccupancy >= 60 ? 'bg-gradient-to-r from-amber-500 to-orange-500' :
-                'bg-gradient-to-r from-green-500 to-emerald-500'
+            className={`h-4 rounded-full ${todayStats.currentOccupancy >= 80 ? 'bg-linear-to-r from-red-500 to-pink-500' :
+              todayStats.currentOccupancy >= 60 ? 'bg-linear-to-r from-amber-500 to-orange-500' :
+                'bg-linear-to-r from-green-500 to-emerald-500'
               }`}
             style={{ width: `${todayStats.currentOccupancy}%` }}
           />
@@ -157,7 +180,7 @@ export default function TodayOverview() {
           </h3>
           <div className="space-y-3">
             {upcomingAppointments.map((apt, idx) => (
-              <div key={idx} className="flex items-center gap-4 p-4 bg-gradient-to-r from-pink-50 to-purple-50 rounded-xl">
+              <div key={idx} className="flex items-center gap-4 p-4 bg-linear-to-r from-pink-50 to-purple-50 rounded-xl">
                 <div className="text-center min-w-[60px]">
                   <p className="text-lg text-gray-900">{apt.time}</p>
                   <p className="text-xs text-gray-600">{apt.duration}min</p>
@@ -180,15 +203,15 @@ export default function TodayOverview() {
         <Card className="border-0 shadow-lg rounded-2xl p-6">
           <h3 className="text-xl text-gray-900 mb-4">Actions Rapides</h3>
           <div className="space-y-3">
-            <Button className="w-full bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white rounded-full justify-start">
+            <Button className="w-full bg-linear-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white rounded-full justify-start">
               <Plus className="w-4 h-4 mr-2" />
               Nouveau Rendez-vous
             </Button>
-            <Button className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white rounded-full justify-start">
+            <Button className="w-full bg-linear-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white rounded-full justify-start">
               <CreditCard className="w-4 h-4 mr-2" />
               Encaisser Cliente
             </Button>
-            <Button className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-full justify-start">
+            <Button className="w-full bg-linear-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-full justify-start">
               <Package className="w-4 h-4 mr-2" />
               Ajouter Stock
             </Button>
@@ -243,7 +266,7 @@ export default function TodayOverview() {
 
       {/* Urgent Alerts */}
       {urgentAlerts.length > 0 && (
-        <Card className="border-0 shadow-lg rounded-2xl p-6 bg-gradient-to-br from-red-50 to-orange-50">
+        <Card className="border-0 shadow-lg rounded-2xl p-6 bg-linear-to-br from-red-50 to-orange-50">
           <div className="flex items-center gap-3 mb-4">
             <AlertCircle className="w-6 h-6 text-red-600" />
             <h3 className="text-xl text-gray-900">Alertes Urgentes</h3>
@@ -283,7 +306,7 @@ export default function TodayOverview() {
         <h3 className="text-xl text-gray-900 mb-4">Services Populaires Aujourd'hui</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {popularServices.map((service, idx) => (
-            <Card key={idx} className="bg-gradient-to-br from-purple-50 to-pink-50 border-0 p-4">
+            <Card key={idx} className="bg-linear-to-br from-purple-50 to-pink-50 border-0 p-4">
               <p className="text-gray-900 mb-2">{service.name}</p>
               <div className="flex items-center justify-between">
                 <div>

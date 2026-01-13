@@ -27,13 +27,13 @@ export type AggregateService = {
 }
 
 export type ServiceAvgAggregateOutputType = {
-  price: runtime.Decimal | null
+  price: number | null
   duration: number | null
   displayOrder: number | null
 }
 
 export type ServiceSumAggregateOutputType = {
-  price: runtime.Decimal | null
+  price: number | null
   duration: number | null
   displayOrder: number | null
 }
@@ -42,7 +42,7 @@ export type ServiceMinAggregateOutputType = {
   id: string | null
   name: string | null
   category: $Enums.Category | null
-  price: runtime.Decimal | null
+  price: number | null
   duration: number | null
   description: string | null
   imageUrl: string | null
@@ -58,7 +58,7 @@ export type ServiceMaxAggregateOutputType = {
   id: string | null
   name: string | null
   category: $Enums.Category | null
-  price: runtime.Decimal | null
+  price: number | null
   duration: number | null
   description: string | null
   imageUrl: string | null
@@ -239,7 +239,7 @@ export type ServiceGroupByOutputType = {
   id: string
   name: string
   category: $Enums.Category
-  price: runtime.Decimal
+  price: number
   duration: number
   description: string
   imageUrl: string | null
@@ -278,7 +278,7 @@ export type ServiceWhereInput = {
   id?: Prisma.StringFilter<"Service"> | string
   name?: Prisma.StringFilter<"Service"> | string
   category?: Prisma.EnumCategoryFilter<"Service"> | $Enums.Category
-  price?: Prisma.DecimalFilter<"Service"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  price?: Prisma.FloatFilter<"Service"> | number
   duration?: Prisma.IntFilter<"Service"> | number
   description?: Prisma.StringFilter<"Service"> | string
   imageUrl?: Prisma.StringNullableFilter<"Service"> | string | null
@@ -321,7 +321,7 @@ export type ServiceWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.ServiceWhereInput | Prisma.ServiceWhereInput[]
   name?: Prisma.StringFilter<"Service"> | string
   category?: Prisma.EnumCategoryFilter<"Service"> | $Enums.Category
-  price?: Prisma.DecimalFilter<"Service"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  price?: Prisma.FloatFilter<"Service"> | number
   duration?: Prisma.IntFilter<"Service"> | number
   description?: Prisma.StringFilter<"Service"> | string
   imageUrl?: Prisma.StringNullableFilter<"Service"> | string | null
@@ -365,7 +365,7 @@ export type ServiceScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"Service"> | string
   name?: Prisma.StringWithAggregatesFilter<"Service"> | string
   category?: Prisma.EnumCategoryWithAggregatesFilter<"Service"> | $Enums.Category
-  price?: Prisma.DecimalWithAggregatesFilter<"Service"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  price?: Prisma.FloatWithAggregatesFilter<"Service"> | number
   duration?: Prisma.IntWithAggregatesFilter<"Service"> | number
   description?: Prisma.StringWithAggregatesFilter<"Service"> | string
   imageUrl?: Prisma.StringNullableWithAggregatesFilter<"Service"> | string | null
@@ -381,7 +381,7 @@ export type ServiceCreateInput = {
   id?: string
   name: string
   category: $Enums.Category
-  price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  price: number
   duration: number
   description: string
   imageUrl?: string | null
@@ -401,7 +401,7 @@ export type ServiceUncheckedCreateInput = {
   id?: string
   name: string
   category: $Enums.Category
-  price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  price: number
   duration: number
   description: string
   imageUrl?: string | null
@@ -421,7 +421,7 @@ export type ServiceUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
-  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
   duration?: Prisma.IntFieldUpdateOperationsInput | number
   description?: Prisma.StringFieldUpdateOperationsInput | string
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -441,7 +441,7 @@ export type ServiceUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
-  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
   duration?: Prisma.IntFieldUpdateOperationsInput | number
   description?: Prisma.StringFieldUpdateOperationsInput | string
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -461,7 +461,7 @@ export type ServiceCreateManyInput = {
   id?: string
   name: string
   category: $Enums.Category
-  price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  price: number
   duration: number
   description: string
   imageUrl?: string | null
@@ -477,7 +477,7 @@ export type ServiceUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
-  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
   duration?: Prisma.IntFieldUpdateOperationsInput | number
   description?: Prisma.StringFieldUpdateOperationsInput | string
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -493,7 +493,7 @@ export type ServiceUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
-  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
   duration?: Prisma.IntFieldUpdateOperationsInput | number
   description?: Prisma.StringFieldUpdateOperationsInput | string
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -668,7 +668,7 @@ export type ServiceCreateWithoutAddOnsInput = {
   id?: string
   name: string
   category: $Enums.Category
-  price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  price: number
   duration: number
   description: string
   imageUrl?: string | null
@@ -687,7 +687,7 @@ export type ServiceUncheckedCreateWithoutAddOnsInput = {
   id?: string
   name: string
   category: $Enums.Category
-  price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  price: number
   duration: number
   description: string
   imageUrl?: string | null
@@ -722,7 +722,7 @@ export type ServiceUpdateWithoutAddOnsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
-  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
   duration?: Prisma.IntFieldUpdateOperationsInput | number
   description?: Prisma.StringFieldUpdateOperationsInput | string
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -741,7 +741,7 @@ export type ServiceUncheckedUpdateWithoutAddOnsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
-  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
   duration?: Prisma.IntFieldUpdateOperationsInput | number
   description?: Prisma.StringFieldUpdateOperationsInput | string
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -760,7 +760,7 @@ export type ServiceCreateWithoutPackagesInput = {
   id?: string
   name: string
   category: $Enums.Category
-  price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  price: number
   duration: number
   description: string
   imageUrl?: string | null
@@ -779,7 +779,7 @@ export type ServiceUncheckedCreateWithoutPackagesInput = {
   id?: string
   name: string
   category: $Enums.Category
-  price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  price: number
   duration: number
   description: string
   imageUrl?: string | null
@@ -822,7 +822,7 @@ export type ServiceScalarWhereInput = {
   id?: Prisma.StringFilter<"Service"> | string
   name?: Prisma.StringFilter<"Service"> | string
   category?: Prisma.EnumCategoryFilter<"Service"> | $Enums.Category
-  price?: Prisma.DecimalFilter<"Service"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  price?: Prisma.FloatFilter<"Service"> | number
   duration?: Prisma.IntFilter<"Service"> | number
   description?: Prisma.StringFilter<"Service"> | string
   imageUrl?: Prisma.StringNullableFilter<"Service"> | string | null
@@ -838,7 +838,7 @@ export type ServiceCreateWithoutAppointmentsInput = {
   id?: string
   name: string
   category: $Enums.Category
-  price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  price: number
   duration: number
   description: string
   imageUrl?: string | null
@@ -857,7 +857,7 @@ export type ServiceUncheckedCreateWithoutAppointmentsInput = {
   id?: string
   name: string
   category: $Enums.Category
-  price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  price: number
   duration: number
   description: string
   imageUrl?: string | null
@@ -892,7 +892,7 @@ export type ServiceUpdateWithoutAppointmentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
-  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
   duration?: Prisma.IntFieldUpdateOperationsInput | number
   description?: Prisma.StringFieldUpdateOperationsInput | string
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -911,7 +911,7 @@ export type ServiceUncheckedUpdateWithoutAppointmentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
-  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
   duration?: Prisma.IntFieldUpdateOperationsInput | number
   description?: Prisma.StringFieldUpdateOperationsInput | string
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -930,7 +930,7 @@ export type ServiceCreateWithoutSalesInput = {
   id?: string
   name: string
   category: $Enums.Category
-  price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  price: number
   duration: number
   description: string
   imageUrl?: string | null
@@ -949,7 +949,7 @@ export type ServiceUncheckedCreateWithoutSalesInput = {
   id?: string
   name: string
   category: $Enums.Category
-  price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  price: number
   duration: number
   description: string
   imageUrl?: string | null
@@ -984,7 +984,7 @@ export type ServiceUpdateWithoutSalesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
-  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
   duration?: Prisma.IntFieldUpdateOperationsInput | number
   description?: Prisma.StringFieldUpdateOperationsInput | string
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1003,7 +1003,7 @@ export type ServiceUncheckedUpdateWithoutSalesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
-  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
   duration?: Prisma.IntFieldUpdateOperationsInput | number
   description?: Prisma.StringFieldUpdateOperationsInput | string
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1022,7 +1022,7 @@ export type ServiceUpdateWithoutPackagesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
-  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
   duration?: Prisma.IntFieldUpdateOperationsInput | number
   description?: Prisma.StringFieldUpdateOperationsInput | string
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1041,7 +1041,7 @@ export type ServiceUncheckedUpdateWithoutPackagesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
-  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
   duration?: Prisma.IntFieldUpdateOperationsInput | number
   description?: Prisma.StringFieldUpdateOperationsInput | string
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1060,7 +1060,7 @@ export type ServiceUncheckedUpdateManyWithoutPackagesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
-  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
   duration?: Prisma.IntFieldUpdateOperationsInput | number
   description?: Prisma.StringFieldUpdateOperationsInput | string
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1222,7 +1222,7 @@ export type $ServicePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     id: string
     name: string
     category: $Enums.Category
-    price: runtime.Decimal
+    price: number
     duration: number
     description: string
     imageUrl: string | null
@@ -1662,7 +1662,7 @@ export interface ServiceFieldRefs {
   readonly id: Prisma.FieldRef<"Service", 'String'>
   readonly name: Prisma.FieldRef<"Service", 'String'>
   readonly category: Prisma.FieldRef<"Service", 'Category'>
-  readonly price: Prisma.FieldRef<"Service", 'Decimal'>
+  readonly price: Prisma.FieldRef<"Service", 'Float'>
   readonly duration: Prisma.FieldRef<"Service", 'Int'>
   readonly description: Prisma.FieldRef<"Service", 'String'>
   readonly imageUrl: Prisma.FieldRef<"Service", 'String'>

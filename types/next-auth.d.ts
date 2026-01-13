@@ -12,11 +12,18 @@ declare module 'next-auth' {
       tier: 'Regular' | 'VIP' | 'Premium';
       loyaltyPoints: number;
       totalAppointments: number;
-      totalSpent: number;
+      totalSpent: number | string;
       referralCode: string;
       referredBy?: string;
       preferences?: any;
       notes?: string;
+      birthday?: string;
+      address?: string;
+      favoriteServices?: string[];
+      allergies?: string;
+      prepaymentBalance?: number | string;
+      giftCardBalance?: number | string;
+      referrals?: number;
     } | null;
     workerProfile?: {
       id: string;

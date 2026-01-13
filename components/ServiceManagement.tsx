@@ -1,5 +1,5 @@
 "use client"
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Card } from './ui/card';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
@@ -8,6 +8,8 @@ import { Badge } from './ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Switch } from './ui/switch';
 import { Scissors, Clock, DollarSign, Sparkles, Package, Percent, Globe } from 'lucide-react';
+import { useServices } from '@/lib/hooks/useServices';
+import CreateServiceModal from '@/components/modals/CreateServiceModal';
 
 // Axios API calls (commented out for future use)
 // import axios from 'axios';
@@ -32,8 +34,8 @@ interface Service {
   price: string;
   duration: number;
   description: string;
-  onlineBookable: boolean;
-  popular: boolean;
+  onlineBookable?: boolean;
+  popular?: boolean;
 }
 
 interface Package {
@@ -47,11 +49,13 @@ interface Package {
   active: boolean;
 }
 
-export default function ServiceManagement() {
+export default function ServiceManagement({ showMock }: { showMock?: boolean }) {
   const [selectedService, setSelectedService] = useState<Service | null>(null);
 
-  // Mock data
-  const services: Service[] = [
+  // API services (fall back to mock when none and showMock enabled)
+  const { services: apiServices = [], isLoading: servicesLoading } = useServices();
+
+  const MOCK_SERVICES: Service[] = [
     {
       id: '1',
       name: 'Manucure Gel',
@@ -71,48 +75,13 @@ export default function ServiceManagement() {
       description: 'Extension de cils technique volume russe',
       onlineBookable: true,
       popular: true
-    },
-    {
-      id: '3',
-      name: 'Tresses Box Braids',
-      category: 'Tresses',
-      price: '50 000 CDF',
-      duration: 180,
-      description: 'Tressage africain box braids',
-      onlineBookable: false,
-      popular: true
-    },
-    {
-      id: '4',
-      name: 'Maquillage Soirée',
-      category: 'Maquillage',
-      price: '40 000 CDF',
-      duration: 45,
-      description: 'Maquillage complet pour événement',
-      onlineBookable: true,
-      popular: false
-    },
-    {
-      id: '5',
-      name: 'Pédicure Spa',
-      category: 'Onglerie',
-      price: '25 000 CDF',
-      duration: 45,
-      description: 'Pédicure avec soin spa relaxant',
-      onlineBookable: true,
-      popular: false
-    },
-    {
-      id: '6',
-      name: 'Manucure Française',
-      category: 'Onglerie',
-      price: '35 000 CDF',
-      duration: 60,
-      description: 'Manucure classique française',
-      onlineBookable: true,
-      popular: false
     }
   ];
+
+  const services: Service[] = useMemo(() => {
+    if ((apiServices as any)?.length > 0) return apiServices as unknown as Service[];
+    return showMock ? MOCK_SERVICES : [];
+  }, [apiServices, showMock]);
 
   const packages: Package[] = [
     {
@@ -186,9 +155,7 @@ export default function ServiceManagement() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-3xl text-gray-900">Gestion des Services</h2>
-        <Button className="bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-full">
-          + Nouveau Service
-        </Button>
+        <CreateServiceModal triggerLabel="+ Nouveau Service" />
       </div>
 
       <Tabs defaultValue="services" className="space-y-6">
@@ -212,7 +179,7 @@ export default function ServiceManagement() {
                       <Card
                         key={service.id}
                         className={`p-4 cursor-pointer transition-all ${selectedService?.id === service.id
-                          ? 'bg-gradient-to-r from-pink-100 to-purple-100 border-2 border-pink-300'
+                          ? 'bg-linear-to-r from-pink-100 to-purple-100 border-2 border-pink-300'
                           : 'bg-gray-50 hover:bg-gray-100'
                           }`}
                         onClick={() => setSelectedService(service)}
@@ -295,7 +262,7 @@ export default function ServiceManagement() {
                   </div>
 
                   <div className="flex gap-2 pt-4">
-                    <Button className="flex-1 bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-full">
+                    <Button className="flex-1 bg-linear-to-r from-pink-500 to-purple-500 text-white rounded-full">
                       Sauvegarder
                     </Button>
                     <Button variant="outline" className="rounded-full text-red-600">
@@ -322,7 +289,7 @@ export default function ServiceManagement() {
               {packages.map((pkg) => (
                 <Card key={pkg.id} className="border-0 shadow-lg rounded-2xl p-6">
                   <div className="flex items-start justify-between mb-4">
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center">
+                    <div className="w-12 h-12 rounded-full bg-linear-to-br from-purple-400 to-pink-400 flex items-center justify-center">
                       <Package className="w-6 h-6 text-white" />
                     </div>
                     <Badge className={`${pkg.active ? 'bg-green-500' : 'bg-gray-400'
@@ -343,7 +310,7 @@ export default function ServiceManagement() {
                     ))}
                   </div>
 
-                  <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-4 rounded-xl mb-4">
+                  <div className="bg-linear-to-r from-green-50 to-emerald-50 p-4 rounded-xl mb-4">
                     <div className="flex justify-between items-center mb-2">
                       <span className="text-sm text-gray-600 line-through">{pkg.regularPrice}</span>
                       <span className="text-2xl text-gray-900">{pkg.packagePrice}</span>
@@ -367,7 +334,7 @@ export default function ServiceManagement() {
               ))}
             </div>
 
-            <Button className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full">
+            <Button className="w-full bg-linear-to-r from-purple-500 to-pink-500 text-white rounded-full">
               + Créer Nouveau Forfait
             </Button>
           </div>
@@ -381,14 +348,14 @@ export default function ServiceManagement() {
                 <Percent className="w-8 h-8 text-amber-500" />
                 <h3 className="text-2xl text-gray-900">Codes Promotionnels</h3>
               </div>
-              <Button className="bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-full">
+              <Button className="bg-linear-to-r from-amber-500 to-orange-500 text-white rounded-full">
                 + Nouvelle Promotion
               </Button>
             </div>
 
             <div className="space-y-4">
               {promotions.map((promo) => (
-                <Card key={promo.id} className="bg-gradient-to-r from-amber-50 to-orange-50 border-0 p-6 rounded-xl">
+                <Card key={promo.id} className="bg-linear-to-r from-amber-50 to-orange-50 border-0 p-6 rounded-xl">
                   <div className="flex items-start justify-between mb-4">
                     <div>
                       <div className="flex items-center gap-3 mb-2">
@@ -423,7 +390,7 @@ export default function ServiceManagement() {
 
                   <div className="w-full bg-gray-200 rounded-full h-2 mt-4 mb-4">
                     <div
-                      className="bg-gradient-to-r from-amber-500 to-orange-500 h-2 rounded-full"
+                      className="bg-linear-to-r from-amber-500 to-orange-500 h-2 rounded-full"
                       style={{ width: `${(promo.usageCount / promo.usageLimit) * 100}%` }}
                     />
                   </div>
@@ -468,7 +435,7 @@ export default function ServiceManagement() {
               ))}
             </div>
 
-            <Card className="bg-gradient-to-br from-blue-50 to-cyan-50 border-0 p-6">
+            <Card className="bg-linear-to-br from-blue-50 to-cyan-50 border-0 p-6">
               <h4 className="text-lg text-gray-900 mb-4">Options Supplémentaires</h4>
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
@@ -490,7 +457,7 @@ export default function ServiceManagement() {
               </div>
             </Card>
 
-            <Button className="w-full mt-6 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-full">
+            <Button className="w-full mt-6 bg-linear-to-r from-blue-500 to-cyan-500 text-white rounded-full">
               Sauvegarder les Paramètres
             </Button>
           </Card>

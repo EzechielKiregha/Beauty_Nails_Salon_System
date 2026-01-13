@@ -27,14 +27,14 @@ export type AggregateDiscountCode = {
 }
 
 export type DiscountCodeAvgAggregateOutputType = {
-  value: runtime.Decimal | null
+  value: number | null
   minPurchase: runtime.Decimal | null
   maxUses: number | null
   usedCount: number | null
 }
 
 export type DiscountCodeSumAggregateOutputType = {
-  value: runtime.Decimal | null
+  value: number | null
   minPurchase: runtime.Decimal | null
   maxUses: number | null
   usedCount: number | null
@@ -44,7 +44,7 @@ export type DiscountCodeMinAggregateOutputType = {
   id: string | null
   code: string | null
   type: $Enums.DiscountType | null
-  value: runtime.Decimal | null
+  value: number | null
   minPurchase: runtime.Decimal | null
   maxUses: number | null
   usedCount: number | null
@@ -59,7 +59,7 @@ export type DiscountCodeMaxAggregateOutputType = {
   id: string | null
   code: string | null
   type: $Enums.DiscountType | null
-  value: runtime.Decimal | null
+  value: number | null
   minPurchase: runtime.Decimal | null
   maxUses: number | null
   usedCount: number | null
@@ -237,7 +237,7 @@ export type DiscountCodeGroupByOutputType = {
   id: string
   code: string
   type: $Enums.DiscountType
-  value: runtime.Decimal
+  value: number
   minPurchase: runtime.Decimal | null
   maxUses: number | null
   usedCount: number
@@ -275,7 +275,7 @@ export type DiscountCodeWhereInput = {
   id?: Prisma.StringFilter<"DiscountCode"> | string
   code?: Prisma.StringFilter<"DiscountCode"> | string
   type?: Prisma.EnumDiscountTypeFilter<"DiscountCode"> | $Enums.DiscountType
-  value?: Prisma.DecimalFilter<"DiscountCode"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  value?: Prisma.FloatFilter<"DiscountCode"> | number
   minPurchase?: Prisma.DecimalNullableFilter<"DiscountCode"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   maxUses?: Prisma.IntNullableFilter<"DiscountCode"> | number | null
   usedCount?: Prisma.IntFilter<"DiscountCode"> | number
@@ -308,7 +308,7 @@ export type DiscountCodeWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.DiscountCodeWhereInput[]
   NOT?: Prisma.DiscountCodeWhereInput | Prisma.DiscountCodeWhereInput[]
   type?: Prisma.EnumDiscountTypeFilter<"DiscountCode"> | $Enums.DiscountType
-  value?: Prisma.DecimalFilter<"DiscountCode"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  value?: Prisma.FloatFilter<"DiscountCode"> | number
   minPurchase?: Prisma.DecimalNullableFilter<"DiscountCode"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   maxUses?: Prisma.IntNullableFilter<"DiscountCode"> | number | null
   usedCount?: Prisma.IntFilter<"DiscountCode"> | number
@@ -346,7 +346,7 @@ export type DiscountCodeScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"DiscountCode"> | string
   code?: Prisma.StringWithAggregatesFilter<"DiscountCode"> | string
   type?: Prisma.EnumDiscountTypeWithAggregatesFilter<"DiscountCode"> | $Enums.DiscountType
-  value?: Prisma.DecimalWithAggregatesFilter<"DiscountCode"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  value?: Prisma.FloatWithAggregatesFilter<"DiscountCode"> | number
   minPurchase?: Prisma.DecimalNullableWithAggregatesFilter<"DiscountCode"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   maxUses?: Prisma.IntNullableWithAggregatesFilter<"DiscountCode"> | number | null
   usedCount?: Prisma.IntWithAggregatesFilter<"DiscountCode"> | number
@@ -361,7 +361,7 @@ export type DiscountCodeCreateInput = {
   id?: string
   code: string
   type: $Enums.DiscountType
-  value: runtime.Decimal | runtime.DecimalJsLike | number | string
+  value: number
   minPurchase?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   maxUses?: number | null
   usedCount?: number
@@ -376,7 +376,7 @@ export type DiscountCodeUncheckedCreateInput = {
   id?: string
   code: string
   type: $Enums.DiscountType
-  value: runtime.Decimal | runtime.DecimalJsLike | number | string
+  value: number
   minPurchase?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   maxUses?: number | null
   usedCount?: number
@@ -391,7 +391,7 @@ export type DiscountCodeUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   code?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumDiscountTypeFieldUpdateOperationsInput | $Enums.DiscountType
-  value?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  value?: Prisma.FloatFieldUpdateOperationsInput | number
   minPurchase?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   maxUses?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   usedCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -406,7 +406,7 @@ export type DiscountCodeUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   code?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumDiscountTypeFieldUpdateOperationsInput | $Enums.DiscountType
-  value?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  value?: Prisma.FloatFieldUpdateOperationsInput | number
   minPurchase?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   maxUses?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   usedCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -421,7 +421,7 @@ export type DiscountCodeCreateManyInput = {
   id?: string
   code: string
   type: $Enums.DiscountType
-  value: runtime.Decimal | runtime.DecimalJsLike | number | string
+  value: number
   minPurchase?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   maxUses?: number | null
   usedCount?: number
@@ -436,7 +436,7 @@ export type DiscountCodeUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   code?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumDiscountTypeFieldUpdateOperationsInput | $Enums.DiscountType
-  value?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  value?: Prisma.FloatFieldUpdateOperationsInput | number
   minPurchase?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   maxUses?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   usedCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -451,7 +451,7 @@ export type DiscountCodeUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   code?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumDiscountTypeFieldUpdateOperationsInput | $Enums.DiscountType
-  value?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  value?: Prisma.FloatFieldUpdateOperationsInput | number
   minPurchase?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   maxUses?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   usedCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -596,7 +596,7 @@ export type $DiscountCodePayload<ExtArgs extends runtime.Types.Extensions.Intern
     id: string
     code: string
     type: $Enums.DiscountType
-    value: runtime.Decimal
+    value: number
     minPurchase: runtime.Decimal | null
     maxUses: number | null
     usedCount: number
@@ -1031,7 +1031,7 @@ export interface DiscountCodeFieldRefs {
   readonly id: Prisma.FieldRef<"DiscountCode", 'String'>
   readonly code: Prisma.FieldRef<"DiscountCode", 'String'>
   readonly type: Prisma.FieldRef<"DiscountCode", 'DiscountType'>
-  readonly value: Prisma.FieldRef<"DiscountCode", 'Decimal'>
+  readonly value: Prisma.FieldRef<"DiscountCode", 'Float'>
   readonly minPurchase: Prisma.FieldRef<"DiscountCode", 'Decimal'>
   readonly maxUses: Prisma.FieldRef<"DiscountCode", 'Int'>
   readonly usedCount: Prisma.FieldRef<"DiscountCode", 'Int'>

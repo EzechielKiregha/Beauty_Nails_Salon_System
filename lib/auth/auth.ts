@@ -1,7 +1,8 @@
 import NextAuth from 'next-auth';
 import prisma from '@/lib/prisma';
 import { authConfig } from './auth.config';
-import { PrismaAdapter } from '@next-auth/prisma-adapter';
+import { Decimal } from '@/prisma/generated/internal/prismaNamespaceBrowser';
+import { PrismaAdapter } from '@auth/prisma-adapter';
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
@@ -29,4 +30,16 @@ export async function requireRole(allowedRoles: ('client' | 'worker' | 'admin')[
     throw new Error('Forbidden');
   }
   return user;
+}
+
+export function clean(obj: any): any {
+  if (!obj || typeof obj !== 'object') return obj;
+
+  if (obj instanceof Decimal) return obj.toNumber();
+
+  if (Array.isArray(obj)) return obj.map(clean);
+
+  return Object.fromEntries(
+    Object.entries(obj).map(([k, v]) => [k, clean(v)])
+  );
 }

@@ -134,7 +134,7 @@ export default function JoinTeam() {
           </div>
 
           <div className="relative">
-            <div className="absolute -inset-4 bg-gradient-to-r from-pink-400 to-amber-400 rounded-2xl opacity-20 blur-2xl" />
+            <div className="absolute -inset-4 bg-linear-to-r from-pink-400 to-amber-400 rounded-2xl opacity-20 blur-2xl" />
             <ImageWithFallback
               src="https://images.unsplash.com/photo-1632643746039-de953cb0f260?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxiZWF1dHklMjBzYWxvbiUyMGVsZWdhbnR8ZW58MXx8fHwxNzYyMjYzMDgyfDA&ixlib=rb-4.1.0&q=80&w=1080"
               alt="Beauty Nails Team"
@@ -153,7 +153,7 @@ export default function JoinTeam() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {benefits.map((benefit, index) => (
               <Card key={index} className="bg-white border-0 shadow-xl rounded-2xl p-8 text-center hover:shadow-2xl transition-shadow">
-                <div className={`w-16 h-16 rounded-full bg-gradient-to-br ${benefit.color} flex items-center justify-center mx-auto mb-6`}>
+                <div className={`w-16 h-16 rounded-full bg-linear-to-br ${benefit.color} flex items-center justify-center mx-auto mb-6`}>
                   {benefit.icon}
                 </div>
                 <h3 className="text-xl text-gray-900 mb-3">{benefit.title}</h3>
@@ -290,7 +290,7 @@ export default function JoinTeam() {
 
                 <Button
                   type="submit"
-                  className="w-full bg-gradient-to-r from-pink-500 to-amber-400 hover:from-pink-600 hover:to-amber-500 text-white rounded-full py-6"
+                  className="w-full bg-linear-to-r from-pink-500 to-amber-400 hover:from-pink-600 hover:to-amber-500 text-white rounded-full py-6"
                 >
                   Envoyer ma candidature
                 </Button>
@@ -300,7 +300,7 @@ export default function JoinTeam() {
 
           {/* Sidebar */}
           <div className="space-y-6">
-            <Card className="bg-gradient-to-br from-pink-50 to-purple-50 border-0 shadow-lg p-6 rounded-2xl">
+            <Card className="bg-linear-to-br from-pink-50 to-purple-50 border-0 shadow-lg p-6 rounded-2xl">
               <h3 className="text-xl text-gray-900 mb-4">Processus de Recrutement</h3>
               <div className="space-y-4">
                 <div className="flex gap-4">
@@ -342,7 +342,7 @@ export default function JoinTeam() {
               </div>
             </Card>
 
-            <Card className="bg-gradient-to-br from-amber-50 to-orange-50 border-0 shadow-lg p-6 rounded-2xl">
+            <Card className="bg-linear-to-br from-amber-50 to-orange-50 border-0 shadow-lg p-6 rounded-2xl">
               <h3 className="text-xl text-gray-900 mb-4">Questions ?</h3>
               <p className="text-gray-600 mb-4">
                 Contactez notre responsable RH pour plus d'informations

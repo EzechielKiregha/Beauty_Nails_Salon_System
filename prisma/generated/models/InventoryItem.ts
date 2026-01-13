@@ -30,14 +30,14 @@ export type InventoryItemAvgAggregateOutputType = {
   currentStock: number | null
   minStock: number | null
   maxStock: number | null
-  cost: runtime.Decimal | null
+  cost: number | null
 }
 
 export type InventoryItemSumAggregateOutputType = {
   currentStock: number | null
   minStock: number | null
   maxStock: number | null
-  cost: runtime.Decimal | null
+  cost: number | null
 }
 
 export type InventoryItemMinAggregateOutputType = {
@@ -48,7 +48,7 @@ export type InventoryItemMinAggregateOutputType = {
   minStock: number | null
   maxStock: number | null
   unit: string | null
-  cost: runtime.Decimal | null
+  cost: number | null
   supplier: string | null
   sku: string | null
   lastRestocked: Date | null
@@ -65,7 +65,7 @@ export type InventoryItemMaxAggregateOutputType = {
   minStock: number | null
   maxStock: number | null
   unit: string | null
-  cost: runtime.Decimal | null
+  cost: number | null
   supplier: string | null
   sku: string | null
   lastRestocked: Date | null
@@ -253,7 +253,7 @@ export type InventoryItemGroupByOutputType = {
   minStock: number
   maxStock: number | null
   unit: string
-  cost: runtime.Decimal
+  cost: number
   supplier: string | null
   sku: string | null
   lastRestocked: Date | null
@@ -293,7 +293,7 @@ export type InventoryItemWhereInput = {
   minStock?: Prisma.IntFilter<"InventoryItem"> | number
   maxStock?: Prisma.IntNullableFilter<"InventoryItem"> | number | null
   unit?: Prisma.StringFilter<"InventoryItem"> | string
-  cost?: Prisma.DecimalFilter<"InventoryItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  cost?: Prisma.FloatFilter<"InventoryItem"> | number
   supplier?: Prisma.StringNullableFilter<"InventoryItem"> | string | null
   sku?: Prisma.StringNullableFilter<"InventoryItem"> | string | null
   lastRestocked?: Prisma.DateTimeNullableFilter<"InventoryItem"> | Date | string | null
@@ -337,7 +337,7 @@ export type InventoryItemWhereUniqueInput = Prisma.AtLeast<{
   minStock?: Prisma.IntFilter<"InventoryItem"> | number
   maxStock?: Prisma.IntNullableFilter<"InventoryItem"> | number | null
   unit?: Prisma.StringFilter<"InventoryItem"> | string
-  cost?: Prisma.DecimalFilter<"InventoryItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  cost?: Prisma.FloatFilter<"InventoryItem"> | number
   supplier?: Prisma.StringNullableFilter<"InventoryItem"> | string | null
   lastRestocked?: Prisma.DateTimeNullableFilter<"InventoryItem"> | Date | string | null
   status?: Prisma.EnumStockStatusFilter<"InventoryItem"> | $Enums.StockStatus
@@ -381,7 +381,7 @@ export type InventoryItemScalarWhereWithAggregatesInput = {
   minStock?: Prisma.IntWithAggregatesFilter<"InventoryItem"> | number
   maxStock?: Prisma.IntNullableWithAggregatesFilter<"InventoryItem"> | number | null
   unit?: Prisma.StringWithAggregatesFilter<"InventoryItem"> | string
-  cost?: Prisma.DecimalWithAggregatesFilter<"InventoryItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  cost?: Prisma.FloatWithAggregatesFilter<"InventoryItem"> | number
   supplier?: Prisma.StringNullableWithAggregatesFilter<"InventoryItem"> | string | null
   sku?: Prisma.StringNullableWithAggregatesFilter<"InventoryItem"> | string | null
   lastRestocked?: Prisma.DateTimeNullableWithAggregatesFilter<"InventoryItem"> | Date | string | null
@@ -398,7 +398,7 @@ export type InventoryItemCreateInput = {
   minStock: number
   maxStock?: number | null
   unit: string
-  cost: runtime.Decimal | runtime.DecimalJsLike | number | string
+  cost: number
   supplier?: string | null
   sku?: string | null
   lastRestocked?: Date | string | null
@@ -418,7 +418,7 @@ export type InventoryItemUncheckedCreateInput = {
   minStock: number
   maxStock?: number | null
   unit: string
-  cost: runtime.Decimal | runtime.DecimalJsLike | number | string
+  cost: number
   supplier?: string | null
   sku?: string | null
   lastRestocked?: Date | string | null
@@ -438,7 +438,7 @@ export type InventoryItemUpdateInput = {
   minStock?: Prisma.IntFieldUpdateOperationsInput | number
   maxStock?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  cost?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  cost?: Prisma.FloatFieldUpdateOperationsInput | number
   supplier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sku?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastRestocked?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -458,7 +458,7 @@ export type InventoryItemUncheckedUpdateInput = {
   minStock?: Prisma.IntFieldUpdateOperationsInput | number
   maxStock?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  cost?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  cost?: Prisma.FloatFieldUpdateOperationsInput | number
   supplier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sku?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastRestocked?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -478,7 +478,7 @@ export type InventoryItemCreateManyInput = {
   minStock: number
   maxStock?: number | null
   unit: string
-  cost: runtime.Decimal | runtime.DecimalJsLike | number | string
+  cost: number
   supplier?: string | null
   sku?: string | null
   lastRestocked?: Date | string | null
@@ -495,7 +495,7 @@ export type InventoryItemUpdateManyMutationInput = {
   minStock?: Prisma.IntFieldUpdateOperationsInput | number
   maxStock?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  cost?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  cost?: Prisma.FloatFieldUpdateOperationsInput | number
   supplier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sku?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastRestocked?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -512,7 +512,7 @@ export type InventoryItemUncheckedUpdateManyInput = {
   minStock?: Prisma.IntFieldUpdateOperationsInput | number
   maxStock?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  cost?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  cost?: Prisma.FloatFieldUpdateOperationsInput | number
   supplier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sku?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastRestocked?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -645,7 +645,7 @@ export type InventoryItemCreateWithoutTransactionsInput = {
   minStock: number
   maxStock?: number | null
   unit: string
-  cost: runtime.Decimal | runtime.DecimalJsLike | number | string
+  cost: number
   supplier?: string | null
   sku?: string | null
   lastRestocked?: Date | string | null
@@ -664,7 +664,7 @@ export type InventoryItemUncheckedCreateWithoutTransactionsInput = {
   minStock: number
   maxStock?: number | null
   unit: string
-  cost: runtime.Decimal | runtime.DecimalJsLike | number | string
+  cost: number
   supplier?: string | null
   sku?: string | null
   lastRestocked?: Date | string | null
@@ -699,7 +699,7 @@ export type InventoryItemUpdateWithoutTransactionsInput = {
   minStock?: Prisma.IntFieldUpdateOperationsInput | number
   maxStock?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  cost?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  cost?: Prisma.FloatFieldUpdateOperationsInput | number
   supplier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sku?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastRestocked?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -718,7 +718,7 @@ export type InventoryItemUncheckedUpdateWithoutTransactionsInput = {
   minStock?: Prisma.IntFieldUpdateOperationsInput | number
   maxStock?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  cost?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  cost?: Prisma.FloatFieldUpdateOperationsInput | number
   supplier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sku?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastRestocked?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -737,7 +737,7 @@ export type InventoryItemCreateWithoutUsagesInput = {
   minStock: number
   maxStock?: number | null
   unit: string
-  cost: runtime.Decimal | runtime.DecimalJsLike | number | string
+  cost: number
   supplier?: string | null
   sku?: string | null
   lastRestocked?: Date | string | null
@@ -756,7 +756,7 @@ export type InventoryItemUncheckedCreateWithoutUsagesInput = {
   minStock: number
   maxStock?: number | null
   unit: string
-  cost: runtime.Decimal | runtime.DecimalJsLike | number | string
+  cost: number
   supplier?: string | null
   sku?: string | null
   lastRestocked?: Date | string | null
@@ -791,7 +791,7 @@ export type InventoryItemUpdateWithoutUsagesInput = {
   minStock?: Prisma.IntFieldUpdateOperationsInput | number
   maxStock?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  cost?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  cost?: Prisma.FloatFieldUpdateOperationsInput | number
   supplier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sku?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastRestocked?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -810,7 +810,7 @@ export type InventoryItemUncheckedUpdateWithoutUsagesInput = {
   minStock?: Prisma.IntFieldUpdateOperationsInput | number
   maxStock?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  cost?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  cost?: Prisma.FloatFieldUpdateOperationsInput | number
   supplier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sku?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastRestocked?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -829,7 +829,7 @@ export type InventoryItemCreateWithoutReordersInput = {
   minStock: number
   maxStock?: number | null
   unit: string
-  cost: runtime.Decimal | runtime.DecimalJsLike | number | string
+  cost: number
   supplier?: string | null
   sku?: string | null
   lastRestocked?: Date | string | null
@@ -848,7 +848,7 @@ export type InventoryItemUncheckedCreateWithoutReordersInput = {
   minStock: number
   maxStock?: number | null
   unit: string
-  cost: runtime.Decimal | runtime.DecimalJsLike | number | string
+  cost: number
   supplier?: string | null
   sku?: string | null
   lastRestocked?: Date | string | null
@@ -883,7 +883,7 @@ export type InventoryItemUpdateWithoutReordersInput = {
   minStock?: Prisma.IntFieldUpdateOperationsInput | number
   maxStock?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  cost?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  cost?: Prisma.FloatFieldUpdateOperationsInput | number
   supplier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sku?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastRestocked?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -902,7 +902,7 @@ export type InventoryItemUncheckedUpdateWithoutReordersInput = {
   minStock?: Prisma.IntFieldUpdateOperationsInput | number
   maxStock?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  cost?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  cost?: Prisma.FloatFieldUpdateOperationsInput | number
   supplier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sku?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastRestocked?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1059,7 +1059,7 @@ export type $InventoryItemPayload<ExtArgs extends runtime.Types.Extensions.Inter
     minStock: number
     maxStock: number | null
     unit: string
-    cost: runtime.Decimal
+    cost: number
     supplier: string | null
     sku: string | null
     lastRestocked: Date | null
@@ -1499,7 +1499,7 @@ export interface InventoryItemFieldRefs {
   readonly minStock: Prisma.FieldRef<"InventoryItem", 'Int'>
   readonly maxStock: Prisma.FieldRef<"InventoryItem", 'Int'>
   readonly unit: Prisma.FieldRef<"InventoryItem", 'String'>
-  readonly cost: Prisma.FieldRef<"InventoryItem", 'Decimal'>
+  readonly cost: Prisma.FieldRef<"InventoryItem", 'Float'>
   readonly supplier: Prisma.FieldRef<"InventoryItem", 'String'>
   readonly sku: Prisma.FieldRef<"InventoryItem", 'String'>
   readonly lastRestocked: Prisma.FieldRef<"InventoryItem", 'DateTime'>

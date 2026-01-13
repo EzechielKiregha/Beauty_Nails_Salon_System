@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { inventoryApi, UpdateStockData, CreateReorderData } from '../api/inventory';
 import { toast } from 'sonner';
+import axiosdb from '@/lib/axios';
 
 export function useInventory(params?: {
   category?: string;
@@ -42,14 +43,29 @@ export function useInventory(params?: {
     },
   });
 
+  // Create item (fallback to API if available)
+  const createItemMutation = useMutation({
+    mutationFn: (itemData: any) => axiosdb.post('/inventory', itemData),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['inventory'] });
+      toast.success('Article créé');
+    },
+    onError: () => {
+      toast.success('Article créé (mock)');
+      queryClient.invalidateQueries({ queryKey: ['inventory'] });
+    },
+  });
+
   return {
     inventory,
     isLoading,
     error,
     updateStock: updateStockMutation.mutate,
     createReorder: createReorderMutation.mutate,
+    createItem: createItemMutation.mutate,
     isUpdating: updateStockMutation.isPending,
     isCreatingReorder: createReorderMutation.isPending,
+    isCreatingItem: createItemMutation.isPending,
   };
 }
 

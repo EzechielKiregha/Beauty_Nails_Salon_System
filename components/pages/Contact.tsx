@@ -98,7 +98,7 @@ export default function Contact() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
           {contactInfo.map((info, index) => (
             <Card key={index} className="bg-white border-0 shadow-lg hover:shadow-xl transition-shadow p-6 rounded-2xl text-center">
-              <div className="w-14 h-14 rounded-full bg-gradient-to-br from-pink-100 to-purple-100 flex items-center justify-center mx-auto mb-4">
+              <div className="w-14 h-14 rounded-full bg-linear-to-br from-pink-100 to-purple-100 flex items-center justify-center mx-auto mb-4">
                 {info.icon}
               </div>
               <h3 className="text-lg text-gray-900 mb-2">{info.title}</h3>
@@ -196,7 +196,7 @@ export default function Contact() {
 
                 <Button
                   type="submit"
-                  className="w-full bg-gradient-to-r from-pink-500 to-amber-400 hover:from-pink-600 hover:to-amber-500 text-white rounded-full py-6"
+                  className="w-full bg-linear-to-r from-pink-500 to-amber-400 hover:from-pink-600 hover:to-amber-500 text-white rounded-full py-6"
                 >
                   Envoyer le message
                 </Button>
@@ -207,7 +207,7 @@ export default function Contact() {
           {/* Sidebar */}
           <div className="space-y-6">
             {/* WhatsApp Card */}
-            <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-0 shadow-lg p-6 rounded-2xl">
+            <Card className="bg-linear-to-br from-green-50 to-emerald-50 border-0 shadow-lg p-6 rounded-2xl">
               <div className="text-center">
                 <div className="w-16 h-16 rounded-full bg-green-500 flex items-center justify-center mx-auto mb-4">
                   <MessageCircle className="w-8 h-8 text-white" />
@@ -243,7 +243,7 @@ export default function Contact() {
             </Card>
 
             {/* Social Media Card */}
-            <Card className="bg-gradient-to-br from-pink-50 to-purple-50 border-0 shadow-lg p-6 rounded-2xl">
+            <Card className="bg-linear-to-br from-pink-50 to-purple-50 border-0 shadow-lg p-6 rounded-2xl">
               <h3 className="text-xl text-gray-900 mb-4">Suivez-nous</h3>
               <div className="space-y-3">
                 <a
@@ -263,7 +263,7 @@ export default function Contact() {
                   rel="noopener noreferrer"
                   className="flex items-center gap-3 p-3 bg-white rounded-xl hover:shadow-md transition-shadow"
                 >
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white">
+                  <div className="w-10 h-10 rounded-full bg-linear-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white">
                     I
                   </div>
                   <span className="text-gray-700">Instagram</span>
@@ -287,7 +287,7 @@ export default function Contact() {
         {/* Map Section */}
         <div className="mt-16">
           <Card className="bg-white border-0 shadow-xl rounded-2xl overflow-hidden">
-            <div className="p-6 bg-gradient-to-r from-pink-50 to-purple-50">
+            <div className="p-6 bg-linear-to-r from-pink-50 to-purple-50">
               <h2 className="text-2xl text-gray-900 flex items-center">
                 <MapPin className="w-6 h-6 mr-2 text-pink-500" />
                 Notre Emplacement

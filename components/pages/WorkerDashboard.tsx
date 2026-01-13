@@ -200,7 +200,7 @@ export default function WorkerDashboard({ user }: WorkerDashboardProps) {
   };
 
   return (
-    <div className="min-h-screen py-24 bg-gradient-to-br from-purple-50 via-pink-50 to-white">
+    <div className="min-h-screen py-24 bg-linear-to-br from-purple-50 via-pink-50 to-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header with Notifications */}
         <div className="mb-12 flex items-start justify-between">
@@ -268,53 +268,53 @@ export default function WorkerDashboard({ user }: WorkerDashboardProps) {
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          <Card className="bg-gradient-to-br from-purple-50 to-pink-50 border-0 shadow-lg p-6 rounded-2xl hover:shadow-xl transition-shadow">
+          <Card className="bg-linear-to-br from-purple-50 to-pink-50 border-0 shadow-lg p-6 rounded-2xl hover:shadow-xl transition-shadow">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600 mb-1">Clientes Aujourd'hui</p>
                 <p className="text-3xl text-gray-900">{stats.todayClients}</p>
                 <p className="text-xs text-purple-600 mt-1">Planning complet</p>
               </div>
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center">
+              <div className="w-12 h-12 rounded-full bg-linear-to-br from-purple-400 to-pink-400 flex items-center justify-center">
                 <User className="w-6 h-6 text-white" />
               </div>
             </div>
           </Card>
 
-          <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-0 shadow-lg p-6 rounded-2xl hover:shadow-xl transition-shadow">
+          <Card className="bg-linear-to-br from-green-50 to-emerald-50 border-0 shadow-lg p-6 rounded-2xl hover:shadow-xl transition-shadow">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600 mb-1">Complétées</p>
                 <p className="text-3xl text-gray-900">{stats.completedToday}/{stats.todayClients}</p>
                 <p className="text-xs text-green-600 mt-1">Bon rythme</p>
               </div>
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-green-400 to-emerald-400 flex items-center justify-center">
+              <div className="w-12 h-12 rounded-full bg-linear-to-br from-green-400 to-emerald-400 flex items-center justify-center">
                 <CheckCircle className="w-6 h-6 text-white" />
               </div>
             </div>
           </Card>
 
-          <Card className="bg-gradient-to-br from-amber-50 to-orange-50 border-0 shadow-lg p-6 rounded-2xl hover:shadow-xl transition-shadow">
+          <Card className="bg-linear-to-br from-amber-50 to-orange-50 border-0 shadow-lg p-6 rounded-2xl hover:shadow-xl transition-shadow">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600 mb-1">Note Moyenne</p>
                 <p className="text-3xl text-gray-900">{stats.avgRating}/5</p>
                 <p className="text-xs text-amber-600 mt-1">Excellence!</p>
               </div>
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-amber-400 to-orange-400 flex items-center justify-center">
+              <div className="w-12 h-12 rounded-full bg-linear-to-br from-amber-400 to-orange-400 flex items-center justify-center">
                 <Star className="w-6 h-6 text-white" />
               </div>
             </div>
           </Card>
 
-          <Card className="bg-gradient-to-br from-pink-50 to-rose-50 border-0 shadow-lg p-6 rounded-2xl hover:shadow-xl transition-shadow">
+          <Card className="bg-linear-to-br from-pink-50 to-rose-50 border-0 shadow-lg p-6 rounded-2xl hover:shadow-xl transition-shadow">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600 mb-1">Revenus ce mois</p>
                 <p className="text-2xl text-gray-900">{stats.totalRevenue}</p>
                 <p className="text-xs text-pink-600 mt-1">+8% vs Oct</p>
               </div>
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-pink-400 to-rose-400 flex items-center justify-center">
+              <div className="w-12 h-12 rounded-full bg-linear-to-br from-pink-400 to-rose-400 flex items-center justify-center">
                 <TrendingUp className="w-6 h-6 text-white" />
               </div>
             </div>
@@ -365,7 +365,7 @@ export default function WorkerDashboard({ user }: WorkerDashboardProps) {
                         <div className="w-px h-12 bg-gray-200" />
 
                         <Avatar className="w-12 h-12">
-                          <AvatarFallback className="bg-gradient-to-br from-purple-400 to-pink-400 text-white">
+                          <AvatarFallback className="bg-linear-to-br from-purple-400 to-pink-400 text-white">
                             {appointment.client.split(' ').map(n => n[0]).join('')}
                           </AvatarFallback>
                         </Avatar>
@@ -418,7 +418,7 @@ export default function WorkerDashboard({ user }: WorkerDashboardProps) {
                             <div className="space-y-4 py-4">
                               <div className="flex items-center gap-3">
                                 <Avatar className="w-16 h-16">
-                                  <AvatarFallback className="bg-gradient-to-br from-purple-400 to-pink-400 text-white text-xl">
+                                  <AvatarFallback className="bg-linear-to-br from-purple-400 to-pink-400 text-white text-xl">
                                     {appointment.client.split(' ').map(n => n[0]).join('')}
                                   </AvatarFallback>
                                 </Avatar>
@@ -477,7 +477,7 @@ export default function WorkerDashboard({ user }: WorkerDashboardProps) {
                         {/* Action Buttons */}
                         {appointment.status === 'upcoming' && (
                           <Button
-                            className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-full"
+                            className="bg-linear-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-full"
                             onClick={() => handleStartAppointment(appointment)}
                           >
                             <PlayCircle className="w-4 h-4 mr-2" />
@@ -486,7 +486,7 @@ export default function WorkerDashboard({ user }: WorkerDashboardProps) {
                         )}
                         {appointment.status === 'in-progress' && (
                           <Button
-                            className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white rounded-full"
+                            className="bg-linear-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white rounded-full"
                             onClick={() => handleCompleteAppointment(appointment)}
                           >
                             <CheckCheck className="w-4 h-4 mr-2" />
@@ -536,7 +536,7 @@ export default function WorkerDashboard({ user }: WorkerDashboardProps) {
                       <div className="flex-1">
                         <div className="flex items-center gap-3 mb-2">
                           <Avatar className="w-10 h-10">
-                            <AvatarFallback className="bg-gradient-to-br from-green-400 to-emerald-400 text-white">
+                            <AvatarFallback className="bg-linear-to-br from-green-400 to-emerald-400 text-white">
                               {service.client.split(' ').map(n => n[0]).join('')}
                             </AvatarFallback>
                           </Avatar>
@@ -605,9 +605,9 @@ export default function WorkerDashboard({ user }: WorkerDashboardProps) {
                 </div>
               </div>
 
-              <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-6">
+              <div className="bg-linear-to-br from-purple-50 to-pink-50 rounded-2xl p-6">
                 <div className="flex items-center gap-4">
-                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center">
+                  <div className="w-16 h-16 rounded-full bg-linear-to-br from-purple-400 to-pink-400 flex items-center justify-center">
                     <Award className="w-8 h-8 text-white" />
                   </div>
                   <div>

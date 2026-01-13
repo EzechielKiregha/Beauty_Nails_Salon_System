@@ -78,6 +78,11 @@ export type WorkerSchedule = Prisma.WorkerScheduleModel
  */
 export type WorkerLeave = Prisma.WorkerLeaveModel
 /**
+ * Model Task
+ * 
+ */
+export type Task = Prisma.TaskModel
+/**
  * Model Service
  * 
  */

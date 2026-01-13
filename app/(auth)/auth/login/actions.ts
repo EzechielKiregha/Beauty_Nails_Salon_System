@@ -1,6 +1,6 @@
 "use server";
 
-import { auth, getCurrentUser, signIn } from "@/lib/auth/auth";
+import { getCurrentUser, signIn } from "@/lib/auth/auth";
 
 export async function handleLogin(formData: FormData, expectedRole: string) {
   const email = formData.get("email") as string;
@@ -14,7 +14,7 @@ export async function handleLogin(formData: FormData, expectedRole: string) {
     });
 
     if (result?.error) {
-      return { error: result.error };
+      return { error: result.cause || "Échec de la connexion"};
     }
   } catch (err: any) {
     return { error: err?.message ?? "Une erreur inconnue" };
@@ -23,7 +23,7 @@ export async function handleLogin(formData: FormData, expectedRole: string) {
   const user = await getCurrentUser()
 
   if (!user) {
-    return { error: "Invalid session" };
+    return { error: "une erreur s'est produite, reessayer encore" };
   }
 
   const role = user?.role;

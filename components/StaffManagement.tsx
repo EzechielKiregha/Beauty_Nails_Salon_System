@@ -6,20 +6,9 @@ import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Calendar as CalendarIcon, Clock, DollarSign, Star, TrendingUp, Award, CheckCircle, AlertCircle, Users } from 'lucide-react';
-
-// Axios API calls (commented out for future use)
-// import axios from 'axios';
-// const fetchStaff = async () => {
-//   const response = await axiosdb.get('/api/staff');
-//   return response.data;
-// };
-// const updateStaffSchedule = async (staffId: string, schedule: any) => {
-//   await axiosdb.patch(`/api/staff/${staffId}/schedule`, { schedule });
-// };
-// const calculateCommission = async (staffId: string, period: string) => {
-//   const response = await axiosdb.get(`/api/staff/${staffId}/commission?period=${period}`);
-//   return response.data;
-// };
+import { useStaff } from '@/lib/hooks/useStaff';
+import CreateWorkerModal from '@/components/modals/CreateWorkerModal';
+// import CreateTaskModal from './modals/CreateTaskModal';
 
 interface StaffMember {
   id: string;
@@ -38,11 +27,14 @@ interface StaffMember {
   status: 'active' | 'off' | 'busy';
 }
 
-export default function StaffManagement() {
+export default function StaffManagement({ showMock }: { showMock?: boolean }) {
   const [selectedStaff, setSelectedStaff] = useState<StaffMember | null>(null);
 
-  // Mock data - replace with API call
-  const staff: StaffMember[] = [
+  // API hook
+  const { staff: apiStaff = [] } = useStaff();
+
+  // Fallback mock staff (used only if showMock=true)
+  const MOCK_STAFF: StaffMember[] = [
     {
       id: '1',
       name: 'Marie Nkumu',
@@ -109,6 +101,26 @@ export default function StaffManagement() {
     }
   ];
 
+  // Prefer API data, fallback to mock only when showMock is true
+  const staff: StaffMember[] = (apiStaff && apiStaff.length > 0)
+    ? apiStaff.map((s: any) => ({
+      id: s.id || s._id || String(s.name),
+      name: s.name || s.fullName || 'Employée',
+      role: s.role || s.position || 'Staff',
+      phone: s.phone || '',
+      email: s.email || '',
+      workingDays: s.workingDays || [],
+      workingHours: s.workingHours || '09:00 - 18:00',
+      appointments: s.appointments || 0,
+      rating: s.rating || 0,
+      revenue: s.revenue || '0 CDF',
+      clientRetention: s.clientRetention || '0%',
+      upsellRate: s.upsellRate || '0%',
+      commission: s.commission || '0 CDF',
+      status: s.status || 'off'
+    }))
+    : (showMock ? MOCK_STAFF : []);
+
   const tasks = [
     { id: '1', task: 'Nettoyer et stériliser les outils', assignedTo: 'Marie Nkumu', priority: 'high', status: 'completed' },
     { id: '2', task: 'Vérifier stock vernis gel', assignedTo: 'Grace Lumière', priority: 'medium', status: 'in-progress' },
@@ -129,9 +141,7 @@ export default function StaffManagement() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-3xl text-gray-900">Gestion du Personnel</h2>
-        <Button className="bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full">
-          + Nouvelle Employée
-        </Button>
+        <CreateWorkerModal triggerLabel="+ Nouvelle Employée" />
       </div>
 
       {/* Staff Roster - Who's Working Now */}
@@ -148,7 +158,7 @@ export default function StaffManagement() {
               onClick={() => setSelectedStaff(member)}
             >
               <div className="flex items-center justify-between mb-3">
-                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center text-white text-lg">
+                <div className="w-12 h-12 rounded-full bg-linear-to-br from-purple-400 to-pink-400 flex items-center justify-center text-white text-lg">
                   {member.name.charAt(0)}
                 </div>
                 <Badge className={`${member.status === 'active' ? 'bg-green-500' :
@@ -178,7 +188,7 @@ export default function StaffManagement() {
                 key={member.id}
                 onClick={() => setSelectedStaff(member)}
                 className={`p-4 rounded-xl cursor-pointer transition-all ${selectedStaff?.id === member.id
-                  ? 'bg-gradient-to-r from-purple-100 to-pink-100 border-2 border-purple-300'
+                  ? 'bg-linear-to-r from-purple-100 to-pink-100 border-2 border-purple-300'
                   : 'bg-gray-50 hover:bg-gray-100'
                   }`}
               >
@@ -229,22 +239,22 @@ export default function StaffManagement() {
 
                 {/* Performance Metrics */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <Card className="bg-gradient-to-br from-blue-50 to-cyan-50 border-0 p-4">
+                  <Card className="bg-linear-to-br from-blue-50 to-cyan-50 border-0 p-4">
                     <CalendarIcon className="w-6 h-6 text-blue-600 mb-2" />
                     <p className="text-2xl text-gray-900">{selectedStaff.appointments}</p>
                     <p className="text-xs text-gray-600">RDV ce mois</p>
                   </Card>
-                  <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-0 p-4">
+                  <Card className="bg-linear-to-br from-green-50 to-emerald-50 border-0 p-4">
                     <DollarSign className="w-6 h-6 text-green-600 mb-2" />
                     <p className="text-lg text-gray-900">{selectedStaff.revenue}</p>
                     <p className="text-xs text-gray-600">Revenus</p>
                   </Card>
-                  <Card className="bg-gradient-to-br from-purple-50 to-pink-50 border-0 p-4">
+                  <Card className="bg-linear-to-br from-purple-50 to-pink-50 border-0 p-4">
                     <TrendingUp className="w-6 h-6 text-purple-600 mb-2" />
                     <p className="text-2xl text-gray-900">{selectedStaff.clientRetention}</p>
                     <p className="text-xs text-gray-600">Rétention</p>
                   </Card>
-                  <Card className="bg-gradient-to-br from-amber-50 to-orange-50 border-0 p-4">
+                  <Card className="bg-linear-to-br from-amber-50 to-orange-50 border-0 p-4">
                     <Award className="w-6 h-6 text-amber-600 mb-2" />
                     <p className="text-2xl text-gray-900">{selectedStaff.upsellRate}</p>
                     <p className="text-xs text-gray-600">Taux Vente+</p>
@@ -269,7 +279,7 @@ export default function StaffManagement() {
                 </div>
 
                 <div className="flex gap-3">
-                  <Button className="flex-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full">
+                  <Button className="flex-1 bg-linear-to-r from-purple-500 to-pink-500 text-white rounded-full">
                     Modifier Horaires
                   </Button>
                   <Button variant="outline" className="rounded-full">
@@ -317,7 +327,7 @@ export default function StaffManagement() {
               <TabsContent value="commission">
                 <h4 className="text-xl text-gray-900 mb-4">Calcul Commission & Paie</h4>
                 <div className="space-y-4">
-                  <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-0 p-6">
+                  <Card className="bg-linear-to-br from-green-50 to-emerald-50 border-0 p-6">
                     <h5 className="text-gray-900 mb-4">Ce Mois (Novembre)</h5>
                     <div className="space-y-3">
                       <div className="flex justify-between items-center">
@@ -336,7 +346,7 @@ export default function StaffManagement() {
                     </div>
                   </Card>
 
-                  <Card className="bg-gradient-to-br from-blue-50 to-cyan-50 border-0 p-6">
+                  <Card className="bg-linear-to-br from-blue-50 to-cyan-50 border-0 p-6">
                     <h5 className="text-gray-900 mb-4">Détails de Paie</h5>
                     <div className="space-y-3 text-sm">
                       <div className="flex justify-between">
@@ -359,7 +369,7 @@ export default function StaffManagement() {
                     </div>
                   </Card>
 
-                  <Button className="w-full bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-full">
+                  <Button className="w-full bg-linear-to-r from-green-500 to-emerald-500 text-white rounded-full">
                     Générer Fiche de Paie
                   </Button>
                 </div>
@@ -377,7 +387,7 @@ export default function StaffManagement() {
       </div>
 
       {/* Task Assignment Board */}
-      <Card className="border-0 shadow-lg rounded-2xl p-8">
+      {/* <Card className="border-0 shadow-lg rounded-2xl p-8">
         <h3 className="text-2xl text-gray-900 mb-6">Tableau des Tâches</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {tasks.map((task) => (
@@ -409,10 +419,11 @@ export default function StaffManagement() {
             </Card>
           ))}
         </div>
-        <Button className="w-full mt-6 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full">
+        <Button className="w-full mt-6 bg-linear-to-r from-purple-500 to-pink-500 text-white rounded-full">
           + Nouvelle Tâche
         </Button>
-      </Card>
+        <CreateTaskModal triggerLabel="Nouvelle tâche" />
+      </Card> */}
     </div>
   );
 }

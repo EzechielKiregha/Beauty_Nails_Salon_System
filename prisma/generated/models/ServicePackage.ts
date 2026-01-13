@@ -27,21 +27,21 @@ export type AggregateServicePackage = {
 }
 
 export type ServicePackageAvgAggregateOutputType = {
-  price: runtime.Decimal | null
-  discount: runtime.Decimal | null
+  price: number | null
+  discount: number | null
 }
 
 export type ServicePackageSumAggregateOutputType = {
-  price: runtime.Decimal | null
-  discount: runtime.Decimal | null
+  price: number | null
+  discount: number | null
 }
 
 export type ServicePackageMinAggregateOutputType = {
   id: string | null
   name: string | null
   description: string | null
-  price: runtime.Decimal | null
-  discount: runtime.Decimal | null
+  price: number | null
+  discount: number | null
   isActive: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -51,8 +51,8 @@ export type ServicePackageMaxAggregateOutputType = {
   id: string | null
   name: string | null
   description: string | null
-  price: runtime.Decimal | null
-  discount: runtime.Decimal | null
+  price: number | null
+  discount: number | null
   isActive: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -205,8 +205,8 @@ export type ServicePackageGroupByOutputType = {
   id: string
   name: string
   description: string
-  price: runtime.Decimal
-  discount: runtime.Decimal
+  price: number
+  discount: number
   isActive: boolean
   createdAt: Date
   updatedAt: Date
@@ -239,8 +239,8 @@ export type ServicePackageWhereInput = {
   id?: Prisma.StringFilter<"ServicePackage"> | string
   name?: Prisma.StringFilter<"ServicePackage"> | string
   description?: Prisma.StringFilter<"ServicePackage"> | string
-  price?: Prisma.DecimalFilter<"ServicePackage"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  discount?: Prisma.DecimalFilter<"ServicePackage"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  price?: Prisma.FloatFilter<"ServicePackage"> | number
+  discount?: Prisma.FloatFilter<"ServicePackage"> | number
   isActive?: Prisma.BoolFilter<"ServicePackage"> | boolean
   createdAt?: Prisma.DateTimeFilter<"ServicePackage"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ServicePackage"> | Date | string
@@ -266,8 +266,8 @@ export type ServicePackageWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.ServicePackageWhereInput | Prisma.ServicePackageWhereInput[]
   name?: Prisma.StringFilter<"ServicePackage"> | string
   description?: Prisma.StringFilter<"ServicePackage"> | string
-  price?: Prisma.DecimalFilter<"ServicePackage"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  discount?: Prisma.DecimalFilter<"ServicePackage"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  price?: Prisma.FloatFilter<"ServicePackage"> | number
+  discount?: Prisma.FloatFilter<"ServicePackage"> | number
   isActive?: Prisma.BoolFilter<"ServicePackage"> | boolean
   createdAt?: Prisma.DateTimeFilter<"ServicePackage"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ServicePackage"> | Date | string
@@ -297,8 +297,8 @@ export type ServicePackageScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"ServicePackage"> | string
   name?: Prisma.StringWithAggregatesFilter<"ServicePackage"> | string
   description?: Prisma.StringWithAggregatesFilter<"ServicePackage"> | string
-  price?: Prisma.DecimalWithAggregatesFilter<"ServicePackage"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  discount?: Prisma.DecimalWithAggregatesFilter<"ServicePackage"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  price?: Prisma.FloatWithAggregatesFilter<"ServicePackage"> | number
+  discount?: Prisma.FloatWithAggregatesFilter<"ServicePackage"> | number
   isActive?: Prisma.BoolWithAggregatesFilter<"ServicePackage"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"ServicePackage"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"ServicePackage"> | Date | string
@@ -308,8 +308,8 @@ export type ServicePackageCreateInput = {
   id?: string
   name: string
   description: string
-  price: runtime.Decimal | runtime.DecimalJsLike | number | string
-  discount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  price: number
+  discount?: number
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -320,8 +320,8 @@ export type ServicePackageUncheckedCreateInput = {
   id?: string
   name: string
   description: string
-  price: runtime.Decimal | runtime.DecimalJsLike | number | string
-  discount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  price: number
+  discount?: number
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -332,8 +332,8 @@ export type ServicePackageUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  discount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -344,8 +344,8 @@ export type ServicePackageUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  discount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -356,8 +356,8 @@ export type ServicePackageCreateManyInput = {
   id?: string
   name: string
   description: string
-  price: runtime.Decimal | runtime.DecimalJsLike | number | string
-  discount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  price: number
+  discount?: number
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -367,8 +367,8 @@ export type ServicePackageUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  discount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -378,8 +378,8 @@ export type ServicePackageUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  discount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -480,8 +480,8 @@ export type ServicePackageCreateWithoutServicesInput = {
   id?: string
   name: string
   description: string
-  price: runtime.Decimal | runtime.DecimalJsLike | number | string
-  discount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  price: number
+  discount?: number
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -491,8 +491,8 @@ export type ServicePackageUncheckedCreateWithoutServicesInput = {
   id?: string
   name: string
   description: string
-  price: runtime.Decimal | runtime.DecimalJsLike | number | string
-  discount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  price: number
+  discount?: number
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -526,8 +526,8 @@ export type ServicePackageScalarWhereInput = {
   id?: Prisma.StringFilter<"ServicePackage"> | string
   name?: Prisma.StringFilter<"ServicePackage"> | string
   description?: Prisma.StringFilter<"ServicePackage"> | string
-  price?: Prisma.DecimalFilter<"ServicePackage"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  discount?: Prisma.DecimalFilter<"ServicePackage"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  price?: Prisma.FloatFilter<"ServicePackage"> | number
+  discount?: Prisma.FloatFilter<"ServicePackage"> | number
   isActive?: Prisma.BoolFilter<"ServicePackage"> | boolean
   createdAt?: Prisma.DateTimeFilter<"ServicePackage"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ServicePackage"> | Date | string
@@ -537,8 +537,8 @@ export type ServicePackageUpdateWithoutServicesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  discount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -548,8 +548,8 @@ export type ServicePackageUncheckedUpdateWithoutServicesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  discount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -559,8 +559,8 @@ export type ServicePackageUncheckedUpdateManyWithoutServicesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  discount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -660,8 +660,8 @@ export type $ServicePackagePayload<ExtArgs extends runtime.Types.Extensions.Inte
     id: string
     name: string
     description: string
-    price: runtime.Decimal
-    discount: runtime.Decimal
+    price: number
+    discount: number
     isActive: boolean
     createdAt: Date
     updatedAt: Date
@@ -1092,8 +1092,8 @@ export interface ServicePackageFieldRefs {
   readonly id: Prisma.FieldRef<"ServicePackage", 'String'>
   readonly name: Prisma.FieldRef<"ServicePackage", 'String'>
   readonly description: Prisma.FieldRef<"ServicePackage", 'String'>
-  readonly price: Prisma.FieldRef<"ServicePackage", 'Decimal'>
-  readonly discount: Prisma.FieldRef<"ServicePackage", 'Decimal'>
+  readonly price: Prisma.FieldRef<"ServicePackage", 'Float'>
+  readonly discount: Prisma.FieldRef<"ServicePackage", 'Float'>
   readonly isActive: Prisma.FieldRef<"ServicePackage", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"ServicePackage", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"ServicePackage", 'DateTime'>

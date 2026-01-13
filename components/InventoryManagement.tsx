@@ -1,5 +1,7 @@
 "use client"
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
+import { useInventory } from '@/lib/hooks/useInventory';
+import CreateInventoryModal from '@/components/modals/CreateInventoryModal';
 import { Card } from './ui/card';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
@@ -31,12 +33,13 @@ interface Supplier {
   rating: number;
 }
 
-export default function InventoryManagement() {
+export default function InventoryManagement({ showMock }: { showMock?: boolean }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
 
-  // Mock data
-  const inventory: InventoryItem[] = [
+  const { inventory: apiInventory = [], isLoading: inventoryLoading } = useInventory();
+
+  const MOCK_INVENTORY: InventoryItem[] = [
     {
       id: '1',
       name: 'Vernis Gel - Rouge Passion',
@@ -49,99 +52,13 @@ export default function InventoryManagement() {
       lastRestock: '2024-11-15',
       usageRate: '8 unités/semaine',
       status: 'good'
-    },
-    {
-      id: '2',
-      name: 'Extensions Cils - Volume Classique',
-      category: 'Cils',
-      stock: 28,
-      minStock: 30,
-      unit: 'boîtes',
-      price: '25 000 CDF',
-      supplier: 'Lash Pro Africa',
-      lastRestock: '2024-11-01',
-      usageRate: '6 boîtes/semaine',
-      status: 'low'
-    },
-    {
-      id: '3',
-      name: 'Rajouts Cheveux - Box Braids',
-      category: 'Tresses',
-      stock: 15,
-      minStock: 20,
-      unit: 'paquets',
-      price: '30 000 CDF',
-      supplier: 'African Hair Supplies',
-      lastRestock: '2024-10-20',
-      usageRate: '4 paquets/semaine',
-      status: 'critical'
-    },
-    {
-      id: '4',
-      name: 'Fond de Teint - Teintes Variées',
-      category: 'Maquillage',
-      stock: 60,
-      minStock: 40,
-      unit: 'unités',
-      price: '20 000 CDF',
-      supplier: 'Makeup Pro Congo',
-      lastRestock: '2024-11-20',
-      usageRate: '5 unités/semaine',
-      status: 'good'
-    },
-    {
-      id: '5',
-      name: 'Colle Cils - Professional',
-      category: 'Cils',
-      stock: 0,
-      minStock: 15,
-      unit: 'tubes',
-      price: '18 000 CDF',
-      supplier: 'Lash Pro Africa',
-      lastRestock: '2024-10-15',
-      usageRate: '3 tubes/semaine',
-      status: 'out'
-    },
-    {
-      id: '6',
-      name: 'Vernis Gel - Rose Poudré',
-      category: 'Onglerie',
-      stock: 38,
-      minStock: 30,
-      unit: 'unités',
-      price: '15 000 CDF',
-      supplier: 'Beauty Supplies DRC',
-      lastRestock: '2024-11-18',
-      usageRate: '7 unités/semaine',
-      status: 'good'
-    },
-    {
-      id: '7',
-      name: 'Huile Démaquillante',
-      category: 'Maquillage',
-      stock: 22,
-      minStock: 25,
-      unit: 'flacons',
-      price: '12 000 CDF',
-      supplier: 'Makeup Pro Congo',
-      lastRestock: '2024-11-10',
-      usageRate: '4 flacons/semaine',
-      status: 'low'
-    },
-    {
-      id: '8',
-      name: 'Fils Tresses - Noir',
-      category: 'Tresses',
-      stock: 42,
-      minStock: 25,
-      unit: 'bobines',
-      price: '8 000 CDF',
-      supplier: 'African Hair Supplies',
-      lastRestock: '2024-11-22',
-      usageRate: '6 bobines/semaine',
-      status: 'good'
     }
   ];
+
+  const inventory: InventoryItem[] = useMemo(() => {
+    if (apiInventory && apiInventory.length) return apiInventory as unknown as InventoryItem[];
+    return showMock ? MOCK_INVENTORY : [];
+  }, [apiInventory, showMock]);
 
   const suppliers: Supplier[] = [
     {
@@ -204,9 +121,7 @@ export default function InventoryManagement() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-3xl text-gray-900">Gestion de l'Inventaire</h2>
-        <Button className="bg-linear-to-r from-amber-500 to-orange-500 text-white rounded-full">
-          + Ajouter Produit
-        </Button>
+        <CreateInventoryModal triggerLabel="+ Ajouter Produit" />
       </div>
 
       {/* Alert Panel */}

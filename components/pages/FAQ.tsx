@@ -134,7 +134,7 @@ export default function FAQ() {
           {faqCategories.map((category, categoryIndex) => (
             <div key={categoryIndex}>
               <h2 className="text-2xl text-gray-900 mb-6 flex items-center">
-                <span className="w-2 h-8 bg-gradient-to-b from-pink-500 to-amber-400 rounded-full mr-4" />
+                <span className="w-2 h-8 bg-linear-to-b from-pink-500 to-amber-400 rounded-full mr-4" />
                 {category.category}
               </h2>
 
@@ -159,7 +159,7 @@ export default function FAQ() {
         </div>
 
         {/* Still Have Questions */}
-        <Card className="bg-gradient-to-br from-pink-500 via-purple-500 to-amber-500 border-0 shadow-2xl rounded-3xl p-12 text-center text-white mt-16">
+        <Card className="bg-linear-to-br from-pink-500 via-purple-500 to-amber-500 border-0 shadow-2xl rounded-3xl p-12 text-center text-white mt-16">
           <h2 className="text-3xl mb-4">
             Vous avez d'autres questions ?
           </h2>

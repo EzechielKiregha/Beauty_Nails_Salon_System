@@ -2,6 +2,7 @@ import type { NextAuthConfig } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import { compare } from 'bcryptjs';
 import prisma from '@/lib/prisma';
+import { clean } from './auth';
 
 export const authConfig: NextAuthConfig = {
   providers: [
@@ -27,9 +28,31 @@ export const authConfig: NextAuthConfig = {
         const user = await prisma.user.findUnique({
           where: { email: credentials.email as string },
           include: {
-            clientProfile: true,
-            workerProfile: true,
-          },
+            clientProfile: {
+              select: {
+                id: true,
+                tier: true,
+                loyaltyPoints: true,
+                totalAppointments: true,
+                totalSpent: true,
+                referralCode: true,
+                referredBy: true,
+                preferences: true,
+                notes: true,
+              }
+            },
+            workerProfile: {
+              select: {
+                id: true,
+                position: true,
+                specialties: true,
+                commissionRate: true,
+                rating: true,
+                isAvailable: true,
+                workingHours: true,
+              }
+            }
+          }
         });
 
         if (!user) {
@@ -50,18 +73,19 @@ export const authConfig: NextAuthConfig = {
         // }
 
         // Return user object with role-specific data
-        return {
+        return clean({
           id: user.id,
           email: user.email,
           name: user.name,
           role: user.role,
           phone: user.phone,
+          emailVerified: user.emailVerified,
           avatar: user.avatar,
           isActive: user.isActive,
           // Add role-specific profile data
           clientProfile: user.clientProfile,
           workerProfile: user.workerProfile,
-        };
+        });
       },
     }),
   ],
@@ -70,13 +94,16 @@ export const authConfig: NextAuthConfig = {
     async jwt({ token, user, trigger, session }) {
       // Initial sign in
       if (user) {
-        token.id = user.id;
-        token.role = user.role;
-        token.phone = user.phone;
-        token.avatar = user.avatar;
-        token.isActive = user.isActive;
-        token.clientProfile = user.clientProfile;
-        token.workerProfile = user.workerProfile;
+        const safe = clean(user); // 🧹 sanitize deeply
+
+        token.id = safe.id;
+        token.role = safe.role;
+        token.phone = safe.phone;
+        token.avatar = safe.avatar;
+        token.emailVerified = safe.emailVerified;
+        token.isActive = safe.isActive;
+        token.clientProfile = safe.clientProfile;
+        token.workerProfile = safe.workerProfile;
       }
 
       // Handle session updates
@@ -89,13 +116,20 @@ export const authConfig: NextAuthConfig = {
 
     async session({ session, token }) {
       if (token) {
-        session.user.id = token.id as string;
-        session.user.role = token.role as 'client' | 'worker' | 'admin';
-        session.user.phone = token.phone as string;
-        session.user.avatar = token.avatar as string | null;
-        session.user.isActive = token.isActive as boolean;
-        session.user.clientProfile = token.clientProfile as any;
-        session.user.workerProfile = token.workerProfile as any;
+        const safe = clean(token);
+
+        session.user = {
+          id: safe.id,
+          email: safe.email,
+          name: safe.name,
+          role: safe.role,
+          emailVerified: safe.emailVerified,
+          phone: safe.phone,
+          avatar: safe.avatar,
+          isActive: safe.isActive,
+          clientProfile: safe.clientProfile,
+          workerProfile: safe.workerProfile,
+        };
       }
       return session;
     },

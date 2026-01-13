@@ -1,6 +1,6 @@
 "use client"
 
-import { use, useState } from 'react';
+import { useState } from 'react';
 import { Card } from '../ui/card';
 import { Button } from '../ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
@@ -35,8 +35,14 @@ import { useInventory } from '@/lib/hooks/useInventory';
 import { useNotifications } from '@/lib/hooks/useNotifications';
 import { useRouter } from 'next/navigation';
 
+// Modals
+// import CreateTaskModal from '@/components/modals/CreateTaskModal';
+// import CreateClientModal from '@/components/modals/CreateClientModal';
+import TasksManagement from '@/components/TasksManagement';
+
 export default function AdminDashboardV2() {
   const [notificationOpen, setNotificationOpen] = useState(false);
+  const [showMock, setShowMock] = useState(false);
   const router = useRouter();
 
   // Get authenticated user
@@ -50,9 +56,30 @@ export default function AdminDashboardV2() {
 
   // Get today's appointments
   const today = new Date().toISOString().split('T')[0];
-  const { appointments: todayAppointments = [], isLoading: isAppointmentsLoading } = useAppointments({
-    date: today,
-  });
+  const { appointments: todayAppointments = [] } = useAppointments({ date: today });
+
+  // Mock data (used when no data is returned and user toggles showMock)
+  const MOCK_CLIENTS = [
+    { id: 'mock-1', name: 'Aline Mukoko' },
+    { id: 'mock-2', name: 'Jean Kabila' },
+  ];
+
+  const MOCK_STAFF = [
+    { id: 's-1', name: 'Marie Nkumu', isAvailable: true, rating: 4.8 },
+    { id: 's-2', name: 'Grace Lumière', isAvailable: false, rating: 4.6 },
+  ];
+
+  const MOCK_TODAY_APPOINTMENTS = [
+    { id: 'a-1', status: 'confirmed', date: today },
+    { id: 'a-2', status: 'pending', date: today },
+  ];
+
+  const MOCK_INVENTORY = [
+    { id: 'i-1', name: 'Vernis #1', status: 'good' },
+    { id: 'i-2', name: 'Dissolvant', status: 'low' },
+  ];
+
+
 
   // Get revenue report (current month)
   const firstDayOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().split('T')[0];
@@ -72,6 +99,11 @@ export default function AdminDashboardV2() {
   // Get inventory data
   const { inventory = [], isLoading: isInventoryLoading } = useInventory();
 
+  const clientsList = clients.length ? clients : (showMock ? MOCK_CLIENTS : []);
+  const staffList = staff.length ? staff : (showMock ? MOCK_STAFF : []);
+  const todayAppointmentsList = todayAppointments.length ? todayAppointments : (showMock ? MOCK_TODAY_APPOINTMENTS : []);
+  const inventoryList = inventory.length ? inventory : (showMock ? MOCK_INVENTORY : []);
+
   // Get notifications
   const {
     // notifications: notificationList = [],
@@ -81,38 +113,51 @@ export default function AdminDashboardV2() {
 
   // Calculate stats
   const stats = {
-    totalClients: clients.length,
-    activeWorkers: staff.filter(w => w.isAvailable).length,
+    totalClients: clientsList.length,
+    activeWorkers: staffList.filter((w: any) => w.isAvailable).length,
     todayRevenue: revenueData?.totalRevenue || 0,
-    todayAppointments: todayAppointments.length,
+    todayAppointments: todayAppointmentsList.length,
     monthlyRevenue: revenueData?.totalRevenue || 0,
-    avgRating: staff.reduce((acc, w) => acc + (w.rating || 0), 0) / (staff.length || 1),
-    completedAppointments: todayAppointments.filter(apt => apt.status === 'completed').length,
-    pendingAppointments: todayAppointments.filter(apt => apt.status === 'pending').length,
-    lowStockItems: inventory.filter(item => item.status === 'low' || item.status === 'critical').length,
+    avgRating: staffList.reduce((acc: number, w: any) => acc + (w.rating || 0), 0) / (staffList.length || 1),
+    completedAppointments: todayAppointmentsList.filter((apt: any) => apt.status === 'completed').length,
+    pendingAppointments: todayAppointmentsList.filter((apt: any) => apt.status === 'pending').length,
+    lowStockItems: inventoryList.filter((item: any) => item.status === 'low' || item.status === 'critical').length,
     newClients: clientAnalytics?.newClients || 0,
   };
 
-  // Prepare revenue chart data (last 6 months)
-  const monthlyRevenueData = [
-    { month: 'Jun', revenue: 220000, appointments: 180 },
-    { month: 'Jul', revenue: 250000, appointments: 105 },
-    { month: 'Aug', revenue: 235000, appointments: 192 },
-    { month: 'Sep', revenue: 270000, appointments: 125 },
-    { month: 'Oct', revenue: 285000, appointments: 140 },
-    { month: 'Nov', revenue: stats.monthlyRevenue, appointments: stats.todayAppointments },
-  ];
+  // Prepare revenue chart data (last 6 months) — use report data when available, otherwise show zeros
+  const getLastMonths = (n: number) => {
+    const months: { label: string; key: string }[] = [];
+    for (let i = n - 1; i >= 0; i--) {
+      const d = new Date();
+      d.setMonth(d.getMonth() - i);
+      const label = d.toLocaleString('default', { month: 'short' });
+      const key = d.toISOString().slice(0, 7); // YYYY-MM
+      months.push({ label, key });
+    }
+    return months;
+  };
 
-  // Service distribution
-  const serviceDistribution = servicePerformance?.services?.slice(0, 4).map((service: any, index: number) => ({
-    name: service.name,
-    value: service.count || 0,
-    color: ['#ec4899', '#a855f7', '#f59e0b', '#10b981'][index],
-  })) || [
-      { name: 'Onglerie', value: 45, color: '#ec4899' },
-      { name: 'Cils', value: 30, color: '#a855f7' },
-      { name: 'Tresses', value: 15, color: '#f59e0b' },
-      { name: 'Maquillage', value: 10, color: '#10b981' },
+  const monthlyRevenueData = getLastMonths(6).map(({ label, key }) => ({
+    month: label,
+    revenue: revenueData?.breakdown?.[key] ?? 0,
+    // show this month's appointment count when it's the current month, otherwise 0
+    appointments: key === new Date().toISOString().slice(0, 7) ? todayAppointmentsList.length : 0,
+  }));
+
+  // Service distribution — use performance data when available, otherwise show zeros
+  const _serviceColors = ['#ec4899', '#a855f7', '#f59e0b', '#10b981'];
+  const serviceDistribution = (servicePerformance && servicePerformance.services && servicePerformance.services.length > 0)
+    ? servicePerformance.services.slice(0, 4).map((service: any, index: number) => ({
+      name: service.name,
+      value: service.count || 0,
+      color: _serviceColors[index],
+    }))
+    : [
+      { name: 'Onglerie', value: 0, color: _serviceColors[0] },
+      { name: 'Cils', value: 0, color: _serviceColors[1] },
+      { name: 'Tresses', value: 0, color: _serviceColors[2] },
+      { name: 'Maquillage', value: 0, color: _serviceColors[3] },
     ];
 
   // Loading state
@@ -148,21 +193,42 @@ export default function AdminDashboardV2() {
             </div>
 
             {/* Notifications */}
-            <Sheet open={notificationOpen} onOpenChange={setNotificationOpen}>
-              <SheetTrigger asChild>
-                <Button variant="outline" size="icon" className="relative">
-                  <Bell className="w-5 h-5" />
-                  {unreadCount > 0 && (
-                    <span className="absolute -top-1 -right-1 w-5 h-5 bg-pink-500 text-white text-xs rounded-full flex items-center justify-center">
-                      {unreadCount}
-                    </span>
-                  )}
-                </Button>
-              </SheetTrigger>
-              <SheetContent>
-                <NotificationCenter />
-              </SheetContent>
-            </Sheet>
+            <div className="flex items-center gap-2">
+              <Sheet open={notificationOpen} onOpenChange={setNotificationOpen}>
+                <SheetTrigger asChild>
+                  <Button variant="outline" size="icon" className="relative">
+                    <Bell className="w-5 h-5" />
+                    {unreadCount > 0 && (
+                      <span className="absolute -top-1 -right-1 w-5 h-5 bg-pink-500 text-white text-xs rounded-full flex items-center justify-center">
+                        {unreadCount}
+                      </span>
+                    )}
+                  </Button>
+                </SheetTrigger>
+                <SheetContent>
+                  <NotificationCenter />
+                </SheetContent>
+              </Sheet>
+
+              {/* Quick create actions */}
+              {/* <CreateTaskModal triggerLabel="Nouvelle tâche" />
+              <CreateClientModal triggerLabel="Nouvelle cliente" /> */}
+              {/* <CreateServiceModal triggerLabel="Nouveau service" />
+              <CreateWorkerModal triggerLabel="Nouveau membre" />
+              <CreateInventoryModal triggerLabel="Nouveau article" />
+              <POSOperationModal triggerLabel="POS" /> */}
+
+              {/* Mock toggle */}
+              <div className="flex items-center space-x-2">
+                <label className="text-sm text-gray-600">Données simulées</label>
+                <button
+                  type="button"
+                  onClick={() => setShowMock(!showMock)}
+                  className={`px-2 py-1 rounded ${showMock ? 'bg-pink-500 text-white' : 'bg-gray-100 text-gray-700'}`}>
+                  {showMock ? 'ON' : 'OFF'}
+                </button>
+              </div>
+            </div>
           </div>
 
           {/* Stats Grid */}
@@ -373,22 +439,22 @@ export default function AdminDashboardV2() {
 
           {/* Overview Tab */}
           <TabsContent value="overview">
-            <TodayOverview />
+            <TodayOverview showMock={showMock} />
           </TabsContent>
 
           {/* Calendar Tab */}
           <TabsContent value="calendar">
-            <BookingCalendar />
+            <BookingCalendar showMock={showMock} />
           </TabsContent>
 
           {/* Clients Tab */}
           <TabsContent value="clients">
-            <ClientManagement />
+            <ClientManagement showMock={showMock} />
           </TabsContent>
 
           {/* Staff Tab */}
           <TabsContent value="staff">
-            <StaffManagement />
+            <StaffManagement showMock={showMock} />
           </TabsContent>
 
           {/* More Tab */}
@@ -422,15 +488,15 @@ export default function AdminDashboardV2() {
               </TabsList>
 
               <TabsContent value="services" className="mt-6">
-                <ServiceManagement />
+                <ServiceManagement showMock={showMock} />
               </TabsContent>
 
               <TabsContent value="inventory" className="mt-6">
-                <InventoryManagement />
+                <InventoryManagement showMock={showMock} />
               </TabsContent>
 
               <TabsContent value="pos" className="mt-6">
-                <POSCheckout />
+                <POSCheckout showMock={showMock} />
               </TabsContent>
 
               <TabsContent value="reports" className="mt-6">
@@ -492,6 +558,9 @@ export default function AdminDashboardV2() {
             </div>
           </Card>
         )}
+
+        {/* Tasks Management */}
+        <TasksManagement />
       </div>
     </div>
   );

@@ -53,7 +53,7 @@ export default function Memberships() {
         {/* Membership Plans */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto mb-24">
           {/* 3 Months Plan */}
-          <Card className="bg-gradient-to-br from-pink-50 to-purple-50 border-2 border-pink-200 shadow-xl rounded-3xl overflow-hidden transform hover:scale-105 transition-transform">
+          <Card className="bg-linear-to-br from-pink-50 to-purple-50 border-2 border-pink-200 shadow-xl rounded-3xl overflow-hidden transform hover:scale-105 transition-transform">
             <div className="p-10">
               <Badge className="mb-6 bg-pink-500 text-white text-sm px-4 py-1">Standard</Badge>
               <h2 className="text-4xl text-gray-900 mb-3">Abonnement 3 Mois</h2>
@@ -107,7 +107,7 @@ export default function Memberships() {
               </div>
 
               <Link href="/signup">
-                <Button className="w-full bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white rounded-full py-6 text-lg">
+                <Button className="w-full bg-linear-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white rounded-full py-6 text-lg">
                   S'abonner maintenant
                 </Button>
               </Link>
@@ -115,8 +115,8 @@ export default function Memberships() {
           </Card>
 
           {/* 6 Months Plan - Premium */}
-          <Card className="bg-gradient-to-br from-amber-50 to-orange-50 border-2 border-amber-300 shadow-2xl rounded-3xl overflow-hidden relative transform hover:scale-105 transition-transform">
-            <div className="absolute top-0 right-0 bg-gradient-to-r from-amber-500 to-orange-500 text-white px-8 py-3 rounded-bl-3xl">
+          <Card className="bg-linear-to-br from-amber-50 to-orange-50 border-2 border-amber-300 shadow-2xl rounded-3xl overflow-hidden relative transform hover:scale-105 transition-transform">
+            <div className="absolute top-0 right-0 bg-linear-to-r from-amber-500 to-orange-500 text-white px-8 py-3 rounded-bl-3xl">
               <span className="flex items-center text-lg">
                 <Star className="w-5 h-5 mr-2" />
                 Meilleure Offre
@@ -124,7 +124,7 @@ export default function Memberships() {
             </div>
 
             <div className="p-10">
-              <Badge className="mb-6 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-sm px-4 py-1">Premium</Badge>
+              <Badge className="mb-6 bg-linear-to-r from-amber-500 to-orange-500 text-white text-sm px-4 py-1">Premium</Badge>
               <h2 className="text-4xl text-gray-900 mb-3">Abonnement 6 Mois</h2>
               <p className="text-gray-600 mb-6">Maximum d'avantages et d'économies</p>
 
@@ -136,7 +136,7 @@ export default function Memberships() {
 
               <div className="space-y-4 mb-10">
                 <div className="flex items-start">
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 flex items-center justify-center flex-shrink-0 mt-1">
+                  <div className="w-8 h-8 rounded-full bg-linear-to-r from-amber-500 to-orange-500 flex items-center justify-center flex-shrink-0 mt-1">
                     <Calendar className="w-4 h-4 text-white" />
                   </div>
                   <div className="ml-4">
@@ -146,7 +146,7 @@ export default function Memberships() {
                 </div>
 
                 <div className="flex items-start">
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 flex items-center justify-center flex-shrink-0 mt-1">
+                  <div className="w-8 h-8 rounded-full bg-linear-to-r from-amber-500 to-orange-500 flex items-center justify-center flex-shrink-0 mt-1">
                     <Home className="w-4 h-4 text-white" />
                   </div>
                   <div className="ml-4">
@@ -156,7 +156,7 @@ export default function Memberships() {
                 </div>
 
                 <div className="flex items-start">
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 flex items-center justify-center flex-shrink-0 mt-1">
+                  <div className="w-8 h-8 rounded-full bg-linear-to-r from-amber-500 to-orange-500 flex items-center justify-center flex-shrink-0 mt-1">
                     <ShoppingBag className="w-4 h-4 text-white" />
                   </div>
                   <div className="ml-4">
@@ -166,7 +166,7 @@ export default function Memberships() {
                 </div>
 
                 <div className="flex items-start">
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 flex items-center justify-center flex-shrink-0 mt-1">
+                  <div className="w-8 h-8 rounded-full bg-linear-to-r from-amber-500 to-orange-500 flex items-center justify-center flex-shrink-0 mt-1">
                     <Trophy className="w-4 h-4 text-white" />
                   </div>
                   <div className="ml-4">
@@ -176,7 +176,7 @@ export default function Memberships() {
                 </div>
 
                 <div className="flex items-start">
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 flex items-center justify-center flex-shrink-0 mt-1">
+                  <div className="w-8 h-8 rounded-full bg-linear-to-r from-amber-500 to-orange-500 flex items-center justify-center flex-shrink-0 mt-1">
                     <Gift className="w-4 h-4 text-white" />
                   </div>
                   <div className="ml-4">
@@ -186,7 +186,7 @@ export default function Memberships() {
                 </div>
 
                 <div className="flex items-start">
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 flex items-center justify-center flex-shrink-0 mt-1">
+                  <div className="w-8 h-8 rounded-full bg-linear-to-r from-amber-500 to-orange-500 flex items-center justify-center flex-shrink-0 mt-1">
                     <Sparkles className="w-4 h-4 text-white" />
                   </div>
                   <div className="ml-4">
@@ -197,7 +197,7 @@ export default function Memberships() {
               </div>
 
               <Link href="/signup">
-                <Button className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-full py-6 text-lg">
+                <Button className="w-full bg-linear-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-full py-6 text-lg">
                   Devenir membre Premium
                 </Button>
               </Link>
@@ -211,7 +211,7 @@ export default function Memberships() {
           <Card className="bg-white border-0 shadow-xl rounded-3xl overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-gradient-to-r from-pink-50 to-amber-50">
+                <thead className="bg-linear-to-r from-pink-50 to-amber-50">
                   <tr>
                     <th className="px-6 py-4 text-left text-gray-900">Avantages</th>
                     <th className="px-6 py-4 text-center text-gray-900">Standard (3 mois)</th>
@@ -274,7 +274,7 @@ export default function Memberships() {
 
         {/* CTA */}
         <div className="mt-24 text-center">
-          <div className="bg-gradient-to-br from-pink-500 via-purple-500 to-amber-500 rounded-3xl p-12">
+          <div className="bg-linear-to-br from-pink-500 via-purple-500 to-amber-500 rounded-3xl p-12">
             <h2 className="text-4xl text-white mb-6">
               Prête à rejoindre notre communauté ?
             </h2>

@@ -28,14 +28,14 @@ export type AggregateSaleItem = {
 
 export type SaleItemAvgAggregateOutputType = {
   quantity: number | null
-  price: runtime.Decimal | null
-  discount: runtime.Decimal | null
+  price: number | null
+  discount: number | null
 }
 
 export type SaleItemSumAggregateOutputType = {
   quantity: number | null
-  price: runtime.Decimal | null
-  discount: runtime.Decimal | null
+  price: number | null
+  discount: number | null
 }
 
 export type SaleItemMinAggregateOutputType = {
@@ -43,8 +43,8 @@ export type SaleItemMinAggregateOutputType = {
   saleId: string | null
   serviceId: string | null
   quantity: number | null
-  price: runtime.Decimal | null
-  discount: runtime.Decimal | null
+  price: number | null
+  discount: number | null
 }
 
 export type SaleItemMaxAggregateOutputType = {
@@ -52,8 +52,8 @@ export type SaleItemMaxAggregateOutputType = {
   saleId: string | null
   serviceId: string | null
   quantity: number | null
-  price: runtime.Decimal | null
-  discount: runtime.Decimal | null
+  price: number | null
+  discount: number | null
 }
 
 export type SaleItemCountAggregateOutputType = {
@@ -198,8 +198,8 @@ export type SaleItemGroupByOutputType = {
   saleId: string
   serviceId: string
   quantity: number
-  price: runtime.Decimal
-  discount: runtime.Decimal
+  price: number
+  discount: number
   _count: SaleItemCountAggregateOutputType | null
   _avg: SaleItemAvgAggregateOutputType | null
   _sum: SaleItemSumAggregateOutputType | null
@@ -230,8 +230,8 @@ export type SaleItemWhereInput = {
   saleId?: Prisma.StringFilter<"SaleItem"> | string
   serviceId?: Prisma.StringFilter<"SaleItem"> | string
   quantity?: Prisma.IntFilter<"SaleItem"> | number
-  price?: Prisma.DecimalFilter<"SaleItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  discount?: Prisma.DecimalFilter<"SaleItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  price?: Prisma.FloatFilter<"SaleItem"> | number
+  discount?: Prisma.FloatFilter<"SaleItem"> | number
   sale?: Prisma.XOR<Prisma.SaleScalarRelationFilter, Prisma.SaleWhereInput>
   service?: Prisma.XOR<Prisma.ServiceScalarRelationFilter, Prisma.ServiceWhereInput>
 }
@@ -255,8 +255,8 @@ export type SaleItemWhereUniqueInput = Prisma.AtLeast<{
   saleId?: Prisma.StringFilter<"SaleItem"> | string
   serviceId?: Prisma.StringFilter<"SaleItem"> | string
   quantity?: Prisma.IntFilter<"SaleItem"> | number
-  price?: Prisma.DecimalFilter<"SaleItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  discount?: Prisma.DecimalFilter<"SaleItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  price?: Prisma.FloatFilter<"SaleItem"> | number
+  discount?: Prisma.FloatFilter<"SaleItem"> | number
   sale?: Prisma.XOR<Prisma.SaleScalarRelationFilter, Prisma.SaleWhereInput>
   service?: Prisma.XOR<Prisma.ServiceScalarRelationFilter, Prisma.ServiceWhereInput>
 }, "id">
@@ -283,15 +283,15 @@ export type SaleItemScalarWhereWithAggregatesInput = {
   saleId?: Prisma.StringWithAggregatesFilter<"SaleItem"> | string
   serviceId?: Prisma.StringWithAggregatesFilter<"SaleItem"> | string
   quantity?: Prisma.IntWithAggregatesFilter<"SaleItem"> | number
-  price?: Prisma.DecimalWithAggregatesFilter<"SaleItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  discount?: Prisma.DecimalWithAggregatesFilter<"SaleItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  price?: Prisma.FloatWithAggregatesFilter<"SaleItem"> | number
+  discount?: Prisma.FloatWithAggregatesFilter<"SaleItem"> | number
 }
 
 export type SaleItemCreateInput = {
   id?: string
   quantity?: number
-  price: runtime.Decimal | runtime.DecimalJsLike | number | string
-  discount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  price: number
+  discount?: number
   sale: Prisma.SaleCreateNestedOneWithoutItemsInput
   service: Prisma.ServiceCreateNestedOneWithoutSalesInput
 }
@@ -301,15 +301,15 @@ export type SaleItemUncheckedCreateInput = {
   saleId: string
   serviceId: string
   quantity?: number
-  price: runtime.Decimal | runtime.DecimalJsLike | number | string
-  discount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  price: number
+  discount?: number
 }
 
 export type SaleItemUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  discount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
   sale?: Prisma.SaleUpdateOneRequiredWithoutItemsNestedInput
   service?: Prisma.ServiceUpdateOneRequiredWithoutSalesNestedInput
 }
@@ -319,8 +319,8 @@ export type SaleItemUncheckedUpdateInput = {
   saleId?: Prisma.StringFieldUpdateOperationsInput | string
   serviceId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  discount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
 }
 
 export type SaleItemCreateManyInput = {
@@ -328,15 +328,15 @@ export type SaleItemCreateManyInput = {
   saleId: string
   serviceId: string
   quantity?: number
-  price: runtime.Decimal | runtime.DecimalJsLike | number | string
-  discount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  price: number
+  discount?: number
 }
 
 export type SaleItemUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  discount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
 }
 
 export type SaleItemUncheckedUpdateManyInput = {
@@ -344,8 +344,8 @@ export type SaleItemUncheckedUpdateManyInput = {
   saleId?: Prisma.StringFieldUpdateOperationsInput | string
   serviceId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  discount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
 }
 
 export type SaleItemListRelationFilter = {
@@ -484,8 +484,8 @@ export type SaleItemUncheckedUpdateManyWithoutSaleNestedInput = {
 export type SaleItemCreateWithoutServiceInput = {
   id?: string
   quantity?: number
-  price: runtime.Decimal | runtime.DecimalJsLike | number | string
-  discount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  price: number
+  discount?: number
   sale: Prisma.SaleCreateNestedOneWithoutItemsInput
 }
 
@@ -493,8 +493,8 @@ export type SaleItemUncheckedCreateWithoutServiceInput = {
   id?: string
   saleId: string
   quantity?: number
-  price: runtime.Decimal | runtime.DecimalJsLike | number | string
-  discount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  price: number
+  discount?: number
 }
 
 export type SaleItemCreateOrConnectWithoutServiceInput = {
@@ -531,15 +531,15 @@ export type SaleItemScalarWhereInput = {
   saleId?: Prisma.StringFilter<"SaleItem"> | string
   serviceId?: Prisma.StringFilter<"SaleItem"> | string
   quantity?: Prisma.IntFilter<"SaleItem"> | number
-  price?: Prisma.DecimalFilter<"SaleItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  discount?: Prisma.DecimalFilter<"SaleItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  price?: Prisma.FloatFilter<"SaleItem"> | number
+  discount?: Prisma.FloatFilter<"SaleItem"> | number
 }
 
 export type SaleItemCreateWithoutSaleInput = {
   id?: string
   quantity?: number
-  price: runtime.Decimal | runtime.DecimalJsLike | number | string
-  discount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  price: number
+  discount?: number
   service: Prisma.ServiceCreateNestedOneWithoutSalesInput
 }
 
@@ -547,8 +547,8 @@ export type SaleItemUncheckedCreateWithoutSaleInput = {
   id?: string
   serviceId: string
   quantity?: number
-  price: runtime.Decimal | runtime.DecimalJsLike | number | string
-  discount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  price: number
+  discount?: number
 }
 
 export type SaleItemCreateOrConnectWithoutSaleInput = {
@@ -581,15 +581,15 @@ export type SaleItemCreateManyServiceInput = {
   id?: string
   saleId: string
   quantity?: number
-  price: runtime.Decimal | runtime.DecimalJsLike | number | string
-  discount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  price: number
+  discount?: number
 }
 
 export type SaleItemUpdateWithoutServiceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  discount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
   sale?: Prisma.SaleUpdateOneRequiredWithoutItemsNestedInput
 }
 
@@ -597,31 +597,31 @@ export type SaleItemUncheckedUpdateWithoutServiceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   saleId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  discount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
 }
 
 export type SaleItemUncheckedUpdateManyWithoutServiceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   saleId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  discount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
 }
 
 export type SaleItemCreateManySaleInput = {
   id?: string
   serviceId: string
   quantity?: number
-  price: runtime.Decimal | runtime.DecimalJsLike | number | string
-  discount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  price: number
+  discount?: number
 }
 
 export type SaleItemUpdateWithoutSaleInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  discount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
   service?: Prisma.ServiceUpdateOneRequiredWithoutSalesNestedInput
 }
 
@@ -629,16 +629,16 @@ export type SaleItemUncheckedUpdateWithoutSaleInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   serviceId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  discount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
 }
 
 export type SaleItemUncheckedUpdateManyWithoutSaleInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   serviceId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  discount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
 }
 
 
@@ -710,8 +710,8 @@ export type $SaleItemPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     saleId: string
     serviceId: string
     quantity: number
-    price: runtime.Decimal
-    discount: runtime.Decimal
+    price: number
+    discount: number
   }, ExtArgs["result"]["saleItem"]>
   composites: {}
 }
@@ -1141,8 +1141,8 @@ export interface SaleItemFieldRefs {
   readonly saleId: Prisma.FieldRef<"SaleItem", 'String'>
   readonly serviceId: Prisma.FieldRef<"SaleItem", 'String'>
   readonly quantity: Prisma.FieldRef<"SaleItem", 'Int'>
-  readonly price: Prisma.FieldRef<"SaleItem", 'Decimal'>
-  readonly discount: Prisma.FieldRef<"SaleItem", 'Decimal'>
+  readonly price: Prisma.FieldRef<"SaleItem", 'Float'>
+  readonly discount: Prisma.FieldRef<"SaleItem", 'Float'>
 }
     
 

@@ -1,12 +1,13 @@
 'use client';
 
+import React from 'react';
 import Link from 'next/link';
 import { Button } from '../ui/button';
 import { Card } from '../ui/card';
 import { Badge } from '../ui/badge';
-import { Calendar, Sparkles, Star, Gift, Award, Users, Clock, Heart } from 'lucide-react';
+import { Calendar, Star, Gift, Award, Users, Heart } from 'lucide-react';
 import { ImageWithFallback } from '../figma/ImageWithFallback';
-import HeroSection from '../HeroSection';
+import HeroSection, { CarouselService } from '../HeroSection';
 
 export default function Home() {
   const services = [
@@ -44,6 +45,25 @@ export default function Home() {
     }
   ];
 
+  // Carousel selection state for quick appointment defaults
+  const [selectedService, setSelectedService] = React.useState<CarouselService | null>(services[0] ?? null);
+  const [selectedDate, setSelectedDate] = React.useState<string>('');
+  const [selectedTime, setSelectedTime] = React.useState<string>('');
+
+  React.useEffect(() => {
+    if (!selectedService && services.length > 0) {
+      setSelectedService(services[0]);
+    } else if (selectedService && !services.find(s => s.id === selectedService.id) && services.length > 0) {
+      setSelectedService(services[0]);
+    }
+  }, [services, selectedService]);
+
+  const handleServiceChange = (service: CarouselService) => {
+    setSelectedService(service);
+  };
+
+  const reserveHref = `/appointments?service=${encodeURIComponent(selectedService?.id ?? '')}&date=${encodeURIComponent(selectedDate)}&time=${encodeURIComponent(selectedTime)}`;
+
   const testimonials = [
     {
       name: 'Marie Kabila',
@@ -70,8 +90,8 @@ export default function Home() {
       {/* Hero Section */}
       <HeroSection
         imageUrl='https://images.unsplash.com/photo-1632643746039-de953cb0f260?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxiZWF1dHklMjBzYWxvbiUyMGVsZWdhbnR8ZW58MXx8fHwxNzYyMjYzMDgyfDA&ixlib=rb-4.1.0&q=80&w=1080'
-        title='Pour les soins qui révèlent '
-        subtitle='votre beauté'
+        title='Sublimez votre élégance'
+        subtitle='La beauté qui vous ressemble'
         description="Spécialistes en ongles, cils, tresses et maquillage. Découvrez l'excellence de nos services dans une ambiance luxueuse et relaxante."
         isLogoNeeded={true}
         areLinksNeeded={true}
@@ -85,6 +105,10 @@ export default function Home() {
             label: "Nos Services"
           }
         ]}
+        services={services}
+        showCarousel={true}
+        autoPlayInterval={10000}
+        onServiceChange={handleServiceChange}
 
       />
 
@@ -94,25 +118,38 @@ export default function Home() {
           <div className="flex flex-col lg:flex-row items-center gap-4">
             <div className="flex-1 w-full">
               <label className="block text-sm text-gray-600 dark:text-gray-200 mb-2">Service</label>
-              <select className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-pink-400 focus:ring-2 focus:ring-pink-200 outline-none transition-all">
-                <option>Choisir un service</option>
-                <option>Onglerie</option>
-                <option>Cils</option>
-                <option>Tresses</option>
-                <option>Maquillage</option>
+              <select
+                value={selectedService?.id ?? ''}
+                onChange={(e) => {
+                  const s = services.find((svc) => svc.id === e.target.value)
+                  if (s) setSelectedService(s)
+                }}
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-pink-400 focus:ring-2 focus:ring-pink-200 outline-none transition-all"
+              >
+                {services.map((svc) => (
+                  <option key={svc.id} value={svc.id}>
+                    {svc.name}
+                  </option>
+                ))}
               </select>
             </div>
             <div className="flex-1 w-full">
               <label className="block text-sm text-gray-600 dark:text-gray-200 mb-2">Date</label>
               <input
                 type="date"
+                value={selectedDate}
+                onChange={(e) => setSelectedDate(e.target.value)}
                 className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-pink-400 focus:ring-2 focus:ring-pink-200 outline-none transition-all"
               />
             </div>
             <div className="flex-1 w-full">
               <label className="block text-sm text-gray-600 dark:text-gray-200 mb-2">Heure</label>
-              <select className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-pink-400 focus:ring-2 focus:ring-pink-200 outline-none transition-all">
-                <option>Choisir une heure</option>
+              <select
+                value={selectedTime}
+                onChange={(e) => setSelectedTime(e.target.value)}
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-pink-400 focus:ring-2 focus:ring-pink-200 outline-none transition-all"
+              >
+                <option value="">Choisir une heure</option>
                 <option>09:00</option>
                 <option>10:00</option>
                 <option>11:00</option>
@@ -122,7 +159,7 @@ export default function Home() {
               </select>
             </div>
             <div className="w-full lg:w-auto pt-6">
-              <Link href="/appointments">
+              <Link href={reserveHref}>
                 <Button className="w-full lg:w-auto bg-linear-to-br from-gray-900 via-pink-800 to-pink-600 hover:from-pink-600 hover:via-pink-800 hover:to-gray-900 text-white rounded-xl px-8 py-6">
                   Réserver
                 </Button>
@@ -154,7 +191,8 @@ export default function Home() {
                     alt={service.name}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                   />
-                  <div className={`absolute inset-0 bg-linear-to-t ${service.color} opacity-60 group-hover:opacity-40 transition-opacity`} />
+                  {/* Softer overlay so images remain visible */}
+                  <div className="absolute inset-0 bg-linear-to-t from-black/30 to-transparent opacity-30 group-hover:opacity-20 transition-opacity" />
                   <div className="absolute top-4 left-4 text-4xl">{service.icon}</div>
                 </div>
                 <div className="p-6">
@@ -245,19 +283,19 @@ export default function Home() {
               </div>
               <ul className="space-y-4 mb-8">
                 <li className="flex items-start">
-                  <div className="w-6 h-6 rounded-full bg-pink-500 flex items-center justify-center flex-shrink-0 mt-1">
+                  <div className="w-6 h-6 rounded-full bg-pink-500 flex items-center justify-center shrink-0 mt-1">
                     <span className="text-white text-xs">✓</span>
                   </div>
                   <span className="ml-3 text-gray-700">5 rendez-vous salon</span>
                 </li>
                 <li className="flex items-start">
-                  <div className="w-6 h-6 rounded-full bg-pink-500 flex items-center justify-center flex-shrink-0 mt-1">
+                  <div className="w-6 h-6 rounded-full bg-pink-500 flex items-center justify-center shrink-0 mt-1">
                     <span className="text-white text-xs">✓</span>
                   </div>
                   <span className="ml-3 text-gray-700">3 prestations à domicile</span>
                 </li>
                 <li className="flex items-start">
-                  <div className="w-6 h-6 rounded-full bg-pink-500 flex items-center justify-center flex-shrink-0 mt-1">
+                  <div className="w-6 h-6 rounded-full bg-pink-500 flex items-center justify-center shrink-0 mt-1">
                     <span className="text-white text-xs">✓</span>
                   </div>
                   <span className="ml-3 text-gray-700">10% de réduction sur les produits</span>
@@ -288,25 +326,25 @@ export default function Home() {
               </div>
               <ul className="space-y-4 mb-8">
                 <li className="flex items-start">
-                  <div className="w-6 h-6 rounded-full bg-linear-to-r from-amber-500 to-orange-500 flex items-center justify-center flex-shrink-0 mt-1">
+                  <div className="w-6 h-6 rounded-full bg-linear-to-r from-amber-500 to-orange-500 flex items-center justify-center shrink-0 mt-1">
                     <span className="text-white text-xs">✓</span>
                   </div>
                   <span className="ml-3 text-gray-700">10 rendez-vous salon</span>
                 </li>
                 <li className="flex items-start">
-                  <div className="w-6 h-6 rounded-full bg-linear-to-r from-amber-500 to-orange-500 flex items-center justify-center flex-shrink-0 mt-1">
+                  <div className="w-6 h-6 rounded-full bg-linear-to-r from-amber-500 to-orange-500 flex items-center justify-center shrink-0 mt-1">
                     <span className="text-white text-xs">✓</span>
                   </div>
                   <span className="ml-3 text-gray-700">6 prestations à domicile</span>
                 </li>
                 <li className="flex items-start">
-                  <div className="w-6 h-6 rounded-full bg-linear-to-r from-amber-500 to-orange-500 flex items-center justify-center flex-shrink-0 mt-1">
+                  <div className="w-6 h-6 rounded-full bg-linear-to-r from-amber-500 to-orange-500 flex items-center justify-center shrink-0 mt-1">
                     <span className="text-white text-xs">✓</span>
                   </div>
                   <span className="ml-3 text-gray-700">20% de réduction sur les produits</span>
                 </li>
                 <li className="flex items-start">
-                  <div className="w-6 h-6 rounded-full bg-linear-to-r from-amber-500 to-orange-500 flex items-center justify-center flex-shrink-0 mt-1">
+                  <div className="w-6 h-6 rounded-full bg-linear-to-r from-amber-500 to-orange-500 flex items-center justify-center shrink-0 mt-1">
                     <span className="text-white text-xs">✓</span>
                   </div>
                   <span className="ml-3 text-gray-700">Accès prioritaire Best Client Award</span>

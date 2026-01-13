@@ -117,7 +117,7 @@ export default function About() {
           </div>
 
           <div className="relative">
-            <div className="absolute -inset-4 bg-gradient-to-r from-pink-400 to-amber-400 rounded-2xl opacity-20 blur-2xl" />
+            <div className="absolute -inset-4 bg-linear-to-r from-pink-400 to-amber-400 rounded-2xl opacity-20 blur-2xl" />
             <ImageWithFallback
               src="https://images.unsplash.com/photo-1632643746039-de953cb0f260?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxiZWF1dHklMjBzYWxvbiUyMGVsZWdhbnR8ZW58MXx8fHwxNzYyMjYzMDgyfDA&ixlib=rb-4.1.0&q=80&w=1080"
               alt="Beauty Nails Interior"
@@ -141,7 +141,7 @@ export default function About() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {values.map((value, index) => (
               <Card key={index} className="bg-white border-0 shadow-xl rounded-2xl p-8 text-center hover:shadow-2xl transition-shadow">
-                <div className={`w-16 h-16 rounded-full bg-gradient-to-br ${value.color} flex items-center justify-center mx-auto mb-6`}>
+                <div className={`w-16 h-16 rounded-full bg-linear-to-br ${value.color} flex items-center justify-center mx-auto mb-6`}>
                   {value.icon}
                 </div>
                 <h3 className="text-xl text-gray-900 mb-3">{value.title}</h3>
@@ -172,7 +172,7 @@ export default function About() {
                     alt={member.name}
                     className="w-full h-full object-cover"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                  <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent" />
                   <div className="absolute bottom-4 left-4 right-4 text-white">
                     <h3 className="text-xl mb-1">{member.name}</h3>
                     <p className="text-sm text-pink-200">{member.role}</p>
@@ -206,7 +206,7 @@ export default function About() {
         </div>
 
         {/* Commitment Section */}
-        <div className="bg-gradient-to-br from-pink-50 to-purple-50 rounded-3xl p-12 mb-24">
+        <div className="bg-linear-to-br from-pink-50 to-purple-50 rounded-3xl p-12 mb-24">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
               <h2 className="text-3xl text-gray-900 mb-6">
@@ -276,7 +276,7 @@ export default function About() {
           </h2>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/appointments">
-              <Button size="lg" className="bg-gradient-to-r from-pink-500 to-amber-400 hover:from-pink-600 hover:to-amber-500 text-white rounded-full px-8">
+              <Button size="lg" className="bg-linear-to-r from-pink-500 to-amber-400 hover:from-pink-600 hover:to-amber-500 text-white rounded-full px-8">
                 Réserver un rendez-vous
               </Button>
             </Link>

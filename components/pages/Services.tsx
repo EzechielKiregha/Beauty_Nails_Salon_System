@@ -98,7 +98,7 @@ export default function Services() {
               {/* Category Header */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-12 items-center">
                 <div className="relative order-2 lg:order-1">
-                  <div className="absolute -inset-4 bg-gradient-to-r from-pink-400 to-amber-400 rounded-2xl opacity-20 blur-2xl" />
+                  <div className="absolute -inset-4 bg-linear-to-r from-pink-400 to-amber-400 rounded-2xl opacity-20 blur-2xl" />
                   <ImageWithFallback
                     src={category.image}
                     alt={category.name}
@@ -111,7 +111,7 @@ export default function Services() {
                   <h2 className="text-4xl text-gray-900 mb-4">{category.name}</h2>
                   <p className="text-xl text-gray-600 mb-6">{category.description}</p>
                   <Link href={`/services/${category.id}`}>
-                    <Button className="bg-gradient-to-r from-pink-500 to-amber-400 hover:from-pink-600 hover:to-amber-500 text-white rounded-full px-8">
+                    <Button className="bg-linear-to-r from-pink-500 to-amber-400 hover:from-pink-600 hover:to-amber-500 text-white rounded-full px-8">
                       Voir les détails
                     </Button>
                   </Link>
@@ -146,7 +146,7 @@ export default function Services() {
         </div>
 
         {/* Add-ons Section */}
-        <div className="mt-24 bg-gradient-to-br from-pink-50 to-purple-50 rounded-3xl p-12">
+        <div className="mt-24 bg-linear-to-br from-pink-50 to-purple-50 rounded-3xl p-12">
           <div className="text-center mb-12">
             <h2 className="text-3xl text-gray-900 mb-4">Options supplémentaires</h2>
             <p className="text-gray-600">Personnalisez votre expérience avec nos services additionnels</p>
@@ -181,7 +181,7 @@ export default function Services() {
           <h2 className="text-3xl text-gray-900 mb-6">Prête à réserver votre moment beauté ?</h2>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/appointments">
-              <Button size="lg" className="bg-gradient-to-r from-pink-500 to-amber-400 hover:from-pink-600 hover:to-amber-500 text-white rounded-full px-8">
+              <Button size="lg" className="bg-linear-to-r from-pink-500 to-amber-400 hover:from-pink-600 hover:to-amber-500 text-white rounded-full px-8">
                 Prendre rendez-vous
               </Button>
             </Link>

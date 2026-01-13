@@ -4,7 +4,7 @@ import prisma from '@/lib/prisma';
 import { getAuthenticatedUser, successResponse, handleApiError } from '@/lib/api/helpers';
 
 export async function PUT(
-  request: NextRequest,
+  _request: NextRequest,
   params : Promise<{ params: { id: string } }>
 ) {
   try {

@@ -134,7 +134,7 @@ export default function Testimonials() {
         </div>
 
         {/* Rating Overview */}
-        <Card className="bg-gradient-to-br from-pink-50 to-purple-50 border-0 shadow-xl rounded-3xl p-12 mb-16">
+        <Card className="bg-linear-to-br from-pink-50 to-purple-50 border-0 shadow-xl rounded-3xl p-12 mb-16">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div className="text-center lg:text-left">
               <div className="flex items-center justify-center lg:justify-start gap-4 mb-4">
@@ -168,7 +168,7 @@ export default function Testimonials() {
                     <span className="text-sm text-gray-700 w-12">{stars} étoile{stars > 1 ? 's' : ''}</span>
                     <div className="flex-1 h-3 bg-white rounded-full overflow-hidden">
                       <div
-                        className="h-full bg-gradient-to-r from-amber-400 to-orange-400 rounded-full"
+                        className="h-full bg-linear-to-r from-amber-400 to-orange-400 rounded-full"
                         style={{ width: `${percentage}%` }}
                       />
                     </div>
@@ -218,7 +218,7 @@ export default function Testimonials() {
         </div>
 
         {/* CTA Section */}
-        <div className="bg-gradient-to-br from-pink-500 via-purple-500 to-amber-500 rounded-3xl p-12 text-center text-white">
+        <div className="bg-linear-to-br from-pink-500 via-purple-500 to-amber-500 rounded-3xl p-12 text-center text-white">
           <h2 className="text-4xl mb-6">
             Rejoignez nos clientes satisfaites
           </h2>

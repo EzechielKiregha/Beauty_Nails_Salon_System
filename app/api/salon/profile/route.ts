@@ -3,7 +3,7 @@ import { NextRequest } from 'next/server';
 import prisma from '@/lib/prisma';
 import { successResponse, handleApiError, requireRole, errorResponse } from '@/lib/api/helpers';
 
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   try {
     const profile = await prisma.salonProfile.findFirst();
 

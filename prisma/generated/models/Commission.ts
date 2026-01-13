@@ -27,16 +27,16 @@ export type AggregateCommission = {
 }
 
 export type CommissionAvgAggregateOutputType = {
-  totalRevenue: runtime.Decimal | null
-  commissionRate: runtime.Decimal | null
-  commissionAmount: runtime.Decimal | null
+  totalRevenue: number | null
+  commissionRate: number | null
+  commissionAmount: number | null
   appointmentsCount: number | null
 }
 
 export type CommissionSumAggregateOutputType = {
-  totalRevenue: runtime.Decimal | null
-  commissionRate: runtime.Decimal | null
-  commissionAmount: runtime.Decimal | null
+  totalRevenue: number | null
+  commissionRate: number | null
+  commissionAmount: number | null
   appointmentsCount: number | null
 }
 
@@ -44,9 +44,9 @@ export type CommissionMinAggregateOutputType = {
   id: string | null
   workerId: string | null
   period: string | null
-  totalRevenue: runtime.Decimal | null
-  commissionRate: runtime.Decimal | null
-  commissionAmount: runtime.Decimal | null
+  totalRevenue: number | null
+  commissionRate: number | null
+  commissionAmount: number | null
   appointmentsCount: number | null
   status: $Enums.CommissionStatus | null
   paidAt: Date | null
@@ -58,9 +58,9 @@ export type CommissionMaxAggregateOutputType = {
   id: string | null
   workerId: string | null
   period: string | null
-  totalRevenue: runtime.Decimal | null
-  commissionRate: runtime.Decimal | null
-  commissionAmount: runtime.Decimal | null
+  totalRevenue: number | null
+  commissionRate: number | null
+  commissionAmount: number | null
   appointmentsCount: number | null
   status: $Enums.CommissionStatus | null
   paidAt: Date | null
@@ -231,9 +231,9 @@ export type CommissionGroupByOutputType = {
   id: string
   workerId: string
   period: string
-  totalRevenue: runtime.Decimal
-  commissionRate: runtime.Decimal
-  commissionAmount: runtime.Decimal
+  totalRevenue: number
+  commissionRate: number
+  commissionAmount: number
   appointmentsCount: number
   status: $Enums.CommissionStatus
   paidAt: Date | null
@@ -268,9 +268,9 @@ export type CommissionWhereInput = {
   id?: Prisma.StringFilter<"Commission"> | string
   workerId?: Prisma.StringFilter<"Commission"> | string
   period?: Prisma.StringFilter<"Commission"> | string
-  totalRevenue?: Prisma.DecimalFilter<"Commission"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  commissionRate?: Prisma.DecimalFilter<"Commission"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  commissionAmount?: Prisma.DecimalFilter<"Commission"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalRevenue?: Prisma.FloatFilter<"Commission"> | number
+  commissionRate?: Prisma.FloatFilter<"Commission"> | number
+  commissionAmount?: Prisma.FloatFilter<"Commission"> | number
   appointmentsCount?: Prisma.IntFilter<"Commission"> | number
   status?: Prisma.EnumCommissionStatusFilter<"Commission"> | $Enums.CommissionStatus
   paidAt?: Prisma.DateTimeNullableFilter<"Commission"> | Date | string | null
@@ -302,9 +302,9 @@ export type CommissionWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.CommissionWhereInput | Prisma.CommissionWhereInput[]
   workerId?: Prisma.StringFilter<"Commission"> | string
   period?: Prisma.StringFilter<"Commission"> | string
-  totalRevenue?: Prisma.DecimalFilter<"Commission"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  commissionRate?: Prisma.DecimalFilter<"Commission"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  commissionAmount?: Prisma.DecimalFilter<"Commission"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalRevenue?: Prisma.FloatFilter<"Commission"> | number
+  commissionRate?: Prisma.FloatFilter<"Commission"> | number
+  commissionAmount?: Prisma.FloatFilter<"Commission"> | number
   appointmentsCount?: Prisma.IntFilter<"Commission"> | number
   status?: Prisma.EnumCommissionStatusFilter<"Commission"> | $Enums.CommissionStatus
   paidAt?: Prisma.DateTimeNullableFilter<"Commission"> | Date | string | null
@@ -339,9 +339,9 @@ export type CommissionScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"Commission"> | string
   workerId?: Prisma.StringWithAggregatesFilter<"Commission"> | string
   period?: Prisma.StringWithAggregatesFilter<"Commission"> | string
-  totalRevenue?: Prisma.DecimalWithAggregatesFilter<"Commission"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  commissionRate?: Prisma.DecimalWithAggregatesFilter<"Commission"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  commissionAmount?: Prisma.DecimalWithAggregatesFilter<"Commission"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalRevenue?: Prisma.FloatWithAggregatesFilter<"Commission"> | number
+  commissionRate?: Prisma.FloatWithAggregatesFilter<"Commission"> | number
+  commissionAmount?: Prisma.FloatWithAggregatesFilter<"Commission"> | number
   appointmentsCount?: Prisma.IntWithAggregatesFilter<"Commission"> | number
   status?: Prisma.EnumCommissionStatusWithAggregatesFilter<"Commission"> | $Enums.CommissionStatus
   paidAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Commission"> | Date | string | null
@@ -352,9 +352,9 @@ export type CommissionScalarWhereWithAggregatesInput = {
 export type CommissionCreateInput = {
   id?: string
   period: string
-  totalRevenue: runtime.Decimal | runtime.DecimalJsLike | number | string
-  commissionRate: runtime.Decimal | runtime.DecimalJsLike | number | string
-  commissionAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalRevenue: number
+  commissionRate: number
+  commissionAmount: number
   appointmentsCount: number
   status?: $Enums.CommissionStatus
   paidAt?: Date | string | null
@@ -367,9 +367,9 @@ export type CommissionUncheckedCreateInput = {
   id?: string
   workerId: string
   period: string
-  totalRevenue: runtime.Decimal | runtime.DecimalJsLike | number | string
-  commissionRate: runtime.Decimal | runtime.DecimalJsLike | number | string
-  commissionAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalRevenue: number
+  commissionRate: number
+  commissionAmount: number
   appointmentsCount: number
   status?: $Enums.CommissionStatus
   paidAt?: Date | string | null
@@ -380,9 +380,9 @@ export type CommissionUncheckedCreateInput = {
 export type CommissionUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   period?: Prisma.StringFieldUpdateOperationsInput | string
-  totalRevenue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  commissionRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  commissionAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalRevenue?: Prisma.FloatFieldUpdateOperationsInput | number
+  commissionRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  commissionAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   appointmentsCount?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumCommissionStatusFieldUpdateOperationsInput | $Enums.CommissionStatus
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -395,9 +395,9 @@ export type CommissionUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   workerId?: Prisma.StringFieldUpdateOperationsInput | string
   period?: Prisma.StringFieldUpdateOperationsInput | string
-  totalRevenue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  commissionRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  commissionAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalRevenue?: Prisma.FloatFieldUpdateOperationsInput | number
+  commissionRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  commissionAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   appointmentsCount?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumCommissionStatusFieldUpdateOperationsInput | $Enums.CommissionStatus
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -409,9 +409,9 @@ export type CommissionCreateManyInput = {
   id?: string
   workerId: string
   period: string
-  totalRevenue: runtime.Decimal | runtime.DecimalJsLike | number | string
-  commissionRate: runtime.Decimal | runtime.DecimalJsLike | number | string
-  commissionAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalRevenue: number
+  commissionRate: number
+  commissionAmount: number
   appointmentsCount: number
   status?: $Enums.CommissionStatus
   paidAt?: Date | string | null
@@ -422,9 +422,9 @@ export type CommissionCreateManyInput = {
 export type CommissionUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   period?: Prisma.StringFieldUpdateOperationsInput | string
-  totalRevenue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  commissionRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  commissionAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalRevenue?: Prisma.FloatFieldUpdateOperationsInput | number
+  commissionRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  commissionAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   appointmentsCount?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumCommissionStatusFieldUpdateOperationsInput | $Enums.CommissionStatus
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -436,9 +436,9 @@ export type CommissionUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   workerId?: Prisma.StringFieldUpdateOperationsInput | string
   period?: Prisma.StringFieldUpdateOperationsInput | string
-  totalRevenue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  commissionRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  commissionAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalRevenue?: Prisma.FloatFieldUpdateOperationsInput | number
+  commissionRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  commissionAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   appointmentsCount?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumCommissionStatusFieldUpdateOperationsInput | $Enums.CommissionStatus
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -566,9 +566,9 @@ export type EnumCommissionStatusFieldUpdateOperationsInput = {
 export type CommissionCreateWithoutWorkerInput = {
   id?: string
   period: string
-  totalRevenue: runtime.Decimal | runtime.DecimalJsLike | number | string
-  commissionRate: runtime.Decimal | runtime.DecimalJsLike | number | string
-  commissionAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalRevenue: number
+  commissionRate: number
+  commissionAmount: number
   appointmentsCount: number
   status?: $Enums.CommissionStatus
   paidAt?: Date | string | null
@@ -579,9 +579,9 @@ export type CommissionCreateWithoutWorkerInput = {
 export type CommissionUncheckedCreateWithoutWorkerInput = {
   id?: string
   period: string
-  totalRevenue: runtime.Decimal | runtime.DecimalJsLike | number | string
-  commissionRate: runtime.Decimal | runtime.DecimalJsLike | number | string
-  commissionAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalRevenue: number
+  commissionRate: number
+  commissionAmount: number
   appointmentsCount: number
   status?: $Enums.CommissionStatus
   paidAt?: Date | string | null
@@ -622,9 +622,9 @@ export type CommissionScalarWhereInput = {
   id?: Prisma.StringFilter<"Commission"> | string
   workerId?: Prisma.StringFilter<"Commission"> | string
   period?: Prisma.StringFilter<"Commission"> | string
-  totalRevenue?: Prisma.DecimalFilter<"Commission"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  commissionRate?: Prisma.DecimalFilter<"Commission"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  commissionAmount?: Prisma.DecimalFilter<"Commission"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalRevenue?: Prisma.FloatFilter<"Commission"> | number
+  commissionRate?: Prisma.FloatFilter<"Commission"> | number
+  commissionAmount?: Prisma.FloatFilter<"Commission"> | number
   appointmentsCount?: Prisma.IntFilter<"Commission"> | number
   status?: Prisma.EnumCommissionStatusFilter<"Commission"> | $Enums.CommissionStatus
   paidAt?: Prisma.DateTimeNullableFilter<"Commission"> | Date | string | null
@@ -635,9 +635,9 @@ export type CommissionScalarWhereInput = {
 export type CommissionCreateManyWorkerInput = {
   id?: string
   period: string
-  totalRevenue: runtime.Decimal | runtime.DecimalJsLike | number | string
-  commissionRate: runtime.Decimal | runtime.DecimalJsLike | number | string
-  commissionAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalRevenue: number
+  commissionRate: number
+  commissionAmount: number
   appointmentsCount: number
   status?: $Enums.CommissionStatus
   paidAt?: Date | string | null
@@ -648,9 +648,9 @@ export type CommissionCreateManyWorkerInput = {
 export type CommissionUpdateWithoutWorkerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   period?: Prisma.StringFieldUpdateOperationsInput | string
-  totalRevenue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  commissionRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  commissionAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalRevenue?: Prisma.FloatFieldUpdateOperationsInput | number
+  commissionRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  commissionAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   appointmentsCount?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumCommissionStatusFieldUpdateOperationsInput | $Enums.CommissionStatus
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -661,9 +661,9 @@ export type CommissionUpdateWithoutWorkerInput = {
 export type CommissionUncheckedUpdateWithoutWorkerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   period?: Prisma.StringFieldUpdateOperationsInput | string
-  totalRevenue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  commissionRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  commissionAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalRevenue?: Prisma.FloatFieldUpdateOperationsInput | number
+  commissionRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  commissionAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   appointmentsCount?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumCommissionStatusFieldUpdateOperationsInput | $Enums.CommissionStatus
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -674,9 +674,9 @@ export type CommissionUncheckedUpdateWithoutWorkerInput = {
 export type CommissionUncheckedUpdateManyWithoutWorkerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   period?: Prisma.StringFieldUpdateOperationsInput | string
-  totalRevenue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  commissionRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  commissionAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalRevenue?: Prisma.FloatFieldUpdateOperationsInput | number
+  commissionRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  commissionAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   appointmentsCount?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumCommissionStatusFieldUpdateOperationsInput | $Enums.CommissionStatus
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -765,9 +765,9 @@ export type $CommissionPayload<ExtArgs extends runtime.Types.Extensions.Internal
     id: string
     workerId: string
     period: string
-    totalRevenue: runtime.Decimal
-    commissionRate: runtime.Decimal
-    commissionAmount: runtime.Decimal
+    totalRevenue: number
+    commissionRate: number
+    commissionAmount: number
     appointmentsCount: number
     status: $Enums.CommissionStatus
     paidAt: Date | null
@@ -1200,9 +1200,9 @@ export interface CommissionFieldRefs {
   readonly id: Prisma.FieldRef<"Commission", 'String'>
   readonly workerId: Prisma.FieldRef<"Commission", 'String'>
   readonly period: Prisma.FieldRef<"Commission", 'String'>
-  readonly totalRevenue: Prisma.FieldRef<"Commission", 'Decimal'>
-  readonly commissionRate: Prisma.FieldRef<"Commission", 'Decimal'>
-  readonly commissionAmount: Prisma.FieldRef<"Commission", 'Decimal'>
+  readonly totalRevenue: Prisma.FieldRef<"Commission", 'Float'>
+  readonly commissionRate: Prisma.FieldRef<"Commission", 'Float'>
+  readonly commissionAmount: Prisma.FieldRef<"Commission", 'Float'>
   readonly appointmentsCount: Prisma.FieldRef<"Commission", 'Int'>
   readonly status: Prisma.FieldRef<"Commission", 'CommissionStatus'>
   readonly paidAt: Prisma.FieldRef<"Commission", 'DateTime'>

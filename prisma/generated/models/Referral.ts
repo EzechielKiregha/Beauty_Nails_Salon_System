@@ -262,7 +262,7 @@ export type ReferralCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   referrer: Prisma.ClientProfileCreateNestedOneWithoutReferrerInput
-  referred: Prisma.ClientProfileCreateNestedOneWithoutReferralsInput
+  referred: Prisma.ClientProfileCreateNestedOneWithoutReferralsRelInput
 }
 
 export type ReferralUncheckedCreateInput = {
@@ -282,7 +282,7 @@ export type ReferralUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   referrer?: Prisma.ClientProfileUpdateOneRequiredWithoutReferrerNestedInput
-  referred?: Prisma.ClientProfileUpdateOneRequiredWithoutReferralsNestedInput
+  referred?: Prisma.ClientProfileUpdateOneRequiredWithoutReferralsRelNestedInput
 }
 
 export type ReferralUncheckedUpdateInput = {
@@ -480,7 +480,7 @@ export type ReferralCreateWithoutReferrerInput = {
   rewardGranted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  referred: Prisma.ClientProfileCreateNestedOneWithoutReferralsInput
+  referred: Prisma.ClientProfileCreateNestedOneWithoutReferralsRelInput
 }
 
 export type ReferralUncheckedCreateWithoutReferrerInput = {
@@ -543,7 +543,7 @@ export type ReferralUpdateWithoutReferrerInput = {
   rewardGranted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  referred?: Prisma.ClientProfileUpdateOneRequiredWithoutReferralsNestedInput
+  referred?: Prisma.ClientProfileUpdateOneRequiredWithoutReferralsRelNestedInput
 }
 
 export type ReferralUncheckedUpdateWithoutReferrerInput = {

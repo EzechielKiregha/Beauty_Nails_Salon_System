@@ -59,6 +59,7 @@ export const ModelName = {
   WorkerProfile: 'WorkerProfile',
   WorkerSchedule: 'WorkerSchedule',
   WorkerLeave: 'WorkerLeave',
+  Task: 'Task',
   Service: 'Service',
   ServiceAddOn: 'ServiceAddOn',
   ServicePackage: 'ServicePackage',
@@ -168,6 +169,13 @@ export const ClientProfileScalarFieldEnum = {
   referredBy: 'referredBy',
   preferences: 'preferences',
   notes: 'notes',
+  birthday: 'birthday',
+  address: 'address',
+  favoriteServices: 'favoriteServices',
+  allergies: 'allergies',
+  prepaymentBalance: 'prepaymentBalance',
+  giftCardBalance: 'giftCardBalance',
+  referrals: 'referrals',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -219,6 +227,29 @@ export const WorkerLeaveScalarFieldEnum = {
 } as const
 
 export type WorkerLeaveScalarFieldEnum = (typeof WorkerLeaveScalarFieldEnum)[keyof typeof WorkerLeaveScalarFieldEnum]
+
+
+export const TaskScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  type: 'type',
+  status: 'status',
+  priority: 'priority',
+  assignedToWorkerId: 'assignedToWorkerId',
+  clientId: 'clientId',
+  appointmentId: 'appointmentId',
+  createdById: 'createdById',
+  dueAt: 'dueAt',
+  scheduledAt: 'scheduledAt',
+  completedAt: 'completedAt',
+  metadata: 'metadata',
+  isPrivate: 'isPrivate',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TaskScalarFieldEnum = (typeof TaskScalarFieldEnum)[keyof typeof TaskScalarFieldEnum]
 
 
 export const ServiceScalarFieldEnum = {

@@ -27,14 +27,14 @@ export type AggregateWorkerProfile = {
 }
 
 export type WorkerProfileAvgAggregateOutputType = {
-  commissionRate: runtime.Decimal | null
-  rating: runtime.Decimal | null
+  commissionRate: number | null
+  rating: number | null
   totalReviews: number | null
 }
 
 export type WorkerProfileSumAggregateOutputType = {
-  commissionRate: runtime.Decimal | null
-  rating: runtime.Decimal | null
+  commissionRate: number | null
+  rating: number | null
   totalReviews: number | null
 }
 
@@ -42,8 +42,8 @@ export type WorkerProfileMinAggregateOutputType = {
   id: string | null
   userId: string | null
   position: string | null
-  commissionRate: runtime.Decimal | null
-  rating: runtime.Decimal | null
+  commissionRate: number | null
+  rating: number | null
   totalReviews: number | null
   isAvailable: boolean | null
   hireDate: Date | null
@@ -55,8 +55,8 @@ export type WorkerProfileMaxAggregateOutputType = {
   id: string | null
   userId: string | null
   position: string | null
-  commissionRate: runtime.Decimal | null
-  rating: runtime.Decimal | null
+  commissionRate: number | null
+  rating: number | null
   totalReviews: number | null
   isAvailable: boolean | null
   hireDate: Date | null
@@ -226,8 +226,8 @@ export type WorkerProfileGroupByOutputType = {
   userId: string
   position: string
   specialties: string[]
-  commissionRate: runtime.Decimal
-  rating: runtime.Decimal
+  commissionRate: number
+  rating: number
   totalReviews: number
   isAvailable: boolean
   workingHours: runtime.JsonValue | null
@@ -264,8 +264,8 @@ export type WorkerProfileWhereInput = {
   userId?: Prisma.StringFilter<"WorkerProfile"> | string
   position?: Prisma.StringFilter<"WorkerProfile"> | string
   specialties?: Prisma.StringNullableListFilter<"WorkerProfile">
-  commissionRate?: Prisma.DecimalFilter<"WorkerProfile"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  rating?: Prisma.DecimalFilter<"WorkerProfile"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionRate?: Prisma.FloatFilter<"WorkerProfile"> | number
+  rating?: Prisma.FloatFilter<"WorkerProfile"> | number
   totalReviews?: Prisma.IntFilter<"WorkerProfile"> | number
   isAvailable?: Prisma.BoolFilter<"WorkerProfile"> | boolean
   workingHours?: Prisma.JsonNullableFilter<"WorkerProfile">
@@ -278,6 +278,7 @@ export type WorkerProfileWhereInput = {
   commissions?: Prisma.CommissionListRelationFilter
   reviews?: Prisma.ReviewListRelationFilter
   leaves?: Prisma.WorkerLeaveListRelationFilter
+  tasks?: Prisma.TaskListRelationFilter
 }
 
 export type WorkerProfileOrderByWithRelationInput = {
@@ -299,6 +300,7 @@ export type WorkerProfileOrderByWithRelationInput = {
   commissions?: Prisma.CommissionOrderByRelationAggregateInput
   reviews?: Prisma.ReviewOrderByRelationAggregateInput
   leaves?: Prisma.WorkerLeaveOrderByRelationAggregateInput
+  tasks?: Prisma.TaskOrderByRelationAggregateInput
 }
 
 export type WorkerProfileWhereUniqueInput = Prisma.AtLeast<{
@@ -309,8 +311,8 @@ export type WorkerProfileWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.WorkerProfileWhereInput | Prisma.WorkerProfileWhereInput[]
   position?: Prisma.StringFilter<"WorkerProfile"> | string
   specialties?: Prisma.StringNullableListFilter<"WorkerProfile">
-  commissionRate?: Prisma.DecimalFilter<"WorkerProfile"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  rating?: Prisma.DecimalFilter<"WorkerProfile"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionRate?: Prisma.FloatFilter<"WorkerProfile"> | number
+  rating?: Prisma.FloatFilter<"WorkerProfile"> | number
   totalReviews?: Prisma.IntFilter<"WorkerProfile"> | number
   isAvailable?: Prisma.BoolFilter<"WorkerProfile"> | boolean
   workingHours?: Prisma.JsonNullableFilter<"WorkerProfile">
@@ -323,6 +325,7 @@ export type WorkerProfileWhereUniqueInput = Prisma.AtLeast<{
   commissions?: Prisma.CommissionListRelationFilter
   reviews?: Prisma.ReviewListRelationFilter
   leaves?: Prisma.WorkerLeaveListRelationFilter
+  tasks?: Prisma.TaskListRelationFilter
 }, "id" | "userId">
 
 export type WorkerProfileOrderByWithAggregationInput = {
@@ -353,8 +356,8 @@ export type WorkerProfileScalarWhereWithAggregatesInput = {
   userId?: Prisma.StringWithAggregatesFilter<"WorkerProfile"> | string
   position?: Prisma.StringWithAggregatesFilter<"WorkerProfile"> | string
   specialties?: Prisma.StringNullableListFilter<"WorkerProfile">
-  commissionRate?: Prisma.DecimalWithAggregatesFilter<"WorkerProfile"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  rating?: Prisma.DecimalWithAggregatesFilter<"WorkerProfile"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionRate?: Prisma.FloatWithAggregatesFilter<"WorkerProfile"> | number
+  rating?: Prisma.FloatWithAggregatesFilter<"WorkerProfile"> | number
   totalReviews?: Prisma.IntWithAggregatesFilter<"WorkerProfile"> | number
   isAvailable?: Prisma.BoolWithAggregatesFilter<"WorkerProfile"> | boolean
   workingHours?: Prisma.JsonNullableWithAggregatesFilter<"WorkerProfile">
@@ -367,8 +370,8 @@ export type WorkerProfileCreateInput = {
   id?: string
   position: string
   specialties?: Prisma.WorkerProfileCreatespecialtiesInput | string[]
-  commissionRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  rating?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionRate?: number
+  rating?: number
   totalReviews?: number
   isAvailable?: boolean
   workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -381,6 +384,7 @@ export type WorkerProfileCreateInput = {
   commissions?: Prisma.CommissionCreateNestedManyWithoutWorkerInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutWorkerInput
   leaves?: Prisma.WorkerLeaveCreateNestedManyWithoutWorkerInput
+  tasks?: Prisma.TaskCreateNestedManyWithoutAssignedToInput
 }
 
 export type WorkerProfileUncheckedCreateInput = {
@@ -388,8 +392,8 @@ export type WorkerProfileUncheckedCreateInput = {
   userId: string
   position: string
   specialties?: Prisma.WorkerProfileCreatespecialtiesInput | string[]
-  commissionRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  rating?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionRate?: number
+  rating?: number
   totalReviews?: number
   isAvailable?: boolean
   workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -401,14 +405,15 @@ export type WorkerProfileUncheckedCreateInput = {
   commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutWorkerInput
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutWorkerInput
   leaves?: Prisma.WorkerLeaveUncheckedCreateNestedManyWithoutWorkerInput
+  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssignedToInput
 }
 
 export type WorkerProfileUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   position?: Prisma.StringFieldUpdateOperationsInput | string
   specialties?: Prisma.WorkerProfileUpdatespecialtiesInput | string[]
-  commissionRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  rating?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  rating?: Prisma.FloatFieldUpdateOperationsInput | number
   totalReviews?: Prisma.IntFieldUpdateOperationsInput | number
   isAvailable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -421,6 +426,7 @@ export type WorkerProfileUpdateInput = {
   commissions?: Prisma.CommissionUpdateManyWithoutWorkerNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutWorkerNestedInput
   leaves?: Prisma.WorkerLeaveUpdateManyWithoutWorkerNestedInput
+  tasks?: Prisma.TaskUpdateManyWithoutAssignedToNestedInput
 }
 
 export type WorkerProfileUncheckedUpdateInput = {
@@ -428,8 +434,8 @@ export type WorkerProfileUncheckedUpdateInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   position?: Prisma.StringFieldUpdateOperationsInput | string
   specialties?: Prisma.WorkerProfileUpdatespecialtiesInput | string[]
-  commissionRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  rating?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  rating?: Prisma.FloatFieldUpdateOperationsInput | number
   totalReviews?: Prisma.IntFieldUpdateOperationsInput | number
   isAvailable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -441,6 +447,7 @@ export type WorkerProfileUncheckedUpdateInput = {
   commissions?: Prisma.CommissionUncheckedUpdateManyWithoutWorkerNestedInput
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutWorkerNestedInput
   leaves?: Prisma.WorkerLeaveUncheckedUpdateManyWithoutWorkerNestedInput
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutAssignedToNestedInput
 }
 
 export type WorkerProfileCreateManyInput = {
@@ -448,8 +455,8 @@ export type WorkerProfileCreateManyInput = {
   userId: string
   position: string
   specialties?: Prisma.WorkerProfileCreatespecialtiesInput | string[]
-  commissionRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  rating?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionRate?: number
+  rating?: number
   totalReviews?: number
   isAvailable?: boolean
   workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -462,8 +469,8 @@ export type WorkerProfileUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   position?: Prisma.StringFieldUpdateOperationsInput | string
   specialties?: Prisma.WorkerProfileUpdatespecialtiesInput | string[]
-  commissionRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  rating?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  rating?: Prisma.FloatFieldUpdateOperationsInput | number
   totalReviews?: Prisma.IntFieldUpdateOperationsInput | number
   isAvailable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -477,8 +484,8 @@ export type WorkerProfileUncheckedUpdateManyInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   position?: Prisma.StringFieldUpdateOperationsInput | string
   specialties?: Prisma.WorkerProfileUpdatespecialtiesInput | string[]
-  commissionRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  rating?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  rating?: Prisma.FloatFieldUpdateOperationsInput | number
   totalReviews?: Prisma.IntFieldUpdateOperationsInput | number
   isAvailable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -490,14 +497,6 @@ export type WorkerProfileUncheckedUpdateManyInput = {
 export type WorkerProfileNullableScalarRelationFilter = {
   is?: Prisma.WorkerProfileWhereInput | null
   isNot?: Prisma.WorkerProfileWhereInput | null
-}
-
-export type StringNullableListFilter<$PrismaModel = never> = {
-  equals?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel> | null
-  has?: string | Prisma.StringFieldRefInput<$PrismaModel> | null
-  hasEvery?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
-  hasSome?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
-  isEmpty?: boolean
 }
 
 export type WorkerProfileCountOrderByAggregateInput = {
@@ -627,6 +626,22 @@ export type WorkerProfileUpdateOneRequiredWithoutLeavesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.WorkerProfileUpdateToOneWithWhereWithoutLeavesInput, Prisma.WorkerProfileUpdateWithoutLeavesInput>, Prisma.WorkerProfileUncheckedUpdateWithoutLeavesInput>
 }
 
+export type WorkerProfileCreateNestedOneWithoutTasksInput = {
+  create?: Prisma.XOR<Prisma.WorkerProfileCreateWithoutTasksInput, Prisma.WorkerProfileUncheckedCreateWithoutTasksInput>
+  connectOrCreate?: Prisma.WorkerProfileCreateOrConnectWithoutTasksInput
+  connect?: Prisma.WorkerProfileWhereUniqueInput
+}
+
+export type WorkerProfileUpdateOneWithoutTasksNestedInput = {
+  create?: Prisma.XOR<Prisma.WorkerProfileCreateWithoutTasksInput, Prisma.WorkerProfileUncheckedCreateWithoutTasksInput>
+  connectOrCreate?: Prisma.WorkerProfileCreateOrConnectWithoutTasksInput
+  upsert?: Prisma.WorkerProfileUpsertWithoutTasksInput
+  disconnect?: Prisma.WorkerProfileWhereInput | boolean
+  delete?: Prisma.WorkerProfileWhereInput | boolean
+  connect?: Prisma.WorkerProfileWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.WorkerProfileUpdateToOneWithWhereWithoutTasksInput, Prisma.WorkerProfileUpdateWithoutTasksInput>, Prisma.WorkerProfileUncheckedUpdateWithoutTasksInput>
+}
+
 export type WorkerProfileCreateNestedOneWithoutAppointmentsInput = {
   create?: Prisma.XOR<Prisma.WorkerProfileCreateWithoutAppointmentsInput, Prisma.WorkerProfileUncheckedCreateWithoutAppointmentsInput>
   connectOrCreate?: Prisma.WorkerProfileCreateOrConnectWithoutAppointmentsInput
@@ -673,8 +688,8 @@ export type WorkerProfileCreateWithoutUserInput = {
   id?: string
   position: string
   specialties?: Prisma.WorkerProfileCreatespecialtiesInput | string[]
-  commissionRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  rating?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionRate?: number
+  rating?: number
   totalReviews?: number
   isAvailable?: boolean
   workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -686,14 +701,15 @@ export type WorkerProfileCreateWithoutUserInput = {
   commissions?: Prisma.CommissionCreateNestedManyWithoutWorkerInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutWorkerInput
   leaves?: Prisma.WorkerLeaveCreateNestedManyWithoutWorkerInput
+  tasks?: Prisma.TaskCreateNestedManyWithoutAssignedToInput
 }
 
 export type WorkerProfileUncheckedCreateWithoutUserInput = {
   id?: string
   position: string
   specialties?: Prisma.WorkerProfileCreatespecialtiesInput | string[]
-  commissionRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  rating?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionRate?: number
+  rating?: number
   totalReviews?: number
   isAvailable?: boolean
   workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -705,6 +721,7 @@ export type WorkerProfileUncheckedCreateWithoutUserInput = {
   commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutWorkerInput
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutWorkerInput
   leaves?: Prisma.WorkerLeaveUncheckedCreateNestedManyWithoutWorkerInput
+  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssignedToInput
 }
 
 export type WorkerProfileCreateOrConnectWithoutUserInput = {
@@ -727,8 +744,8 @@ export type WorkerProfileUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   position?: Prisma.StringFieldUpdateOperationsInput | string
   specialties?: Prisma.WorkerProfileUpdatespecialtiesInput | string[]
-  commissionRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  rating?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  rating?: Prisma.FloatFieldUpdateOperationsInput | number
   totalReviews?: Prisma.IntFieldUpdateOperationsInput | number
   isAvailable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -740,14 +757,15 @@ export type WorkerProfileUpdateWithoutUserInput = {
   commissions?: Prisma.CommissionUpdateManyWithoutWorkerNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutWorkerNestedInput
   leaves?: Prisma.WorkerLeaveUpdateManyWithoutWorkerNestedInput
+  tasks?: Prisma.TaskUpdateManyWithoutAssignedToNestedInput
 }
 
 export type WorkerProfileUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   position?: Prisma.StringFieldUpdateOperationsInput | string
   specialties?: Prisma.WorkerProfileUpdatespecialtiesInput | string[]
-  commissionRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  rating?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  rating?: Prisma.FloatFieldUpdateOperationsInput | number
   totalReviews?: Prisma.IntFieldUpdateOperationsInput | number
   isAvailable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -759,14 +777,15 @@ export type WorkerProfileUncheckedUpdateWithoutUserInput = {
   commissions?: Prisma.CommissionUncheckedUpdateManyWithoutWorkerNestedInput
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutWorkerNestedInput
   leaves?: Prisma.WorkerLeaveUncheckedUpdateManyWithoutWorkerNestedInput
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutAssignedToNestedInput
 }
 
 export type WorkerProfileCreateWithoutSchedulesInput = {
   id?: string
   position: string
   specialties?: Prisma.WorkerProfileCreatespecialtiesInput | string[]
-  commissionRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  rating?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionRate?: number
+  rating?: number
   totalReviews?: number
   isAvailable?: boolean
   workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -778,6 +797,7 @@ export type WorkerProfileCreateWithoutSchedulesInput = {
   commissions?: Prisma.CommissionCreateNestedManyWithoutWorkerInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutWorkerInput
   leaves?: Prisma.WorkerLeaveCreateNestedManyWithoutWorkerInput
+  tasks?: Prisma.TaskCreateNestedManyWithoutAssignedToInput
 }
 
 export type WorkerProfileUncheckedCreateWithoutSchedulesInput = {
@@ -785,8 +805,8 @@ export type WorkerProfileUncheckedCreateWithoutSchedulesInput = {
   userId: string
   position: string
   specialties?: Prisma.WorkerProfileCreatespecialtiesInput | string[]
-  commissionRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  rating?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionRate?: number
+  rating?: number
   totalReviews?: number
   isAvailable?: boolean
   workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -797,6 +817,7 @@ export type WorkerProfileUncheckedCreateWithoutSchedulesInput = {
   commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutWorkerInput
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutWorkerInput
   leaves?: Prisma.WorkerLeaveUncheckedCreateNestedManyWithoutWorkerInput
+  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssignedToInput
 }
 
 export type WorkerProfileCreateOrConnectWithoutSchedulesInput = {
@@ -819,8 +840,8 @@ export type WorkerProfileUpdateWithoutSchedulesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   position?: Prisma.StringFieldUpdateOperationsInput | string
   specialties?: Prisma.WorkerProfileUpdatespecialtiesInput | string[]
-  commissionRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  rating?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  rating?: Prisma.FloatFieldUpdateOperationsInput | number
   totalReviews?: Prisma.IntFieldUpdateOperationsInput | number
   isAvailable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -832,6 +853,7 @@ export type WorkerProfileUpdateWithoutSchedulesInput = {
   commissions?: Prisma.CommissionUpdateManyWithoutWorkerNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutWorkerNestedInput
   leaves?: Prisma.WorkerLeaveUpdateManyWithoutWorkerNestedInput
+  tasks?: Prisma.TaskUpdateManyWithoutAssignedToNestedInput
 }
 
 export type WorkerProfileUncheckedUpdateWithoutSchedulesInput = {
@@ -839,8 +861,8 @@ export type WorkerProfileUncheckedUpdateWithoutSchedulesInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   position?: Prisma.StringFieldUpdateOperationsInput | string
   specialties?: Prisma.WorkerProfileUpdatespecialtiesInput | string[]
-  commissionRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  rating?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  rating?: Prisma.FloatFieldUpdateOperationsInput | number
   totalReviews?: Prisma.IntFieldUpdateOperationsInput | number
   isAvailable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -851,14 +873,15 @@ export type WorkerProfileUncheckedUpdateWithoutSchedulesInput = {
   commissions?: Prisma.CommissionUncheckedUpdateManyWithoutWorkerNestedInput
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutWorkerNestedInput
   leaves?: Prisma.WorkerLeaveUncheckedUpdateManyWithoutWorkerNestedInput
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutAssignedToNestedInput
 }
 
 export type WorkerProfileCreateWithoutLeavesInput = {
   id?: string
   position: string
   specialties?: Prisma.WorkerProfileCreatespecialtiesInput | string[]
-  commissionRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  rating?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionRate?: number
+  rating?: number
   totalReviews?: number
   isAvailable?: boolean
   workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -870,6 +893,7 @@ export type WorkerProfileCreateWithoutLeavesInput = {
   schedules?: Prisma.WorkerScheduleCreateNestedManyWithoutWorkerInput
   commissions?: Prisma.CommissionCreateNestedManyWithoutWorkerInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutWorkerInput
+  tasks?: Prisma.TaskCreateNestedManyWithoutAssignedToInput
 }
 
 export type WorkerProfileUncheckedCreateWithoutLeavesInput = {
@@ -877,8 +901,8 @@ export type WorkerProfileUncheckedCreateWithoutLeavesInput = {
   userId: string
   position: string
   specialties?: Prisma.WorkerProfileCreatespecialtiesInput | string[]
-  commissionRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  rating?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionRate?: number
+  rating?: number
   totalReviews?: number
   isAvailable?: boolean
   workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -889,6 +913,7 @@ export type WorkerProfileUncheckedCreateWithoutLeavesInput = {
   schedules?: Prisma.WorkerScheduleUncheckedCreateNestedManyWithoutWorkerInput
   commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutWorkerInput
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutWorkerInput
+  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssignedToInput
 }
 
 export type WorkerProfileCreateOrConnectWithoutLeavesInput = {
@@ -911,8 +936,8 @@ export type WorkerProfileUpdateWithoutLeavesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   position?: Prisma.StringFieldUpdateOperationsInput | string
   specialties?: Prisma.WorkerProfileUpdatespecialtiesInput | string[]
-  commissionRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  rating?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  rating?: Prisma.FloatFieldUpdateOperationsInput | number
   totalReviews?: Prisma.IntFieldUpdateOperationsInput | number
   isAvailable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -924,6 +949,7 @@ export type WorkerProfileUpdateWithoutLeavesInput = {
   schedules?: Prisma.WorkerScheduleUpdateManyWithoutWorkerNestedInput
   commissions?: Prisma.CommissionUpdateManyWithoutWorkerNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutWorkerNestedInput
+  tasks?: Prisma.TaskUpdateManyWithoutAssignedToNestedInput
 }
 
 export type WorkerProfileUncheckedUpdateWithoutLeavesInput = {
@@ -931,8 +957,8 @@ export type WorkerProfileUncheckedUpdateWithoutLeavesInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   position?: Prisma.StringFieldUpdateOperationsInput | string
   specialties?: Prisma.WorkerProfileUpdatespecialtiesInput | string[]
-  commissionRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  rating?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  rating?: Prisma.FloatFieldUpdateOperationsInput | number
   totalReviews?: Prisma.IntFieldUpdateOperationsInput | number
   isAvailable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -943,14 +969,111 @@ export type WorkerProfileUncheckedUpdateWithoutLeavesInput = {
   schedules?: Prisma.WorkerScheduleUncheckedUpdateManyWithoutWorkerNestedInput
   commissions?: Prisma.CommissionUncheckedUpdateManyWithoutWorkerNestedInput
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutWorkerNestedInput
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutAssignedToNestedInput
+}
+
+export type WorkerProfileCreateWithoutTasksInput = {
+  id?: string
+  position: string
+  specialties?: Prisma.WorkerProfileCreatespecialtiesInput | string[]
+  commissionRate?: number
+  rating?: number
+  totalReviews?: number
+  isAvailable?: boolean
+  workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  hireDate?: Date | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutWorkerProfileInput
+  appointments?: Prisma.AppointmentCreateNestedManyWithoutWorkerInput
+  schedules?: Prisma.WorkerScheduleCreateNestedManyWithoutWorkerInput
+  commissions?: Prisma.CommissionCreateNestedManyWithoutWorkerInput
+  reviews?: Prisma.ReviewCreateNestedManyWithoutWorkerInput
+  leaves?: Prisma.WorkerLeaveCreateNestedManyWithoutWorkerInput
+}
+
+export type WorkerProfileUncheckedCreateWithoutTasksInput = {
+  id?: string
+  userId: string
+  position: string
+  specialties?: Prisma.WorkerProfileCreatespecialtiesInput | string[]
+  commissionRate?: number
+  rating?: number
+  totalReviews?: number
+  isAvailable?: boolean
+  workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  hireDate?: Date | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutWorkerInput
+  schedules?: Prisma.WorkerScheduleUncheckedCreateNestedManyWithoutWorkerInput
+  commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutWorkerInput
+  reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutWorkerInput
+  leaves?: Prisma.WorkerLeaveUncheckedCreateNestedManyWithoutWorkerInput
+}
+
+export type WorkerProfileCreateOrConnectWithoutTasksInput = {
+  where: Prisma.WorkerProfileWhereUniqueInput
+  create: Prisma.XOR<Prisma.WorkerProfileCreateWithoutTasksInput, Prisma.WorkerProfileUncheckedCreateWithoutTasksInput>
+}
+
+export type WorkerProfileUpsertWithoutTasksInput = {
+  update: Prisma.XOR<Prisma.WorkerProfileUpdateWithoutTasksInput, Prisma.WorkerProfileUncheckedUpdateWithoutTasksInput>
+  create: Prisma.XOR<Prisma.WorkerProfileCreateWithoutTasksInput, Prisma.WorkerProfileUncheckedCreateWithoutTasksInput>
+  where?: Prisma.WorkerProfileWhereInput
+}
+
+export type WorkerProfileUpdateToOneWithWhereWithoutTasksInput = {
+  where?: Prisma.WorkerProfileWhereInput
+  data: Prisma.XOR<Prisma.WorkerProfileUpdateWithoutTasksInput, Prisma.WorkerProfileUncheckedUpdateWithoutTasksInput>
+}
+
+export type WorkerProfileUpdateWithoutTasksInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  position?: Prisma.StringFieldUpdateOperationsInput | string
+  specialties?: Prisma.WorkerProfileUpdatespecialtiesInput | string[]
+  commissionRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  rating?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalReviews?: Prisma.IntFieldUpdateOperationsInput | number
+  isAvailable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  hireDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutWorkerProfileNestedInput
+  appointments?: Prisma.AppointmentUpdateManyWithoutWorkerNestedInput
+  schedules?: Prisma.WorkerScheduleUpdateManyWithoutWorkerNestedInput
+  commissions?: Prisma.CommissionUpdateManyWithoutWorkerNestedInput
+  reviews?: Prisma.ReviewUpdateManyWithoutWorkerNestedInput
+  leaves?: Prisma.WorkerLeaveUpdateManyWithoutWorkerNestedInput
+}
+
+export type WorkerProfileUncheckedUpdateWithoutTasksInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  position?: Prisma.StringFieldUpdateOperationsInput | string
+  specialties?: Prisma.WorkerProfileUpdatespecialtiesInput | string[]
+  commissionRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  rating?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalReviews?: Prisma.IntFieldUpdateOperationsInput | number
+  isAvailable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  hireDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutWorkerNestedInput
+  schedules?: Prisma.WorkerScheduleUncheckedUpdateManyWithoutWorkerNestedInput
+  commissions?: Prisma.CommissionUncheckedUpdateManyWithoutWorkerNestedInput
+  reviews?: Prisma.ReviewUncheckedUpdateManyWithoutWorkerNestedInput
+  leaves?: Prisma.WorkerLeaveUncheckedUpdateManyWithoutWorkerNestedInput
 }
 
 export type WorkerProfileCreateWithoutAppointmentsInput = {
   id?: string
   position: string
   specialties?: Prisma.WorkerProfileCreatespecialtiesInput | string[]
-  commissionRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  rating?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionRate?: number
+  rating?: number
   totalReviews?: number
   isAvailable?: boolean
   workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -962,6 +1085,7 @@ export type WorkerProfileCreateWithoutAppointmentsInput = {
   commissions?: Prisma.CommissionCreateNestedManyWithoutWorkerInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutWorkerInput
   leaves?: Prisma.WorkerLeaveCreateNestedManyWithoutWorkerInput
+  tasks?: Prisma.TaskCreateNestedManyWithoutAssignedToInput
 }
 
 export type WorkerProfileUncheckedCreateWithoutAppointmentsInput = {
@@ -969,8 +1093,8 @@ export type WorkerProfileUncheckedCreateWithoutAppointmentsInput = {
   userId: string
   position: string
   specialties?: Prisma.WorkerProfileCreatespecialtiesInput | string[]
-  commissionRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  rating?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionRate?: number
+  rating?: number
   totalReviews?: number
   isAvailable?: boolean
   workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -981,6 +1105,7 @@ export type WorkerProfileUncheckedCreateWithoutAppointmentsInput = {
   commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutWorkerInput
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutWorkerInput
   leaves?: Prisma.WorkerLeaveUncheckedCreateNestedManyWithoutWorkerInput
+  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssignedToInput
 }
 
 export type WorkerProfileCreateOrConnectWithoutAppointmentsInput = {
@@ -1003,8 +1128,8 @@ export type WorkerProfileUpdateWithoutAppointmentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   position?: Prisma.StringFieldUpdateOperationsInput | string
   specialties?: Prisma.WorkerProfileUpdatespecialtiesInput | string[]
-  commissionRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  rating?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  rating?: Prisma.FloatFieldUpdateOperationsInput | number
   totalReviews?: Prisma.IntFieldUpdateOperationsInput | number
   isAvailable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1016,6 +1141,7 @@ export type WorkerProfileUpdateWithoutAppointmentsInput = {
   commissions?: Prisma.CommissionUpdateManyWithoutWorkerNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutWorkerNestedInput
   leaves?: Prisma.WorkerLeaveUpdateManyWithoutWorkerNestedInput
+  tasks?: Prisma.TaskUpdateManyWithoutAssignedToNestedInput
 }
 
 export type WorkerProfileUncheckedUpdateWithoutAppointmentsInput = {
@@ -1023,8 +1149,8 @@ export type WorkerProfileUncheckedUpdateWithoutAppointmentsInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   position?: Prisma.StringFieldUpdateOperationsInput | string
   specialties?: Prisma.WorkerProfileUpdatespecialtiesInput | string[]
-  commissionRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  rating?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  rating?: Prisma.FloatFieldUpdateOperationsInput | number
   totalReviews?: Prisma.IntFieldUpdateOperationsInput | number
   isAvailable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1035,14 +1161,15 @@ export type WorkerProfileUncheckedUpdateWithoutAppointmentsInput = {
   commissions?: Prisma.CommissionUncheckedUpdateManyWithoutWorkerNestedInput
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutWorkerNestedInput
   leaves?: Prisma.WorkerLeaveUncheckedUpdateManyWithoutWorkerNestedInput
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutAssignedToNestedInput
 }
 
 export type WorkerProfileCreateWithoutReviewsInput = {
   id?: string
   position: string
   specialties?: Prisma.WorkerProfileCreatespecialtiesInput | string[]
-  commissionRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  rating?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionRate?: number
+  rating?: number
   totalReviews?: number
   isAvailable?: boolean
   workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1054,6 +1181,7 @@ export type WorkerProfileCreateWithoutReviewsInput = {
   schedules?: Prisma.WorkerScheduleCreateNestedManyWithoutWorkerInput
   commissions?: Prisma.CommissionCreateNestedManyWithoutWorkerInput
   leaves?: Prisma.WorkerLeaveCreateNestedManyWithoutWorkerInput
+  tasks?: Prisma.TaskCreateNestedManyWithoutAssignedToInput
 }
 
 export type WorkerProfileUncheckedCreateWithoutReviewsInput = {
@@ -1061,8 +1189,8 @@ export type WorkerProfileUncheckedCreateWithoutReviewsInput = {
   userId: string
   position: string
   specialties?: Prisma.WorkerProfileCreatespecialtiesInput | string[]
-  commissionRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  rating?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionRate?: number
+  rating?: number
   totalReviews?: number
   isAvailable?: boolean
   workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1073,6 +1201,7 @@ export type WorkerProfileUncheckedCreateWithoutReviewsInput = {
   schedules?: Prisma.WorkerScheduleUncheckedCreateNestedManyWithoutWorkerInput
   commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutWorkerInput
   leaves?: Prisma.WorkerLeaveUncheckedCreateNestedManyWithoutWorkerInput
+  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssignedToInput
 }
 
 export type WorkerProfileCreateOrConnectWithoutReviewsInput = {
@@ -1095,8 +1224,8 @@ export type WorkerProfileUpdateWithoutReviewsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   position?: Prisma.StringFieldUpdateOperationsInput | string
   specialties?: Prisma.WorkerProfileUpdatespecialtiesInput | string[]
-  commissionRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  rating?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  rating?: Prisma.FloatFieldUpdateOperationsInput | number
   totalReviews?: Prisma.IntFieldUpdateOperationsInput | number
   isAvailable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1108,6 +1237,7 @@ export type WorkerProfileUpdateWithoutReviewsInput = {
   schedules?: Prisma.WorkerScheduleUpdateManyWithoutWorkerNestedInput
   commissions?: Prisma.CommissionUpdateManyWithoutWorkerNestedInput
   leaves?: Prisma.WorkerLeaveUpdateManyWithoutWorkerNestedInput
+  tasks?: Prisma.TaskUpdateManyWithoutAssignedToNestedInput
 }
 
 export type WorkerProfileUncheckedUpdateWithoutReviewsInput = {
@@ -1115,8 +1245,8 @@ export type WorkerProfileUncheckedUpdateWithoutReviewsInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   position?: Prisma.StringFieldUpdateOperationsInput | string
   specialties?: Prisma.WorkerProfileUpdatespecialtiesInput | string[]
-  commissionRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  rating?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  rating?: Prisma.FloatFieldUpdateOperationsInput | number
   totalReviews?: Prisma.IntFieldUpdateOperationsInput | number
   isAvailable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1127,14 +1257,15 @@ export type WorkerProfileUncheckedUpdateWithoutReviewsInput = {
   schedules?: Prisma.WorkerScheduleUncheckedUpdateManyWithoutWorkerNestedInput
   commissions?: Prisma.CommissionUncheckedUpdateManyWithoutWorkerNestedInput
   leaves?: Prisma.WorkerLeaveUncheckedUpdateManyWithoutWorkerNestedInput
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutAssignedToNestedInput
 }
 
 export type WorkerProfileCreateWithoutCommissionsInput = {
   id?: string
   position: string
   specialties?: Prisma.WorkerProfileCreatespecialtiesInput | string[]
-  commissionRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  rating?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionRate?: number
+  rating?: number
   totalReviews?: number
   isAvailable?: boolean
   workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1146,6 +1277,7 @@ export type WorkerProfileCreateWithoutCommissionsInput = {
   schedules?: Prisma.WorkerScheduleCreateNestedManyWithoutWorkerInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutWorkerInput
   leaves?: Prisma.WorkerLeaveCreateNestedManyWithoutWorkerInput
+  tasks?: Prisma.TaskCreateNestedManyWithoutAssignedToInput
 }
 
 export type WorkerProfileUncheckedCreateWithoutCommissionsInput = {
@@ -1153,8 +1285,8 @@ export type WorkerProfileUncheckedCreateWithoutCommissionsInput = {
   userId: string
   position: string
   specialties?: Prisma.WorkerProfileCreatespecialtiesInput | string[]
-  commissionRate?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  rating?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionRate?: number
+  rating?: number
   totalReviews?: number
   isAvailable?: boolean
   workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1165,6 +1297,7 @@ export type WorkerProfileUncheckedCreateWithoutCommissionsInput = {
   schedules?: Prisma.WorkerScheduleUncheckedCreateNestedManyWithoutWorkerInput
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutWorkerInput
   leaves?: Prisma.WorkerLeaveUncheckedCreateNestedManyWithoutWorkerInput
+  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssignedToInput
 }
 
 export type WorkerProfileCreateOrConnectWithoutCommissionsInput = {
@@ -1187,8 +1320,8 @@ export type WorkerProfileUpdateWithoutCommissionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   position?: Prisma.StringFieldUpdateOperationsInput | string
   specialties?: Prisma.WorkerProfileUpdatespecialtiesInput | string[]
-  commissionRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  rating?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  rating?: Prisma.FloatFieldUpdateOperationsInput | number
   totalReviews?: Prisma.IntFieldUpdateOperationsInput | number
   isAvailable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1200,6 +1333,7 @@ export type WorkerProfileUpdateWithoutCommissionsInput = {
   schedules?: Prisma.WorkerScheduleUpdateManyWithoutWorkerNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutWorkerNestedInput
   leaves?: Prisma.WorkerLeaveUpdateManyWithoutWorkerNestedInput
+  tasks?: Prisma.TaskUpdateManyWithoutAssignedToNestedInput
 }
 
 export type WorkerProfileUncheckedUpdateWithoutCommissionsInput = {
@@ -1207,8 +1341,8 @@ export type WorkerProfileUncheckedUpdateWithoutCommissionsInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   position?: Prisma.StringFieldUpdateOperationsInput | string
   specialties?: Prisma.WorkerProfileUpdatespecialtiesInput | string[]
-  commissionRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  rating?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  commissionRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  rating?: Prisma.FloatFieldUpdateOperationsInput | number
   totalReviews?: Prisma.IntFieldUpdateOperationsInput | number
   isAvailable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1219,6 +1353,7 @@ export type WorkerProfileUncheckedUpdateWithoutCommissionsInput = {
   schedules?: Prisma.WorkerScheduleUncheckedUpdateManyWithoutWorkerNestedInput
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutWorkerNestedInput
   leaves?: Prisma.WorkerLeaveUncheckedUpdateManyWithoutWorkerNestedInput
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutAssignedToNestedInput
 }
 
 
@@ -1232,6 +1367,7 @@ export type WorkerProfileCountOutputType = {
   commissions: number
   reviews: number
   leaves: number
+  tasks: number
 }
 
 export type WorkerProfileCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1240,6 +1376,7 @@ export type WorkerProfileCountOutputTypeSelect<ExtArgs extends runtime.Types.Ext
   commissions?: boolean | WorkerProfileCountOutputTypeCountCommissionsArgs
   reviews?: boolean | WorkerProfileCountOutputTypeCountReviewsArgs
   leaves?: boolean | WorkerProfileCountOutputTypeCountLeavesArgs
+  tasks?: boolean | WorkerProfileCountOutputTypeCountTasksArgs
 }
 
 /**
@@ -1287,6 +1424,13 @@ export type WorkerProfileCountOutputTypeCountLeavesArgs<ExtArgs extends runtime.
   where?: Prisma.WorkerLeaveWhereInput
 }
 
+/**
+ * WorkerProfileCountOutputType without action
+ */
+export type WorkerProfileCountOutputTypeCountTasksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TaskWhereInput
+}
+
 
 export type WorkerProfileSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1307,6 +1451,7 @@ export type WorkerProfileSelect<ExtArgs extends runtime.Types.Extensions.Interna
   commissions?: boolean | Prisma.WorkerProfile$commissionsArgs<ExtArgs>
   reviews?: boolean | Prisma.WorkerProfile$reviewsArgs<ExtArgs>
   leaves?: boolean | Prisma.WorkerProfile$leavesArgs<ExtArgs>
+  tasks?: boolean | Prisma.WorkerProfile$tasksArgs<ExtArgs>
   _count?: boolean | Prisma.WorkerProfileCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["workerProfile"]>
 
@@ -1365,6 +1510,7 @@ export type WorkerProfileInclude<ExtArgs extends runtime.Types.Extensions.Intern
   commissions?: boolean | Prisma.WorkerProfile$commissionsArgs<ExtArgs>
   reviews?: boolean | Prisma.WorkerProfile$reviewsArgs<ExtArgs>
   leaves?: boolean | Prisma.WorkerProfile$leavesArgs<ExtArgs>
+  tasks?: boolean | Prisma.WorkerProfile$tasksArgs<ExtArgs>
   _count?: boolean | Prisma.WorkerProfileCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type WorkerProfileIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1383,14 +1529,15 @@ export type $WorkerProfilePayload<ExtArgs extends runtime.Types.Extensions.Inter
     commissions: Prisma.$CommissionPayload<ExtArgs>[]
     reviews: Prisma.$ReviewPayload<ExtArgs>[]
     leaves: Prisma.$WorkerLeavePayload<ExtArgs>[]
+    tasks: Prisma.$TaskPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     userId: string
     position: string
     specialties: string[]
-    commissionRate: runtime.Decimal
-    rating: runtime.Decimal
+    commissionRate: number
+    rating: number
     totalReviews: number
     isAvailable: boolean
     workingHours: runtime.JsonValue | null
@@ -1797,6 +1944,7 @@ export interface Prisma__WorkerProfileClient<T, Null = never, ExtArgs extends ru
   commissions<T extends Prisma.WorkerProfile$commissionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorkerProfile$commissionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CommissionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   reviews<T extends Prisma.WorkerProfile$reviewsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorkerProfile$reviewsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   leaves<T extends Prisma.WorkerProfile$leavesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorkerProfile$leavesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WorkerLeavePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  tasks<T extends Prisma.WorkerProfile$tasksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorkerProfile$tasksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1830,8 +1978,8 @@ export interface WorkerProfileFieldRefs {
   readonly userId: Prisma.FieldRef<"WorkerProfile", 'String'>
   readonly position: Prisma.FieldRef<"WorkerProfile", 'String'>
   readonly specialties: Prisma.FieldRef<"WorkerProfile", 'String[]'>
-  readonly commissionRate: Prisma.FieldRef<"WorkerProfile", 'Decimal'>
-  readonly rating: Prisma.FieldRef<"WorkerProfile", 'Decimal'>
+  readonly commissionRate: Prisma.FieldRef<"WorkerProfile", 'Float'>
+  readonly rating: Prisma.FieldRef<"WorkerProfile", 'Float'>
   readonly totalReviews: Prisma.FieldRef<"WorkerProfile", 'Int'>
   readonly isAvailable: Prisma.FieldRef<"WorkerProfile", 'Boolean'>
   readonly workingHours: Prisma.FieldRef<"WorkerProfile", 'Json'>
@@ -2351,6 +2499,30 @@ export type WorkerProfile$leavesArgs<ExtArgs extends runtime.Types.Extensions.In
   take?: number
   skip?: number
   distinct?: Prisma.WorkerLeaveScalarFieldEnum | Prisma.WorkerLeaveScalarFieldEnum[]
+}
+
+/**
+ * WorkerProfile.tasks
+ */
+export type WorkerProfile$tasksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Task
+   */
+  select?: Prisma.TaskSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Task
+   */
+  omit?: Prisma.TaskOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TaskInclude<ExtArgs> | null
+  where?: Prisma.TaskWhereInput
+  orderBy?: Prisma.TaskOrderByWithRelationInput | Prisma.TaskOrderByWithRelationInput[]
+  cursor?: Prisma.TaskWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TaskScalarFieldEnum | Prisma.TaskScalarFieldEnum[]
 }
 
 /**

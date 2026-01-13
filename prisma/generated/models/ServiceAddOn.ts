@@ -27,12 +27,12 @@ export type AggregateServiceAddOn = {
 }
 
 export type ServiceAddOnAvgAggregateOutputType = {
-  price: runtime.Decimal | null
+  price: number | null
   duration: number | null
 }
 
 export type ServiceAddOnSumAggregateOutputType = {
-  price: runtime.Decimal | null
+  price: number | null
   duration: number | null
 }
 
@@ -40,7 +40,7 @@ export type ServiceAddOnMinAggregateOutputType = {
   id: string | null
   serviceId: string | null
   name: string | null
-  price: runtime.Decimal | null
+  price: number | null
   duration: number | null
   description: string | null
 }
@@ -49,7 +49,7 @@ export type ServiceAddOnMaxAggregateOutputType = {
   id: string | null
   serviceId: string | null
   name: string | null
-  price: runtime.Decimal | null
+  price: number | null
   duration: number | null
   description: string | null
 }
@@ -193,7 +193,7 @@ export type ServiceAddOnGroupByOutputType = {
   id: string
   serviceId: string
   name: string
-  price: runtime.Decimal
+  price: number
   duration: number
   description: string | null
   _count: ServiceAddOnCountAggregateOutputType | null
@@ -225,7 +225,7 @@ export type ServiceAddOnWhereInput = {
   id?: Prisma.StringFilter<"ServiceAddOn"> | string
   serviceId?: Prisma.StringFilter<"ServiceAddOn"> | string
   name?: Prisma.StringFilter<"ServiceAddOn"> | string
-  price?: Prisma.DecimalFilter<"ServiceAddOn"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  price?: Prisma.FloatFilter<"ServiceAddOn"> | number
   duration?: Prisma.IntFilter<"ServiceAddOn"> | number
   description?: Prisma.StringNullableFilter<"ServiceAddOn"> | string | null
   service?: Prisma.XOR<Prisma.ServiceScalarRelationFilter, Prisma.ServiceWhereInput>
@@ -248,7 +248,7 @@ export type ServiceAddOnWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.ServiceAddOnWhereInput | Prisma.ServiceAddOnWhereInput[]
   serviceId?: Prisma.StringFilter<"ServiceAddOn"> | string
   name?: Prisma.StringFilter<"ServiceAddOn"> | string
-  price?: Prisma.DecimalFilter<"ServiceAddOn"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  price?: Prisma.FloatFilter<"ServiceAddOn"> | number
   duration?: Prisma.IntFilter<"ServiceAddOn"> | number
   description?: Prisma.StringNullableFilter<"ServiceAddOn"> | string | null
   service?: Prisma.XOR<Prisma.ServiceScalarRelationFilter, Prisma.ServiceWhereInput>
@@ -275,7 +275,7 @@ export type ServiceAddOnScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"ServiceAddOn"> | string
   serviceId?: Prisma.StringWithAggregatesFilter<"ServiceAddOn"> | string
   name?: Prisma.StringWithAggregatesFilter<"ServiceAddOn"> | string
-  price?: Prisma.DecimalWithAggregatesFilter<"ServiceAddOn"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  price?: Prisma.FloatWithAggregatesFilter<"ServiceAddOn"> | number
   duration?: Prisma.IntWithAggregatesFilter<"ServiceAddOn"> | number
   description?: Prisma.StringNullableWithAggregatesFilter<"ServiceAddOn"> | string | null
 }
@@ -283,7 +283,7 @@ export type ServiceAddOnScalarWhereWithAggregatesInput = {
 export type ServiceAddOnCreateInput = {
   id?: string
   name: string
-  price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  price: number
   duration: number
   description?: string | null
   service: Prisma.ServiceCreateNestedOneWithoutAddOnsInput
@@ -293,7 +293,7 @@ export type ServiceAddOnUncheckedCreateInput = {
   id?: string
   serviceId: string
   name: string
-  price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  price: number
   duration: number
   description?: string | null
 }
@@ -301,7 +301,7 @@ export type ServiceAddOnUncheckedCreateInput = {
 export type ServiceAddOnUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
   duration?: Prisma.IntFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   service?: Prisma.ServiceUpdateOneRequiredWithoutAddOnsNestedInput
@@ -311,7 +311,7 @@ export type ServiceAddOnUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   serviceId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
   duration?: Prisma.IntFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
@@ -320,7 +320,7 @@ export type ServiceAddOnCreateManyInput = {
   id?: string
   serviceId: string
   name: string
-  price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  price: number
   duration: number
   description?: string | null
 }
@@ -328,7 +328,7 @@ export type ServiceAddOnCreateManyInput = {
 export type ServiceAddOnUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
   duration?: Prisma.IntFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
@@ -337,7 +337,7 @@ export type ServiceAddOnUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   serviceId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
   duration?: Prisma.IntFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
@@ -434,7 +434,7 @@ export type ServiceAddOnUncheckedUpdateManyWithoutServiceNestedInput = {
 export type ServiceAddOnCreateWithoutServiceInput = {
   id?: string
   name: string
-  price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  price: number
   duration: number
   description?: string | null
 }
@@ -442,7 +442,7 @@ export type ServiceAddOnCreateWithoutServiceInput = {
 export type ServiceAddOnUncheckedCreateWithoutServiceInput = {
   id?: string
   name: string
-  price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  price: number
   duration: number
   description?: string | null
 }
@@ -480,7 +480,7 @@ export type ServiceAddOnScalarWhereInput = {
   id?: Prisma.StringFilter<"ServiceAddOn"> | string
   serviceId?: Prisma.StringFilter<"ServiceAddOn"> | string
   name?: Prisma.StringFilter<"ServiceAddOn"> | string
-  price?: Prisma.DecimalFilter<"ServiceAddOn"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  price?: Prisma.FloatFilter<"ServiceAddOn"> | number
   duration?: Prisma.IntFilter<"ServiceAddOn"> | number
   description?: Prisma.StringNullableFilter<"ServiceAddOn"> | string | null
 }
@@ -488,7 +488,7 @@ export type ServiceAddOnScalarWhereInput = {
 export type ServiceAddOnCreateManyServiceInput = {
   id?: string
   name: string
-  price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  price: number
   duration: number
   description?: string | null
 }
@@ -496,7 +496,7 @@ export type ServiceAddOnCreateManyServiceInput = {
 export type ServiceAddOnUpdateWithoutServiceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
   duration?: Prisma.IntFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
@@ -504,7 +504,7 @@ export type ServiceAddOnUpdateWithoutServiceInput = {
 export type ServiceAddOnUncheckedUpdateWithoutServiceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
   duration?: Prisma.IntFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
@@ -512,7 +512,7 @@ export type ServiceAddOnUncheckedUpdateWithoutServiceInput = {
 export type ServiceAddOnUncheckedUpdateManyWithoutServiceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
   duration?: Prisma.IntFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
@@ -578,7 +578,7 @@ export type $ServiceAddOnPayload<ExtArgs extends runtime.Types.Extensions.Intern
     id: string
     serviceId: string
     name: string
-    price: runtime.Decimal
+    price: number
     duration: number
     description: string | null
   }, ExtArgs["result"]["serviceAddOn"]>
@@ -1008,7 +1008,7 @@ export interface ServiceAddOnFieldRefs {
   readonly id: Prisma.FieldRef<"ServiceAddOn", 'String'>
   readonly serviceId: Prisma.FieldRef<"ServiceAddOn", 'String'>
   readonly name: Prisma.FieldRef<"ServiceAddOn", 'String'>
-  readonly price: Prisma.FieldRef<"ServiceAddOn", 'Decimal'>
+  readonly price: Prisma.FieldRef<"ServiceAddOn", 'Float'>
   readonly duration: Prisma.FieldRef<"ServiceAddOn", 'Int'>
   readonly description: Prisma.FieldRef<"ServiceAddOn", 'String'>
 }
