@@ -29,7 +29,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     await signOut({ redirect: false });
     setUser(null);
     setIsAuthenticated(false);
-    router.push('/login');
+    router.push('/auth/login');
   };
 
   const refreshSession = async () => {

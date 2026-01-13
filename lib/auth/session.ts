@@ -7,7 +7,7 @@ export interface ClientProfile {
   tier: 'Regular' | 'VIP' | 'Premium';
   loyaltyPoints: number;
   totalAppointments: number;
-  totalSpent: number;
+  totalSpent: number | string;
   referralCode: string;
   referredBy?: string;
   preferences?: any;
