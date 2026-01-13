@@ -5,18 +5,19 @@ import { requireRole, errorResponse, successResponse, handleApiError } from '@/l
 
 export async function GET(
   _request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string; }>; }
 ) {
   try {
+    const id = (await context.params).id;
     await requireRole(['admin', 'worker']);
 
     const schedule = await prisma.workerSchedule.findMany({
-      where: { workerId: params.id },
+      where: { workerId: id },
       orderBy: { dayOfWeek: 'asc' },
     });
 
     const worker = await prisma.workerProfile.findUnique({
-      where: { id: params.id },
+      where: { id: id },
       select: {
         workingHours: true,
       },
