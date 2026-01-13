@@ -5,10 +5,10 @@ import { StockStatus } from '@/prisma/generated/enums';
 
 export async function PATCH(
   request: NextRequest,
-  params : Promise<{ params: { id: string } }>
+  context: { params: Promise<{ id: string; }>; }
 ) {
   try {
-    const id = (await params).params.id;
+    const id = (await context.params).id;
     const user = await requireRole(['admin', 'worker']);
     const body = await request.json();
     const { quantity, operation, notes } = body;

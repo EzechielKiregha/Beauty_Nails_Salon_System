@@ -5,10 +5,10 @@ import { requireRole, successResponse, handleApiError } from '@/lib/api/helpers'
 
 export async function PUT(
   request: NextRequest,
-  params : Promise<{ params: { id: string } }>
+  context: { params: Promise<{ id: string; }>; }
 ) {
   try {
-    const id = (await params).params.id;
+    const id = (await context.params).id;
     await requireRole(['admin', 'worker']);
 
     const body = await request.json();

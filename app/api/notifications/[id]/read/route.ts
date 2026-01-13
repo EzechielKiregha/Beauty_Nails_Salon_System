@@ -5,10 +5,10 @@ import { getAuthenticatedUser, successResponse, handleApiError } from '@/lib/api
 
 export async function PUT(
   _request: NextRequest,
-  params : Promise<{ params: { id: string } }>
+  context: { params: Promise<{ id: string; }>; }
 ) {
   try {
-    const id = (await params).params.id;
+    const id = (await context.params).id;
     const user = await getAuthenticatedUser();
 
     await prisma.notification.update({

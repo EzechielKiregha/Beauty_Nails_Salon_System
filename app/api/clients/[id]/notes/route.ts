@@ -5,10 +5,10 @@ import { requireRole, successResponse, handleApiError } from '@/lib/api/helpers'
 
 export async function PATCH(
   request: NextRequest,
-  params : Promise<{ params: { id: string } }>
+  context: { params: Promise<{ id: string; }>; }
 ) {
   try {
-    const clientId = (await params).params.id;
+    const id = (await context.params).id;
 
     await requireRole(['admin', 'worker']);
 
@@ -16,7 +16,7 @@ export async function PATCH(
     const { notes } = body;
 
     const client = await prisma.clientProfile.update({
-      where: { userId: clientId },
+      where: { userId: id },
       data: { notes },
     });
 

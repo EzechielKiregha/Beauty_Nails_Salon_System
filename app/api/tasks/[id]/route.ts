@@ -5,11 +5,11 @@ import { requireRole, successResponse, errorResponse, handleApiError } from '@/l
 
 export async function GET(
   _request: NextRequest,
-  params: Promise<{ params: { id: string } }>
+  context: { params: Promise<{ id: string; }>; }
 ) {
   try {
     await requireRole(['admin', 'worker']);
-    const id = (await params).params.id;
+    const id = (await context.params).id;
 
     const task = await prisma.task.findUnique({
       where: { id },
@@ -29,11 +29,11 @@ export async function GET(
 
 export async function PATCH(
   request: NextRequest,
-  params: Promise<{ params: { id: string } }>
+  context: { params: Promise<{ id: string; }>; }
 ) {
   try {
     await requireRole(['admin', 'worker']);
-    const id = (await params).params.id;
+    const id = (await context.params).id;
     const body = await request.json();
 
     const allowed: any = {};
@@ -73,11 +73,11 @@ export async function PATCH(
 
 export async function DELETE(
   _request: NextRequest,
-  params: Promise<{ params: { id: string } }>
+  context: { params: Promise<{ id: string; }>; }
 ) {
   try {
     await requireRole(['admin']);
-    const id = (await params).params.id;
+    const id = (await context.params).id;
 
     const task = await prisma.task.findUnique({ where: { id } });
     if (!task) return errorResponse('Task not found', 404);

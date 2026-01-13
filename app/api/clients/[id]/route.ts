@@ -5,11 +5,11 @@ import { getAuthenticatedUser, errorResponse, successResponse, handleApiError } 
 
 export async function GET(
   _request: NextRequest,
-  params : Promise<{ params: { id: string } }>
+  context: { params: Promise<{ id: string; }>; }
 ) {
   try {
     const user = await getAuthenticatedUser();
-    const id = (await params).params.id;
+    const id = (await context.params).id;
 
     // Clients can only view their own profile
     if (user.role === 'client' && user.id !== id) {

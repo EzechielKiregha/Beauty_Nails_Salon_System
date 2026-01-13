@@ -33,10 +33,10 @@ export async function GET(
 
 export async function PATCH(
   request: NextRequest,
-  params : Promise<{ params: { id: string } }>
+  context: { params: Promise<{ id: string; }>; }
   ) {
     try {
-      const id = (await params).params.id;
+      const id = (await context.params).id;
     await requireRole(['admin']);
 
     const body = await request.json();

@@ -5,10 +5,11 @@ import { getAuthenticatedUser, errorResponse, successResponse, handleApiError } 
 
 export async function DELETE(
   request: NextRequest,
-  params : Promise<{ params: { id: string } }>
+  context: { params: Promise<{ id: string; }>; }
 ) {
   try {
-    const id = (await params).params.id;
+    // context: { params: Promise<{ id: string; }>; }
+    const id = (await context.params).id;
     const user = await getAuthenticatedUser();
     const body = await request.json();
     const { reason } = body;
