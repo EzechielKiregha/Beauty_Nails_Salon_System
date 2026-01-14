@@ -59,6 +59,8 @@ NEXT_PUBLIC_API_URL=http://localhost:3000/api
 # Database (Postgres)
 DATABASE_URL=postgresql://<user>:<password>@<host>:<port>/<database>?schema=public
 ```
+<img width="1600" height="256" alt="postgresql-connection-string-276b462a076391ab258aba297e74823b" src="https://github.com/user-attachments/assets/dfc41f50-faa6-4916-87f6-531254ffda4f" />
+
 
 Tip: generate NEXTAUTH_SECRET with `openssl rand -base64 32` or any 32+ char random string.
 
@@ -70,12 +72,7 @@ Tip: generate NEXTAUTH_SECRET with `openssl rand -base64 32` or any 32+ char ran
 
 This project uses Prisma with the schema defined in `prisma/schema.prisma`.
 
-- Ensure Postgres is running locally but I recommend cloud prisma postgres (or use a managed DB). Example using Docker:
-
-```bash
-# start a local Postgres container
-docker run --name bn-postgres -e POSTGRES_USER=bn -e POSTGRES_PASSWORD=bnpass -e POSTGRES_DB=beauty_nails -p 5432:5432 -d postgres
-```
+- Ensure Postgres is running locally but I recommend cloud prisma postgres (or use a managed DB).
 
 - Set `DATABASE_URL` in `.env` to point at your DB.
 
