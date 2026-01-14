@@ -1,21 +1,20 @@
 export default [
+  // GLOBAL IGNORES: No other keys allowed here
   {
     ignores: [
       ".next/**",
       "out/**",
       "build/**",
-      "next-env.d.ts",
-      "**/temp.js",
-      "config/*",
-      "**/dist",
-      "**/build",
-      "**/out",
-      "**/coverage",
-      "**/node_modules",
-      "**/.next",
-      "**/.turbo",
-      "./src/generated/prisma",
-      "**/src/generated/prisma",
+      "**/dist/**",
+      "**/node_modules/**",
+      "**/coverage/**",
+      // ... your other ignore patterns
     ],
+  },
+  // RULE CONFIGURATION: Applies to everything NOT ignored above
+  {
+    rules: {
+      "no-unused-expressions": "error",
+    },
   },
 ];

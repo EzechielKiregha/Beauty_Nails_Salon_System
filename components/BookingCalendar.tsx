@@ -223,7 +223,7 @@ export default function BookingCalendar({ showMock }: { showMock?: boolean }) {
                     return (
                       <div
                         key={s.id}
-                        className={`min-h-[60px] rounded-lg border-2 border-dashed p-2 ${appointment
+                        className={`min-h-15 rounded-lg border-2 border-dashed p-2 ${appointment
                           ? 'bg-linear-to-br from-pink-50 to-purple-50 dark:from-pink-950 dark:to-purple-950 border-pink-300 dark:border-pink-700'
                           : 'border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800'
                           } cursor-pointer transition-all`}
