@@ -1,7 +1,7 @@
 "use server"
 import { NextRequest } from 'next/server';
 import prisma from '@/lib/prisma';
-import { requireRole, errorResponse, successResponse, handleApiError } from '@/lib/api/helpers';
+import { requireRole, successResponse, handleApiError } from '@/lib/api/helpers';
 
 export async function GET(
   _request: NextRequest,
