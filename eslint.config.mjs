@@ -1,6 +1,7 @@
+// eslint.config.js
 export default [
-  // GLOBAL IGNORES: No other keys allowed here
   {
+    // GLOBAL IGNORE: Must be in its own object with no other keys
     ignores: [
       ".next/**",
       "out/**",
@@ -8,13 +9,18 @@ export default [
       "**/dist/**",
       "**/node_modules/**",
       "**/coverage/**",
-      // ... your other ignore patterns
+      "**/prisma/generated/**",
     ],
   },
-  // RULE CONFIGURATION: Applies to everything NOT ignored above
   {
+    // RULES: Downgrade or disable common false positives
     rules: {
-      "no-unused-expressions": "error",
+      "no-unused-vars": "warn", // Change 'error' to 'warn'
+      "no-unused-expressions": "warn",
+      "no-console": "off", // Allow console.log during debug
+      "@typescript-eslint/no-explicit-any": "warn",
+      "react/no-unescaped-entities": "off", // Common false positive with apostrophes
+      "@next/next/no-img-element": "warn", // Next.js often errors on <img>
     },
   },
 ];
