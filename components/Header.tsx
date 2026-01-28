@@ -94,7 +94,7 @@ export default function Header() {
             ) : (
               <>
                 <Link href="/auth/login">
-                  <Button variant="ghost" className="text-gray-700 dark:text-gray-300 hover:text-pink-800 dark:hover:text-pink-700">
+                  <Button variant="ghost" className="text-gray-700 dark:text-gray-300 hover:text-pink-200 dark:hover:text-pink-700">
                     Connexion
                   </Button>
                 </Link>
