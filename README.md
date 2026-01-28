@@ -10,7 +10,7 @@ A full-featured salon management app built with **Next.js** (App Router), **Pris
 
 ```bash
 git clone https://github.com/EzechielKiregha/Beauty_Nails_Salon_System.git
-cd beauty-nails-system
+cd Beauty_Nails_Salon_System
 ```
 
 2. Install dependencies:
