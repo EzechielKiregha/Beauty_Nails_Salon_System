@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
     const workerId = searchParams.get('workerId');
     const clientId = searchParams.get('clientId');
 
-    console.log('GET /appointments called with params:', { date, status, workerId, clientId, userId: user.id });
+    // console.log('GET /appointments called with params:', { date, status, workerId, clientId, userId: user.id });
 
 
     // Validation
@@ -111,8 +111,8 @@ export async function POST(request: NextRequest) {
       notes,
     } = body;
 
-    console.log('Received appointment data: ', body);
-    console.log('Authenticated user: ', user);
+    // console.log('Received appointment data: ', body);
+    // console.log('Authenticated user: ', user);
 
     // If user is not a client, find clientId from their profile
     if (user.role !== 'client') {
@@ -213,7 +213,7 @@ export async function POST(request: NextRequest) {
       wId = w.user.id;
     }
 
-    console.log('Creating notification for user:', wId);
+    // console.log('Creating notification for user:', wId);
 
     // Create notification
     await prisma.notification.create({

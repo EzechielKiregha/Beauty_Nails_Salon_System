@@ -53,6 +53,7 @@ import { useAuth } from "@/lib/hooks/useAuth";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import LoadingSpinner from "../LoadingSpinner";
+import { env } from "node:process";
 
 export default function ClientDashboardV2() {
   const [notificationOpen, setNotificationOpen] = useState(false);
@@ -157,7 +158,7 @@ export default function ClientDashboardV2() {
 
   // Copy referral code
   const handleCopyReferralCode = () => {
-    navigator.clipboard.writeText(referralCode);
+    navigator.clipboard.writeText("https://beauty-nails.vercel.app/auth/signup?ref=" + referralCode.toLocaleLowerCase());
     toast.success("Code de parrainage copié !");
   };
 
@@ -254,7 +255,7 @@ export default function ClientDashboardV2() {
               <h1 className="text-3xl sm:text-4xl font-bold bg-linear-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent mb-2">
                 Bonjour, {user?.name} 👋
               </h1>
-              <p className="text-gray-600 dark:text-gray-300 text-base sm:text-lg">
+              <p className="text-gray-900  dark:text-gray-300 text-base sm:text-lg">
                 Bienvenue dans votre espace beauté
               </p>
             </div>
@@ -271,11 +272,11 @@ export default function ClientDashboardV2() {
                   )}
                 </Button>
               </SheetTrigger>
-              <SheetContent className="dark:bg-gray-900 dark:border-gray-800">
+              <SheetContent className="p-2 border-r-0 border-pink-100 dark:border-pink-900 shadow-xl rounded-l-2xl bg-white dark:bg-gray-900">
                 <div className="mb-6">
                   <h2 className="text-2xl font-bold mb-2 dark:text-gray-100">Notifications</h2>
                   <div className="flex items-center justify-between">
-                    <p className="text-sm text-gray-600 dark:text-gray-300">
+                    <p className="text-sm text-gray-900  dark:text-gray-300">
                       {unreadCount} non lues
                     </p>
                     {unreadCount > 0 && (
@@ -314,7 +315,7 @@ export default function ClientDashboardV2() {
                               <h3 className="font-semibold text-sm mb-1">
                                 {notification.title}
                               </h3>
-                              <p className="text-sm text-gray-600 mb-2">
+                              <p className="text-sm text-gray-900 dark:text-gray-100 mb-2">
                                 {notification.message}
                               </p>
                               <p className="text-xs text-gray-500">
@@ -350,13 +351,13 @@ export default function ClientDashboardV2() {
             </Card>
 
             {/* Total Appointments */}
-            <Card className="p-4 sm:p-6 hover:shadow-lg transition-shadow dark:bg-gray-900 dark:border-gray-800 dark:hover:shadow-gray-800/50">
+            <Card className="p-4 sm:p-6 hover:shadow-lg transition-shadow border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-900">
               <div className="flex items-center justify-between mb-4">
                 <div className="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
                   <Calendar className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600 dark:text-purple-400" />
                 </div>
               </div>
-              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mb-1">Rendez-vous</p>
+              <p className="text-xs sm:text-sm text-gray-900 dark:text-gray-300 mb-1">Rendez-vous</p>
               <p className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">
                 {completedAppointments}
               </p>
@@ -366,13 +367,13 @@ export default function ClientDashboardV2() {
             </Card>
 
             {/* Referrals */}
-            <Card className="p-4 sm:p-6 hover:shadow-lg transition-shadow dark:bg-gray-900 dark:border-gray-800 dark:hover:shadow-gray-800/50">
+            <Card className="p-4 sm:p-6 hover:shadow-lg transition-shadow border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-900">
               <div className="flex items-center justify-between mb-4">
                 <div className="p-3 bg-amber-100 dark:bg-amber-900/30 rounded-lg">
                   <Users className="w-5 h-5 sm:w-6 sm:h-6 text-amber-600 dark:text-amber-400" />
                 </div>
               </div>
-              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mb-1">Parrainages</p>
+              <p className="text-xs sm:text-sm text-gray-900  dark:text-gray-300 mb-1">Parrainages</p>
               <p className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">{referrals}</p>
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
                 {nextFreeReferral} pour service gratuit
@@ -380,13 +381,13 @@ export default function ClientDashboardV2() {
             </Card>
 
             {/* Next Free Service */}
-            <Card className="p-4 sm:p-6 hover:shadow-lg transition-shadow dark:bg-gray-900 dark:border-gray-800 dark:hover:shadow-gray-800/50">
+            <Card className="p-4 sm:p-6 hover:shadow-lg transition-shadow border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-900">
               <div className="flex items-center justify-between mb-4">
                 <div className="p-3 bg-green-100 dark:bg-green-900/30 rounded-lg">
                   <Award className="w-5 h-5 sm:w-6 sm:h-6 text-green-600 dark:text-green-400" />
                 </div>
               </div>
-              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mb-1">Service gratuit dans</p>
+              <p className="text-xs sm:text-sm text-gray-900 dark:text-gray-300 mb-1">Service gratuit dans</p>
               <p className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">
                 {nextFreeService}
               </p>
@@ -398,7 +399,7 @@ export default function ClientDashboardV2() {
         {/* Main Content Tabs */}
         <Tabs defaultValue="appointments" className="space-y-6">
           <TabsList className="grid w-full grid-cols-3 lg:w-auto">
-            <TabsTrigger value="appointments">
+            <TabsTrigger value="appointments" >
               <Calendar className="w-4 h-4 mr-2" />
               Rendez-vous
             </TabsTrigger>
@@ -424,7 +425,7 @@ export default function ClientDashboardV2() {
               {upcomingAppointments.length === 0 ? (
                 <div className="text-center py-12">
                   <Calendar className="w-16 h-16 mx-auto mb-4 text-gray-300" />
-                  <p className="text-gray-600 mb-4">
+                  <p className="text-gray-900 dark:text-gray-100 mb-4">
                     Aucun rendez-vous prévu
                   </p>
                   <Link href="/appointments">
@@ -438,7 +439,7 @@ export default function ClientDashboardV2() {
                   {upcomingAppointments.map((appointment) => (
                     <div
                       key={appointment.id}
-                      className="border rounded-xl p-6 hover:shadow-lg transition-all bg-linear-to-r from-white to-pink-50"
+                      className="p-6 hover:shadow-lg border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-900"
                     >
                       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                         <div className="flex-1">
@@ -449,7 +450,7 @@ export default function ClientDashboardV2() {
                             {getStatusBadge(appointment.status)}
                           </div>
 
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm text-gray-600">
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm text-gray-900 dark:text-gray-100">
                             <div className="flex items-center gap-2">
                               <Calendar className="w-4 h-4 text-pink-500" />
                               <span>{formatDate(appointment.date)}</span>
@@ -536,7 +537,7 @@ export default function ClientDashboardV2() {
                   {appointmentHistory.map((appointment) => (
                     <div
                       key={appointment.id}
-                      className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 transition-colors"
+                      className="flex items-center justify-between p-4 border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-900"
                     >
                       <div className="flex-1">
                         <div className="flex items-center gap-3 mb-2">
@@ -545,7 +546,7 @@ export default function ClientDashboardV2() {
                           </h3>
                           {getStatusBadge(appointment.status)}
                         </div>
-                        <div className="flex items-center gap-4 text-sm text-gray-600">
+                        <div className="flex items-center gap-4 text-sm text-gray-900 dark:text-gray-100">
                           <span>{formatDate(appointment.date)}</span>
                           <span>•</span>
                           <span>{appointment.worker?.user?.name}</span>
@@ -587,11 +588,11 @@ export default function ClientDashboardV2() {
               </h2>
 
               {/* Loyalty Progress */}
-              <div className="mb-8 p-6 bg-linear-to-br from-pink-100 to-purple-100 rounded-xl">
+              <div className="mb-8 p-6 border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-900">
                 <div className="flex items-center justify-between mb-4">
                   <div>
-                    <p className="text-sm text-gray-600 mb-1">Vos points</p>
-                    <p className="text-4xl font-bold text-gray-900">{points}</p>
+                    <p className="text-sm text-gray-900 dark:text-gray-100 mb-1">Vos points</p>
+                    <p className="text-4xl font-bold text-gray-900 dark:text-gray-100">{points}</p>
                   </div>
                   <div className="text-right">
                     <Badge className="bg-linear-to-r from-pink-500 to-purple-500 text-white border-0 text-lg px-4 py-2">
@@ -602,7 +603,7 @@ export default function ClientDashboardV2() {
 
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">
+                    <span className="text-gray-900 dark:text-gray-100">
                       Prochain service gratuit
                     </span>
                     <span className="font-semibold">
@@ -675,14 +676,14 @@ export default function ClientDashboardV2() {
               </h2>
 
               {/* Referral Code */}
-              <div className="mb-8 p-6 bg-linear-to-br from-amber-100 to-pink-100 rounded-xl">
+              <div className="mb-8 p-6 border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-900">
                 <h3 className="text-lg font-semibold mb-4">
                   Votre code de parrainage
                 </h3>
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="flex-1 p-4 bg-white rounded-lg border-2 border-dashed border-pink-300">
+                  <div className="flex-1 p-4 bg-background rounded-lg border-2 border-dashed border-pink-300">
                     <p className="text-3xl font-bold text-center text-pink-600 tracking-wider">
-                      {referralCode || "Chargement..."}
+                      {referralCode ? "https://beauty-nails.vercel.app/auth/signup?ref=" + referralCode.toLocaleLowerCase() : "Chargement..."}
                     </p>
                   </div>
                   <Button
@@ -696,17 +697,17 @@ export default function ClientDashboardV2() {
                 </div>
 
                 <div className="grid grid-cols-2 gap-4 text-center">
-                  <div className="p-4 bg-white/60 rounded-lg">
+                  <div className="p-4 bg-white dark:bg-gray-800 rounded-lg">
                     <p className="text-2xl font-bold text-pink-600">
                       {referrals}
                     </p>
-                    <p className="text-sm text-gray-600">Parrainages réussis</p>
+                    <p className="text-sm text-gray-900 dark:text-gray-100">Parrainages réussis</p>
                   </div>
-                  <div className="p-4 bg-white/60 rounded-lg">
+                  <div className="p-4 bg-white dark:bg-gray-800 rounded-lg">
                     <p className="text-2xl font-bold text-purple-600">
                       {nextFreeReferral}
                     </p>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-gray-900 dark:text-gray-100">
                       Restants pour service gratuit
                     </p>
                   </div>
@@ -717,36 +718,36 @@ export default function ClientDashboardV2() {
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold">Comment ça marche ?</h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="p-4 border rounded-lg">
+                  <div className="p-4 border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-900">
                     <div className="w-12 h-12 bg-pink-100 rounded-full flex items-center justify-center mb-3">
                       <span className="text-2xl font-bold text-pink-600">
                         1
                       </span>
                     </div>
                     <h4 className="font-semibold mb-2">Partagez</h4>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-gray-900 dark:text-gray-100">
                       Partagez votre code avec vos amis
                     </p>
                   </div>
-                  <div className="p-4 border rounded-lg">
+                  <div className="p-4 border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-900">
                     <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mb-3">
                       <span className="text-2xl font-bold text-purple-600">
                         2
                       </span>
                     </div>
                     <h4 className="font-semibold mb-2">Ils s'inscrivent</h4>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-gray-900 dark:text-gray-100">
                       Vos amis utilisent votre code à l'inscription
                     </p>
                   </div>
-                  <div className="p-4 border rounded-lg">
+                  <div className="p-4 border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-900">
                     <div className="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center mb-3">
                       <span className="text-2xl font-bold text-amber-600">
                         3
                       </span>
                     </div>
                     <h4 className="font-semibold mb-2">Gagnez des points</h4>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-gray-900 dark:text-gray-100">
                       Recevez des points à chaque parrainage réussi
                     </p>
                   </div>
@@ -771,7 +772,7 @@ export default function ClientDashboardV2() {
             <div className="py-4">
               <div className="p-4 bg-gray-50 rounded-lg space-y-2">
                 <p className="font-semibold">{selectedAppointment.service?.name}</p>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-gray-900 dark:text-gray-100">
                   {formatDate(selectedAppointment.date)} à {selectedAppointment.time}
                 </p>
               </div>
