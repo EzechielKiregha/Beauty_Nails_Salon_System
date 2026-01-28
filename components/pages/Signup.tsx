@@ -50,20 +50,20 @@ export default function Signup() {
   };
 
   return (
-    <div className="min-h-screen py-10">
+    <div className="min-h-screen py-8 sm:py-12 bg-background dark:bg-gray-950">
       <div className="max-w-md mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center justify-center mb-6">
+        <div className="text-center mb-6 sm:mb-8">
+          <Link href="/" className="inline-flex items-center justify-center mb-4 sm:mb-6">
             <Logo width={250} height={70} />
           </Link>
-          <h1 className="text-3xl text-gray-900 dark:text-white mb-2">Créer un compte</h1>
-          <p className="text-gray-600 dark:text-gray-400">Rejoignez notre communauté beauté</p>
+          <h1 className="text-2xl sm:text-3xl text-gray-900 dark:text-gray-100 mb-1 sm:mb-2">Créer un compte</h1>
+          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300">Rejoignez notre communauté beauté</p>
         </div>
 
-        <Card className="p-8 border-0 bg-card shadow-2xl rounded-3xl">
+        <Card className="p-6 sm:p-8 border-b border-pink-100 dark:border-pink-900 bg-white dark:bg-gray-900 shadow-2xl rounded-3xl">
           <form onSubmit={onSubmit} className="space-y-4">
             <div>
-              <Label htmlFor="name">Nom complet</Label>
+              <Label htmlFor="name" className="dark:text-gray-200">Nom complet</Label>
               <Input
                 id="name"
                 name="name"
@@ -71,12 +71,12 @@ export default function Signup() {
                 placeholder="Marie Kabila"
                 value={formData.name}
                 onChange={handleChange}
-                className="mt-2 rounded-xl"
+                className="mt-2 rounded-xl dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"
               />
             </div>
 
             <div>
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email" className="dark:text-gray-200">Email</Label>
               <Input
                 id="email"
                 name="email"
@@ -84,12 +84,12 @@ export default function Signup() {
                 placeholder="marie@example.com"
                 value={formData.email}
                 onChange={handleChange}
-                className="mt-2 rounded-xl"
+                className="mt-2 rounded-xl dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"
               />
             </div>
 
             <div>
-              <Label htmlFor="phone">Téléphone</Label>
+              <Label htmlFor="phone" className="dark:text-gray-200">Téléphone</Label>
               <Input
                 id="phone"
                 name="phone"
@@ -97,12 +97,12 @@ export default function Signup() {
                 placeholder="+243 123 456 789"
                 value={formData.phone}
                 onChange={handleChange}
-                className="mt-2 rounded-xl"
+                className="mt-2 rounded-xl dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"
               />
             </div>
 
             <div>
-              <Label htmlFor="password">Mot de passe</Label>
+              <Label htmlFor="password" className="dark:text-gray-200">Mot de passe</Label>
               <Input
                 id="password"
                 name="password"
@@ -110,15 +110,15 @@ export default function Signup() {
                 placeholder="••••••••"
                 value={formData.password}
                 onChange={handleChange}
-                className="mt-2 rounded-xl"
+                className="mt-2 rounded-xl dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"
               />
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                 Minimum 8 caractères
               </p>
             </div>
 
             <div>
-              <Label htmlFor="confirmPassword">Confirmer le mot de passe</Label>
+              <Label htmlFor="confirmPassword" className="dark:text-gray-200">Confirmer le mot de passe</Label>
               <Input
                 id="confirmPassword"
                 name="confirmPassword"
@@ -126,7 +126,7 @@ export default function Signup() {
                 placeholder="••••••••"
                 value={formData.confirmPassword}
                 onChange={handleChange}
-                className="mt-2 rounded-xl"
+                className="mt-2 rounded-xl dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"
               />
             </div>
 
@@ -138,13 +138,13 @@ export default function Signup() {
                   setFormData({ ...formData, acceptTerms: checked as boolean })
                 }
               />
-              <label htmlFor="terms" className="text-sm text-gray-600 cursor-pointer">
+              <label htmlFor="terms" className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 cursor-pointer">
                 J'accepte les{' '}
-                <Link href="/terms" className="text-pink-600 hover:text-pink-700 underline">
+                <Link href="/terms" className="text-pink-600 dark:text-pink-400 hover:text-pink-700 dark:hover:text-pink-300 underline">
                   conditions d'utilisation
                 </Link>{' '}
                 et la{' '}
-                <Link href="/privacy" className="text-pink-600 hover:text-pink-700 underline">
+                <Link href="/privacy" className="text-pink-600 dark:text-pink-400 hover:text-pink-700 dark:hover:text-pink-300 underline">
                   politique de confidentialité
                 </Link>
               </label>
@@ -152,29 +152,29 @@ export default function Signup() {
 
             <Button
               type="submit"
-              className="w-full bg-linear-to-r from-pink-500 to-amber-400 hover:from-pink-600 hover:to-amber-500 text-white rounded-full py-6 mt-6"
+              className="w-full bg-linear-to-r from-pink-500 to-amber-400 hover:from-pink-600 hover:to-amber-500 text-white rounded-full py-5 sm:py-6 mt-4 sm:mt-6 text-sm sm:text-base"
             >
               {isPending ? 'Création...' : 'Créer un compte'}
             </Button>
           </form>
 
-          <div className="mt-6">
+          <div className="mt-4 sm:mt-6">
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-300"></div>
+                <div className="w-full border-t border-gray-300 dark:border-gray-700"></div>
               </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-4 bg-card text-gray-500">Ou</span>
+              <div className="relative flex justify-center text-xs sm:text-sm">
+                <span className="px-3 sm:px-4 bg-white dark:bg-gray-900 text-gray-500 dark:text-gray-400">Ou</span>
               </div>
             </div>
 
-            <div className="mt-6 space-y-3">
+            <div className="mt-4 sm:mt-6 space-y-2 sm:space-y-3">
               <Button
                 type="button"
                 variant="outline"
-                className="w-full rounded-full py-6 border-2"
+                className="w-full rounded-full py-5 sm:py-6 border-2 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-800 text-xs sm:text-sm"
               >
-                <svg className="w-5 h-5 mr-3" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 sm:w-5 sm:h-5 mr-2" viewBox="0 0 24 24">
                   <path
                     fill="currentColor"
                     d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -198,9 +198,9 @@ export default function Signup() {
               <Button
                 type="button"
                 variant="outline"
-                className="w-full rounded-full py-6 border-2"
+                className="w-full rounded-full py-5 sm:py-6 border-2 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-800 text-xs sm:text-sm"
               >
-                <svg className="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 sm:w-5 sm:h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
                 </svg>
                 Continuer avec Facebook
@@ -209,9 +209,9 @@ export default function Signup() {
           </div>
         </Card>
 
-        <p className="text-center mt-6 text-gray-600">
+        <p className="text-center mt-4 sm:mt-6 text-sm sm:text-base text-gray-600 dark:text-gray-300">
           Vous avez déjà un compte ?{' '}
-          <Link href="/auth/login" className="text-pink-600 hover:text-pink-700">
+          <Link href="/auth/login" className="text-pink-600 dark:text-pink-400 hover:text-pink-700 dark:hover:text-pink-300 font-medium">
             Se connecter
           </Link>
         </p>

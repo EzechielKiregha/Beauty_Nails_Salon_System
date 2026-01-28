@@ -53,6 +53,7 @@ import { useNotifications } from "@/lib/hooks/useNotifications";
 import { useAuth } from "@/lib/hooks/useAuth";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import LoadingSpinner from "../LoadingSpinner";
 
 export default function ClientDashboardV2() {
   const [notificationOpen, setNotificationOpen] = useState(false);
@@ -234,12 +235,7 @@ export default function ClientDashboardV2() {
   // Loading state
   if (isAuthLoading || isAppointmentsLoading || isLoyaltyLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-pink-50 via-purple-50 to-white">
-        <div className="text-center">
-          <Loader2 className="w-12 h-12 animate-spin text-pink-500 mx-auto mb-4" />
-          <p className="text-gray-600">Chargement...</p>
-        </div>
-      </div>
+      <LoadingSpinner />
     );
   }
 
@@ -249,16 +245,16 @@ export default function ClientDashboardV2() {
   }
 
   return (
-    <div className="min-h-screen py-24 bg-linear-to-br from-pink-50 via-purple-50 to-white">
+    <div className="min-h-screen py-24 bg-linear-to-br from-pink-50 via-purple-50 to-white dark:from-gray-950 dark:via-gray-950 dark:to-gray-950">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Welcome Section */}
         <div className="mb-12">
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
             <div>
-              <h1 className="text-4xl font-bold bg-linear-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent mb-2">
+              <h1 className="text-3xl sm:text-4xl font-bold bg-linear-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent mb-2">
                 Bonjour, {user?.name} 👋
               </h1>
-              <p className="text-gray-600 text-lg">
+              <p className="text-gray-600 dark:text-gray-300 text-base sm:text-lg">
                 Bienvenue dans votre espace beauté
               </p>
             </div>
@@ -266,7 +262,7 @@ export default function ClientDashboardV2() {
             {/* Notifications */}
             <Sheet open={notificationOpen} onOpenChange={setNotificationOpen}>
               <SheetTrigger asChild>
-                <Button variant="outline" size="icon" className="relative">
+                <Button variant="outline" size="icon" className="relative dark:border-gray-700 dark:text-gray-200">
                   <Bell className="w-5 h-5" />
                   {unreadCount > 0 && (
                     <span className="absolute -top-1 -right-1 w-5 h-5 bg-pink-500 text-white text-xs rounded-full flex items-center justify-center">
@@ -275,11 +271,11 @@ export default function ClientDashboardV2() {
                   )}
                 </Button>
               </SheetTrigger>
-              <SheetContent>
+              <SheetContent className="dark:bg-gray-900 dark:border-gray-800">
                 <div className="mb-6">
-                  <h2 className="text-2xl font-bold mb-2">Notifications</h2>
+                  <h2 className="text-2xl font-bold mb-2 dark:text-gray-100">Notifications</h2>
                   <div className="flex items-center justify-between">
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-gray-600 dark:text-gray-300">
                       {unreadCount} non lues
                     </p>
                     {unreadCount > 0 && (
@@ -287,6 +283,7 @@ export default function ClientDashboardV2() {
                         variant="ghost"
                         size="sm"
                         onClick={() => markAllAsRead()}
+                        className="dark:text-gray-200 dark:hover:bg-gray-800"
                       >
                         Tout marquer comme lu
                       </Button>
@@ -335,65 +332,65 @@ export default function ClientDashboardV2() {
           </div>
 
           {/* Stats Overview */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             {/* Loyalty Points Card */}
-            <Card className="p-6 bg-linear-to-br from-pink-500 to-purple-500 text-white border-0 shadow-xl">
+            <Card className="p-4 sm:p-6 bg-linear-to-br from-pink-500 to-purple-500 text-white border-0 shadow-xl">
               <div className="flex items-center justify-between mb-4">
                 <div className="p-3 bg-white/20 rounded-lg backdrop-blur-sm">
-                  <Gift className="w-6 h-6" />
+                  <Gift className="w-5 h-5 sm:w-6 sm:h-6" />
                 </div>
-                {tier === "VIP" && <Crown className="w-5 h-5 opacity-80" />}
-                {tier === "Premium" && <Sparkles className="w-5 h-5 opacity-80" />}
+                {tier === "VIP" && <Crown className="w-4 h-4 sm:w-5 sm:h-5 opacity-80" />}
+                {tier === "Premium" && <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 opacity-80" />}
               </div>
-              <p className="text-sm opacity-90 mb-1">Points de fidélité</p>
-              <p className="text-3xl font-bold mb-2">{points}</p>
-              <Badge className="bg-white/20 hover:bg-white/30 text-white border-0">
+              <p className="text-xs sm:text-sm opacity-90 mb-1">Points de fidélité</p>
+              <p className="text-2xl sm:text-3xl font-bold mb-2">{points}</p>
+              <Badge className="bg-white/20 hover:bg-white/30 text-white border-0 text-xs sm:text-sm">
                 {tier}
               </Badge>
             </Card>
 
             {/* Total Appointments */}
-            <Card className="p-6 hover:shadow-lg transition-shadow">
+            <Card className="p-4 sm:p-6 hover:shadow-lg transition-shadow dark:bg-gray-900 dark:border-gray-800 dark:hover:shadow-gray-800/50">
               <div className="flex items-center justify-between mb-4">
-                <div className="p-3 bg-purple-100 rounded-lg">
-                  <Calendar className="w-6 h-6 text-purple-600" />
+                <div className="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
+                  <Calendar className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600 dark:text-purple-400" />
                 </div>
               </div>
-              <p className="text-sm text-gray-600 mb-1">Rendez-vous</p>
-              <p className="text-3xl font-bold text-gray-900">
+              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mb-1">Rendez-vous</p>
+              <p className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">
                 {completedAppointments}
               </p>
-              <p className="text-xs text-gray-500 mt-2">
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
                 {upcomingAppointments.length} à venir
               </p>
             </Card>
 
             {/* Referrals */}
-            <Card className="p-6 hover:shadow-lg transition-shadow">
+            <Card className="p-4 sm:p-6 hover:shadow-lg transition-shadow dark:bg-gray-900 dark:border-gray-800 dark:hover:shadow-gray-800/50">
               <div className="flex items-center justify-between mb-4">
-                <div className="p-3 bg-amber-100 rounded-lg">
-                  <Users className="w-6 h-6 text-amber-600" />
+                <div className="p-3 bg-amber-100 dark:bg-amber-900/30 rounded-lg">
+                  <Users className="w-5 h-5 sm:w-6 sm:h-6 text-amber-600 dark:text-amber-400" />
                 </div>
               </div>
-              <p className="text-sm text-gray-600 mb-1">Parrainages</p>
-              <p className="text-3xl font-bold text-gray-900">{referrals}</p>
-              <p className="text-xs text-gray-500 mt-2">
+              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mb-1">Parrainages</p>
+              <p className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">{referrals}</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
                 {nextFreeReferral} pour service gratuit
               </p>
             </Card>
 
             {/* Next Free Service */}
-            <Card className="p-6 hover:shadow-lg transition-shadow">
+            <Card className="p-4 sm:p-6 hover:shadow-lg transition-shadow dark:bg-gray-900 dark:border-gray-800 dark:hover:shadow-gray-800/50">
               <div className="flex items-center justify-between mb-4">
-                <div className="p-3 bg-green-100 rounded-lg">
-                  <Award className="w-6 h-6 text-green-600" />
+                <div className="p-3 bg-green-100 dark:bg-green-900/30 rounded-lg">
+                  <Award className="w-5 h-5 sm:w-6 sm:h-6 text-green-600 dark:text-green-400" />
                 </div>
               </div>
-              <p className="text-sm text-gray-600 mb-1">Service gratuit dans</p>
-              <p className="text-3xl font-bold text-gray-900">
+              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mb-1">Service gratuit dans</p>
+              <p className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">
                 {nextFreeService}
               </p>
-              <p className="text-xs text-gray-500 mt-2">rendez-vous</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">rendez-vous</p>
             </Card>
           </div>
         </div>

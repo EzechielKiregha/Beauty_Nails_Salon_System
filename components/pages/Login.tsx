@@ -41,31 +41,31 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen py-24 flex items-center">
+    <div className="min-h-screen py-12 sm:py-24 flex items-center bg-background dark:bg-gray-950">
       <div className="max-w-md mx-auto px-4 sm:px-6 lg:px-8 w-full">
-        <div className="text-center mb-8">
+        <div className="text-center mb-6 sm:mb-8">
           <Link
             href="/"
-            className="inline-flex items-center justify-center mb-6"
+            className="inline-flex items-center justify-center mb-4 sm:mb-6"
           >
             <Logo width={250} height={70} />
           </Link>
-          <h1 className="text-3xl text-gray-900 dark:text-white mb-2">
+          <h1 className="text-2xl sm:text-3xl text-gray-900 dark:text-gray-100 mb-1 sm:mb-2">
             Connexion
           </h1>
-          <p className="text-gray-600 dark:text-gray-400">
+          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300">
             Accédez à votre espace personnel
           </p>
         </div>
 
-        <Card className="p-8 border-0 shadow-2xl rounded-3xl">
+        <Card className="p-6 sm:p-8 border-b border-pink-100 dark:border-pink-900 bg-white dark:bg-gray-900 shadow-2xl rounded-3xl">
           <Tabs
             defaultValue="client"
           >
-            <TabsList className="grid w-full grid-cols-3 mb-6">
-              <TabsTrigger value="client">Client</TabsTrigger>
-              <TabsTrigger value="worker">Employée</TabsTrigger>
-              <TabsTrigger value="admin">Admin</TabsTrigger>
+            <TabsList className="grid w-full grid-cols-3 mb-4 sm:mb-6">
+              <TabsTrigger value="client" className="text-xs sm:text-sm">Client</TabsTrigger>
+              <TabsTrigger value="worker" className="text-xs sm:text-sm">Employée</TabsTrigger>
+              <TabsTrigger value="admin" className="text-xs sm:text-sm">Admin</TabsTrigger>
             </TabsList>
 
             <TabsContent value="client">
@@ -74,7 +74,7 @@ export default function Login() {
                 className="space-y-4"
               >
                 <div>
-                  <Label htmlFor="email">Email</Label>
+                  <Label htmlFor="email" className="dark:text-gray-200">Email</Label>
                   <Input
                     id="email"
                     type="email"
@@ -82,11 +82,11 @@ export default function Login() {
                     placeholder="votre@email.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="mt-2 rounded-xl"
+                    className="mt-2 rounded-xl dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"
                   />
                 </div>
                 <div>
-                  <Label htmlFor="password">
+                  <Label htmlFor="password" className="dark:text-gray-200">
                     Mot de passe
                   </Label>
                   <Input
@@ -98,12 +98,12 @@ export default function Login() {
                     onChange={(e) =>
                       setPassword(e.target.value)
                     }
-                    className="mt-2 rounded-xl"
+                    className="mt-2 rounded-xl dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"
                   />
                 </div>
                 <Button
                   type="submit"
-                  className="w-full bg-linear-to-r from-pink-500 to-amber-400 hover:from-pink-600 hover:to-amber-500 text-white rounded-full py-6 mt-6"
+                  className="w-full bg-linear-to-r from-pink-500 to-amber-400 hover:from-pink-600 hover:to-amber-500 text-white rounded-full py-5 sm:py-6 mt-4 sm:mt-6 text-sm sm:text-base"
                 >
                   {isPending ? 'Connexion...' : 'Se connecter'}
                 </Button>
@@ -116,7 +116,7 @@ export default function Login() {
                 className="space-y-4"
               >
                 <div>
-                  <Label htmlFor="email">Email</Label>
+                  <Label htmlFor="email" className="dark:text-gray-200">Email</Label>
                   <Input
                     id="email"
                     type="email"
@@ -124,11 +124,11 @@ export default function Login() {
                     placeholder="votre@email.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="mt-2 rounded-xl"
+                    className="mt-2 rounded-xl dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"
                   />
                 </div>
                 <div>
-                  <Label htmlFor="password">
+                  <Label htmlFor="password" className="dark:text-gray-200">
                     Mot de passe
                   </Label>
                   <Input
@@ -140,12 +140,12 @@ export default function Login() {
                     onChange={(e) =>
                       setPassword(e.target.value)
                     }
-                    className="mt-2 rounded-xl"
+                    className="mt-2 rounded-xl dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"
                   />
                 </div>
                 <Button
                   type="submit"
-                  className="w-full bg-linear-to-r from-purple-500 to-pink-400 hover:from-purple-600 hover:to-pink-500 text-white rounded-full py-6 mt-6"
+                  className="w-full bg-linear-to-r from-purple-500 to-pink-400 hover:from-purple-600 hover:to-pink-500 text-white rounded-full py-5 sm:py-6 mt-4 sm:mt-6 text-sm sm:text-base"
                 >
                   {isPending ? 'Connexion...' : 'Se connecter'}
                 </Button>
@@ -158,7 +158,7 @@ export default function Login() {
                 className="space-y-4"
               >
                 <div>
-                  <Label htmlFor="email">Email</Label>
+                  <Label htmlFor="email" className="dark:text-gray-200">Email</Label>
                   <Input
                     id="email"
                     type="email"
@@ -166,11 +166,11 @@ export default function Login() {
                     placeholder="admin@beautynails.cd"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="mt-2 rounded-xl"
+                    className="mt-2 rounded-xl dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"
                   />
                 </div>
                 <div>
-                  <Label htmlFor="password">
+                  <Label htmlFor="password" className="dark:text-gray-200">
                     Mot de passe
                   </Label>
                   <Input
@@ -182,12 +182,12 @@ export default function Login() {
                     onChange={(e) =>
                       setPassword(e.target.value)
                     }
-                    className="mt-2 rounded-xl"
+                    className="mt-2 rounded-xl dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"
                   />
                 </div>
                 <Button
                   type="submit"
-                  className="w-full bg-linear-to-r from-amber-500 to-orange-400 hover:from-amber-600 hover:to-orange-500 text-white rounded-full py-6 mt-6"
+                  className="w-full bg-linear-to-r from-amber-500 to-orange-400 hover:from-amber-600 hover:to-orange-500 text-white rounded-full py-5 sm:py-6 mt-4 sm:mt-6 text-sm sm:text-base"
                 >
                   {isPending ? 'Connexion...' : 'Se connecter'}
                 </Button>
@@ -195,34 +195,25 @@ export default function Login() {
             </TabsContent>
           </Tabs>
 
-          <div className="mt-6 text-center">
+          <div className="mt-4 sm:mt-6 text-center">
             <a
               href="#"
-              className="text-sm text-pink-600 hover:text-pink-700"
+              className="text-xs sm:text-sm text-pink-600 dark:text-pink-400 hover:text-pink-700 dark:hover:text-pink-300"
             >
               Mot de passe oublié ?
             </a>
           </div>
         </Card>
 
-        <p className="text-center mt-6 text-gray-600">
+        <p className="text-center mt-4 sm:mt-6 text-sm sm:text-base text-gray-600 dark:text-gray-300">
           Vous n'avez pas de compte ?{" "}
           <Link
             href="/auth/signup"
-            className="text-pink-600 hover:text-pink-700"
+            className="text-pink-600 dark:text-pink-400 hover:text-pink-700 dark:hover:text-pink-300 font-medium"
           >
             Créer un compte
           </Link>
         </p>
-
-        {/* <div className="mt-8 p-4 bg-gray-50 rounded-2xl">
-          <p className="text-xs text-gray-500 text-center mb-2">
-            Comptes de démonstration :
-          </p>
-          <p className="text-xs text-gray-600 text-center">
-            Email : demo@example.com | Mot de passe : demo123
-          </p>
-        </div> */}
       </div>
     </div>
   );

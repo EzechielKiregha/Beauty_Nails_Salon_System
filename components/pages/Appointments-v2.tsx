@@ -1,5 +1,6 @@
 'use client'
-import { useState } from "react";
+import { useMemo, useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { Card } from "../ui/card";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
@@ -34,16 +35,31 @@ import { useAvailableStaff } from "@/lib/hooks/useStaff";
 import { useAppointments, useAvailableSlots } from "@/lib/hooks/useAppointments";
 import { CreateAppointmentData } from "@/lib/api/appointments";
 import { Service } from "@/lib/api/services";
+import LoadingSpinner from "../LoadingSpinner";
 
 export default function AppointmentsV2() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // Get parameters from quick appointment form
+  const paramService = searchParams.get("service");
+  const paramDate = searchParams.get("date");
+  const paramTime = searchParams.get("time");
+
+  // Initialize states with URL parameters
   const [selectedDate, setSelectedDate] = useState<
     Date | undefined
-  >(new Date());
-  const [selectedServiceId, setSelectedServiceId] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("");
+  >(() => {
+    if (paramDate) {
+      const date = new Date(paramDate);
+      return !isNaN(date.getTime()) ? date : new Date();
+    }
+    return new Date();
+  });
+  const [selectedServiceId, setSelectedServiceId] = useState(paramService || "");
+  const [selectedCategory, setSelectedCategory] = useState(paramService || "");
   const [selectedWorker, setSelectedWorker] = useState("");
-  const [selectedTime, setSelectedTime] = useState("");
+  const [selectedTime, setSelectedTime] = useState(paramTime || "");
   const [location, setLocation] = useState<"salon" | "home">(
     "salon",
   );
@@ -52,24 +68,35 @@ export default function AppointmentsV2() {
   const { user } = useAuth();
   const { services, isLoading: servicesLoading } = useServices();
   const { staff, isLoading: staffLoading } = useAvailableStaff();
-  const { data, isLoading: slotsLoading } = useAvailableSlots({ date: selectedDate?.toLocaleDateString(), workerId: selectedWorker });
+  const { data: availableSlotsData, isLoading: slotsLoading } = useAvailableSlots({ date: selectedDate?.toLocaleDateString(), workerId: selectedWorker });
   const { createAppointment, isLoading: appointmentLoading } = useAppointments();
 
-  // const timeSlots = [
-  //   "09:00",
-  //   "09:30",
-  //   "10:00",
-  //   "10:30",
-  //   "11:00",
-  //   "11:30",
-  //   "14:00",
-  //   "14:30",
-  //   "15:00",
-  //   "15:30",
-  //   "16:00",
-  //   "16:30",
-  //   "17:00",
-  // ];
+  // Sync service when services load from API
+  useEffect(() => {
+    if (paramService && services.length > 0) {
+      const service = services.find((s: Service) => s.id === paramService);
+      if (service) {
+        setSelectedServiceId(service.id);
+        setSelectedCategory(service.category); // Set to actual category, not service ID
+      }
+    }
+  }, [services, paramService]);
+
+  const timeSlots = [
+    "09:00",
+    "09:30",
+    "10:00",
+    "10:30",
+    "11:00",
+    "11:30",
+    "14:00",
+    "14:30",
+    "15:00",
+    "15:30",
+    "16:00",
+    "16:30",
+    "17:00",
+  ];
 
   const availableAddOns = [
     "Prestation à domicile (+20 000 CDF)",
@@ -77,13 +104,14 @@ export default function AppointmentsV2() {
     "Produits premium (+15 000 CDF)",
   ];
 
-  if (servicesLoading || staffLoading || slotsLoading || appointmentLoading) {
+  const availableMap = useMemo(() => {
+    if (!availableSlotsData?.slots) return null;
+    return new Map(availableSlotsData.slots.map((s: any) => [s.time, s.available]));
+  }, [availableSlotsData]);
+
+  if (servicesLoading || staffLoading || appointmentLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-blue-50 via-purple-50 to-pink-50">
-        <div className="text-center">
-          <Loader2 className="w-12 h-12 animate-spin text-purple-500 mx-auto mb-4" />
-        </div>
-      </div>
+      <LoadingSpinner />
     )
   }
 
@@ -108,7 +136,7 @@ export default function AppointmentsV2() {
     }
 
     const appointmentData: CreateAppointmentData = {
-      clientId: user.id,
+      clientId: user.clientProfile?.id,
       serviceId: selectedServiceId,
       workerId: selectedWorker,
       date: selectedDate.toISOString(),
@@ -121,7 +149,7 @@ export default function AppointmentsV2() {
   };
 
   return (
-    <div className="min-h-screen py-24">
+    <div className="min-h-screen bg-background">
       <HeroSection
         imageUrl='/reservation.jpg'
         title="Réservation"
@@ -132,36 +160,36 @@ export default function AppointmentsV2() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-16">
-          <Badge className="mb-4 bg-pink-100 text-pink-600">
+          <Badge className="my-8 bg-pink-100 dark:bg-pink-900 text-pink-600 dark:text-pink-200">
             <CalendarIcon className="w-4 h-4 mr-2" />
             Réservation
           </Badge>
-          <h1 className="text-5xl text-gray-900 mb-6">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl text-gray-900 dark:text-gray-100 mb-6">
             Prenez rendez-vous en quelques clics
           </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
             Choisissez votre service, votre spécialiste et votre
             créneau horaire
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
           {/* Booking Form */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-2 space-y-4 sm:space-y-6">
             {/* Step 1: Service Category */}
-            <Card className="p-8 border-0 shadow-xl rounded-2xl">
+            <Card className="p-4 sm:p-6 lg:p-8 border border-pink-100 dark:border-pink-900 shadow-xl rounded-2xl bg-white dark:bg-gray-900">
               <div className="flex items-center mb-6">
-                <div className="w-10 h-10 rounded-full bg-linear-to-br from-pink-500 to-amber-400 flex items-center justify-center text-white mr-4">
+                <div className="w-10 h-10 rounded-full bg-linear-to-br from-pink-500 to-amber-400 flex items-center justify-center text-white mr-4 shrink-0">
                   1
                 </div>
-                <h2 className="text-2xl text-gray-900">
+                <h2 className="text-xl sm:text-2xl text-gray-900 dark:text-gray-100">
                   Choisissez votre service
                 </h2>
               </div>
 
               <div className="space-y-4">
                 <div>
-                  <Label className="text-gray-700 mb-2 block">
+                  <Label className="text-gray-700 dark:text-gray-300 mb-2 block font-medium">
                     Catégorie de service
                   </Label>
                   <Select
@@ -171,7 +199,7 @@ export default function AppointmentsV2() {
                       setSelectedServiceId("");
                     }}
                   >
-                    <SelectTrigger className="w-full rounded-xl border-gray-200">
+                    <SelectTrigger className="w-full rounded-xl border-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100">
                       <SelectValue placeholder="Sélectionner une catégorie" />
                     </SelectTrigger>
                     <SelectContent>
@@ -193,18 +221,18 @@ export default function AppointmentsV2() {
 
                 {selectedCategory && (
                   <div>
-                    <Label className="text-gray-700 mb-2 block">
+                    <Label className="text-gray-700 dark:text-gray-300 mb-2 block font-medium">
                       Prestation
                     </Label>
                     <Select
                       value={selectedServiceId}
                       onValueChange={setSelectedServiceId}
                     >
-                      <SelectTrigger className="w-full rounded-xl border-gray-200">
+                      <SelectTrigger className="w-full rounded-xl border-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100">
                         <SelectValue placeholder="Sélectionner une prestation" />
                       </SelectTrigger>
                       <SelectContent>
-                        {services?.map((service: Service) => (
+                        {services?.filter((service: Service) => service.category === selectedCategory).map((service: Service) => (
                           <SelectItem
                             key={service.id}
                             value={service.id}
@@ -220,12 +248,12 @@ export default function AppointmentsV2() {
             </Card>
 
             {/* Step 2: Worker */}
-            <Card className="p-8 border-0 shadow-xl rounded-2xl">
+            <Card className="p-4 sm:p-6 lg:p-8 border border-pink-100 dark:border-pink-900 shadow-xl rounded-2xl bg-white dark:bg-gray-900">
               <div className="flex items-center mb-6">
-                <div className="w-10 h-10 rounded-full bg-linear-to-br from-pink-500 to-amber-400 flex items-center justify-center text-white mr-4">
+                <div className="w-10 h-10 rounded-full bg-linear-to-br from-pink-500 to-amber-400 flex items-center justify-center text-white mr-4 shrink-0">
                   2
                 </div>
-                <h2 className="text-2xl text-gray-900">
+                <h2 className="text-xl sm:text-2xl text-gray-900 dark:text-gray-100">
                   Choisissez votre spécialiste
                 </h2>
               </div>
@@ -234,7 +262,7 @@ export default function AppointmentsV2() {
                 value={selectedWorker}
                 onValueChange={setSelectedWorker}
               >
-                <SelectTrigger className="w-full rounded-xl border-gray-200">
+                <SelectTrigger className="w-full rounded-xl border-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100">
                   <SelectValue placeholder="Sélectionner une spécialiste" />
                 </SelectTrigger>
                 <SelectContent>
@@ -251,59 +279,64 @@ export default function AppointmentsV2() {
             </Card>
 
             {/* Step 3: Date & Time */}
-            <Card className="p-8 border-0 shadow-xl rounded-2xl">
+            <Card className="p-4 sm:p-6 lg:p-8 border border-pink-100 dark:border-pink-900 shadow-xl rounded-2xl bg-white dark:bg-gray-900">
               <div className="flex items-center mb-6">
-                <div className="w-10 h-10 rounded-full bg-linear-to-br from-pink-500 to-amber-400 flex items-center justify-center text-white mr-4">
+                <div className="w-10 h-10 rounded-full bg-linear-to-br from-pink-500 to-amber-400 flex items-center justify-center text-white mr-4 shrink-0">
                   3
                 </div>
-                <h2 className="text-2xl text-gray-900">
+                <h2 className="text-xl sm:text-2xl text-gray-900 dark:text-gray-100">
                   Date et heure
                 </h2>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
                 <div>
-                  <Label className="text-gray-700 mb-3 block">
+                  <Label className="text-gray-700 dark:text-gray-300 mb-3 block font-medium">
                     Date
                   </Label>
-                  <Calendar
-                    mode="single"
-                    selected={selectedDate}
-                    onSelect={setSelectedDate}
-                    className="rounded-xl border border-gray-200 p-4"
-                    disabled={(date) => date < new Date()}
-                  />
+                  <div className="rounded-xl border border-gray-200 dark:border-gray-700 dark:bg-gray-800 p-4 overflow-x-auto">
+                    <Calendar
+                      mode="single"
+                      selected={selectedDate}
+                      onSelect={setSelectedDate}
+                      className="dark:text-gray-100"
+                      disabled={(date) => date < new Date()}
+                    />
+                  </div>
                 </div>
 
                 <div>
-                  <Label className="text-gray-700 mb-3 block">
+                  <Label className="text-gray-700 dark:text-gray-300 mb-3 block font-medium">
                     Heure
                   </Label>
-                  <div className="grid grid-cols-3 gap-2">
-                    {data?.slots?.map((slot: any) => (
-                      <button
-                        key={slot.time}
-                        onClick={() => setSelectedTime(slot.time)}
-                        className={`px-4 py-3 rounded-xl border-2 transition-all ${selectedTime === slot.time
-                          ? "border-pink-500 bg-pink-50 text-pink-600"
-                          : "border-gray-200 hover:border-pink-300 text-gray-700"
-                          }`}
-                      >
-                        {slot.time}
-                      </button>
-                    ))}
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                    {timeSlots.map((time) => {
+                      // const isAvailable = availableMap instanceof Map ? !!availableMap.get(time) : true;
+                      return (
+                        <button
+                          key={time}
+                          onClick={() => setSelectedTime(time)}
+                          className={`px-3 sm:px-4 py-3 rounded-xl border transition-all text-sm sm:text-base ${selectedTime === time
+                            ? "border-pink-500 bg-pink-50 dark:bg-pink-900 text-pink-600 dark:text-pink-200"
+                            : "border-gray-200 dark:border-gray-700 hover:border-pink-300 dark:hover:border-pink-600 text-gray-700 dark:text-gray-300"
+                            }`}
+                        >
+                          {time}
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
               </div>
             </Card>
 
             {/* Step 4: Location */}
-            <Card className="p-8 border-0 shadow-xl rounded-2xl">
+            <Card className="p-4 sm:p-6 lg:p-8 border border-pink-100 dark:border-pink-900 shadow-xl rounded-2xl bg-white dark:bg-gray-900">
               <div className="flex items-center mb-6">
-                <div className="w-10 h-10 rounded-full bg-linear-to-br from-pink-500 to-amber-400 flex items-center justify-center text-white mr-4">
+                <div className="w-10 h-10 rounded-full bg-linear-to-br from-pink-500 to-amber-400 flex items-center justify-center text-white mr-4 shrink-0">
                   4
                 </div>
-                <h2 className="text-2xl text-gray-900">
+                <h2 className="text-xl sm:text-2xl text-gray-900 dark:text-gray-100">
                   Lieu du rendez-vous
                 </h2>
               </div>
@@ -315,37 +348,37 @@ export default function AppointmentsV2() {
                 }
               >
                 <div className="space-y-4">
-                  <div className="flex items-center space-x-3 p-4 border-2 border-gray-200 rounded-xl hover:border-pink-300 transition-colors">
-                    <RadioGroupItem value="salon" id="salon" />
+                  <div className="flex items-start sm:items-center space-x-3 p-3 sm:p-4 border border-gray-200 dark:border-gray-700 rounded-xl hover:border-pink-300 dark:hover:border-pink-600 transition-colors">
+                    <RadioGroupItem value="salon" id="salon" className="mt-1 sm:mt-0" />
                     <Label
                       htmlFor="salon"
-                      className="flex items-center cursor-pointer flex-1"
+                      className="flex items-start sm:items-center cursor-pointer flex-1"
                     >
-                      <Sparkles className="w-5 h-5 mr-3 text-pink-500" />
+                      <Sparkles className="w-5 h-5 mr-3 text-pink-500 shrink-0 mt-0.5 sm:mt-0" />
                       <div>
-                        <p className="text-gray-900">
+                        <p className="text-gray-900 dark:text-gray-100 font-medium">
                           Au salon
                         </p>
-                        <p className="text-sm text-gray-500">
-                          Avenue de la Paix, Gombe, Kinshasa
+                        <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
+                          Quartier HIMBI, Commune de Goma, Ville de Goma
                         </p>
                       </div>
                     </Label>
                   </div>
 
-                  <div className="flex items-center space-x-3 p-4 border-2 border-gray-200 rounded-xl hover:border-pink-300 transition-colors">
-                    <RadioGroupItem value="home" id="home" />
+                  <div className="flex items-start sm:items-center space-x-3 p-3 sm:p-4 border border-gray-200 dark:border-gray-700 rounded-xl hover:border-pink-300 dark:hover:border-pink-600 transition-colors">
+                    <RadioGroupItem value="home" id="home" className="mt-1 sm:mt-0" />
                     <Label
                       htmlFor="home"
-                      className="flex items-center cursor-pointer flex-1"
+                      className="flex items-start sm:items-center cursor-pointer flex-1"
                     >
-                      <Home className="w-5 h-5 mr-3 text-amber-500" />
+                      <Home className="w-5 h-5 mr-3 text-amber-500 shrink-0 mt-0.5 sm:mt-0" />
                       <div>
-                        <p className="text-gray-900">
+                        <p className="text-gray-900 dark:text-gray-100 font-medium">
                           À domicile
                         </p>
-                        <p className="text-sm text-gray-500">
-                          +20 000 CDF - Dans la zone de Kinshasa
+                        <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
+                          +20 000 CDF - Dans la zone de Goma
                         </p>
                       </div>
                     </Label>
@@ -355,12 +388,12 @@ export default function AppointmentsV2() {
             </Card>
 
             {/* Step 5: Add-ons */}
-            <Card className="p-8 border-0 shadow-xl rounded-2xl">
+            <Card className="p-4 sm:p-6 lg:p-8 border border-pink-100 dark:border-pink-900 shadow-xl rounded-2xl bg-white dark:bg-gray-900">
               <div className="flex items-center mb-6">
-                <div className="w-10 h-10 rounded-full bg-linear-to-br from-pink-500 to-amber-400 flex items-center justify-center text-white mr-4">
+                <div className="w-10 h-10 rounded-full bg-linear-to-br from-pink-500 to-amber-400 flex items-center justify-center text-white mr-4 shrink-0">
                   5
                 </div>
-                <h2 className="text-2xl text-gray-900">
+                <h2 className="text-xl sm:text-2xl text-gray-900 dark:text-gray-100">
                   Options supplémentaires
                 </h2>
               </div>
@@ -369,7 +402,7 @@ export default function AppointmentsV2() {
                 {availableAddOns.map((addon) => (
                   <div
                     key={addon}
-                    className="flex items-center space-x-3 p-4 border border-gray-200 rounded-xl"
+                    className="flex items-start sm:items-center space-x-3 p-3 sm:p-4 border border-gray-200 dark:border-gray-700 rounded-xl hover:border-pink-300 dark:hover:border-pink-600 transition-colors"
                   >
                     <Checkbox
                       id={addon}
@@ -383,10 +416,11 @@ export default function AppointmentsV2() {
                           );
                         }
                       }}
+                      className="mt-1 sm:mt-0"
                     />
                     <Label
                       htmlFor={addon}
-                      className="cursor-pointer flex-1 text-gray-700"
+                      className="cursor-pointer flex-1 text-sm sm:text-base text-gray-700 dark:text-gray-300 font-medium"
                     >
                       {addon}
                     </Label>
@@ -398,67 +432,68 @@ export default function AppointmentsV2() {
 
           {/* Summary Sidebar */}
           <div className="lg:col-span-1">
-            <Card className="p-8 border-0 shadow-xl rounded-2xl sticky top-24">
-              <h3 className="text-2xl text-gray-900 mb-6">
+            <Card className="p-4 sm:p-6 lg:p-8 border border-pink-100 dark:border-pink-900 shadow-xl rounded-2xl sticky top-24 bg-white dark:bg-gray-900">
+              <h3 className="text-xl sm:text-2xl text-gray-900 dark:text-gray-100 mb-6">
                 Récapitulatif
               </h3>
 
               <div className="space-y-4 mb-6">
-                {selectedServiceId && (
-                  <div className="pb-4 border-b border-gray-200">
-                    <p className="text-sm text-gray-500 mb-1">
+                {services?.filter((service: Service) => service.id === selectedServiceId).map((service: Service) => (
+                  <div className="pb-4 border-b border-gray-200 dark:border-gray-700">
+                    <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mb-1">
                       Service
                     </p>
-                    <p className="text-gray-900">
-                      {selectedServiceId}
+                    <p className="text-sm sm:text-base text-gray-900 dark:text-gray-100 font-medium">
+                      {service.name}
                     </p>
                   </div>
-                )}
+                ))}
 
-                {selectedWorker && (
-                  <div className="pb-4 border-b border-gray-200">
-                    <p className="text-sm text-gray-500 mb-1">
+                {staff?.filter((worker) => worker.id === selectedWorker).map((worker) => (
+                  <div className="pb-4 border-b border-gray-200 dark:border-gray-700">
+                    <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mb-1">
                       Spécialiste
                     </p>
-                    <p className="text-gray-900">
-                      {selectedWorker}
+                    <p className="text-sm sm:text-base text-gray-900 dark:text-gray-100 font-medium">
+                      {worker?.user?.name}
                     </p>
                   </div>
-                )}
+                ))}
+
 
                 {selectedDate && selectedTime && (
-                  <div className="pb-4 border-b border-gray-200">
-                    <p className="text-sm text-gray-500 mb-1">
+                  <div className="pb-4 border-b border-gray-200 dark:border-gray-700">
+                    <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mb-1">
                       Date et heure
                     </p>
-                    <div className="flex items-center text-gray-900">
-                      <CalendarIcon className="w-4 h-4 mr-2 text-pink-500" />
+                    <div className="flex items-center text-gray-900 dark:text-gray-100 text-sm sm:text-base">
+                      <CalendarIcon className="w-4 h-4 mr-2 text-pink-500 shrink-0" />
                       <span>
                         {selectedDate.toLocaleDateString(
                           "fr-FR",
                         )}
                       </span>
                     </div>
-                    <div className="flex items-center text-gray-900 mt-1">
-                      <Clock className="w-4 h-4 mr-2 text-pink-500" />
+                    <div className="flex items-center text-gray-900 dark:text-gray-100 mt-1 text-sm sm:text-base">
+                      <Clock className="w-4 h-4 mr-2 text-pink-500 shrink-0" />
                       <span>{selectedTime}</span>
                     </div>
                   </div>
                 )}
 
-                <div className="pb-4 border-b border-gray-200">
-                  <p className="text-sm text-gray-500 mb-1">
+                <div className="pb-4 border-b border-gray-200 dark:border-gray-700">
+                  <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mb-1">
                     Lieu
                   </p>
-                  <div className="flex items-center text-gray-900">
+                  <div className="flex items-center text-gray-900 dark:text-gray-100 text-sm sm:text-base">
                     {location === "salon" ? (
                       <>
-                        <Sparkles className="w-4 h-4 mr-2 text-pink-500" />
+                        <Sparkles className="w-4 h-4 mr-2 text-pink-500 shrink-0" />
                         <span>Au salon</span>
                       </>
                     ) : (
                       <>
-                        <Home className="w-4 h-4 mr-2 text-amber-500" />
+                        <Home className="w-4 h-4 mr-2 text-amber-500 shrink-0" />
                         <span>À domicile</span>
                       </>
                     )}
@@ -467,14 +502,14 @@ export default function AppointmentsV2() {
 
                 {addOns.length > 0 && (
                   <div className="pb-4">
-                    <p className="text-sm text-gray-500 mb-2">
+                    <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mb-2">
                       Options
                     </p>
                     <ul className="space-y-1">
                       {addOns.map((addon) => (
                         <li
                           key={addon}
-                          className="text-sm text-gray-700"
+                          className="text-xs sm:text-sm text-gray-700 dark:text-gray-300"
                         >
                           • {addon}
                         </li>
@@ -485,14 +520,14 @@ export default function AppointmentsV2() {
               </div>
 
               {!user && (
-                <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-xl">
-                  <p className="text-sm text-amber-800">
+                <div className="mb-6 p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl">
+                  <p className="text-xs sm:text-sm text-amber-800 dark:text-amber-200">
                     Vous devez être connecté(e) pour réserver un
                     rendez-vous
                   </p>
                   <Link
                     href="/login"
-                    className="text-sm text-amber-600 hover:text-amber-700 underline mt-2 inline-block"
+                    className="text-xs sm:text-sm text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 underline mt-2 inline-block"
                   >
                     Se connecter
                   </Link>
@@ -502,12 +537,12 @@ export default function AppointmentsV2() {
               <Button
                 onClick={handleSubmit}
                 disabled={!user}
-                className="w-full bg-linear-to-r from-pink-500 to-amber-400 hover:from-pink-600 hover:to-amber-500 text-white rounded-full py-6"
+                className="w-full bg-linear-to-r from-pink-500 to-amber-400 hover:from-pink-600 hover:to-amber-500 text-white rounded-full py-4 sm:py-6 text-sm sm:text-base font-medium"
               >
                 Confirmer le rendez-vous
               </Button>
 
-              <p className="text-xs text-gray-500 text-center mt-4">
+              <p className="text-xs text-gray-500 dark:text-gray-400 text-center mt-4">
                 Vous recevrez une confirmation par email et
                 WhatsApp
               </p>

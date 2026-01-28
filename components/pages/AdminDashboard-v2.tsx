@@ -39,6 +39,7 @@ import { useRouter } from 'next/navigation';
 // import CreateTaskModal from '@/components/modals/CreateTaskModal';
 // import CreateClientModal from '@/components/modals/CreateClientModal';
 import TasksManagement from '@/components/TasksManagement';
+import LoadingSpinner from '../LoadingSpinner';
 
 export default function AdminDashboardV2() {
   const [notificationOpen, setNotificationOpen] = useState(false);
@@ -163,12 +164,7 @@ export default function AdminDashboardV2() {
   // Loading state
   if (isAuthLoading || isClientsLoading || isStaffLoading || isAnalyticsLoading || isRevenueLoading || isServicePerformanceLoading || isInventoryLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-blue-50 via-purple-50 to-pink-50">
-        <div className="text-center">
-          <Loader2 className="w-12 h-12 animate-spin text-purple-500 mx-auto mb-4" />
-          <p className="text-gray-600">Chargement du tableau de bord...</p>
-        </div>
-      </div>
+      <LoadingSpinner />
     );
   }
 
@@ -178,25 +174,25 @@ export default function AdminDashboardV2() {
   }
 
   return (
-    <div className="min-h-screen py-24 bg-background">
+    <div className="min-h-screen py-24 bg-background dark:bg-gray-950">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-12">
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
             <div>
-              <h1 className="text-4xl font-bold bg-linear-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">
+              <h1 className="text-3xl sm:text-4xl font-bold bg-linear-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">
                 Tableau de Bord Admin
               </h1>
-              <p className="text-gray-600 text-lg">
+              <p className="text-gray-600 dark:text-gray-300 text-base sm:text-lg">
                 Bienvenue, {user?.name} 👋
               </p>
             </div>
 
             {/* Notifications */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
               <Sheet open={notificationOpen} onOpenChange={setNotificationOpen}>
                 <SheetTrigger asChild>
-                  <Button variant="outline" size="icon" className="relative">
+                  <Button variant="outline" size="icon" className="relative dark:border-gray-700 dark:text-gray-200">
                     <Bell className="w-5 h-5" />
                     {unreadCount > 0 && (
                       <span className="absolute -top-1 -right-1 w-5 h-5 bg-pink-500 text-white text-xs rounded-full flex items-center justify-center">
@@ -205,7 +201,7 @@ export default function AdminDashboardV2() {
                     )}
                   </Button>
                 </SheetTrigger>
-                <SheetContent>
+                <SheetContent className="dark:bg-gray-900 dark:border-gray-800">
                   <NotificationCenter />
                 </SheetContent>
               </Sheet>
@@ -220,11 +216,11 @@ export default function AdminDashboardV2() {
 
               {/* Mock toggle */}
               <div className="flex items-center space-x-2">
-                <label className="text-sm text-gray-600">Données simulées</label>
+                <label className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">Données simulées</label>
                 <button
                   type="button"
                   onClick={() => setShowMock(!showMock)}
-                  className={`px-2 py-1 rounded ${showMock ? 'bg-pink-500 text-white' : 'bg-gray-100 text-gray-700'}`}>
+                  className={`px-2 py-1 rounded text-xs sm:text-sm transition-colors ${showMock ? 'bg-pink-500 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300'}`}>
                   {showMock ? 'ON' : 'OFF'}
                 </button>
               </div>
@@ -234,15 +230,15 @@ export default function AdminDashboardV2() {
           {/* Stats Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             {/* Revenue Card */}
-            <Card className="p-6 bg-linear-to-br from-green-500 to-emerald-600 text-white border-0 shadow-xl">
+            <Card className="p-4 sm:p-6 bg-linear-to-br from-green-500 to-emerald-600 text-white border-0 shadow-xl">
               <div className="flex items-center justify-between mb-4">
                 <div className="p-3 bg-white/20 rounded-lg backdrop-blur-sm">
-                  <DollarSign className="w-6 h-6" />
+                  <DollarSign className="w-5 h-5 sm:w-6 sm:h-6" />
                 </div>
-                <TrendingUp className="w-5 h-5 opacity-80" />
+                <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 opacity-80" />
               </div>
-              <p className="text-sm opacity-90 mb-1">Revenus du mois</p>
-              <p className="text-3xl font-bold mb-2">
+              <p className="text-xs sm:text-sm opacity-90 mb-1">Revenus du mois</p>
+              <p className="text-2xl sm:text-3xl font-bold mb-2">
                 {(stats.monthlyRevenue / 1000000).toFixed(1)}M
               </p>
               <p className="text-xs opacity-80">
@@ -251,43 +247,43 @@ export default function AdminDashboardV2() {
             </Card>
 
             {/* Clients Card */}
-            <Card className="p-6 hover:shadow-lg transition-shadow">
+            <Card className="p-4 sm:p-6 hover:shadow-lg transition-shadow dark:bg-gray-900 dark:border-gray-800 dark:hover:shadow-gray-800/50">
               <div className="flex items-center justify-between mb-4">
-                <div className="p-3 bg-blue-100 rounded-lg">
-                  <Users className="w-6 h-6 text-blue-600" />
+                <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+                  <Users className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600 dark:text-blue-400" />
                 </div>
               </div>
-              <p className="text-sm text-gray-600 mb-1">Clients</p>
-              <p className="text-3xl font-bold text-gray-900">{stats.totalClients}</p>
-              <p className="text-xs text-gray-500 mt-2">
+              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mb-1">Clients</p>
+              <p className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">{stats.totalClients}</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
                 +{stats.newClients} ce mois
               </p>
             </Card>
 
             {/* Appointments Card */}
-            <Card className="p-6 hover:shadow-lg transition-shadow">
+            <Card className="p-4 sm:p-6 hover:shadow-lg transition-shadow dark:bg-gray-900 dark:border-gray-800 dark:hover:shadow-gray-800/50">
               <div className="flex items-center justify-between mb-4">
-                <div className="p-3 bg-purple-100 rounded-lg">
-                  <Calendar className="w-6 h-6 text-purple-600" />
+                <div className="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
+                  <Calendar className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600 dark:text-purple-400" />
                 </div>
               </div>
-              <p className="text-sm text-gray-600 mb-1">Rendez-vous aujourd'hui</p>
-              <p className="text-3xl font-bold text-gray-900">{stats.todayAppointments}</p>
-              <p className="text-xs text-gray-500 mt-2">
+              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mb-1">Rendez-vous aujourd'hui</p>
+              <p className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">{stats.todayAppointments}</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
                 {stats.completedAppointments} terminés
               </p>
             </Card>
 
             {/* Staff Card */}
-            <Card className="p-6 bg-linear-to-br from-amber-500 to-orange-500 text-white border-0 shadow-xl">
+            <Card className="p-4 sm:p-6 bg-linear-to-br from-amber-500 to-orange-500 text-white border-0 shadow-xl">
               <div className="flex items-center justify-between mb-4">
                 <div className="p-3 bg-white/20 rounded-lg backdrop-blur-sm">
-                  <Award className="w-6 h-6" />
+                  <Award className="w-5 h-5 sm:w-6 sm:h-6" />
                 </div>
-                <Star className="w-5 h-5 opacity-80" />
+                <Star className="w-4 h-4 sm:w-5 sm:h-5 opacity-80" />
               </div>
-              <p className="text-sm opacity-90 mb-1">Personnel actif</p>
-              <p className="text-3xl font-bold mb-2">{stats.activeWorkers}</p>
+              <p className="text-xs sm:text-sm opacity-90 mb-1">Personnel actif</p>
+              <p className="text-2xl sm:text-3xl font-bold mb-2">{stats.activeWorkers}</p>
               <p className="text-xs opacity-80">
                 Note moyenne: {stats.avgRating.toFixed(1)}⭐
               </p>
@@ -295,53 +291,53 @@ export default function AdminDashboardV2() {
           </div>
 
           {/* Quick Stats Bar */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <Card className="p-4">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-green-100 rounded-lg">
-                  <CheckCircle className="w-5 h-5 text-green-600" />
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+            <Card className="p-3 sm:p-4 dark:bg-gray-900 dark:border-gray-800">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-lg">
+                  <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-600 dark:text-green-400" />
                 </div>
                 <div>
-                  <p className="text-xs text-gray-600">Complétés</p>
-                  <p className="text-xl font-bold">{stats.completedAppointments}</p>
+                  <p className="text-xs text-gray-600 dark:text-gray-300">Complétés</p>
+                  <p className="text-lg sm:text-xl font-bold text-gray-900 dark:text-gray-100">{stats.completedAppointments}</p>
                 </div>
               </div>
             </Card>
 
-            <Card className="p-4">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-yellow-100 rounded-lg">
-                  <Clock className="w-5 h-5 text-yellow-600" />
+            <Card className="p-3 sm:p-4 dark:bg-gray-900 dark:border-gray-800">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <div className="p-2 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg">
+                  <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-600 dark:text-yellow-400" />
                 </div>
                 <div>
-                  <p className="text-xs text-gray-600">En attente</p>
-                  <p className="text-xl font-bold">{stats.pendingAppointments}</p>
+                  <p className="text-xs text-gray-600 dark:text-gray-300">En attente</p>
+                  <p className="text-lg sm:text-xl font-bold text-gray-900 dark:text-gray-100">{stats.pendingAppointments}</p>
                 </div>
               </div>
             </Card>
 
-            <Card className="p-4">
-              <div className="flex items-center gap-3">
-                <div className={`p-2 rounded-lg ${stats.lowStockItems > 0 ? 'bg-red-100' : 'bg-gray-100'
+            <Card className="p-3 sm:p-4 dark:bg-gray-900 dark:border-gray-800">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <div className={`p-2 rounded-lg ${stats.lowStockItems > 0 ? 'bg-red-100 dark:bg-red-900/30' : 'bg-gray-100 dark:bg-gray-800'
                   }`}>
-                  <Package className={`w-5 h-5 ${stats.lowStockItems > 0 ? 'text-red-600' : 'text-gray-600'
+                  <Package className={`w-4 h-4 sm:w-5 sm:h-5 ${stats.lowStockItems > 0 ? 'text-red-600 dark:text-red-400' : 'text-gray-600 dark:text-gray-400'
                     }`} />
                 </div>
                 <div>
-                  <p className="text-xs text-gray-600">Stock bas</p>
-                  <p className="text-xl font-bold">{stats.lowStockItems}</p>
+                  <p className="text-xs text-gray-600 dark:text-gray-300">Stock bas</p>
+                  <p className="text-lg sm:text-xl font-bold text-gray-900 dark:text-gray-100">{stats.lowStockItems}</p>
                 </div>
               </div>
             </Card>
 
-            <Card className="p-4">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-purple-100 rounded-lg">
-                  <Activity className="w-5 h-5 text-purple-600" />
+            <Card className="p-3 sm:p-4 dark:bg-gray-900 dark:border-gray-800">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <div className="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
+                  <Activity className="w-4 h-4 sm:w-5 sm:h-5 text-purple-600 dark:text-purple-400" />
                 </div>
                 <div>
-                  <p className="text-xs text-gray-600">Taux occupation</p>
-                  <p className="text-xl font-bold">
+                  <p className="text-xs text-gray-600 dark:text-gray-300">Taux occupation</p>
+                  <p className="text-lg sm:text-xl font-bold text-gray-900 dark:text-gray-100">
                     {stats.todayAppointments > 0
                       ? Math.round((stats.completedAppointments / stats.todayAppointments) * 100)
                       : 0}%
@@ -355,19 +351,21 @@ export default function AdminDashboardV2() {
         {/* Charts Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           {/* Revenue Trend */}
-          <Card className="p-6">
-            <h3 className="text-lg font-semibold mb-4 flex items-center">
-              <TrendingUp className="w-5 h-5 mr-2 text-green-500" />
+          <Card className="p-4 sm:p-6 dark:bg-gray-900 dark:border-gray-800">
+            <h3 className="text-base sm:text-lg font-semibold mb-4 flex items-center text-gray-900 dark:text-gray-100">
+              <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-green-500" />
               Évolution des Revenus
             </h3>
-            <div className="h-80">
+            <div className="h-64 sm:h-80">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={monthlyRevenueData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="month" />
-                  <YAxis />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                  <XAxis dataKey="month" stroke="#9CA3AF" />
+                  <YAxis stroke="#9CA3AF" />
                   <Tooltip
                     formatter={(value: number) => `${(value / 1000000).toFixed(1)}M CDF`}
+                    contentStyle={{ backgroundColor: '#1F2937', border: '1px solid #374151', borderRadius: '8px' }}
+                    labelStyle={{ color: '#F3F4F6' }}
                   />
                   <Legend />
                   <Line
@@ -383,12 +381,12 @@ export default function AdminDashboardV2() {
           </Card>
 
           {/* Service Distribution */}
-          <Card className="p-6">
-            <h3 className="text-lg font-semibold mb-4 flex items-center">
-              <Scissors className="w-5 h-5 mr-2 text-pink-500" />
+          <Card className="p-4 sm:p-6 dark:bg-gray-900 dark:border-gray-800">
+            <h3 className="text-base sm:text-lg font-semibold mb-4 flex items-center text-gray-900 dark:text-gray-100">
+              <Scissors className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-pink-500" />
               Distribution des Services
             </h3>
-            <div className="h-80 flex items-center justify-center">
+            <div className="h-64 sm:h-80 flex items-center justify-center">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
@@ -397,7 +395,7 @@ export default function AdminDashboardV2() {
                     cy="50%"
                     labelLine={false}
                     label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                    outerRadius={100}
+                    outerRadius={80}
                     fill="#8884d8"
                     dataKey="value"
                   >

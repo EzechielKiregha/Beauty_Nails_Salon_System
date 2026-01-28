@@ -122,7 +122,7 @@ export default function CreateTaskModal({ triggerLabel = 'Créer une tâche' }: 
             <Select onValueChange={(v) => setAssignedToWorkerId(v || null)}>
               <SelectTrigger size="sm"><SelectValue placeholder="Aucun" /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Aucun</SelectItem>
+                <SelectItem value="Aucun">Aucun</SelectItem>
                 {staff.map((s: any) => (
                   <SelectItem key={s.id} value={s.id}>{s.user?.name || s.id}</SelectItem>
                 ))}
@@ -135,7 +135,7 @@ export default function CreateTaskModal({ triggerLabel = 'Créer une tâche' }: 
             <Select onValueChange={(v) => setClientId(v || null)}>
               <SelectTrigger size="sm"><SelectValue placeholder="Aucun" /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Aucun</SelectItem>
+                <SelectItem value="Aucun">Aucun</SelectItem>
                 {clients.map((c: any) => (
                   <SelectItem key={c.id} value={c.id}>{c.user?.name || c.id}</SelectItem>
                 ))}

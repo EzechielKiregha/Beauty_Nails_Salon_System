@@ -13,13 +13,47 @@ export async function GET(request: NextRequest) {
     const workerId = searchParams.get('workerId');
     const clientId = searchParams.get('clientId');
 
+
+    // Validation
+    if ( !workerId || !date || (!clientId && user.role !== 'client')) {
+      return errorResponse('Données manquantes', 400);
+    }
+
     const where: any = {};
+    let wId = workerId;
+
+    const workerUser = await prisma.user.findUnique({
+      where: { id: workerId },
+      select: {
+        workerProfile: { select: { id: true } }
+      }
+    });
+
+    wId = user.id;
+
+    if (!workerUser?.workerProfile) {
+    const w = await prisma.workerProfile.findUnique({
+      where: { id: workerId },
+        include: {
+          user: true,
+        },
+      });
+
+      if (!w) {
+        return errorResponse('Employé non trouvé pour la notification', 404);
+      }
+
+      wId = w.user.id;
+    }
 
     // Role-based filtering
     if (user.role === 'client') {
       where.clientId = user.id;
     } else if (user.role === 'worker' && !clientId) {
-      where.workerId = user.id;
+
+      
+
+      where.workerId = wId;
     }
 
     if (date) {
@@ -91,7 +125,7 @@ export async function POST(request: NextRequest) {
     } = body;
 
     // Validation
-    if (!serviceId || !workerId || !date || !time) {
+    if (!serviceId || !workerId || !date || !time || (!clientId && user.role !== 'worker')) {
       return errorResponse('Données manquantes', 400);
     }
 
@@ -103,6 +137,7 @@ export async function POST(request: NextRequest) {
     if (!service) {
       return errorResponse('Service non trouvé', 404);
     }
+
 
     // Check for conflicts
     const conflictingAppointment = await prisma.appointment.findFirst({
@@ -120,12 +155,13 @@ export async function POST(request: NextRequest) {
       return errorResponse('Ce créneau n\'est pas disponible', 409);
     }
 
+
     // Create appointment
     const appointment = await prisma.appointment.create({
       data: {
-        clientId: clientId || user.id,
+        clientId: user.id === clientId ? user.id : clientId,
         serviceId,
-        workerId,
+        workerId: workerId,
         date: new Date(date),
         time,
         duration: service.duration,
@@ -150,14 +186,40 @@ export async function POST(request: NextRequest) {
       },
     });
 
+    let wId = workerId;
+
+    const workerUser = await prisma.user.findUnique({
+      where: { id: workerId },
+      select: {
+        workerProfile: { select: { id: true } }
+      }
+    });
+
+    if (!workerUser?.workerProfile) {
+      const w = await prisma.workerProfile.findUnique({
+      where: { id: workerId },
+        include: {
+          user: true,
+        },
+      });
+
+      if (!w) {
+        return errorResponse('Employé non trouvé pour la notification', 404);
+      }
+
+      wId = w.user.id;
+    }
+
+    console.log('Creating notification for user:', wId);
+
     // Create notification
     await prisma.notification.create({
       data: {
-        userId: workerId,
+        userId: wId,
         type: 'appointment_confirmed',
         title: 'Nouveau rendez-vous',
         message: `Nouveau rendez-vous pour ${service.name} le ${date} à ${time}`,
-        link: `/dashboard/worker/appointments/${appointment.id}`,
+        link: `/dashboard/worker/appointments?id=${appointment.id}`,
       },
     });
 

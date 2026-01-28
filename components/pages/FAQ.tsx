@@ -113,42 +113,42 @@ export default function FAQ() {
   ];
 
   return (
-    <div className="min-h-screen py-24">
+    <div className="min-h-screen py-16 sm:py-24 bg-background dark:bg-gray-950">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-16">
-          <Badge className="mb-4 bg-pink-100 text-pink-600">
+        <div className="text-center mb-12 sm:mb-16">
+          <Badge className="mb-4 bg-pink-100 dark:bg-pink-900 text-pink-600 dark:text-pink-200">
             <HelpCircle className="w-4 h-4 mr-2" />
             FAQ
           </Badge>
-          <h1 className="text-5xl text-gray-900 mb-6">
+          <h1 className="text-4xl sm:text-5xl text-gray-900 dark:text-gray-100 mb-4 sm:mb-6">
             Questions Fréquentes
           </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
             Trouvez rapidement les réponses à vos questions les plus courantes
           </p>
         </div>
 
         {/* FAQ Sections */}
-        <div className="space-y-12">
+        <div className="space-y-10 sm:space-y-12">
           {faqCategories.map((category, categoryIndex) => (
             <div key={categoryIndex}>
-              <h2 className="text-2xl text-gray-900 mb-6 flex items-center">
-                <span className="w-2 h-8 bg-linear-to-b from-pink-500 to-amber-400 rounded-full mr-4" />
+              <h2 className="text-xl sm:text-2xl text-gray-900 dark:text-gray-100 mb-4 sm:mb-6 flex items-center">
+                <span className="w-2 h-8 bg-linear-to-b from-pink-500 to-amber-400 rounded-full mr-3 sm:mr-4" />
                 {category.category}
               </h2>
 
-              <Accordion type="single" collapsible className="space-y-4">
+              <Accordion type="single" collapsible className="space-y-3 sm:space-y-4">
                 {category.questions.map((item, index) => (
                   <AccordionItem
                     key={index}
                     value={`${categoryIndex}-${index}`}
-                    className="bg-white border-0 shadow-md rounded-2xl px-6"
+                    className="bg-white dark:bg-gray-900 border-0 border-b border-pink-100 dark:border-pink-900 shadow-md dark:shadow-gray-900/50 rounded-2xl px-4 sm:px-6"
                   >
-                    <AccordionTrigger className="text-left text-gray-900 hover:text-pink-600 py-6">
+                    <AccordionTrigger className="text-left text-sm sm:text-base text-gray-900 dark:text-gray-100 hover:text-pink-600 dark:hover:text-pink-400 py-4 sm:py-6">
                       {item.question}
                     </AccordionTrigger>
-                    <AccordionContent className="text-gray-600 pb-6">
+                    <AccordionContent className="text-sm sm:text-base text-gray-600 dark:text-gray-300 pb-4 sm:pb-6">
                       {item.answer}
                     </AccordionContent>
                   </AccordionItem>
@@ -159,21 +159,21 @@ export default function FAQ() {
         </div>
 
         {/* Still Have Questions */}
-        <Card className="bg-linear-to-br from-pink-500 via-purple-500 to-amber-500 border-0 shadow-2xl rounded-3xl p-12 text-center text-white mt-16">
-          <h2 className="text-3xl mb-4">
+        <Card className="bg-linear-to-br from-pink-500 via-purple-500 to-amber-500 border-0 shadow-2xl rounded-3xl p-6 sm:p-12 text-center text-white mt-12 sm:mt-16">
+          <h2 className="text-2xl sm:text-3xl mb-3 sm:mb-4">
             Vous avez d'autres questions ?
           </h2>
-          <p className="text-xl text-pink-100 mb-8 max-w-2xl mx-auto">
+          <p className="text-lg sm:text-xl text-pink-100 mb-6 sm:mb-8 max-w-2xl mx-auto">
             Notre équipe est là pour vous aider. N'hésitez pas à nous contacter !
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
             <Link href="/contact">
-              <Button size="lg" className="bg-white text-pink-600 hover:bg-gray-100 rounded-full px-8">
+              <Button size="lg" className="w-full sm:w-auto bg-white text-pink-600 hover:bg-gray-100 rounded-full px-6 sm:px-8 py-5 sm:py-6">
                 Nous contacter
               </Button>
             </Link>
             <a href="https://wa.me/243123456789" target="_blank" rel="noopener noreferrer">
-              <Button size="lg" variant="outline" className="border-2 border-white text-white hover:bg-white/10 rounded-full px-8">
+              <Button size="lg" variant="outline" className="w-full sm:w-auto border-2 border-white text-white hover:bg-white/10 rounded-full px-6 sm:px-8 py-5 sm:py-6">
                 WhatsApp
               </Button>
             </a>

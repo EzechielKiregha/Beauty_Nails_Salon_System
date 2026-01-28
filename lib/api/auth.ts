@@ -25,12 +25,17 @@ export interface ClientProfile {
 
 export interface WorkerProfile {
   id: string;
+  userId: string;
   position: string;
   specialties: string[];
   commissionRate: number;
   rating: number;
+  totalReviews: number;
   isAvailable: boolean;
   workingHours?: any;
+  hireDate: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface LoginData {

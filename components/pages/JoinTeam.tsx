@@ -91,44 +91,44 @@ export default function JoinTeam() {
   ];
 
   return (
-    <div className="min-h-screen py-24">
+    <div className="min-h-screen py-16 sm:py-24 bg-background dark:bg-gray-950">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-16">
-          <Badge className="mb-4 bg-pink-100 text-pink-600">
+        <div className="text-center mb-12 sm:mb-16">
+          <Badge className="mb-4 bg-pink-100 dark:bg-pink-900 text-pink-600 dark:text-pink-200">
             <Users className="w-4 h-4 mr-2" />
             Carrières
           </Badge>
-          <h1 className="text-5xl text-gray-900 mb-6">
+          <h1 className="text-4xl sm:text-5xl text-gray-900 dark:text-gray-100 mb-4 sm:mb-6">
             Rejoignez l'équipe Beauty Nails
           </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
             Faites partie d'une équipe passionnée et talentueuse dans le plus beau salon de Kinshasa
           </p>
         </div>
 
         {/* Why Join Us */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-24">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 items-center mb-16 sm:mb-24">
           <div>
-            <h2 className="text-4xl text-gray-900 mb-6">
+            <h2 className="text-3xl sm:text-4xl text-gray-900 dark:text-gray-100 mb-4 sm:mb-6">
               Pourquoi travailler chez Beauty Nails ?
             </h2>
-            <p className="text-lg text-gray-600 mb-6">
+            <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300 mb-4 sm:mb-6">
               Beauty Nails n'est pas qu'un salon de beauté, c'est une famille. Nous investissons dans notre équipe
               et créons un environnement où chaque membre peut s'épanouir professionnellement et personnellement.
             </p>
-            <p className="text-lg text-gray-600 mb-8">
+            <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300 mb-6 sm:mb-8">
               Nous recherchons des professionnelles passionnées, créatives et dévouées qui partagent notre vision
               de l'excellence et du service client exceptionnel.
             </p>
-            <div className="grid grid-cols-2 gap-6">
-              <div className="text-center p-6 bg-pink-50 rounded-2xl">
-                <div className="text-4xl text-pink-600 mb-2">8</div>
-                <div className="text-sm text-gray-600">Membres de l'équipe</div>
+            <div className="grid grid-cols-2 gap-4 sm:gap-6">
+              <div className="text-center p-4 sm:p-6 bg-pink-50 dark:bg-gray-900 border-b border-pink-100 dark:border-pink-900 rounded-2xl">
+                <div className="text-3xl sm:text-4xl text-pink-600 dark:text-pink-400 mb-1 sm:mb-2">8</div>
+                <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">Membres de l'équipe</div>
               </div>
-              <div className="text-center p-6 bg-purple-50 rounded-2xl">
-                <div className="text-4xl text-purple-600 mb-2">5+</div>
-                <div className="text-sm text-gray-600">Années d'expérience</div>
+              <div className="text-center p-4 sm:p-6 bg-purple-50 dark:bg-gray-900 border-b border-pink-100 dark:border-pink-900 rounded-2xl">
+                <div className="text-3xl sm:text-4xl text-purple-600 dark:text-purple-400 mb-1 sm:mb-2">5+</div>
+                <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">Années d'expérience</div>
               </div>
             </div>
           </div>
@@ -144,43 +144,43 @@ export default function JoinTeam() {
         </div>
 
         {/* Benefits */}
-        <div className="mb-24">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl text-gray-900 mb-4">Avantages</h2>
-            <p className="text-xl text-gray-600">Nous prenons soin de notre équipe</p>
+        <div className="mb-16 sm:mb-24">
+          <div className="text-center mb-10 sm:mb-12">
+            <h2 className="text-3xl sm:text-4xl text-gray-900 dark:text-gray-100 mb-2 sm:mb-4">Avantages</h2>
+            <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300">Nous prenons soin de notre équipe</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             {benefits.map((benefit, index) => (
-              <Card key={index} className="bg-white border-0 shadow-xl rounded-2xl p-8 text-center hover:shadow-2xl transition-shadow">
-                <div className={`w-16 h-16 rounded-full bg-linear-to-br ${benefit.color} flex items-center justify-center mx-auto mb-6`}>
+              <Card key={index} className="bg-white dark:bg-gray-900 border-b border-pink-100 dark:border-pink-900 shadow-xl rounded-2xl p-6 sm:p-8 text-center hover:shadow-2xl transition-shadow">
+                <div className={`w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-linear-to-br ${benefit.color} flex items-center justify-center mx-auto mb-4 sm:mb-6`}>
                   {benefit.icon}
                 </div>
-                <h3 className="text-xl text-gray-900 mb-3">{benefit.title}</h3>
-                <p className="text-gray-600">{benefit.description}</p>
+                <h3 className="text-lg sm:text-xl text-gray-900 dark:text-gray-100 mb-2 sm:mb-3">{benefit.title}</h3>
+                <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300">{benefit.description}</p>
               </Card>
             ))}
           </div>
         </div>
 
         {/* Open Positions */}
-        <div className="mb-24">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl text-gray-900 mb-4">Postes Ouverts</h2>
-            <p className="text-xl text-gray-600">Trouvez le poste qui vous correspond</p>
+        <div className="mb-16 sm:mb-24">
+          <div className="text-center mb-10 sm:mb-12">
+            <h2 className="text-3xl sm:text-4xl text-gray-900 dark:text-gray-100 mb-2 sm:mb-4">Postes Ouverts</h2>
+            <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300">Trouvez le poste qui vous correspond</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
             {positions.map((position, index) => (
-              <Card key={index} className="bg-white border-0 shadow-lg hover:shadow-xl transition-shadow p-8 rounded-2xl">
-                <h3 className="text-2xl text-gray-900 mb-3">{position.title}</h3>
-                <p className="text-gray-600 mb-6">{position.description}</p>
+              <Card key={index} className="bg-white dark:bg-gray-900 border-b border-pink-100 dark:border-pink-900 shadow-lg hover:shadow-xl transition-shadow p-6 sm:p-8 rounded-2xl">
+                <h3 className="text-xl sm:text-2xl text-gray-900 dark:text-gray-100 mb-2 sm:mb-3">{position.title}</h3>
+                <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300 mb-4 sm:mb-6">{position.description}</p>
                 <div className="mb-6">
-                  <p className="text-sm text-gray-500 mb-3">Exigences :</p>
+                  <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mb-3">Exigences :</p>
                   <ul className="space-y-2">
                     {position.requirements.map((req, i) => (
-                      <li key={i} className="flex items-start text-gray-700">
-                        <span className="w-1.5 h-1.5 bg-pink-400 rounded-full mr-2 mt-2" />
+                      <li key={i} className="flex items-start text-sm sm:text-base text-gray-700 dark:text-gray-300">
+                        <span className="w-1.5 h-1.5 bg-pink-400 dark:bg-pink-500 rounded-full mr-2 mt-1 flex-shrink-0" />
                         {req}
                       </li>
                     ))}
@@ -192,14 +192,14 @@ export default function JoinTeam() {
         </div>
 
         {/* Application Form */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
           <div className="lg:col-span-2">
-            <Card className="bg-white border-0 shadow-xl rounded-2xl p-8">
-              <h2 className="text-2xl text-gray-900 mb-6">Postulez Maintenant</h2>
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card className="bg-white dark:bg-gray-900 border-b border-pink-100 dark:border-pink-900 shadow-xl rounded-2xl p-6 sm:p-8">
+              <h2 className="text-xl sm:text-2xl text-gray-900 dark:text-gray-100 mb-4 sm:mb-6">Postulez Maintenant</h2>
+              <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                   <div>
-                    <Label htmlFor="name">Nom complet *</Label>
+                    <Label htmlFor="name" className="dark:text-gray-200">Nom complet *</Label>
                     <Input
                       id="name"
                       name="name"
@@ -207,12 +207,12 @@ export default function JoinTeam() {
                       placeholder="Marie Kabila"
                       value={formData.name}
                       onChange={handleChange}
-                      className="mt-2 rounded-xl"
+                      className="mt-2 rounded-xl dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"
                       required
                     />
                   </div>
                   <div>
-                    <Label htmlFor="email">Email *</Label>
+                    <Label htmlFor="email" className="dark:text-gray-200">Email *</Label>
                     <Input
                       id="email"
                       name="email"
@@ -220,15 +220,15 @@ export default function JoinTeam() {
                       placeholder="marie@example.com"
                       value={formData.email}
                       onChange={handleChange}
-                      className="mt-2 rounded-xl"
+                      className="mt-2 rounded-xl dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"
                       required
                     />
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                   <div>
-                    <Label htmlFor="phone">Téléphone *</Label>
+                    <Label htmlFor="phone" className="dark:text-gray-200">Téléphone *</Label>
                     <Input
                       id="phone"
                       name="phone"
@@ -236,14 +236,14 @@ export default function JoinTeam() {
                       placeholder="+243 123 456 789"
                       value={formData.phone}
                       onChange={handleChange}
-                      className="mt-2 rounded-xl"
+                      className="mt-2 rounded-xl dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"
                       required
                     />
                   </div>
                   <div>
-                    <Label htmlFor="position">Poste désiré *</Label>
+                    <Label htmlFor="position" className="dark:text-gray-200">Poste désiré *</Label>
                     <Select value={formData.position} onValueChange={(value: any) => setFormData({ ...formData, position: value })}>
-                      <SelectTrigger className="mt-2 rounded-xl">
+                      <SelectTrigger className="mt-2 rounded-xl dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100">
                         <SelectValue placeholder="Sélectionner un poste" />
                       </SelectTrigger>
                       <SelectContent>
@@ -257,7 +257,7 @@ export default function JoinTeam() {
                 </div>
 
                 <div>
-                  <Label htmlFor="experience">Années d'expérience</Label>
+                  <Label htmlFor="experience" className="dark:text-gray-200">Années d'expérience</Label>
                   <Input
                     id="experience"
                     name="experience"
@@ -265,32 +265,32 @@ export default function JoinTeam() {
                     placeholder="ex: 3 ans"
                     value={formData.experience}
                     onChange={handleChange}
-                    className="mt-2 rounded-xl"
+                    className="mt-2 rounded-xl dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"
                   />
                 </div>
 
                 <div>
-                  <Label htmlFor="message">Parlez-nous de vous *</Label>
+                  <Label htmlFor="message" className="dark:text-gray-200">Parlez-nous de vous *</Label>
                   <Textarea
                     id="message"
                     name="message"
                     placeholder="Décrivez votre expérience, vos compétences et pourquoi vous souhaitez rejoindre Beauty Nails..."
                     value={formData.message}
                     onChange={handleChange}
-                    className="mt-2 rounded-xl min-h-[150px]"
+                    className="mt-2 rounded-xl dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100 min-h-[150px] text-sm"
                     required
                   />
                 </div>
 
-                <div className="bg-gray-50 rounded-xl p-4">
-                  <p className="text-sm text-gray-600">
+                <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-3 sm:p-4">
+                  <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">
                     📎 Vous pouvez également envoyer votre CV et portfolio par email à <strong>recrutement@beautynails.cd</strong>
                   </p>
                 </div>
 
                 <Button
                   type="submit"
-                  className="w-full bg-linear-to-r from-pink-500 to-amber-400 hover:from-pink-600 hover:to-amber-500 text-white rounded-full py-6"
+                  className="w-full bg-linear-to-r from-pink-500 to-amber-400 hover:from-pink-600 hover:to-amber-500 text-white rounded-full py-5 sm:py-6 text-sm sm:text-base"
                 >
                   Envoyer ma candidature
                 </Button>
@@ -299,58 +299,58 @@ export default function JoinTeam() {
           </div>
 
           {/* Sidebar */}
-          <div className="space-y-6">
-            <Card className="bg-linear-to-br from-pink-50 to-purple-50 border-0 shadow-lg p-6 rounded-2xl">
-              <h3 className="text-xl text-gray-900 mb-4">Processus de Recrutement</h3>
-              <div className="space-y-4">
-                <div className="flex gap-4">
-                  <div className="w-8 h-8 rounded-full bg-pink-500 text-white flex items-center justify-center flex-shrink-0">
+          <div className="space-y-4 sm:space-y-6">
+            <Card className="bg-linear-to-br from-pink-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 border-b border-pink-100 dark:border-pink-900 shadow-lg p-4 sm:p-6 rounded-2xl">
+              <h3 className="text-lg sm:text-xl text-gray-900 dark:text-gray-100 mb-3 sm:mb-4">Processus de Recrutement</h3>
+              <div className="space-y-3 sm:space-y-4">
+                <div className="flex gap-3 sm:gap-4">
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-pink-500 text-white flex items-center justify-center flex-shrink-0 text-xs sm:text-sm">
                     1
                   </div>
                   <div>
-                    <p className="text-gray-900">Candidature</p>
-                    <p className="text-sm text-gray-600">Envoi de votre CV et portfolio</p>
+                    <p className="text-sm sm:text-base text-gray-900 dark:text-gray-100">Candidature</p>
+                    <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Envoi de votre CV et portfolio</p>
                   </div>
                 </div>
-                <div className="flex gap-4">
-                  <div className="w-8 h-8 rounded-full bg-pink-500 text-white flex items-center justify-center flex-shrink-0">
+                <div className="flex gap-3 sm:gap-4">
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-pink-500 text-white flex items-center justify-center flex-shrink-0 text-xs sm:text-sm">
                     2
                   </div>
                   <div>
-                    <p className="text-gray-900">Entretien</p>
-                    <p className="text-sm text-gray-600">Discussion avec notre équipe</p>
+                    <p className="text-sm sm:text-base text-gray-900 dark:text-gray-100">Entretien</p>
+                    <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Discussion avec notre équipe</p>
                   </div>
                 </div>
-                <div className="flex gap-4">
-                  <div className="w-8 h-8 rounded-full bg-pink-500 text-white flex items-center justify-center flex-shrink-0">
+                <div className="flex gap-3 sm:gap-4">
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-pink-500 text-white flex items-center justify-center flex-shrink-0 text-xs sm:text-sm">
                     3
                   </div>
                   <div>
-                    <p className="text-gray-900">Test Pratique</p>
-                    <p className="text-sm text-gray-600">Démonstration de vos compétences</p>
+                    <p className="text-sm sm:text-base text-gray-900 dark:text-gray-100">Test Pratique</p>
+                    <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Démonstration de vos compétences</p>
                   </div>
                 </div>
-                <div className="flex gap-4">
-                  <div className="w-8 h-8 rounded-full bg-pink-500 text-white flex items-center justify-center flex-shrink-0">
+                <div className="flex gap-3 sm:gap-4">
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-pink-500 text-white flex items-center justify-center flex-shrink-0 text-xs sm:text-sm">
                     4
                   </div>
                   <div>
-                    <p className="text-gray-900">Bienvenue !</p>
-                    <p className="text-sm text-gray-600">Intégration dans l'équipe</p>
+                    <p className="text-sm sm:text-base text-gray-900 dark:text-gray-100">Bienvenue !</p>
+                    <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Intégration dans l'équipe</p>
                   </div>
                 </div>
               </div>
             </Card>
 
-            <Card className="bg-linear-to-br from-amber-50 to-orange-50 border-0 shadow-lg p-6 rounded-2xl">
-              <h3 className="text-xl text-gray-900 mb-4">Questions ?</h3>
-              <p className="text-gray-600 mb-4">
+            <Card className="bg-linear-to-br from-amber-50 to-orange-50 dark:from-gray-900 dark:to-gray-800 border-b border-pink-100 dark:border-pink-900 shadow-lg p-4 sm:p-6 rounded-2xl">
+              <h3 className="text-lg sm:text-xl text-gray-900 dark:text-gray-100 mb-3 sm:mb-4">Questions ?</h3>
+              <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300 mb-3 sm:mb-4">
                 Contactez notre responsable RH pour plus d'informations
               </p>
-              <p className="text-sm text-gray-700 mb-2">
+              <p className="text-xs sm:text-sm text-gray-700 dark:text-gray-300 mb-2">
                 📧 recrutement@beautynails.cd
               </p>
-              <p className="text-sm text-gray-700">
+              <p className="text-xs sm:text-sm text-gray-700 dark:text-gray-300">
                 📞 +243 123 456 789
               </p>
             </Card>

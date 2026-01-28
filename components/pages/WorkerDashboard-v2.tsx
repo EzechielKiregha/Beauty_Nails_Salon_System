@@ -6,14 +6,13 @@ import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
 import { Sheet, SheetContent, SheetTrigger } from '../ui/sheet';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
 import { ScrollArea } from '../ui/scroll-area';
 import { Avatar, AvatarFallback } from '../ui/avatar';
 import {
-  Calendar, Clock, User, CheckCircle, Star, TrendingUp, Award,
-  Bell, MoreVertical, Phone, Mail, MessageSquare, MapPin, Info,
+  Calendar, Clock, CheckCircle, Star, TrendingUp, Award,
+  Bell, Phone, MessageSquare, MapPin,
   PlayCircle, CheckCheck, XCircle, AlertCircle,
-  Loader2,
   DollarSign
 } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
@@ -23,6 +22,7 @@ import { useWorkerCommission, useWorkerSchedule } from '@/lib/hooks/useStaff';
 import { useNotifications } from '@/lib/hooks/useNotifications';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
+import LoadingSpinner from '../LoadingSpinner';
 
 export default function WorkerDashboardV2() {
   const [notificationOpen, setNotificationOpen] = useState(false);
@@ -36,7 +36,7 @@ export default function WorkerDashboardV2() {
   // Get today's date
   const today = new Date().toISOString().split('T')[0];
 
-  // Get appointments
+  // Get appointments (today for schedule tab)
   const {
     appointments = [],
     isLoading: isAppointmentsLoading,
@@ -44,6 +44,19 @@ export default function WorkerDashboardV2() {
   } = useAppointments({
     workerId: user?.workerProfile?.id,
     date: today,
+  });
+
+  console.log('Appointments:', appointments);
+
+  // Get weekly appointments for stats
+  const weekStart = new Date();
+  weekStart.setDate(weekStart.getDate() - weekStart.getDay());
+  const weekStartStr = weekStart.toISOString().split('T')[0];
+
+  const {
+    appointments: weeklyAppointments = [],
+  } = useAppointments({
+    workerId: user?.workerProfile?.id,
   });
 
   // Get worker commission
@@ -181,26 +194,53 @@ export default function WorkerDashboardV2() {
     });
   };
 
-  // Prepare chart data
-  const weeklyData = [
-    { day: 'Lun', rendezVous: 8, revenus: 120000 },
-    { day: 'Mar', rendezVous: 10, revenus: 150000 },
-    { day: 'Mer', rendezVous: 7, revenus: 105000 },
-    { day: 'Jeu', rendezVous: 12, revenus: 180000 },
-    { day: 'Ven', rendezVous: 15, revenus: 225000 },
-    { day: 'Sam', rendezVous: 18, revenus: 270000 },
-    { day: 'Dim', rendezVous: 5, revenus: 75000 },
-  ];
+  // Calculate weekly data from appointments
+  const weeklyData = (() => {
+    const days = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
+    const data = days.map((day, index) => {
+      const dayDate = new Date(weekStart);
+      dayDate.setDate(dayDate.getDate() + index);
+      const dayStr = dayDate.toISOString().split('T')[0];
+
+      const dayAppointments = weeklyAppointments.filter(
+        apt => apt.date?.toString().split('T')[0] === dayStr ||
+          apt.date === dayStr ||
+          new Date(apt.date).toISOString().split('T')[0] === dayStr
+      );
+
+      return {
+        day,
+        rendezVous: dayAppointments.length,
+        revenus: dayAppointments.reduce((sum, apt) => sum + (apt.price || 0), 0),
+      };
+    });
+    return data;
+  })();
+
+  // Calculate service statistics from appointments
+  const serviceStats = (() => {
+    const serviceCounts: Record<string, number> = {};
+
+    weeklyAppointments.forEach(apt => {
+      const serviceName = apt.service?.name || 'Autre';
+      serviceCounts[serviceName] = (serviceCounts[serviceName] || 0) + 1;
+    });
+
+    const total = Object.values(serviceCounts).reduce((a, b) => a + b, 0);
+    return Object.entries(serviceCounts)
+      .map(([name, count]) => ({
+        name,
+        percentage: total > 0 ? Math.round((count / total) * 100) : 0,
+        count,
+      }))
+      .sort((a, b) => b.percentage - a.percentage)
+      .slice(0, 3);
+  })();
 
   // Loading state
   if (isAuthLoading || isAppointmentsLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-purple-50 via-pink-50 to-white">
-        <div className="text-center">
-          <Loader2 className="w-12 h-12 animate-spin text-purple-500 mx-auto mb-4" />
-          <p className="text-gray-600">Chargement...</p>
-        </div>
-      </div>
+      <LoadingSpinner />
     );
   }
 
@@ -210,16 +250,16 @@ export default function WorkerDashboardV2() {
   }
 
   return (
-    <div className="min-h-screen py-24 bg-linear-to-br from-purple-50 via-pink-50 to-white">
+    <div className="min-h-screen py-24 bg-linear-to-br from-purple-50 via-pink-50 to-white dark:from-gray-950 dark:via-gray-950 dark:to-gray-950">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-12">
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
             <div>
-              <h1 className="text-4xl font-bold bg-linear-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">
+              <h1 className="text-3xl sm:text-4xl font-bold bg-linear-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">
                 Espace Employé
               </h1>
-              <p className="text-gray-600 text-lg">
+              <p className="text-gray-600 dark:text-gray-300 text-base sm:text-lg">
                 Bonjour, {user?.name} 👋
               </p>
             </div>
@@ -227,7 +267,7 @@ export default function WorkerDashboardV2() {
             {/* Notifications */}
             <Sheet open={notificationOpen} onOpenChange={setNotificationOpen}>
               <SheetTrigger asChild>
-                <Button variant="outline" size="icon" className="relative">
+                <Button variant="outline" size="icon" className="relative dark:border-gray-700 dark:text-gray-200">
                   <Bell className="w-5 h-5" />
                   {unreadCount > 0 && (
                     <span className="absolute -top-1 -right-1 w-5 h-5 bg-pink-500 text-white text-xs rounded-full flex items-center justify-center">
@@ -236,12 +276,12 @@ export default function WorkerDashboardV2() {
                   )}
                 </Button>
               </SheetTrigger>
-              <SheetContent>
-                <h2 className="text-2xl font-bold mb-6">Notifications</h2>
+              <SheetContent className="dark:bg-gray-900 dark:border-gray-800">
+                <h2 className="text-2xl font-bold mb-6 dark:text-gray-100">Notifications</h2>
                 <ScrollArea className="h-[calc(100vh-150px)]">
                   <div className="space-y-4">
                     {notificationList.length === 0 ? (
-                      <div className="text-center py-12 text-gray-500">
+                      <div className="text-center py-12 text-gray-500 dark:text-gray-400">
                         <Bell className="w-12 h-12 mx-auto mb-4 opacity-20" />
                         <p>Aucune notification</p>
                       </div>
@@ -249,7 +289,7 @@ export default function WorkerDashboardV2() {
                       notificationList.map((notification) => (
                         <div
                           key={notification.id}
-                          className={`p-4 rounded-lg border cursor-pointer ${notification.isRead ? 'bg-white' : 'bg-purple-50 border-purple-200'
+                          className={`p-4 rounded-lg border cursor-pointer dark:border-gray-700 ${notification.isRead ? 'bg-white dark:bg-gray-800' : 'bg-purple-50 border-purple-200 dark:bg-purple-900/20 dark:border-purple-800'
                             }`}
                           onClick={() => markAsRead(notification.id)}
                         >
@@ -270,51 +310,50 @@ export default function WorkerDashboardV2() {
           </div>
 
           {/* Stats Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <Card className="p-6 hover:shadow-lg transition-shadow">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+            <Card className="p-4 sm:p-6 hover:shadow-lg transition-shadow dark:bg-gray-900 dark:border-gray-800 dark:hover:shadow-gray-800/50">
               <div className="flex items-center justify-between mb-4">
-                <div className="p-3 bg-purple-100 rounded-lg">
-                  <Calendar className="w-6 h-6 text-purple-600" />
+                <div className="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
+                  <Calendar className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600 dark:text-purple-400" />
                 </div>
               </div>
-              <p className="text-sm text-gray-600 mb-1">Aujourd'hui</p>
-              <p className="text-3xl font-bold text-gray-900">{stats.todayAppointments}</p>
-              <p className="text-xs text-gray-500 mt-2">{stats.completed} terminés</p>
+              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mb-1">Aujourd'hui</p>
+              <p className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">{stats.todayAppointments}</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">{stats.completed} terminés</p>
             </Card>
 
-            <Card className="p-6 hover:shadow-lg transition-shadow">
+            <Card className="p-4 sm:p-6 hover:shadow-lg transition-shadow dark:bg-gray-900 dark:border-gray-800 dark:hover:shadow-gray-800/50">
               <div className="flex items-center justify-between mb-4">
-                <div className="p-3 bg-green-100 rounded-lg">
-                  <CheckCircle className="w-6 h-6 text-green-600" />
+                <div className="p-3 bg-green-100 dark:bg-green-900/30 rounded-lg">
+                  <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6 text-green-600 dark:text-green-400" />
                 </div>
               </div>
-              <p className="text-sm text-gray-600 mb-1">Complétés</p>
-              <p className="text-3xl font-bold text-gray-900">{stats.completed}</p>
-              <p className="text-xs text-gray-500 mt-2">aujourd'hui</p>
+              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mb-1">Complétés</p>
+              <p className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">{stats.completed}</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">aujourd'hui</p>
             </Card>
 
-            <Card className="p-6 hover:shadow-lg transition-shadow">
+            <Card className="p-4 sm:p-6 hover:shadow-lg transition-shadow dark:bg-gray-900 dark:border-gray-800 dark:hover:shadow-gray-800/50">
               <div className="flex items-center justify-between mb-4">
-                <div className="p-3 bg-yellow-100 rounded-lg">
-                  <Clock className="w-6 h-6 text-yellow-600" />
+                <div className="p-3 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg">
+                  <Clock className="w-5 h-5 sm:w-6 sm:h-6 text-yellow-600 dark:text-yellow-400" />
                 </div>
               </div>
-              <p className="text-sm text-gray-600 mb-1">En attente</p>
-              <p className="text-3xl font-bold text-gray-900">{stats.pending}</p>
-              <p className="text-xs text-gray-500 mt-2">à confirmer</p>
+              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mb-1">En attente</p>
+              <p className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">{stats.pending}</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">à confirmer</p>
             </Card>
-
-            <Card className="p-6 bg-linear-to-br from-amber-500 to-pink-500 text-white border-0 shadow-xl">
+            <Card className="p-4 sm:p-6 bg-linear-to-br from-amber-500 to-pink-500 text-white border-0 shadow-xl">
               <div className="flex items-center justify-between mb-4">
                 <div className="p-3 bg-white/20 rounded-lg backdrop-blur-sm">
-                  <Award className="w-6 h-6" />
+                  <Award className="w-5 h-5 sm:w-6 sm:h-6" />
                 </div>
-                <Star className="w-5 h-5" />
+                <Star className="w-4 h-4 sm:w-5 sm:h-5" />
               </div>
-              <p className="text-sm opacity-90 mb-1">Note moyenne</p>
-              <p className="text-3xl font-bold">{stats.rating.toFixed(1)}</p>
+              <p className="text-xs sm:text-sm opacity-90 mb-1">Note moyenne</p>
+              <p className="text-2xl sm:text-3xl font-bold">{stats.rating.toFixed(1)}</p>
               <p className="text-xs opacity-80 mt-2">
-                {user?.workerProfile?.rating || 0} avis
+                {user?.workerProfile?.totalReviews || 0} avis
               </p>
             </Card>
           </div>
@@ -518,18 +557,22 @@ export default function WorkerDashboardV2() {
               <Card className="p-6">
                 <h3 className="text-lg font-semibold mb-4">Services populaires</h3>
                 <div className="space-y-3">
-                  <div className="flex items-center justify-between p-3 bg-purple-50 rounded-lg">
-                    <span>Manucure Gel</span>
-                    <Badge>45%</Badge>
-                  </div>
-                  <div className="flex items-center justify-between p-3 bg-pink-50 rounded-lg">
-                    <span>Extensions de Cils</span>
-                    <Badge>30%</Badge>
-                  </div>
-                  <div className="flex items-center justify-between p-3 bg-amber-50 rounded-lg">
-                    <span>Tresses Box Braids</span>
-                    <Badge>25%</Badge>
-                  </div>
+                  {serviceStats.length === 0 ? (
+                    <p className="text-gray-500">Aucun rendez-vous cette semaine</p>
+                  ) : (
+                    serviceStats.map((service, index) => {
+                      const colors = ['bg-purple-50', 'bg-pink-50', 'bg-amber-50'];
+                      return (
+                        <div
+                          key={service.name}
+                          className={`flex items-center justify-between p-3 ${colors[index] || 'bg-gray-50'} rounded-lg`}
+                        >
+                          <span>{service.name}</span>
+                          <Badge>{service.percentage}%</Badge>
+                        </div>
+                      );
+                    })
+                  )}
                 </div>
               </Card>
             </div>
@@ -572,30 +615,28 @@ export default function WorkerDashboardV2() {
                 </div>
               </div>
 
-              <h3 className="text-lg font-semibold mb-4">Historique des paiements</h3>
+              <h3 className="text-lg font-semibold mb-4">Commission actuelle</h3>
               <div className="space-y-3">
-                {[
-                  { period: 'Semaine 1 - Jan 2024', amount: 125000, paid: true },
-                  { period: 'Semaine 4 - Déc 2023', amount: 110000, paid: true },
-                  { period: 'Semaine 3 - Déc 2023', amount: 98000, paid: true },
-                ].map((payment, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center justify-between p-4 border rounded-lg"
-                  >
-                    <div>
-                      <p className="font-semibold">{payment.period}</p>
-                      <p className="text-sm text-gray-600">
-                        {payment.paid ? 'Payé' : 'En attente'}
-                      </p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-xl font-bold text-green-600">
-                        {payment.amount.toLocaleString()} CDF
-                      </p>
-                    </div>
+                <div className="flex items-center justify-between p-4 border rounded-lg bg-gradient-to-r from-green-50 to-emerald-50">
+                  <div>
+                    <p className="font-semibold">Période actuelle (Semaine)</p>
+                    <p className="text-sm text-gray-600">
+                      {commissionData?.appointmentsCount || 0} rendez-vous
+                    </p>
                   </div>
-                ))}
+                  <div className="text-right">
+                    <p className="text-xl font-bold text-green-600">
+                      {stats.commission.toLocaleString()} CDF
+                    </p>
+                  </div>
+                </div>
+
+                {commissionData?.appointmentsCount === 0 && (
+                  <div className="text-center py-8 text-gray-500">
+                    <Calendar className="w-12 h-12 mx-auto mb-4 opacity-20" />
+                    <p>Aucun rendez-vous complété cette semaine</p>
+                  </div>
+                )}
               </div>
             </Card>
           </TabsContent>

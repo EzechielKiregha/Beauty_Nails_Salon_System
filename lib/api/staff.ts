@@ -37,11 +37,35 @@ export interface WorkerSchedule {
 }
 
 export interface CreateWorkerData {
-  userId: string;
-  position: string;
-  specialties: string[];
-  commissionRate: number;
-  workingHours?: any;
+  name: string;
+  email: string;
+  phone: string;
+  password: string;
+  role?: string;
+  workerProfile: {
+    position: string;
+    specialties: string[];
+    commissionRate: number;
+    workingHours?: any;
+  };
+}
+
+export interface CreateWorkerResponse {
+  user: {
+    id: string;
+    name: string;
+    email: string;
+    phone: string;
+    role: string;
+    avatar: string | null;
+    isActive: boolean;
+    emailVerified: string;
+    createdAt: string;
+    updatedAt: string;
+    clientProfile?: any;
+    workerProfile?: any;
+  };
+  message: string;
 }
 
 export interface UpdateScheduleData {
@@ -67,8 +91,8 @@ export const staffApi = {
     return data;
   },
 
-  // Create worker
-  createWorker: async (workerData: CreateWorkerData): Promise<{ worker: Worker; message: string }> => {
+  // Create worker (registers a new user with worker profile)
+  createWorker: async (workerData: CreateWorkerData): Promise<CreateWorkerResponse> => {
     const { data } = await axiosdb.post('/staff', workerData);
     return data;
   },

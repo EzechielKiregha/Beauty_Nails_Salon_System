@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { staffApi, CreateWorkerData, UpdateScheduleData } from '../api/staff';
+import { staffApi, CreateWorkerData, UpdateScheduleData, CreateWorkerResponse } from '../api/staff';
 import { toast } from 'sonner';
 
 export function useStaff(params?: {
@@ -20,12 +20,12 @@ export function useStaff(params?: {
   // Create worker
   const createMutation = useMutation({
     mutationFn: staffApi.createWorker,
-    onSuccess: (data) => {
+    onSuccess: (data: CreateWorkerResponse) => {
       queryClient.invalidateQueries({ queryKey: ['staff'] });
-      toast.success(data.message);
+      toast.success(data.message || 'Employé créé avec succès');
     },
     onError: (error: any) => {
-      toast.error(error.response?.data?.error?.message || 'Erreur de création');
+      toast.error(error.response?.data?.error?.message || 'Erreur lors de la création');
     },
   });
 

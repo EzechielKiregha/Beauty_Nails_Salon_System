@@ -30,8 +30,8 @@ export default function BookingCalendar({ showMock }: { showMock?: boolean }) {
   const dateStr = currentDate.toISOString().split('T')[0];
 
   // Hooks (prefer API data)
-  const { staff: apiStaff = [] } = useStaff();
-  const { appointments: apiAppointments = [] } = useAppointments({ date: dateStr });
+  const { staff: apiStaff } = useStaff();
+  const { appointments: apiAppointments } = useAppointments({ date: dateStr });
 
   // Fallback mock staff (used only if showMock=true and API returned nothing)
   const MOCK_STAFF = [
@@ -72,7 +72,7 @@ export default function BookingCalendar({ showMock }: { showMock?: boolean }) {
 
   // Use API lists if available, otherwise fallback to mocks only when showMock is true
   const staff = (apiStaff && apiStaff.length > 0)
-    ? apiStaff.map((s: any) => ({ id: s.id || s._id || s.staffId || s.name, name: s.name || s.fullName || s, color: '#a855f7' }))
+    ? apiStaff.map((s: any) => ({ id: s.id || s._id || s.staffId, name: s.user?.name || s.name || s.fullName || 'Staff', color: '#a855f7' }))
     : (showMock ? MOCK_STAFF : []);
 
   const appointments: Appointment[] = (apiAppointments && apiAppointments.length > 0)
@@ -80,11 +80,11 @@ export default function BookingCalendar({ showMock }: { showMock?: boolean }) {
       id: apt.id || apt._id || `${apt.date}_${apt.time}`,
       time: apt.time || apt.startTime || new Date(apt.startsAt || apt.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       duration: apt.duration || 60,
-      clientName: apt.client?.name || apt.clientName || apt.client || 'Client',
-      clientPhone: apt.client?.phone || apt.clientPhone || '',
-      clientEmail: apt.client?.email || apt.clientEmail || '',
+      clientName: apt.client?.user?.name || apt.client?.name || apt.clientName || apt.client || 'Client',
+      clientPhone: apt.client?.user?.phone || apt.client?.phone || apt.clientPhone || '',
+      clientEmail: apt.client?.user?.email || apt.client?.email || apt.clientEmail || '',
       service: apt.service?.name || apt.service || apt.serviceName || 'Service',
-      staff: apt.staff?.name || apt.staff || apt.staffName || 'Staff',
+      staff: apt.staff?.user?.name || apt.staff?.name || apt.staff || apt.staffName || 'Staff',
       status: apt.status || 'confirmed',
       reminderSent: !!apt.reminderSent,
       notes: apt.notes || ''
@@ -184,7 +184,7 @@ export default function BookingCalendar({ showMock }: { showMock?: boolean }) {
       {/* Calendar View */}
       <Card className="border-0 shadow-lg rounded-2xl p-6">
         <div className="overflow-x-auto">
-          <div className="min-w-[900px]">
+          <div className="min-w-225">
             {/* Header Row - Staff Names */}
             <div className="grid gap-2 mb-4" style={{ gridTemplateColumns: `100px repeat(${filteredStaff.length}, 1fr)` }}>
               <div className="p-3 text-center">
@@ -269,7 +269,7 @@ export default function BookingCalendar({ showMock }: { showMock?: boolean }) {
           {appointments.map((apt) => (
             <Card key={apt.id} className="bg-gray-50 dark:bg-gray-800 border-0 p-4 rounded-xl">
               <div className="flex items-start gap-4">
-                <div className="text-center min-w-[60px]">
+                <div className="text-center min-w-15">
                   <Clock className="w-5 h-5 text-pink-500 mx-auto mb-1" />
                   <p className="text-sm text-gray-900">{apt.time}</p>
                   <p className="text-xs text-gray-500">{apt.duration}min</p>

@@ -94,7 +94,7 @@ export default function Header() {
             ) : (
               <>
                 <Link href="/auth/login">
-                  <Button variant="ghost" className="text-gray-700 dark:text-gray-300 hover:text-pink-100">
+                  <Button variant="ghost" className="text-gray-700 dark:text-gray-300 hover:text-pink-800 dark:hover:text-pink-700">
                     Connexion
                   </Button>
                 </Link>
@@ -195,7 +195,7 @@ export default function Header() {
                     onClick={() => setMobileMenuOpen(false)}
                     className="px-4 py-2"
                   >
-                    <Button variant="outline" className="w-full">
+                    <Button variant="outline" className="w-full text-gray-700 dark:text-gray-300 hover:text-pink-800 dark:hover:text-pink-700">
                       Connexion
                     </Button>
                   </Link>
