@@ -44,7 +44,6 @@ import {
   Crown,
   Sparkles,
   PartyPopper,
-  Loader2,
 } from "lucide-react";
 import Link from "next/link";
 import { useAppointments } from "@/lib/hooks/useAppointments";
@@ -72,7 +71,7 @@ export default function ClientDashboardV2() {
     isLoading: isAppointmentsLoading,
     cancelAppointment,
   } = useAppointments({
-    clientId: user?.id,
+    clientId: user?.clientProfile?.id,
   });
 
   // Get loyalty data
@@ -134,6 +133,7 @@ export default function ClientDashboardV2() {
       {
         onSuccess: () => {
           setCancelDialogOpen(false);
+          toast.success("Rendez-vous annulé");
           setSelectedAppointment(null);
         },
       }

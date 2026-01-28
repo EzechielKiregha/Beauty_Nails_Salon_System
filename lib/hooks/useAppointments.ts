@@ -11,6 +11,8 @@ export function useAppointments(params?: {
   clientId?: string;
 }) {
   const queryClient = useQueryClient();
+  
+  const router = useRouter();
 
   // Get appointments
   const {
@@ -26,7 +28,6 @@ export function useAppointments(params?: {
   const createMutation = useMutation({
     mutationFn: appointmentsApi.createAppointment,
     onSuccess: (data) => {
-      const router = useRouter();
       queryClient.invalidateQueries({ queryKey: ['appointments'] });
       toast.success("Rendez-vous confirmé !", {
           description: `Votre rendez-vous est prévu le ${data.appointment.date} à ${data.appointment.time}`,

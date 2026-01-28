@@ -136,7 +136,6 @@ export default function AppointmentsV2() {
     }
 
     const appointmentData: CreateAppointmentData = {
-      clientId: user.clientProfile?.id,
       serviceId: selectedServiceId,
       workerId: selectedWorker,
       date: selectedDate.toISOString(),
@@ -150,14 +149,16 @@ export default function AppointmentsV2() {
 
   return (
     <div className="min-h-screen bg-background">
-      <HeroSection
-        imageUrl='/reservation.jpg'
-        title="Réservation"
-        description="Choisissez votre service, votre spécialiste et votre
+      {!user && (
+        <HeroSection
+          imageUrl='/reservation.jpg'
+          title="Réservation"
+          description="Choisissez votre service, votre spécialiste et votre
                   créneau horaire."
-        badgeText='reservation'
-      />
-      <div id="reservation" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          badgeText='reservation'
+        />
+      )}
+      <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-16">
           <Badge className="my-8 bg-pink-100 dark:bg-pink-900 text-pink-600 dark:text-pink-200">

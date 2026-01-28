@@ -13,46 +13,33 @@ export async function GET(request: NextRequest) {
     const workerId = searchParams.get('workerId');
     const clientId = searchParams.get('clientId');
 
+    console.log('GET /appointments called with params:', { date, status, workerId, clientId, userId: user.id });
+
 
     // Validation
-    if ( !workerId || !date || (!clientId && user.role !== 'client')) {
-      return errorResponse('Données manquantes', 400);
-    }
+    // if ( !workerId || !date || (!clientId && user.role !== 'client')) {
+    //   return errorResponse('Données manquantes', 400);
+    // }
 
     const where: any = {};
     let wId = workerId;
 
-    const workerUser = await prisma.user.findUnique({
-      where: { id: workerId },
-      select: {
-        workerProfile: { select: { id: true } }
-      }
-    });
-
-    wId = user.id;
-
-    if (!workerUser?.workerProfile) {
+    if (workerId && user.role === 'worker') {
     const w = await prisma.workerProfile.findUnique({
-      where: { id: workerId },
-        include: {
-          user: true,
-        },
+      where: { userId: user.id },
       });
 
       if (!w) {
         return errorResponse('Employé non trouvé pour la notification', 404);
       }
 
-      wId = w.user.id;
+      wId = w.id;
     }
 
     // Role-based filtering
     if (user.role === 'client') {
-      where.clientId = user.id;
+      where.clientId = clientId || user.clientProfile?.id;
     } else if (user.role === 'worker' && !clientId) {
-
-      
-
       where.workerId = wId;
     }
 
@@ -112,9 +99,9 @@ export async function POST(request: NextRequest) {
   try {
     const user = await getAuthenticatedUser();
     const body = await request.json();
+    let clientId = user.clientProfile?.id;
 
     const {
-      clientId,
       serviceId,
       workerId,
       date,
@@ -124,8 +111,25 @@ export async function POST(request: NextRequest) {
       notes,
     } = body;
 
+    console.log('Received appointment data: ', body);
+    console.log('Authenticated user: ', user);
+
+    // If user is not a client, find clientId from their profile
+    if (user.role !== 'client') {
+      return errorResponse('Seuls les clients peuvent créer des rendez-vous', 403);
+    }
+
+    const client = await prisma.clientProfile.findUnique({
+      where: { userId: user.id },
+    });
+
+    if (!client) {
+      return errorResponse('Client non trouvé', 404);
+    }
+    clientId = client.id;
+
     // Validation
-    if (!serviceId || !workerId || !date || !time || (!clientId && user.role !== 'worker')) {
+    if (!serviceId || !workerId || !date || !time || !clientId) {
       return errorResponse('Données manquantes', 400);
     }
 
@@ -137,7 +141,6 @@ export async function POST(request: NextRequest) {
     if (!service) {
       return errorResponse('Service non trouvé', 404);
     }
-
 
     // Check for conflicts
     const conflictingAppointment = await prisma.appointment.findFirst({
@@ -159,7 +162,7 @@ export async function POST(request: NextRequest) {
     // Create appointment
     const appointment = await prisma.appointment.create({
       data: {
-        clientId: user.id === clientId ? user.id : clientId,
+        clientId,
         serviceId,
         workerId: workerId,
         date: new Date(date),

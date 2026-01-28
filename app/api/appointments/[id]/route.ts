@@ -23,7 +23,7 @@ export async function DELETE(
     }
 
     // Clients can only cancel their own appointments
-    if (user.role === 'client' && appointment.clientId !== user.id) {
+    if (user.role === 'client' && appointment.clientId !== user.clientProfile?.id) {
       return errorResponse('Accès interdit', 403);
     }
 
@@ -35,10 +35,19 @@ export async function DELETE(
       },
     });
 
+    const userWorker = await prisma.workerProfile.findUnique({
+      where: { id: appointment.workerId },
+      include: { user: true },
+    });
+
+    if (!userWorker) {
+      return errorResponse('Employé non trouvé pour la notification', 404);
+    }
+
     // Send notification to worker
     await prisma.notification.create({
       data: {
-        userId: appointment.workerId,
+        userId: userWorker?.user.id,
         type: 'appointment_cancelled',
         title: 'Rendez-vous annulé',
         message: `Un rendez-vous a été annulé. Raison: ${reason}`,
