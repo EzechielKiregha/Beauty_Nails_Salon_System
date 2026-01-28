@@ -10,6 +10,7 @@ export async function handleSignup(formData: FormData) {
   const password = formData.get("password") as string;
   const confirmPassword = formData.get("confirmPassword") as string;
   // const acceptTerms = !!formData.get("acceptTerms");
+  const refCode = formData.get("refCode") as string;
   const role = "client";
 
   if (!name || !email || !phone || !password) {
@@ -30,7 +31,8 @@ export async function handleSignup(formData: FormData) {
       email,
       phone,
       password,
-      role
+      role,
+      refCode
     })
 
     if(res.status === 202){

@@ -21,7 +21,8 @@ export default function Signup() {
     phone: '',
     password: '',
     confirmPassword: '',
-    acceptTerms: false
+    acceptTerms: false,
+    refCode: typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('ref') : ''
   });
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
@@ -129,6 +130,20 @@ export default function Signup() {
                 className="mt-2 rounded-xl dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"
               />
             </div>
+            {formData.refCode && (
+              <div>
+                <Label htmlFor="refCode" className="dark:text-gray-200">Vous avez été parrainé par</Label>
+                <Input
+                  id="refCode"
+                  name="refCode"
+                  type="text"
+                  disabled
+                  value={formData.refCode}
+                  onChange={handleChange}
+                  className="mt-2 rounded-xl dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"
+                />
+              </div>
+            )}
 
             <div className="flex items-start space-x-3 pt-4">
               <Checkbox

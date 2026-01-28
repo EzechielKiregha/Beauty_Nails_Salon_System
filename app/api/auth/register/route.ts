@@ -7,7 +7,7 @@ import { nanoid } from 'nanoid';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { name, email, phone, password, role = 'client' } = body;
+    const { name, email, phone, password, role = 'client', refCode } = body;
 
     // Validation
     if (!name || !email || !phone || !password) {
@@ -24,7 +24,6 @@ export async function POST(request: NextRequest) {
     if (existingUser) {
       return successResponse('Email ou téléphone déjà utilisé', 202);
     }
-
     
     // Hash password
     const hashedPassword = await hash(password, 10);
@@ -35,7 +34,7 @@ export async function POST(request: NextRequest) {
       phone,
       password: hashedPassword,
       role,
-      emailVerified: new Date(), // For demo purposes; implement proper email verification in production
+      emailVerified: new Date(),
       clientProfile: {
           create: {
             referralCode: nanoid(8).toUpperCase(),
@@ -43,6 +42,21 @@ export async function POST(request: NextRequest) {
           },
         }
     };
+
+    let referrerID;
+
+    if (refCode) {
+      // Find referrer by referral code
+      const referrer = await prisma.clientProfile.findUnique({
+        where: { referralCode: refCode.toUpperCase() },
+        include: { user: true },
+      });
+      if (!referrer) {
+        return errorResponse('Code de parrainage invalide', 400);
+      }
+      dataClause.clientProfile.referredBy = referrer.user.name;
+      referrerID = referrer.id;
+    }
 
     // Create user with profile
     const user = await prisma.user.create({
@@ -52,6 +66,17 @@ export async function POST(request: NextRequest) {
         workerProfile: true,
       },
     });
+
+    if (referrerID) {
+      await prisma.referral.create({
+        data: {
+          referrerId: referrerID!,
+          referredId: user.clientProfile!.id,
+          status: 'completed',
+          rewardGranted: true,
+        },
+      });
+    }
 
     // Remove password from response
     const { password: _, ...userWithoutPassword } = user;
