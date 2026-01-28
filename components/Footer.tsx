@@ -20,7 +20,7 @@ export default function Footer() {
               />
             </Link>
             <p className="text-gray-300 mb-6">
-              Sublimez votre beauté, un soin à la fois. Votre destination premium pour les ongles, cils, tresses et maquillage à Kinshasa.
+              Sublimez votre beauté, un soin à la fois. Votre destination premium pour les ongles, cils, tresses et maquillage à RDC - GOMA .
             </p>
             <div className="flex space-x-4">
               <a href="#" className="w-10 h-10 rounded-full bg-white/10 hover:bg-pink-500 flex items-center justify-center transition-colors">

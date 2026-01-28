@@ -310,7 +310,7 @@ export default function WorkerDashboardV2() {
 
           {/* Stats Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-            <Card className="p-4 sm:p-6 hover:shadow-lg transition-shadow dark:bg-gray-900 dark:border-gray-800 dark:hover:shadow-gray-800/50">
+            <Card className="p-4 sm:p-6 hover:shadow-lg transition-shadow border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-900">
               <div className="flex items-center justify-between mb-4">
                 <div className="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
                   <Calendar className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600 dark:text-purple-400" />
@@ -321,7 +321,7 @@ export default function WorkerDashboardV2() {
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">{stats.completed} terminés</p>
             </Card>
 
-            <Card className="p-4 sm:p-6 hover:shadow-lg transition-shadow dark:bg-gray-900 dark:border-gray-800 dark:hover:shadow-gray-800/50">
+            <Card className="p-4 sm:p-6 hover:shadow-lg transition-shadow border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-900">
               <div className="flex items-center justify-between mb-4">
                 <div className="p-3 bg-green-100 dark:bg-green-900/30 rounded-lg">
                   <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6 text-green-600 dark:text-green-400" />
@@ -332,7 +332,7 @@ export default function WorkerDashboardV2() {
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">aujourd'hui</p>
             </Card>
 
-            <Card className="p-4 sm:p-6 hover:shadow-lg transition-shadow dark:bg-gray-900 dark:border-gray-800 dark:hover:shadow-gray-800/50">
+            <Card className="p-4 sm:p-6 hover:shadow-lg transition-shadow border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-900">
               <div className="flex items-center justify-between mb-4">
                 <div className="p-3 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg">
                   <Clock className="w-5 h-5 sm:w-6 sm:h-6 text-yellow-600 dark:text-yellow-400" />
@@ -483,7 +483,7 @@ export default function WorkerDashboardV2() {
                           {appointment.service?.name} - {appointment.time}
                         </p>
                         <p className="text-sm text-gray-600 dark:text-gray-300">
-                          date : {appointment.date.toString().split('T')[0] || appointment.date}
+                          date : {formatTime(appointment.date)}
                         </p>
                       </div>
                       <div className="flex gap-2">
