@@ -526,7 +526,7 @@ export default function AppointmentsV2() {
                     rendez-vous
                   </p>
                   <Link
-                    href="/login"
+                    href="/auth/login"
                     className="text-xs sm:text-sm text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 underline mt-2 inline-block"
                   >
                     Se connecter
