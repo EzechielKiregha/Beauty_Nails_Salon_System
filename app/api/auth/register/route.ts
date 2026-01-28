@@ -9,8 +9,10 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { name, email, phone, password, role = 'client', refCode } = body;
 
+    console.log("Received refCode:", refCode);
+
     // Validation
-    if (!name || !email || !phone || !password) {
+    if (!name || !email || !phone || !password || !refCode) {
       return errorResponse('Tous les champs sont requis', 400);
     }
 
@@ -19,7 +21,7 @@ export async function POST(request: NextRequest) {
       where: {
         OR: [{ email }, { phone }],
       },
-    });
+    }); 
 
     if (existingUser) {
       return successResponse('Email ou téléphone déjà utilisé', 202);
@@ -54,7 +56,7 @@ export async function POST(request: NextRequest) {
       if (!referrer) {
         return errorResponse('Code de parrainage invalide', 400);
       }
-      dataClause.clientProfile.referredBy = referrer.user.name;
+      dataClause.clientProfile.create.referredBy = referrer.user.name;
       referrerID = referrer.id;
     }
 
@@ -67,15 +69,44 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    if (referrerID) {
-      await prisma.referral.create({
+    if (user && referrerID) {
+      const referral = await prisma.referral.create({
         data: {
           referrerId: referrerID!,
           referredId: user.clientProfile!.id,
-          status: 'completed',
-          rewardGranted: true,
+          status: 'pending',
+          rewardGranted: false,
         },
       });
+
+      // Optionally, update referrer's loyalty points or tier here
+      const referrerProfile = await prisma.clientProfile.update({
+        where: { id: referrerID },
+        data: {
+          loyaltyPoints: { increment: 100 },
+          referrals: { increment: 1 },
+        },
+      });
+
+      const loyaltyTransaction = await prisma.loyaltyTransaction.create({
+        data: {
+          clientId: referrerID,
+          points: 100,
+          type: 'earned_referral',
+          description: `Bonus de parrainage pour avoir référé ${name}`,
+        },
+      });
+
+      if (!referral || !referrerProfile || !loyaltyTransaction) {
+        return errorResponse('Erreur lors du traitement du parrainage', 500);
+      }
+
+      if (referrerProfile.loyaltyPoints >= 500 && referrerProfile.tier === 'Regular') {
+        await prisma.clientProfile.update({
+          where: { id: referrerID },
+          data: { tier: 'VIP', },
+        });
+      }
     }
 
     // Remove password from response

@@ -9,32 +9,25 @@ export async function GET(_request: NextRequest) {
 
     const client = await prisma.clientProfile.findUnique({
       where: { userId: user.id },
-      include: {
-        referralsRel: {
-          include: {
-            referred: {
-              include: {
-                user: {
-                  select: {
-                    name: true,
-                    createdAt: true,
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
+      select: {
+        id: true,
+        referralCode: true,
+        referrals: true,
+      }
     });
 
     if (!client) {
       return errorResponse('Client non trouvé', 404);
     }
 
+    console.log("Returned data:", {
+      code: client.referralCode,
+      referrals: client.referrals || 0,
+    });
+
     return successResponse({
       code: client.referralCode,
-      referrals: client.referrals || client.referralsRel?.length || 0,
-      referralList: client.referralsRel || [],
+      referrals: client.referrals || 0,
     });
   } catch (error) {
     return handleApiError(error);

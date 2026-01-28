@@ -47,7 +47,7 @@ export function useReferral() {
   return {
     referralCode: data?.code,
     referrals: data?.referrals || 0,
-    referralList: data?.referralList || [],
+    // referralList: data?.referralList || [],
     isLoading,
     applyReferralCode: applyReferralMutation.mutate,
     isApplying: applyReferralMutation.isPending,

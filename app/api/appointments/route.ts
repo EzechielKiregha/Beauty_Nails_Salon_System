@@ -2,6 +2,7 @@
 import { NextRequest } from 'next/server';
 import prisma from '@/lib/prisma';
 import { getAuthenticatedUser, successResponse, handleApiError, errorResponse } from '@/lib/api/helpers';
+import { lte } from 'zod';
 
 export async function GET(request: NextRequest) {
   try {
@@ -15,11 +16,14 @@ export async function GET(request: NextRequest) {
 
     // console.log('GET /appointments called with params:', { date, status, workerId, clientId, userId: user.id });
 
-
     // Validation
-    // if ( !workerId || !date || (!clientId && user.role !== 'client')) {
-    //   return errorResponse('Données manquantes', 400);
-    // }
+    if ( !clientId && user.role === 'client' ) {
+      return errorResponse('Données manquantes', 400);
+    }
+
+    if (user.role === 'worker' && !workerId) {
+      return errorResponse('Données manquantes pour les employés', 400);
+    }
 
     const where: any = {};
     let wId = workerId;
@@ -44,7 +48,7 @@ export async function GET(request: NextRequest) {
     }
 
     if (date) {
-      where.date = new Date(date);
+      where.date = { gte: new Date(date) };
     }
 
     if (status) {
@@ -58,6 +62,8 @@ export async function GET(request: NextRequest) {
     if (clientId) {
       where.clientId = clientId;
     }
+
+    console.log('Final where clause for appointments query:', where);
 
     const appointments = await prisma.appointment.findMany({
       where,

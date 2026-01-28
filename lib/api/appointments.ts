@@ -43,14 +43,14 @@ export interface RescheduleAppointmentData {
 }
 
 export interface AvailableSlotsParams {
-  date?: string;
+  date?: Date | string;
   workerId: string;
 }
 
 export const appointmentsApi = {
   // Get appointments
   getAppointments: async (params?: {
-    date?: string;
+    date?: Date | string;
     status?: string;
     workerId?: string;
     clientId?: string;

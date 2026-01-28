@@ -35,7 +35,7 @@ export const loyaltyApi = {
   getReferralCode: async (): Promise<{
     code: string;
     referrals: number;
-    referralList: Referral[];
+    // referralList: Referral[];
   }> => {
     const { data } = await axiosdb.get('/loyalty/referral-code');
     return data;

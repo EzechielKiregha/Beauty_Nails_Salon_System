@@ -3,17 +3,16 @@
 import { signIn } from "@/lib/auth/auth";
 import axiosdb from "@/lib/axios";
 
-export async function handleSignup(formData: FormData) {
+export async function handleSignup(formData: FormData, refCodeParam: string | null) {
   const name = formData.get("name") as string;
   const email = formData.get("email") as string;
   const phone = formData.get("phone") as string;
   const password = formData.get("password") as string;
   const confirmPassword = formData.get("confirmPassword") as string;
   // const acceptTerms = !!formData.get("acceptTerms");
-  const refCode = formData.get("refCode") as string;
   const role = "client";
 
-  if (!name || !email || !phone || !password) {
+  if (!name || !email || !phone || !password || !refCodeParam) {
     return { error: "Veuillez remplir tous les champs" };
   }
 
@@ -32,7 +31,7 @@ export async function handleSignup(formData: FormData) {
       phone,
       password,
       role,
-      refCode
+      refCode: refCodeParam
     })
 
     if(res.status === 202){

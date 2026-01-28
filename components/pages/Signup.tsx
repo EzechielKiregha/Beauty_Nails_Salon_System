@@ -22,16 +22,18 @@ export default function Signup() {
     password: '',
     confirmPassword: '',
     acceptTerms: false,
-    refCode: typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('ref') : ''
+    refCode: typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('ref') : '',
   });
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
+
+  const refCode = typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('ref') : '';
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     startTransition(async () => {
-      const result = await handleSignup(new FormData(e.currentTarget));
+      const result = await handleSignup(new FormData(e.currentTarget), refCode);
       if (result?.success) {
         toast.success('Connecté avec succès');
         router.push(result?.redirectUrl);
@@ -52,7 +54,7 @@ export default function Signup() {
 
   return (
     <div className="min-h-screen py-8 sm:py-12 bg-background dark:bg-gray-950">
-      <div className="max-w-md mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-6 sm:mb-8">
           <Link href="/" className="inline-flex items-center justify-center mb-4 sm:mb-6">
             <Logo width={250} height={70} />
@@ -63,87 +65,93 @@ export default function Signup() {
 
         <Card className="p-6 sm:p-8 border-b border-pink-100 dark:border-pink-900 bg-white dark:bg-gray-900 shadow-2xl rounded-3xl">
           <form onSubmit={onSubmit} className="space-y-4">
-            <div>
-              <Label htmlFor="name" className="dark:text-gray-200">Nom complet</Label>
-              <Input
-                id="name"
-                name="name"
-                type="text"
-                placeholder="Marie Kabila"
-                value={formData.name}
-                onChange={handleChange}
-                className="mt-2 rounded-xl dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="email" className="dark:text-gray-200">Email</Label>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                placeholder="marie@example.com"
-                value={formData.email}
-                onChange={handleChange}
-                className="mt-2 rounded-xl dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="phone" className="dark:text-gray-200">Téléphone</Label>
-              <Input
-                id="phone"
-                name="phone"
-                type="tel"
-                placeholder="+243 123 456 789"
-                value={formData.phone}
-                onChange={handleChange}
-                className="mt-2 rounded-xl dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="password" className="dark:text-gray-200">Mot de passe</Label>
-              <Input
-                id="password"
-                name="password"
-                type="password"
-                placeholder="••••••••"
-                value={formData.password}
-                onChange={handleChange}
-                className="mt-2 rounded-xl dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"
-              />
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                Minimum 8 caractères
-              </p>
-            </div>
-
-            <div>
-              <Label htmlFor="confirmPassword" className="dark:text-gray-200">Confirmer le mot de passe</Label>
-              <Input
-                id="confirmPassword"
-                name="confirmPassword"
-                type="password"
-                placeholder="••••••••"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                className="mt-2 rounded-xl dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"
-              />
-            </div>
-            {formData.refCode && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="refCode" className="dark:text-gray-200">Vous avez été parrainé par</Label>
+                <Label htmlFor="name" className="dark:text-gray-200">Nom complet</Label>
                 <Input
-                  id="refCode"
-                  name="refCode"
+                  id="name"
+                  name="name"
                   type="text"
-                  disabled
-                  value={formData.refCode}
+                  placeholder="Marie Kabila"
+                  value={formData.name}
                   onChange={handleChange}
                   className="mt-2 rounded-xl dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"
                 />
               </div>
-            )}
+
+              <div>
+                <Label htmlFor="email" className="dark:text-gray-200">Email</Label>
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder="marie@example.com"
+                  value={formData.email}
+                  onChange={handleChange}
+                  className="mt-2 rounded-xl dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="phone" className="dark:text-gray-200">Téléphone</Label>
+                <Input
+                  id="phone"
+                  name="phone"
+                  type="tel"
+                  placeholder="+243 123 456 789"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  className="mt-2 rounded-xl dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="password" className="dark:text-gray-200">Mot de passe</Label>
+                <Input
+                  id="password"
+                  name="password"
+                  type="password"
+                  placeholder="••••••••"
+                  value={formData.password}
+                  onChange={handleChange}
+                  className="mt-2 rounded-xl dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"
+                />
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                  Minimum 8 caractères
+                </p>
+              </div>
+
+              <div className="sm:col-span-2">
+                <Label htmlFor="confirmPassword" className="dark:text-gray-200">
+                  Confirmer le mot de passe
+                </Label>
+                <Input
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  type="password"
+                  placeholder="••••••••"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  className="mt-2 rounded-xl dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"
+                />
+              </div>
+
+              {formData.refCode && (
+                <div className="sm:col-span-2 mt-2">
+                  <Label className="dark:text-gray-200">Vous avez été parrainé par</Label>
+
+                  <div className="mt-2 flex items-center justify-between rounded-xl border border-pink-200 dark:border-pink-800 bg-pink-50 dark:bg-gray-800 px-4 py-3">
+                    <span className="text-sm font-semibold text-pink-700 dark:text-pink-400 tracking-wide">
+                      {formData.refCode}
+                    </span>
+                    <span className="text-xs px-2 py-1 rounded-full bg-pink-200 dark:bg-pink-900 text-pink-700 dark:text-pink-300">
+                      Ref Code
+                    </span>
+                  </div>
+                </div>
+              )}
+            </div>
+
 
             <div className="flex items-start space-x-3 pt-4">
               <Checkbox

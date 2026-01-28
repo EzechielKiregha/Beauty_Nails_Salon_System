@@ -9,12 +9,6 @@ export async function GET(_request: NextRequest) {
 
     const client = await prisma.clientProfile.findUnique({
       where: { userId: user.id },
-      include: {
-        loyaltyTransactions: {
-          orderBy: { createdAt: 'desc' },
-          take: 20,
-        },
-      },
     });
 
     if (!client) {

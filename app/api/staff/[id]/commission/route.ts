@@ -42,13 +42,28 @@ export async function GET(
         status: 'completed',
         date: {
           gte: startDate,
-          lte: now,
+          // lte: now,
         },
       },
     });
 
+
+    const totalR = await prisma.appointment.aggregate({
+      where: {
+        workerId: id,
+        status: 'completed',
+        date: {
+          gte: startDate,
+          // lte: now,
+        },
+      },
+      _sum: {
+        price: true,
+      },
+    });
+
     // Calculate totals
-    const totalRevenue = appointments.reduce((sum, apt) => sum + (apt.price || 0), 0);
+    const totalRevenue = totalR._sum.price || 0;
     // CommissionRate is stored as 0-100 (e.g., 10 for 10%), so divide by 100 for calculation
     const commissionRate = (worker.commissionRate || 10) / 100;
     const commission = totalRevenue * commissionRate;

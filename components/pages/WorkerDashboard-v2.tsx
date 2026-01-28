@@ -46,8 +46,6 @@ export default function WorkerDashboardV2() {
     date: today,
   });
 
-  console.log('Appointments:', appointments);
-
   // Get weekly appointments for stats
   const weekStart = new Date();
   weekStart.setDate(weekStart.getDate() - weekStart.getDay());
@@ -57,6 +55,7 @@ export default function WorkerDashboardV2() {
     appointments: weeklyAppointments = [],
   } = useAppointments({
     workerId: user?.workerProfile?.id,
+    date: weekStartStr,
   });
 
   // Get worker commission
@@ -250,7 +249,7 @@ export default function WorkerDashboardV2() {
   }
 
   return (
-    <div className="min-h-screen py-24 bg-linear-to-br from-purple-50 via-pink-50 to-white dark:from-gray-950 dark:via-gray-950 dark:to-gray-950">
+    <div className="min-h-screen py-8 bg-linear-to-br from-purple-50 via-pink-50 to-white dark:from-gray-950 dark:via-gray-950 dark:to-gray-950">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-12">
@@ -276,7 +275,7 @@ export default function WorkerDashboardV2() {
                   )}
                 </Button>
               </SheetTrigger>
-              <SheetContent className="dark:bg-gray-900 dark:border-gray-800">
+              <SheetContent className="p-2 border-r-0 border-pink-100 dark:border-pink-900 shadow-xl rounded-l-2xl bg-white dark:bg-gray-900">
                 <h2 className="text-2xl font-bold mb-6 dark:text-gray-100">Notifications</h2>
                 <ScrollArea className="h-[calc(100vh-150px)]">
                   <div className="space-y-4">
@@ -297,7 +296,7 @@ export default function WorkerDashboardV2() {
                             {getNotificationIcon(notification.type)}
                             <div className="flex-1">
                               <h3 className="font-semibold text-sm mb-1">{notification.title}</h3>
-                              <p className="text-sm text-gray-600">{notification.message}</p>
+                              <p className="text-sm text-gray-600 dark:text-gray-300">{notification.message}</p>
                             </div>
                           </div>
                         </div>
@@ -317,7 +316,7 @@ export default function WorkerDashboardV2() {
                   <Calendar className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600 dark:text-purple-400" />
                 </div>
               </div>
-              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mb-1">Aujourd'hui</p>
+              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300  mb-1">Aujourd'hui</p>
               <p className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">{stats.todayAppointments}</p>
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">{stats.completed} terminés</p>
             </Card>
@@ -328,7 +327,7 @@ export default function WorkerDashboardV2() {
                   <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6 text-green-600 dark:text-green-400" />
                 </div>
               </div>
-              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mb-1">Complétés</p>
+              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300  mb-1">Complétés</p>
               <p className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">{stats.completed}</p>
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">aujourd'hui</p>
             </Card>
@@ -339,7 +338,7 @@ export default function WorkerDashboardV2() {
                   <Clock className="w-5 h-5 sm:w-6 sm:h-6 text-yellow-600 dark:text-yellow-400" />
                 </div>
               </div>
-              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mb-1">En attente</p>
+              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300  mb-1">En attente</p>
               <p className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">{stats.pending}</p>
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">à confirmer</p>
             </Card>
@@ -394,7 +393,7 @@ export default function WorkerDashboardV2() {
                   {todaySchedule.map((appointment) => (
                     <div
                       key={appointment.id}
-                      className="border rounded-xl p-6 hover:shadow-lg transition-all bg-linear-to-r from-white to-purple-50"
+                      className=" p-6 hover:shadow-lg border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-900"
                     >
                       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                         <div className="flex items-center gap-4 flex-1">
@@ -418,13 +417,14 @@ export default function WorkerDashboardV2() {
                                 <h3 className="font-semibold text-lg">
                                   {appointment.client?.user?.name || 'Client'}
                                 </h3>
-                                <p className="text-sm text-gray-600">
+                                <p className="text-sm text-gray-600 dark:text-gray-300">
                                   {appointment.service?.name}
                                 </p>
                               </div>
+
                             </div>
 
-                            <div className="flex flex-wrap gap-3 text-sm text-gray-600">
+                            <div className="flex flex-wrap gap-3 text-sm text-gray-600 dark:text-gray-300">
                               <div className="flex items-center gap-1">
                                 <Phone className="w-4 h-4" />
                                 {appointment.client?.user?.phone || 'N/A'}
@@ -466,8 +466,8 @@ export default function WorkerDashboardV2() {
 
             {/* Pending Confirmations */}
             {pendingAppointments.length > 0 && (
-              <Card className="p-6 border-yellow-200 bg-yellow-50">
-                <h3 className="text-lg font-semibold mb-4 flex items-center text-yellow-800">
+              <Card className="p-6">
+                <h3 className="text-lg font-semibold mb-4 flex items-center text-yellow-800 dark:text-yellow-400">
                   <AlertCircle className="w-5 h-5 mr-2" />
                   En attente de confirmation ({pendingAppointments.length})
                 </h3>
@@ -475,12 +475,15 @@ export default function WorkerDashboardV2() {
                   {pendingAppointments.map((appointment) => (
                     <div
                       key={appointment.id}
-                      className="flex items-center justify-between p-4 bg-white rounded-lg"
+                      className="flex items-center justify-between p-4 border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-900"
                     >
                       <div>
                         <p className="font-semibold">{appointment.client?.user?.name}</p>
-                        <p className="text-sm text-gray-600">
+                        <p className="text-sm text-gray-600 dark:text-gray-300 ">
                           {appointment.service?.name} - {appointment.time}
+                        </p>
+                        <p className="text-sm text-gray-600 dark:text-gray-300">
+                          date : {appointment.date.toString().split('T')[0] || appointment.date}
                         </p>
                       </div>
                       <div className="flex gap-2">
@@ -532,11 +535,11 @@ export default function WorkerDashboardV2() {
                 <h3 className="text-lg font-semibold mb-4">Statistiques</h3>
                 <div className="space-y-4">
                   <div className="flex items-center justify-between py-2 border-b">
-                    <span className="text-gray-600">Rendez-vous cette semaine</span>
+                    <span className="text-gray-600 dark:text-gray-300">Rendez-vous cette semaine</span>
                     <span className="font-bold">{commissionData?.appointmentsCount || 0}</span>
                   </div>
                   <div className="flex items-center justify-between py-2 border-b">
-                    <span className="text-gray-600">Taux de complétion</span>
+                    <span className="text-gray-600 dark:text-gray-300">Taux de complétion</span>
                     <span className="font-bold text-green-600">
                       {completedToday.length > 0
                         ? Math.round((completedToday.length / todaySchedule.length) * 100)
@@ -545,7 +548,7 @@ export default function WorkerDashboardV2() {
                     </span>
                   </div>
                   <div className="flex items-center justify-between py-2">
-                    <span className="text-gray-600">Note moyenne</span>
+                    <span className="text-gray-600 dark:text-gray-300">Note moyenne</span>
                     <div className="flex items-center gap-1">
                       <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
                       <span className="font-bold">{stats.rating.toFixed(1)}</span>
@@ -561,11 +564,11 @@ export default function WorkerDashboardV2() {
                     <p className="text-gray-500">Aucun rendez-vous cette semaine</p>
                   ) : (
                     serviceStats.map((service, index) => {
-                      const colors = ['bg-purple-50', 'bg-pink-50', 'bg-amber-50'];
+                      const colors = ['bg-purple-50 dark:bg-gray-900', 'bg-pink-50 dark:bg-gray-900', 'bg-amber-50 dark:bg-gray-900'];
                       return (
                         <div
                           key={service.name}
-                          className={`flex items-center justify-between p-3 ${colors[index] || 'bg-gray-50'} rounded-lg`}
+                          className={`flex items-center justify-between p-3 ${colors[index] || 'bg-white dark:bg-gray-900'} border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-lg `}
                         >
                           <span>{service.name}</span>
                           <Badge>{service.percentage}%</Badge>
@@ -584,7 +587,7 @@ export default function WorkerDashboardV2() {
               <h2 className="text-2xl font-bold mb-6">Commissions</h2>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <div className="p-6 bg-linear-to-br from-green-100 to-emerald-100 rounded-xl">
+                <div className="p-6 bg-linear-to-br from-green-100 to-emerald-100  rounded-xl">
                   <p className="text-sm text-gray-600 mb-2">Cette semaine</p>
                   <p className="text-3xl font-bold text-gray-900">
                     {stats.commission.toLocaleString()} Fc
@@ -605,7 +608,7 @@ export default function WorkerDashboardV2() {
                 </div>
 
                 <div className="p-6 bg-linear-to-br from-amber-100 to-orange-100 rounded-xl">
-                  <p className="text-sm text-gray-600 mb-2">Moyenne par service</p>
+                  <p className="text-sm text-gray-600  mb-2">Moyenne par service</p>
                   <p className="text-3xl font-bold text-gray-900">
                     {commissionData?.appointmentsCount
                       ? Math.round(stats.revenue / commissionData.appointmentsCount).toLocaleString()
@@ -617,10 +620,10 @@ export default function WorkerDashboardV2() {
 
               <h3 className="text-lg font-semibold mb-4">Commission actuelle</h3>
               <div className="space-y-3">
-                <div className="flex items-center justify-between p-4 border rounded-lg bg-gradient-to-r from-green-50 to-emerald-50">
+                <div className="flex items-center justify-between p-4 border rounded-lg bg-linear-to-r from-green-50 to-emerald-50">
                   <div>
-                    <p className="font-semibold">Période actuelle (Semaine)</p>
-                    <p className="text-sm text-gray-600">
+                    <p className="font-semibold text-gray-600">Période actuelle (Semaine)</p>
+                    <p className="text-sm text-gray-600 ">
                       {commissionData?.appointmentsCount || 0} rendez-vous
                     </p>
                   </div>
@@ -654,38 +657,38 @@ export default function WorkerDashboardV2() {
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="text-sm text-gray-600">Client</label>
+                  <label className="text-sm text-gray-600 dark:text-gray-300">Client</label>
                   <p className="font-semibold">{selectedAppointment.client?.user?.name}</p>
                 </div>
                 <div>
-                  <label className="text-sm text-gray-600">Service</label>
+                  <label className="text-sm text-gray-600 dark:text-gray-300">Service</label>
                   <p className="font-semibold">{selectedAppointment.service?.name}</p>
                 </div>
                 <div>
-                  <label className="text-sm text-gray-600">Date & Heure</label>
+                  <label className="text-sm text-gray-600 dark:text-gray-300">Date & Heure</label>
                   <p className="font-semibold">
                     {formatDate(selectedAppointment.date)} à {selectedAppointment.time}
                   </p>
                 </div>
                 <div>
-                  <label className="text-sm text-gray-600">Durée</label>
+                  <label className="text-sm text-gray-600 dark:text-gray-300">Durée</label>
                   <p className="font-semibold">{selectedAppointment.duration} min</p>
                 </div>
                 <div>
-                  <label className="text-sm text-gray-600">Lieu</label>
+                  <label className="text-sm text-gray-600 dark:text-gray-300">Lieu</label>
                   <p className="font-semibold">
                     {selectedAppointment.location === 'salon' ? 'Salon' : 'Domicile'}
                   </p>
                 </div>
                 <div>
-                  <label className="text-sm text-gray-600">Prix</label>
+                  <label className="text-sm text-gray-600 dark:text-gray-300">Prix</label>
                   <p className="font-semibold">{selectedAppointment.price?.toLocaleString()} Fc</p>
                 </div>
               </div>
 
               {selectedAppointment.notes && (
                 <div className="p-4 bg-yellow-50 rounded-lg">
-                  <label className="text-sm text-gray-600 block mb-1">Notes</label>
+                  <label className="text-sm text-gray-600 dark:text-gray-300 block mb-1">Notes</label>
                   <p>{selectedAppointment.notes}</p>
                 </div>
               )}

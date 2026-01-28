@@ -5,7 +5,7 @@ import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 
 export function useAppointments(params?: {
-  date?: string;
+  date?: Date | string;
   status?: string;
   workerId?: string;
   clientId?: string;
