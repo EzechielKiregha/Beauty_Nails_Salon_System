@@ -18,6 +18,11 @@ const _geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon-16x16.png",
+    apple: "/apple-touch-icon.png",
+  },
   title: 'Beauty Nails Salon',
   description: 'Professional beauty salon management system',
   keywords: ['salon', 'beauty', 'nails', 'appointments', 'booking'],
