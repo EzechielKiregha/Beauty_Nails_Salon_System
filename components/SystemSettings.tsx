@@ -341,17 +341,17 @@ export default function SystemSettings() {
                   <div className="border-t border-gray-200 py-4">
                     <div className="flex justify-between mb-2">
                       <span className="text-gray-700">Manucure Gel</span>
-                      <span className="text-gray-900">30 000 CDF</span>
+                      <span className="text-gray-900">30 000 Fc</span>
                     </div>
                     <div className="flex justify-between mb-2">
                       <span className="text-gray-700">Extension Cils</span>
-                      <span className="text-gray-900">45 000 CDF</span>
+                      <span className="text-gray-900">45 000 Fc</span>
                     </div>
                   </div>
                   <div className="border-t border-gray-200 pt-4">
                     <div className="flex justify-between text-lg">
                       <span className="text-gray-900">Total:</span>
-                      <span className="text-gray-900">75 000 CDF</span>
+                      <span className="text-gray-900">75 000 Fc</span>
                     </div>
                   </div>
                   <div className="text-center mt-6 text-sm text-gray-600">

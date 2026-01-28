@@ -487,7 +487,7 @@ export default function ClientDashboardV2() {
                         <div className="flex flex-col gap-2">
                           <div className="text-right mb-2">
                             <p className="text-2xl font-bold text-pink-600">
-                              {appointment.price?.toLocaleString()} CDF
+                              {appointment.price?.toLocaleString()} Fc
                             </p>
                           </div>
 
@@ -554,7 +554,7 @@ export default function ClientDashboardV2() {
 
                       <div className="flex items-center gap-4">
                         <p className="font-bold text-gray-900">
-                          {appointment.price?.toLocaleString()} CDF
+                          {appointment.price?.toLocaleString()} Fc
                         </p>
                         {appointment.status === "completed" &&
                           !appointment.review && (

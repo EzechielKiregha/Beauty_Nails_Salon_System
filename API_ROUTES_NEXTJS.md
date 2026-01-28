@@ -1319,7 +1319,7 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Loyalty points discount (1 point = 100 CDF)
+    // Loyalty points discount (1 point = 100 Fc)
     const loyaltyDiscount = loyaltyPointsUsed * 100;
     discount += loyaltyDiscount;
 

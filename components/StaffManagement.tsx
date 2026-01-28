@@ -45,10 +45,10 @@ export default function StaffManagement({ showMock }: { showMock?: boolean }) {
       workingHours: '09:00 - 18:00',
       appointments: 62,
       rating: 4.9,
-      revenue: '930 000 CDF',
+      revenue: '930 000 Fc',
       clientRetention: '92%',
       upsellRate: '45%',
-      commission: '186 000 CDF',
+      commission: '186 000 Fc',
       status: 'active'
     },
     {
@@ -61,10 +61,10 @@ export default function StaffManagement({ showMock }: { showMock?: boolean }) {
       workingHours: '10:00 - 19:00',
       appointments: 58,
       rating: 4.8,
-      revenue: '870 000 CDF',
+      revenue: '870 000 Fc',
       clientRetention: '88%',
       upsellRate: '38%',
-      commission: '174 000 CDF',
+      commission: '174 000 Fc',
       status: 'busy'
     },
     {
@@ -77,10 +77,10 @@ export default function StaffManagement({ showMock }: { showMock?: boolean }) {
       workingHours: '08:00 - 17:00',
       appointments: 48,
       rating: 4.7,
-      revenue: '720 000 CDF',
+      revenue: '720 000 Fc',
       clientRetention: '85%',
       upsellRate: '42%',
-      commission: '144 000 CDF',
+      commission: '144 000 Fc',
       status: 'active'
     },
     {
@@ -93,10 +93,10 @@ export default function StaffManagement({ showMock }: { showMock?: boolean }) {
       workingHours: '09:00 - 18:00',
       appointments: 38,
       rating: 4.9,
-      revenue: '570 000 CDF',
+      revenue: '570 000 Fc',
       clientRetention: '90%',
       upsellRate: '50%',
-      commission: '114 000 CDF',
+      commission: '114 000 Fc',
       status: 'off'
     }
   ];
@@ -113,10 +113,10 @@ export default function StaffManagement({ showMock }: { showMock?: boolean }) {
       workingHours: s.workingHours || '09:00 - 18:00',
       appointments: s.appointments || 0,
       rating: s.rating || 0,
-      revenue: s.revenue || '0 CDF',
+      revenue: s.revenue || '0 Fc',
       clientRetention: s.clientRetention || '0%',
       upsellRate: s.upsellRate || '0%',
-      commission: s.commission || '0 CDF',
+      commission: s.commission || '0 Fc',
       status: s.status || 'off'
     }))
     : (showMock ? MOCK_STAFF : []);
@@ -351,7 +351,7 @@ export default function StaffManagement({ showMock }: { showMock?: boolean }) {
                     <div className="space-y-3 text-sm">
                       <div className="flex justify-between">
                         <span className="text-gray-700">Salaire de base</span>
-                        <span className="text-gray-900">450 000 CDF</span>
+                        <span className="text-gray-900">450 000 Fc</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-gray-700">Commission</span>
@@ -359,12 +359,12 @@ export default function StaffManagement({ showMock }: { showMock?: boolean }) {
                       </div>
                       <div className="flex justify-between">
                         <span className="text-gray-700">Bonus performance</span>
-                        <span className="text-gray-900">50 000 CDF</span>
+                        <span className="text-gray-900">50 000 Fc</span>
                       </div>
                       <div className="w-full h-px bg-gray-300" />
                       <div className="flex justify-between items-center">
                         <span className="text-lg text-gray-900">Total à payer</span>
-                        <span className="text-2xl text-blue-600">686 000 CDF</span>
+                        <span className="text-2xl text-blue-600">686 000 Fc</span>
                       </div>
                     </div>
                   </Card>

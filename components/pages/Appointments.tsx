@@ -110,25 +110,25 @@ export default function Appointments() {
 
   const services = {
     onglerie: [
-      { id: "manucure-classique", label: "Manucure Classique (15 000 CDF)" },
-      { id: "manucure-gel", label: "Manucure Gel (25 000 CDF)" },
-      { id: "pedicure-spa", label: "Pédicure Spa (20 000 CDF)" },
-      { id: "extensions-ongles", label: "Extensions Ongles (35 000 CDF)" },
+      { id: "manucure-classique", label: "Manucure Classique (15 000 Fc)" },
+      { id: "manucure-gel", label: "Manucure Gel (25 000 Fc)" },
+      { id: "pedicure-spa", label: "Pédicure Spa (20 000 Fc)" },
+      { id: "extensions-ongles", label: "Extensions Ongles (35 000 Fc)" },
     ],
     cils: [
-      { id: "extensions-volume-naturel", label: "Extensions Volume Naturel (40 000 CDF)" },
-      { id: "extensions-volume-russe", label: "Extensions Volume Russe (60 000 CDF)" },
-      { id: "rehaussement-de-cils", label: "Rehaussement de Cils (25 000 CDF)" },
+      { id: "extensions-volume-naturel", label: "Extensions Volume Naturel (40 000 Fc)" },
+      { id: "extensions-volume-russe", label: "Extensions Volume Russe (60 000 Fc)" },
+      { id: "rehaussement-de-cils", label: "Rehaussement de Cils (25 000 Fc)" },
     ],
     tresses: [
-      { id: "tresses-box-braids", label: "Tresses Box Braids (45 000 CDF)" },
-      { id: "tissage-closure", label: "Tissage avec Closure (50 000 CDF)" },
-      { id: "crochet-braids", label: "Crochet Braids (35 000 CDF)" },
+      { id: "tresses-box-braids", label: "Tresses Box Braids (45 000 Fc)" },
+      { id: "tissage-closure", label: "Tissage avec Closure (50 000 Fc)" },
+      { id: "crochet-braids", label: "Crochet Braids (35 000 Fc)" },
     ],
     maquillage: [
-      { id: "maquillage-soiree", label: "Maquillage Soirée (30 000 CDF)" },
-      { id: "maquillage-mariage", label: "Maquillage Mariage (50 000 CDF)" },
-      { id: "maquillage-quotidien", label: "Maquillage Quotidien (20 000 CDF)" },
+      { id: "maquillage-soiree", label: "Maquillage Soirée (30 000 Fc)" },
+      { id: "maquillage-mariage", label: "Maquillage Mariage (50 000 Fc)" },
+      { id: "maquillage-quotidien", label: "Maquillage Quotidien (20 000 Fc)" },
     ],
   };
 
@@ -163,9 +163,9 @@ export default function Appointments() {
   ];
 
   const availableAddOns = [
-    "Prestation à domicile (+20 000 CDF)",
-    "Rendez-vous express (+10 000 CDF)",
-    "Produits premium (+15 000 CDF)",
+    "Prestation à domicile (+20 000 Fc)",
+    "Rendez-vous express (+10 000 Fc)",
+    "Produits premium (+15 000 Fc)",
   ];
 
   const handleSubmit = () => {
@@ -425,7 +425,7 @@ export default function Appointments() {
                           À domicile
                         </p>
                         <p className="text-sm text-gray-500">
-                          +20 000 CDF - Dans la zone de Kinshasa
+                          +20 000 Fc - Dans la zone de Kinshasa
                         </p>
                       </div>
                     </Label>

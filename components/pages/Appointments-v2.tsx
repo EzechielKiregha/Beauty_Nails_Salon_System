@@ -99,9 +99,9 @@ export default function AppointmentsV2() {
   ];
 
   const availableAddOns = [
-    "Prestation à domicile (+20 000 CDF)",
-    "Rendez-vous express (+10 000 CDF)",
-    "Produits premium (+15 000 CDF)",
+    "Prestation à domicile (+20 000 Fc)",
+    "Rendez-vous express (+10 000 Fc)",
+    "Produits premium (+15 000 Fc)",
   ];
 
   const availableMap = useMemo(() => {
@@ -378,7 +378,7 @@ export default function AppointmentsV2() {
                           À domicile
                         </p>
                         <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
-                          +20 000 CDF - Dans la zone de Goma
+                          +20 000 Fc - Dans la zone de Goma
                         </p>
                       </div>
                     </Label>

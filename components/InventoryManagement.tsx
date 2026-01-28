@@ -47,7 +47,7 @@ export default function InventoryManagement({ showMock }: { showMock?: boolean }
       stock: 45,
       minStock: 30,
       unit: 'unités',
-      price: '15 000 CDF',
+      price: '15 000 Fc',
       supplier: 'Beauty Supplies DRC',
       lastRestock: '2024-11-15',
       usageRate: '8 unités/semaine',
@@ -100,11 +100,11 @@ export default function InventoryManagement({ showMock }: { showMock?: boolean }
   ];
 
   const usageReport = [
-    { item: 'Vernis Gel', used: 32, revenue: '480 000 CDF', trend: 'up' },
-    { item: 'Extensions Cils', used: 24, revenue: '600 000 CDF', trend: 'up' },
-    { item: 'Rajouts Cheveux', used: 16, revenue: '480 000 CDF', trend: 'stable' },
-    { item: 'Fond de Teint', used: 20, revenue: '400 000 CDF', trend: 'up' },
-    { item: 'Fils Tresses', used: 24, revenue: '192 000 CDF', trend: 'stable' }
+    { item: 'Vernis Gel', used: 32, revenue: '480 000 Fc', trend: 'up' },
+    { item: 'Extensions Cils', used: 24, revenue: '600 000 Fc', trend: 'up' },
+    { item: 'Rajouts Cheveux', used: 16, revenue: '480 000 Fc', trend: 'stable' },
+    { item: 'Fond de Teint', used: 20, revenue: '400 000 Fc', trend: 'up' },
+    { item: 'Fils Tresses', used: 24, revenue: '192 000 Fc', trend: 'stable' }
   ];
 
   const categories = ['Onglerie', 'Cils', 'Tresses', 'Maquillage'];
@@ -368,7 +368,7 @@ export default function InventoryManagement({ showMock }: { showMock?: boolean }
                   <p className="text-sm text-gray-600">Produits Utilisés</p>
                 </div>
                 <div>
-                  <p className="text-2xl text-gray-900">2 152 000 CDF</p>
+                  <p className="text-2xl text-gray-900">2 152 000 Fc</p>
                   <p className="text-sm text-gray-600">Valeur Utilisée</p>
                 </div>
                 <div>

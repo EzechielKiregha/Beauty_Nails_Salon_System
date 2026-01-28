@@ -221,7 +221,7 @@ function ServicesCatalog() {
     <div>
       {services.map(service => (
         <div key={service.id}>
-          {service.name} - {service.price} CDF
+          {service.name} - {service.price} Fc
           <button onClick={() => updateService({
             id: service.id,
             updates: { price: 30000 },
@@ -363,7 +363,7 @@ function ReportsPage() {
 
   return (
     <div>
-      <h3>Revenus total: {revenue?.totalRevenue} CDF</h3>
+      <h3>Revenus total: {revenue?.totalRevenue} Fc</h3>
       <h3>Nombre de ventes: {revenue?.salesCount}</h3>
       <h3>Nouveaux clients: {clientData?.newClients}</h3>
     </div>

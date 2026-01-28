@@ -44,7 +44,7 @@ export default function WorkerDashboard({ user }: WorkerDashboardProps) {
       email: 'marie.k@email.com',
       service: 'Manucure Gel',
       duration: '60 min',
-      price: '15 000 CDF',
+      price: '15 000 Fc',
       status: 'completed',
       notes: 'Préfère les couleurs claires'
     },
@@ -56,7 +56,7 @@ export default function WorkerDashboard({ user }: WorkerDashboardProps) {
       email: 'grace.l@email.com',
       service: 'Pédicure Spa',
       duration: '60 min',
-      price: '20 000 CDF',
+      price: '20 000 Fc',
       status: 'in-progress',
       notes: 'Allergie aux parfums forts'
     },
@@ -68,7 +68,7 @@ export default function WorkerDashboard({ user }: WorkerDashboardProps) {
       email: 'sophie.m@email.com',
       service: 'Extensions Ongles',
       duration: '90 min',
-      price: '25 000 CDF',
+      price: '25 000 Fc',
       status: 'upcoming',
       notes: 'Première visite'
     },
@@ -80,7 +80,7 @@ export default function WorkerDashboard({ user }: WorkerDashboardProps) {
       email: 'elise.n@email.com',
       service: 'Nail Art',
       duration: '45 min',
-      price: '18 000 CDF',
+      price: '18 000 Fc',
       status: 'upcoming',
       notes: 'Design personnalisé demandé'
     }
@@ -94,7 +94,7 @@ export default function WorkerDashboard({ user }: WorkerDashboardProps) {
       service: 'Manucure Classique',
       rating: 5,
       feedback: 'Excellent travail, très professionnelle !',
-      amount: '12 000 CDF'
+      amount: '12 000 Fc'
     },
     {
       id: 2,
@@ -103,7 +103,7 @@ export default function WorkerDashboard({ user }: WorkerDashboardProps) {
       service: 'Pédicure Spa',
       rating: 5,
       feedback: 'Service impeccable, je reviendrai !',
-      amount: '20 000 CDF'
+      amount: '20 000 Fc'
     },
     {
       id: 3,
@@ -112,7 +112,7 @@ export default function WorkerDashboard({ user }: WorkerDashboardProps) {
       service: 'Extensions Ongles',
       rating: 4,
       feedback: 'Très satisfaite du résultat',
-      amount: '25 000 CDF'
+      amount: '25 000 Fc'
     }
   ];
 
@@ -129,7 +129,7 @@ export default function WorkerDashboard({ user }: WorkerDashboardProps) {
     todayClients: 4,
     completedToday: 1,
     avgRating: 4.8,
-    totalRevenue: '930 000 CDF',
+    totalRevenue: '930 000 Fc',
     unreadNotifications: notifications.filter(n => n.unread).length
   };
 
@@ -592,7 +592,7 @@ export default function WorkerDashboard({ user }: WorkerDashboardProps) {
                 </div>
 
                 <div>
-                  <h3 className="text-lg text-gray-700 mb-4">Revenus (CDF)</h3>
+                  <h3 className="text-lg text-gray-700 mb-4">Revenus (Fc)</h3>
                   <ResponsiveContainer width="100%" height={250}>
                     <BarChart data={performanceData}>
                       <CartesianGrid strokeDasharray="3 3" />

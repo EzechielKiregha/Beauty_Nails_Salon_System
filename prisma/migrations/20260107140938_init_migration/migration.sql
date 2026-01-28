@@ -538,7 +538,7 @@ CREATE TABLE "salon_profile" (
     "logo" TEXT,
     "openingHours" JSONB,
     "socialMedia" JSONB,
-    "currency" TEXT NOT NULL DEFAULT 'CDF',
+    "currency" TEXT NOT NULL DEFAULT 'Fc',
     "timezone" TEXT NOT NULL DEFAULT 'Africa/Kinshasa',
     "language" TEXT NOT NULL DEFAULT 'fr',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,

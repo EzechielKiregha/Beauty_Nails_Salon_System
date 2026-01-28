@@ -56,14 +56,14 @@ export default function Terms() {
           <h3 className="text-lg sm:text-xl text-gray-900 dark:text-gray-100 mb-2 sm:mb-3">4.1 Modes de Paiement</h3>
           <p className="text-sm sm:text-base text-gray-700 dark:text-gray-300 mb-2 sm:mb-3">Nous acceptons :</p>
           <ul className="text-sm sm:text-base text-gray-700 dark:text-gray-300 mb-4 sm:mb-6 space-y-1 sm:space-y-2">
-            <li>Espèces (CDF et USD)</li>
+            <li>Espèces (Fc et USD)</li>
             <li>Mobile Money (Airtel Money, Orange Money, M-Pesa)</li>
             <li>Virement bancaire</li>
           </ul>
 
           <h3 className="text-lg sm:text-xl text-gray-900 dark:text-gray-100 mb-2 sm:mb-3">4.2 Tarification</h3>
           <p className="text-sm sm:text-base text-gray-700 dark:text-gray-300 mb-4 sm:mb-6">
-            Les prix affichés sont en francs congolais (CDF) et peuvent être modifiés sans préavis.
+            Les prix affichés sont en francs congolais (Fc) et peuvent être modifiés sans préavis.
             Le prix convenu lors de la réservation sera respecté.
           </p>
 

@@ -64,8 +64,8 @@ export default function TodayOverview({ showMock }: { showMock?: boolean }) {
   if (lowStock.length > 0) urgentAlerts.push({ type: 'stock', message: `${lowStock.length} article(s) avec stock bas`, priority: 'high', icon: Package });
 
   const popularServices = (servicePerformance && servicePerformance.services && servicePerformance.services.length > 0)
-    ? servicePerformance.services.slice(0, 4).map((s: any) => ({ name: s.name, count: s.count || 0, revenue: `${(s.revenue || 0).toLocaleString()} CDF` }))
-    : (showMock ? [{ name: 'Manucure Gel', count: 8, revenue: '240 000 CDF' }] : []);
+    ? servicePerformance.services.slice(0, 4).map((s: any) => ({ name: s.name, count: s.count || 0, revenue: `${(s.revenue || 0).toLocaleString()} Fc` }))
+    : (showMock ? [{ name: 'Manucure Gel', count: 8, revenue: '240 000 Fc' }] : []);
 
   const todayStats = {
     upcomingAppointments: upcomingAppointments.length,
@@ -99,7 +99,7 @@ export default function TodayOverview({ showMock }: { showMock?: boolean }) {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600 mb-1">Revenus du Jour</p>
-              <p className="text-2xl text-gray-900">{todayStats.dailyRevenue.toLocaleString()} CDF</p>
+              <p className="text-2xl text-gray-900">{todayStats.dailyRevenue.toLocaleString()} Fc</p>
               <p className="text-xs text-green-600 mt-1">+8% vs hier</p>
             </div>
             <div className="w-12 h-12 rounded-full bg-linear-to-br from-green-400 to-emerald-400 flex items-center justify-center">

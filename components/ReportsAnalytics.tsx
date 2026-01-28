@@ -120,7 +120,7 @@ export default function ReportsAnalytics() {
         <Card className="bg-linear-to-br from-green-50 to-emerald-50 border-0 shadow-lg p-6">
           <DollarSign className="w-8 h-8 text-green-600 mb-2" />
           <p className="text-sm text-gray-600 mb-1">Revenus Mensuels</p>
-          <p className="text-3xl text-gray-900">30,2M CDF</p>
+          <p className="text-3xl text-gray-900">30,2M Fc</p>
           <div className="flex items-center gap-1 mt-2">
             <TrendingUp className="w-4 h-4 text-green-600" />
             <p className="text-sm text-green-600">+16% vs objectif</p>
@@ -233,7 +233,7 @@ export default function ReportsAnalytics() {
                     <div>
                       <p className="text-sm text-gray-600 mb-1">Revenus</p>
                       <p className="text-xl text-gray-900">
-                        {(service.revenue / 1000000).toFixed(1)}M CDF
+                        {(service.revenue / 1000000).toFixed(1)}M Fc
                       </p>
                     </div>
                     <div>
@@ -243,7 +243,7 @@ export default function ReportsAnalytics() {
                     <div>
                       <p className="text-sm text-gray-600 mb-1">Prix Moyen</p>
                       <p className="text-xl text-gray-900">
-                        {(service.avgPrice / 1000).toFixed(0)}K CDF
+                        {(service.avgPrice / 1000).toFixed(0)}K Fc
                       </p>
                     </div>
                   </div>
@@ -302,20 +302,20 @@ export default function ReportsAnalytics() {
                 <Card className="bg-linear-to-br from-green-50 to-emerald-50 border-0 p-6">
                   <p className="text-sm text-gray-700 mb-3">Revenus Membres</p>
                   <p className="text-3xl text-gray-900 mb-2">
-                    {(membershipAnalytics.memberRevenue / 1000000).toFixed(1)}M CDF
+                    {(membershipAnalytics.memberRevenue / 1000000).toFixed(1)}M Fc
                   </p>
                   <p className="text-sm text-gray-600">
-                    Dépense moyenne: {(membershipAnalytics.averageMemberSpend / 1000).toFixed(0)}K CDF
+                    Dépense moyenne: {(membershipAnalytics.averageMemberSpend / 1000).toFixed(0)}K Fc
                   </p>
                 </Card>
 
                 <Card className="bg-linear-to-br from-blue-50 to-cyan-50 border-0 p-6">
                   <p className="text-sm text-gray-700 mb-3">Revenus Non-Membres</p>
                   <p className="text-3xl text-gray-900 mb-2">
-                    {(membershipAnalytics.nonMemberRevenue / 1000000).toFixed(1)}M CDF
+                    {(membershipAnalytics.nonMemberRevenue / 1000000).toFixed(1)}M Fc
                   </p>
                   <p className="text-sm text-gray-600">
-                    Dépense moyenne: {(membershipAnalytics.averageNonMemberSpend / 1000).toFixed(0)}K CDF
+                    Dépense moyenne: {(membershipAnalytics.averageNonMemberSpend / 1000).toFixed(0)}K Fc
                   </p>
                 </Card>
 
@@ -355,7 +355,7 @@ export default function ReportsAnalytics() {
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-600">Revenus générés:</span>
-                    <span className="text-gray-900">{(staff.revenue / 1000).toFixed(0)}K CDF</span>
+                    <span className="text-gray-900">{(staff.revenue / 1000).toFixed(0)}K Fc</span>
                   </div>
                 </Card>
               ))}
@@ -372,7 +372,7 @@ export default function ReportsAnalytics() {
                   <p className="text-sm text-gray-600">RDV/Mois</p>
                 </div>
                 <div>
-                  <p className="text-2xl text-gray-900">760K CDF</p>
+                  <p className="text-2xl text-gray-900">760K Fc</p>
                   <p className="text-sm text-gray-600">Revenus/Mois</p>
                 </div>
               </div>
@@ -401,7 +401,7 @@ export default function ReportsAnalytics() {
                       <Target className="w-5 h-5 text-green-600" />
                       <span className="text-gray-700">Revenus générés:</span>
                     </div>
-                    <span className="text-xl text-gray-900">{(campaign.revenue / 1000).toFixed(0)}K CDF</span>
+                    <span className="text-xl text-gray-900">{(campaign.revenue / 1000).toFixed(0)}K Fc</span>
                   </div>
                 </Card>
               ))}
@@ -414,7 +414,7 @@ export default function ReportsAnalytics() {
               </Card>
               <Card className="bg-linear-to-br from-blue-50 to-cyan-50 border-0 p-6">
                 <p className="text-sm text-gray-600 mb-1">Total Revenus Marketing</p>
-                <p className="text-2xl text-gray-900">1,74M CDF</p>
+                <p className="text-2xl text-gray-900">1,74M Fc</p>
               </Card>
               <Card className="bg-linear-to-br from-amber-50 to-orange-50 border-0 p-6">
                 <p className="text-sm text-gray-600 mb-1">ROI Moyen</p>

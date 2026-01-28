@@ -324,7 +324,7 @@ export default function Home() {
               <h3 className="text-3xl text-gray-900 dark:text-gray-100 mb-2">Abonnement 3 Mois</h3>
               <div className="flex items-baseline mb-6">
                 <span className="text-5xl text-gray-900 dark:text-gray-100">120 000</span>
-                <span className="text-2xl text-gray-600 dark:text-gray-300 ml-2">CDF</span>
+                <span className="text-2xl text-gray-600 dark:text-gray-300 ml-2">Fc</span>
               </div>
               <ul className="space-y-4 mb-8">
                 <li className="flex items-start">
@@ -367,7 +367,7 @@ export default function Home() {
               <h3 className="text-3xl text-gray-900 dark:text-gray-100 mb-2">Abonnement 6 Mois</h3>
               <div className="flex items-baseline mb-6">
                 <span className="text-5xl text-gray-900 dark:text-gray-100">210 000</span>
-                <span className="text-2xl text-gray-600 dark:text-gray-300 ml-2">CDF</span>
+                <span className="text-2xl text-gray-600 dark:text-gray-300 ml-2">Fc</span>
               </div>
               <ul className="space-y-4 mb-8">
                 <li className="flex items-start">

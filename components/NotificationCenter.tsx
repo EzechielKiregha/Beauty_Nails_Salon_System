@@ -63,7 +63,7 @@ export default function NotificationCenter() {
       type: 'payment',
       priority: 'high',
       title: 'Facture Impayée',
-      message: 'Facture #2024-0428 non payée - Cliente: Grace Lumière (45 000 CDF)',
+      message: 'Facture #2024-0428 non payée - Cliente: Grace Lumière (45 000 Fc)',
       time: 'Il y a 1 heure',
       read: false
     },

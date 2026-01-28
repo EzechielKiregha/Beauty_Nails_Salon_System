@@ -32,7 +32,7 @@ export default function MarketingLoyalty() {
 
   // Mock loyalty program data
   const loyaltyRules = {
-    pointsPerSpend: 1, // 1 point per 1000 CDF
+    pointsPerSpend: 1, // 1 point per 1000 Fc
     appointmentsForReward: 5,
     referralsForReward: 5,
     rewards: [
@@ -53,7 +53,7 @@ export default function MarketingLoyalty() {
       opened: 198,
       clicked: 87,
       conversions: 23,
-      revenue: '690 000 CDF',
+      revenue: '690 000 Fc',
       date: '2024-11-15'
     },
     {
@@ -65,7 +65,7 @@ export default function MarketingLoyalty() {
       opened: 145,
       clicked: 0,
       conversions: 12,
-      revenue: '360 000 CDF',
+      revenue: '360 000 Fc',
       date: '2024-11-20'
     },
     {
@@ -77,7 +77,7 @@ export default function MarketingLoyalty() {
       opened: 0,
       clicked: 0,
       conversions: 0,
-      revenue: '0 CDF',
+      revenue: '0 Fc',
       date: '2024-12-01'
     }
   ];
@@ -125,7 +125,7 @@ export default function MarketingLoyalty() {
                 <Card className="bg-linear-to-br from-purple-50 to-pink-50 border-0 p-4">
                   <p className="text-sm text-gray-700 mb-1">Points par dépense</p>
                   <p className="text-2xl text-gray-900">
-                    {loyaltyRules.pointsPerSpend} point / 1 000 CDF dépensé
+                    {loyaltyRules.pointsPerSpend} point / 1 000 Fc dépensé
                   </p>
                 </Card>
 
@@ -308,7 +308,7 @@ export default function MarketingLoyalty() {
               </Card>
               <Card className="bg-linear-to-br from-amber-50 to-orange-50 border-0 p-6">
                 <p className="text-sm text-gray-600 mb-1">ROI Campagnes</p>
-                <p className="text-2xl text-green-600">1 050 000 CDF</p>
+                <p className="text-2xl text-green-600">1 050 000 Fc</p>
               </Card>
             </div>
           </div>

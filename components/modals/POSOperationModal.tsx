@@ -117,7 +117,7 @@ export default function POSOperationModal({ triggerLabel = "Opération POS" }: {
                 <div key={idx} className="flex items-center justify-between bg-gray-50 p-2 rounded">
                   <div>
                     <p className="text-sm font-medium">{it.serviceId}</p>
-                    <p className="text-xs text-gray-600">{it.quantity} × {it.price.toLocaleString()} CDF</p>
+                    <p className="text-xs text-gray-600">{it.quantity} × {it.price.toLocaleString()} Fc</p>
                   </div>
                   <Button size="icon" variant="ghost" onClick={() => removeItem(idx)}>✕</Button>
                 </div>

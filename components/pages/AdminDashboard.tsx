@@ -31,9 +31,9 @@ export default function AdminDashboard({ user }: AdminDashboardProps) {
   const stats = {
     totalClients: 247,
     activeWorkers: 8,
-    todayRevenue: '1 250 000 CDF',
+    todayRevenue: '1 250 000 Fc',
     todayAppointments: 32,
-    monthlyRevenue: '28 500 000 CDF',
+    monthlyRevenue: '28 500 000 Fc',
     avgRating: 4.9
   };
 
@@ -54,18 +54,18 @@ export default function AdminDashboard({ user }: AdminDashboardProps) {
   ];
 
   const topClients = [
-    { name: 'Marie Kabila', appointments: 15, spent: '450 000 CDF', status: 'VIP' },
-    { name: 'Grace Lumière', appointments: 12, spent: '380 000 CDF', status: 'VIP' },
-    { name: 'Sophie Makala', appointments: 10, spent: '320 000 CDF', status: 'Premium' },
-    { name: 'Élise Nkumu', appointments: 9, spent: '285 000 CDF', status: 'Premium' },
-    { name: 'Rose Mbala', appointments: 8, spent: '250 000 CDF', status: 'Regular' }
+    { name: 'Marie Kabila', appointments: 15, spent: '450 000 Fc', status: 'VIP' },
+    { name: 'Grace Lumière', appointments: 12, spent: '380 000 Fc', status: 'VIP' },
+    { name: 'Sophie Makala', appointments: 10, spent: '320 000 Fc', status: 'Premium' },
+    { name: 'Élise Nkumu', appointments: 9, spent: '285 000 Fc', status: 'Premium' },
+    { name: 'Rose Mbala', appointments: 8, spent: '250 000 Fc', status: 'Regular' }
   ];
 
   const workers = [
-    { name: 'Marie Nkumu', role: 'Spécialiste Ongles', appointments: 62, rating: 4.9, revenue: '930 000 CDF' },
-    { name: 'Grace Lumière', role: 'Experte Cils', appointments: 58, rating: 4.8, revenue: '870 000 CDF' },
-    { name: 'Sophie Kabila', role: 'Coiffeuse', appointments: 48, rating: 4.7, revenue: '720 000 CDF' },
-    { name: 'Élise Makala', role: 'Maquilleuse', appointments: 38, rating: 4.9, revenue: '570 000 CDF' }
+    { name: 'Marie Nkumu', role: 'Spécialiste Ongles', appointments: 62, rating: 4.9, revenue: '930 000 Fc' },
+    { name: 'Grace Lumière', role: 'Experte Cils', appointments: 58, rating: 4.8, revenue: '870 000 Fc' },
+    { name: 'Sophie Kabila', role: 'Coiffeuse', appointments: 48, rating: 4.7, revenue: '720 000 Fc' },
+    { name: 'Élise Makala', role: 'Maquilleuse', appointments: 38, rating: 4.9, revenue: '570 000 Fc' }
   ];
 
   const recentAppointments = [

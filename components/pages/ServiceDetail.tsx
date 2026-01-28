@@ -136,7 +136,7 @@ export default function ServiceDetail() {
                             {service.addOns.map((addon, i) => (
                               <li key={i} className="text-sm text-gray-600 dark:text-gray-300 flex items-center">
                                 <span className="w-1.5 h-1.5 bg-pink-400 rounded-full mr-2" />
-                                {addon.name} ({addon.price.toLocaleString()} CDF)
+                                {addon.name} ({addon.price.toLocaleString()} Fc)
                               </li>
                             ))}
                           </ul>
@@ -152,7 +152,7 @@ export default function ServiceDetail() {
                         </div>
                         <div className="flex items-center">
                           <DollarSign className="w-5 h-5 mr-3 text-amber-500" />
-                          <span className="text-2xl text-gray-900 dark:text-gray-100 font-semibold">{service.price.toLocaleString()} CDF</span>
+                          <span className="text-2xl text-gray-900 dark:text-gray-100 font-semibold">{service.price.toLocaleString()} Fc</span>
                         </div>
                       </div>
                       <Link href={`/appointments?service=${service.id}`} className="w-full">

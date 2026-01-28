@@ -43,7 +43,7 @@ export default function FAQ() {
         },
         {
           question: 'Puis-je avoir une prestation à domicile ?',
-          answer: 'Oui, nous proposons des prestations à domicile dans la zone de Kinshasa pour un supplément de 20 000 CDF. Ce service doit être réservé à l\'avance.'
+          answer: 'Oui, nous proposons des prestations à domicile dans la zone de Kinshasa pour un supplément de 20 000 Fc. Ce service doit être réservé à l\'avance.'
         },
         {
           question: 'Combien de temps tient le vernis gel ?',
@@ -77,7 +77,7 @@ export default function FAQ() {
       questions: [
         {
           question: 'Quels modes de paiement acceptez-vous ?',
-          answer: 'Nous acceptons les paiements en espèces (CDF et USD), par mobile money (Airtel Money, Orange Money, M-Pesa), et par virement bancaire.'
+          answer: 'Nous acceptons les paiements en espèces (Fc et USD), par mobile money (Airtel Money, Orange Money, M-Pesa), et par virement bancaire.'
         },
         {
           question: 'Les prix incluent-ils les pourboires ?',

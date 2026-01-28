@@ -63,7 +63,7 @@ export default function Memberships() {
 
               <div className="flex items-baseline mb-8 sm:mb-10">
                 <span className="text-4xl sm:text-6xl text-gray-900 dark:text-gray-100">120 000</span>
-                <span className="text-lg sm:text-2xl text-gray-600 dark:text-gray-400 ml-2">CDF</span>
+                <span className="text-lg sm:text-2xl text-gray-600 dark:text-gray-400 ml-2">Fc</span>
               </div>
 
               <div className="space-y-3 sm:space-y-4 mb-8 sm:mb-10">
@@ -132,9 +132,9 @@ export default function Memberships() {
 
               <div className="flex items-baseline mb-2">
                 <span className="text-4xl sm:text-6xl text-gray-900 dark:text-gray-100">210 000</span>
-                <span className="text-lg sm:text-2xl text-gray-600 dark:text-gray-400 ml-2">CDF</span>
+                <span className="text-lg sm:text-2xl text-gray-600 dark:text-gray-400 ml-2">Fc</span>
               </div>
-              <p className="text-xs sm:text-sm text-green-600 dark:text-green-400 mb-8 sm:mb-10">Économisez 30 000 CDF par rapport au plan 3 mois ×2</p>
+              <p className="text-xs sm:text-sm text-green-600 dark:text-green-400 mb-8 sm:mb-10">Économisez 30 000 Fc par rapport au plan 3 mois ×2</p>
 
               <div className="space-y-3 sm:space-y-4 mb-8 sm:mb-10">
                 <div className="flex items-start">

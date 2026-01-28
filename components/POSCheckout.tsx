@@ -150,7 +150,7 @@ export default function POSCheckout({ showMock }: { showMock?: boolean }) {
                   className="h-auto flex flex-col items-start p-4 rounded-xl hover:bg-pink-50 hover:border-pink-300"
                 >
                   <p className="text-sm text-gray-900 mb-1">{service.name}</p>
-                  <p className="text-lg text-pink-600">{(service.price).toLocaleString()} CDF</p>
+                  <p className="text-lg text-pink-600">{(service.price).toLocaleString()} Fc</p>
                 </Button>
               ))}
             </div>
@@ -168,7 +168,7 @@ export default function POSCheckout({ showMock }: { showMock?: boolean }) {
                   className="h-auto flex flex-col items-start p-4 rounded-xl hover:bg-purple-50 hover:border-purple-300"
                 >
                   <p className="text-sm text-gray-900 mb-1">{product.name}</p>
-                  <p className="text-lg text-purple-600">{(product.price).toLocaleString()} CDF</p>
+                  <p className="text-lg text-purple-600">{(product.price).toLocaleString()} Fc</p>
                 </Button>
               ))}
             </div>
@@ -208,7 +208,7 @@ export default function POSCheckout({ showMock }: { showMock?: boolean }) {
                       <div className="flex-1">
                         <p className="text-sm text-gray-900">{item.name}</p>
                         <p className="text-xs text-gray-600">
-                          {item.price.toLocaleString()} CDF × {item.quantity}
+                          {item.price.toLocaleString()} Fc × {item.quantity}
                         </p>
                       </div>
                       <Button
@@ -243,7 +243,7 @@ export default function POSCheckout({ showMock }: { showMock?: boolean }) {
                         </Button>
                       </div>
                       <p className="text-sm text-gray-900">
-                        {(item.price * item.quantity).toLocaleString()} CDF
+                        {(item.price * item.quantity).toLocaleString()} Fc
                       </p>
                     </div>
                   </div>
@@ -271,18 +271,18 @@ export default function POSCheckout({ showMock }: { showMock?: boolean }) {
             <div className="space-y-2 mb-4">
               <div className="flex justify-between text-gray-700">
                 <span>Sous-total:</span>
-                <span>{subtotal.toLocaleString()} CDF</span>
+                <span>{subtotal.toLocaleString()} Fc</span>
               </div>
               {discountPercent > 0 && (
                 <div className="flex justify-between text-green-600">
                   <span>Remise ({discountPercent}%):</span>
-                  <span>- {discountAmount.toLocaleString()} CDF</span>
+                  <span>- {discountAmount.toLocaleString()} Fc</span>
                 </div>
               )}
               <Separator />
               <div className="flex justify-between text-xl text-gray-900">
                 <span>Total:</span>
-                <span>{total.toLocaleString()} CDF</span>
+                <span>{total.toLocaleString()} Fc</span>
               </div>
             </div>
 
@@ -376,17 +376,17 @@ export default function POSCheckout({ showMock }: { showMock?: boolean }) {
               <div className="space-y-2 mb-4">
                 <div className="flex justify-between text-gray-700">
                   <span>Total à payer:</span>
-                  <span>{total.toLocaleString()} CDF</span>
+                  <span>{total.toLocaleString()} Fc</span>
                 </div>
                 <div className="flex justify-between text-gray-700">
                   <span>Total payé:</span>
-                  <span>{totalPaid.toLocaleString()} CDF</span>
+                  <span>{totalPaid.toLocaleString()} Fc</span>
                 </div>
                 <Separator />
                 <div className={`flex justify-between text-xl ${remaining > 0 ? 'text-red-600' : 'text-green-600'
                   }`}>
                   <span>{remaining > 0 ? 'Reste à payer:' : 'Monnaie:'}</span>
-                  <span>{Math.abs(remaining).toLocaleString()} CDF</span>
+                  <span>{Math.abs(remaining).toLocaleString()} Fc</span>
                 </div>
               </div>
 
@@ -410,11 +410,11 @@ export default function POSCheckout({ showMock }: { showMock?: boolean }) {
         </Card>
         <Card className="bg-linear-to-br from-green-50 to-emerald-50 border-0 p-6">
           <p className="text-sm text-gray-600 mb-1">Revenus Journée</p>
-          <p className="text-2xl text-gray-900">1 250 000 CDF</p>
+          <p className="text-2xl text-gray-900">1 250 000 Fc</p>
         </Card>
         <Card className="bg-linear-to-br from-purple-50 to-pink-50 border-0 p-6">
           <p className="text-sm text-gray-600 mb-1">Ticket Moyen</p>
-          <p className="text-2xl text-gray-900">39 063 CDF</p>
+          <p className="text-2xl text-gray-900">39 063 Fc</p>
         </Card>
         <Card className="bg-linear-to-br from-amber-50 to-orange-50 border-0 p-6">
           <Button className="w-full bg-linear-to-r from-amber-500 to-orange-500 text-white rounded-full">

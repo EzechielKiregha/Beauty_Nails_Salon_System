@@ -83,7 +83,7 @@ export default function CreateServiceModal({ triggerLabel = "Créer un service" 
           </div>
 
           <div>
-            <Label htmlFor="service-price">Prix (CDF)</Label>
+            <Label htmlFor="service-price">Prix (Fc)</Label>
             <Input id="service-price" value={price} onChange={(e) => setPrice(e.target.value === '' ? '' : Number(e.target.value))} type="number" />
           </div>
 

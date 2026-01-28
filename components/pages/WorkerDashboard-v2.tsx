@@ -587,7 +587,7 @@ export default function WorkerDashboardV2() {
                 <div className="p-6 bg-linear-to-br from-green-100 to-emerald-100 rounded-xl">
                   <p className="text-sm text-gray-600 mb-2">Cette semaine</p>
                   <p className="text-3xl font-bold text-gray-900">
-                    {stats.commission.toLocaleString()} CDF
+                    {stats.commission.toLocaleString()} Fc
                   </p>
                   <p className="text-sm text-gray-600 mt-2">
                     Taux: {user?.workerProfile?.commissionRate || 0}%
@@ -597,7 +597,7 @@ export default function WorkerDashboardV2() {
                 <div className="p-6 bg-linear-to-br from-blue-100 to-purple-100 rounded-xl">
                   <p className="text-sm text-gray-600 mb-2">Revenus générés</p>
                   <p className="text-3xl font-bold text-gray-900">
-                    {stats.revenue.toLocaleString()} CDF
+                    {stats.revenue.toLocaleString()} Fc
                   </p>
                   <p className="text-sm text-gray-600 mt-2">
                     {commissionData?.appointmentsCount || 0} rendez-vous
@@ -610,7 +610,7 @@ export default function WorkerDashboardV2() {
                     {commissionData?.appointmentsCount
                       ? Math.round(stats.revenue / commissionData.appointmentsCount).toLocaleString()
                       : 0}{' '}
-                    CDF
+                    Fc
                   </p>
                 </div>
               </div>
@@ -626,7 +626,7 @@ export default function WorkerDashboardV2() {
                   </div>
                   <div className="text-right">
                     <p className="text-xl font-bold text-green-600">
-                      {stats.commission.toLocaleString()} CDF
+                      {stats.commission.toLocaleString()} Fc
                     </p>
                   </div>
                 </div>
@@ -679,7 +679,7 @@ export default function WorkerDashboardV2() {
                 </div>
                 <div>
                   <label className="text-sm text-gray-600">Prix</label>
-                  <p className="font-semibold">{selectedAppointment.price?.toLocaleString()} CDF</p>
+                  <p className="font-semibold">{selectedAppointment.price?.toLocaleString()} Fc</p>
                 </div>
               </div>
 

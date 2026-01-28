@@ -242,7 +242,7 @@ export default function AdminDashboardV2() {
                 {(stats.monthlyRevenue / 1000000).toFixed(1)}M
               </p>
               <p className="text-xs opacity-80">
-                {stats.todayRevenue.toLocaleString()} CDF aujourd'hui
+                {stats.todayRevenue.toLocaleString()} Fc aujourd'hui
               </p>
             </Card>
 
@@ -363,7 +363,7 @@ export default function AdminDashboardV2() {
                   <XAxis dataKey="month" stroke="#9CA3AF" />
                   <YAxis stroke="#9CA3AF" />
                   <Tooltip
-                    formatter={(value: number) => `${(value / 1000000).toFixed(1)}M CDF`}
+                    formatter={(value: number) => `${(value / 1000000).toFixed(1)}M Fc`}
                     contentStyle={{ backgroundColor: '#1F2937', border: '1px solid #374151', borderRadius: '8px' }}
                     labelStyle={{ color: '#F3F4F6' }}
                   />

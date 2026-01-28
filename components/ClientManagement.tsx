@@ -46,15 +46,15 @@ export default function ClientManagement({ showMock }: { showMock?: boolean }) {
       birthday: '15 Mars 1992',
       address: 'Gombe, Kinshasa',
       totalAppointments: 15,
-      totalSpent: '450 000 CDF',
+      totalSpent: '450 000 Fc',
       loyaltyPoints: 450,
       membershipStatus: 'VIP',
       lastVisit: '2024-11-28',
       preferences: 'Préfère les vernis roses, aime les designs discrets',
       allergies: 'Aucune allergie connue',
       favoriteServices: ['Manucure Gel', 'Extension Cils', 'Maquillage Soirée'],
-      prepaymentBalance: '50 000 CDF',
-      giftCardBalance: '25 000 CDF',
+      prepaymentBalance: '50 000 Fc',
+      giftCardBalance: '25 000 Fc',
       referrals: 3
     },
     {
@@ -65,15 +65,15 @@ export default function ClientManagement({ showMock }: { showMock?: boolean }) {
       birthday: '22 Juillet 1988',
       address: 'Ma Campagne, Kinshasa',
       totalAppointments: 12,
-      totalSpent: '380 000 CDF',
+      totalSpent: '380 000 Fc',
       loyaltyPoints: 380,
       membershipStatus: 'VIP',
       lastVisit: '2024-11-25',
       preferences: 'Adore les tresses africaines, préfère les RDV matinaux',
       allergies: 'Sensible aux parfums forts',
       favoriteServices: ['Tresses Box Braids', 'Pédicure Spa', 'Manucure Française'],
-      prepaymentBalance: '0 CDF',
-      giftCardBalance: '0 CDF',
+      prepaymentBalance: '0 Fc',
+      giftCardBalance: '0 Fc',
       referrals: 5
     },
     {
@@ -84,15 +84,15 @@ export default function ClientManagement({ showMock }: { showMock?: boolean }) {
       birthday: '10 Janvier 1995',
       address: 'Limete, Kinshasa',
       totalAppointments: 10,
-      totalSpent: '320 000 CDF',
+      totalSpent: '320 000 Fc',
       loyaltyPoints: 320,
       membershipStatus: 'Premium',
       lastVisit: '2024-11-20',
       preferences: 'Aime les couleurs vives, très active sur réseaux sociaux',
       allergies: 'Aucune',
       favoriteServices: ['Extensions Cils Volume', 'Nail Art', 'Maquillage Naturel'],
-      prepaymentBalance: '100 000 CDF',
-      giftCardBalance: '50 000 CDF',
+      prepaymentBalance: '100 000 Fc',
+      giftCardBalance: '50 000 Fc',
       referrals: 2
     }
   ];
@@ -121,10 +121,10 @@ export default function ClientManagement({ showMock }: { showMock?: boolean }) {
     : (showMock ? MOCK_CLIENTS : []);
 
   const appointmentHistory = [
-    { date: '2024-11-28', service: 'Manucure Gel', worker: 'Marie N.', amount: '30 000 CDF', status: 'Complété' },
-    { date: '2024-11-15', service: 'Extension Cils', worker: 'Grace L.', amount: '45 000 CDF', status: 'Complété' },
-    { date: '2024-11-01', service: 'Maquillage', worker: 'Élise M.', amount: '40 000 CDF', status: 'Complété' },
-    { date: '2024-10-20', service: 'Pédicure', worker: 'Sophie K.', amount: '25 000 CDF', status: 'Complété' }
+    { date: '2024-11-28', service: 'Manucure Gel', worker: 'Marie N.', amount: '30 000 Fc', status: 'Complété' },
+    { date: '2024-11-15', service: 'Extension Cils', worker: 'Grace L.', amount: '45 000 Fc', status: 'Complété' },
+    { date: '2024-11-01', service: 'Maquillage', worker: 'Élise M.', amount: '40 000 Fc', status: 'Complété' },
+    { date: '2024-10-20', service: 'Pédicure', worker: 'Sophie K.', amount: '25 000 Fc', status: 'Complété' }
   ];
 
   const notifications = [
