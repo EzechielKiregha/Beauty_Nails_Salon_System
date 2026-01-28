@@ -23,7 +23,7 @@ npm install
 
 ```bash
 touch .env
-# then open .env and fill values
+# then open .env and fill all values
 ```
 
 4. Prepare the database (see **Prisma & Postgres**):
