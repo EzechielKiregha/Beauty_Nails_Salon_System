@@ -48,9 +48,9 @@ export default function TodayOverview({ showMock }: { showMock?: boolean }) {
   const upcomingAppointments = (apiAppointments && apiAppointments.length > 0)
     ? apiAppointments.map((apt: any) => ({
       time: apt.time || apt.startTime || new Date(apt.startsAt || apt.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-      client: apt.client?.name || apt.clientName || apt.client || 'Client',
-      service: apt.service?.name || apt.serviceName || apt.service || 'Service',
-      staff: apt.staff?.name || apt.staffName || apt.staff || 'Staff',
+      client: apt.client?.name || apt.client?.user?.name || apt.clientName || (typeof apt.client === 'string' ? apt.client : 'Client'),
+      service: apt.service?.name || apt.serviceName || (typeof apt.service === 'string' ? apt.service : 'Service'),
+      staff: apt.staff?.name || apt.staff?.user?.name || apt.staffName || (typeof apt.staff === 'string' ? apt.staff : 'Staff'),
       duration: apt.duration || 60,
     }))
     : (showMock ? MOCK_UPCOMING : []);
