@@ -174,7 +174,7 @@ export default function AdminDashboardV2() {
   }
 
   return (
-    <div className="min-h-screen py-24 bg-background dark:bg-gray-950">
+    <div className="min-h-screen py-8 bg-background dark:bg-gray-950">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-12">
@@ -558,7 +558,9 @@ export default function AdminDashboardV2() {
         )}
 
         {/* Tasks Management */}
-        <TasksManagement />
+        <div className="py-2">
+          <TasksManagement />
+        </div>
       </div>
     </div>
   );

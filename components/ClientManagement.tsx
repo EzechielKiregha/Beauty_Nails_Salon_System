@@ -6,7 +6,7 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Badge } from './ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
-import { Search, Phone, Calendar, DollarSign, Gift, Bell, CreditCard, Award, Mail, MapPin, Cake } from 'lucide-react';
+import { Search, Phone, Calendar, DollarSign, Gift, Bell, CreditCard, Award, Mail, MapPin, Cake, Clock, Users } from 'lucide-react';
 import { useClients } from '@/lib/hooks/useClients';
 
 interface Client {
@@ -141,55 +141,63 @@ export default function ClientManagement({ showMock }: { showMock?: boolean }) {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-3xl text-gray-900 dark:text-white">Gestion des Clientes</h2>
-        <div className="flex items-center gap-2">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <h2 className="text-2xl sm:text-3xl text-gray-900 dark:text-gray-100 font-bold">Gestion des Clientes</h2>
+        <div className="flex items-center gap-2 w-full sm:w-auto">
           <CreateClientModal triggerLabel="+ Nouvelle Cliente" />
-          <Button variant="ghost" size="sm">Importer</Button>
+          <Button variant="ghost" size="sm" className="dark:text-gray-400 dark:hover:text-gray-200">Importer</Button>
         </div>
       </div>
       {/* Search Bar */}
-      <Card className="border-0 shadow-lg rounded-2xl p-6">
+      <Card className="p-4 sm:p-6 hover:shadow-lg transition-all border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-900">
         <div className="relative">
           <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
           <Input
             placeholder="Rechercher par nom ou téléphone..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-12 py-6 rounded-xl border-gray-200"
+            className="pl-12 py-5 sm:py-6 rounded-xl border-gray-200 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100 dark:placeholder:text-gray-500 text-sm sm:text-base"
           />
         </div>
       </Card>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Clients List */}
-        <Card className="border-0 shadow-lg rounded-2xl p-6 lg:col-span-1">
-          <h3 className="text-xl text-gray-900 dark:text-white mb-4">Liste des Clientes</h3>
-          <div className="space-y-3 max-h-150 overflow-y-auto">
+        <Card className="p-4 sm:p-6 hover:shadow-lg transition-all border border-pink-100 dark:border-pink-900 shadow-xl rounded-2xl bg-white dark:bg-gray-900 lg:col-span-1">
+          <h3 className="text-lg sm:text-xl text-gray-900 dark:text-gray-100 mb-6 font-bold flex items-center gap-2">
+            <Users className="w-5 h-5 text-pink-500" />
+            Liste des Clientes
+          </h3>
+          <div className="space-y-3 max-h-[500px] sm:max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
             {filteredClients.map((client) => (
               <div
                 key={client.id}
                 onClick={() => setSelectedClient(client)}
-                className={`p-4 rounded-xl cursor-pointer transition-all ${selectedClient?.id === client.id
-                  ? 'bg-linear-to-r from-pink-100 to-purple-100 dark:from-pink-900 dark:to-purple-900 border-2 border-pink-300 dark:border-pink-700'
-                  : 'bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700'
+                className={`p-4 rounded-xl cursor-pointer transition-all border-2 ${selectedClient?.id === client.id
+                  ? 'bg-linear-to-r from-pink-50 to-purple-50 dark:from-pink-900/20 dark:to-purple-900/20 border-pink-300 dark:border-pink-800 shadow-md'
+                  : 'bg-gray-50 dark:bg-gray-800/50 border-transparent hover:border-pink-200 dark:hover:border-pink-900/50'
                   }`}
               >
                 <div className="flex items-center justify-between mb-2">
-                  <p className="text-gray-900 dark:text-white">{client.name}</p>
+                  <p className="text-gray-900 dark:text-gray-100 font-bold text-sm sm:text-base">{client.name}</p>
                   <Badge className={`${client.membershipStatus === 'VIP' ? 'bg-amber-500' :
                     client.membershipStatus === 'Premium' ? 'bg-purple-500' : 'bg-gray-500'
-                    } text-white`}>
+                    } text-white text-[10px] sm:text-xs border-0`}>
                     {client.membershipStatus}
                   </Badge>
                 </div>
-                <p className="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-2">
-                  <Phone className="w-3 h-3" />
+                <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 flex items-center gap-2">
+                  <Phone className="w-3.5 h-3.5 text-pink-500" />
                   {client.phone}
                 </p>
-                <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                  {client.totalAppointments} visites • {client.loyaltyPoints} points
-                </p>
+                <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
+                  <p className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-500 font-medium">
+                    {client.totalAppointments} visites
+                  </p>
+                  <p className="text-[10px] sm:text-xs text-pink-600 dark:text-pink-400 font-bold">
+                    {client.loyaltyPoints} pts
+                  </p>
+                </div>
               </div>
             ))}
           </div>
@@ -197,114 +205,150 @@ export default function ClientManagement({ showMock }: { showMock?: boolean }) {
 
         {/* Client Profile */}
         {selectedClient ? (
-          <Card className="border-0 shadow-lg rounded-2xl p-8 lg:col-span-2">
-            <Tabs defaultValue="profile" className="space-y-6">
-              <TabsList className="bg-gray-100 dark:bg-gray-800 p-1 rounded-xl">
-                <TabsTrigger value="profile" className="rounded-lg">Profil</TabsTrigger>
-                <TabsTrigger value="history" className="rounded-lg">Historique</TabsTrigger>
-                <TabsTrigger value="notifications" className="rounded-lg">Notifications</TabsTrigger>
-                <TabsTrigger value="finances" className="rounded-lg">Finances</TabsTrigger>
+          <Card className="p-4 sm:p-8 hover:shadow-lg transition-all border border-pink-100 dark:border-pink-900 shadow-xl rounded-2xl bg-white dark:bg-gray-900 lg:col-span-2">
+            <Tabs defaultValue="profile" className="space-y-8">
+              <TabsList className="bg-gray-100 dark:bg-gray-800/50 p-1 rounded-xl w-full flex overflow-x-auto no-scrollbar justify-start sm:justify-center">
+                <TabsTrigger value="profile" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-white dark:data-[state=active]:bg-gray-800 dark:data-[state=active]:text-pink-400 shadow-sm">Profil</TabsTrigger>
+                <TabsTrigger value="history" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-white dark:data-[state=active]:bg-gray-800 dark:data-[state=active]:text-pink-400 shadow-sm">Historique</TabsTrigger>
+                <TabsTrigger value="notifications" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-white dark:data-[state=active]:bg-gray-800 dark:data-[state=active]:text-pink-400 shadow-sm">Notifications</TabsTrigger>
+                <TabsTrigger value="finances" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-white dark:data-[state=active]:bg-gray-800 dark:data-[state=active]:text-pink-400 shadow-sm">Finances</TabsTrigger>
               </TabsList>
 
               {/* Profile Tab */}
-              <TabsContent value="profile" className="space-y-6">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <h3 className="text-2xl text-gray-900 dark:text-white mb-2">{selectedClient.name}</h3>
-                    <div className="space-y-2 text-gray-600 dark:text-gray-400">
-                      <p className="flex items-center gap-2">
-                        <Phone className="w-4 h-4" />
+              <TabsContent value="profile" className="space-y-8">
+                <div className="flex flex-col sm:flex-row items-start justify-between gap-6">
+                  <div className="flex items-center gap-4 sm:gap-6">
+                    <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-3xl bg-linear-to-br from-pink-500 to-purple-500 flex items-center justify-center text-white text-2xl sm:text-3xl font-black shadow-lg shadow-pink-500/20">
+                      {selectedClient.name.charAt(0)}
+                    </div>
+                    <div>
+                      <h3 className="text-2xl sm:text-3xl text-gray-900 dark:text-gray-100 font-black mb-2">{selectedClient.name}</h3>
+                      <div className="flex flex-wrap gap-3">
+                        <Badge className="bg-amber-500 dark:bg-amber-600 text-white border-0 px-3 py-1 font-bold shadow-md shadow-amber-500/10">
+                          {selectedClient.membershipStatus}
+                        </Badge>
+                        <Badge variant="outline" className="border-pink-200 dark:border-pink-900 text-pink-600 dark:text-pink-400 px-3 py-1 font-bold">
+                          ID: #{selectedClient.id.slice(0, 4)}
+                        </Badge>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3 w-full sm:w-auto">
+                    <Button className="bg-linear-to-r from-pink-500 to-purple-500 text-white rounded-full py-5 px-6 shadow-lg shadow-pink-500/20 font-bold transition-all text-sm">
+                      Prendre RDV
+                    </Button>
+                    <Button variant="outline" className="rounded-full py-5 px-6 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 font-bold transition-all text-sm">
+                      Modifier
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-4">
+                    <h4 className="text-xs sm:text-sm font-black text-gray-400 dark:text-gray-500 uppercase tracking-[0.2em]">Informations de Contact</h4>
+                    <div className="space-y-3 p-5 bg-gray-50 dark:bg-gray-800/50 rounded-2xl border border-gray-100 dark:border-gray-700">
+                      <p className="flex items-center gap-3 text-sm sm:text-base text-gray-700 dark:text-gray-300">
+                        <div className="w-8 h-8 rounded-lg bg-white dark:bg-gray-800 flex items-center justify-center shadow-sm">
+                          <Phone className="w-4 h-4 text-pink-500" />
+                        </div>
                         {selectedClient.phone}
                       </p>
-                      <p className="flex items-center gap-2">
-                        <Mail className="w-4 h-4" />
+                      <p className="flex items-center gap-3 text-sm sm:text-base text-gray-700 dark:text-gray-300">
+                        <div className="w-8 h-8 rounded-lg bg-white dark:bg-gray-800 flex items-center justify-center shadow-sm">
+                          <Mail className="w-4 h-4 text-pink-500" />
+                        </div>
                         {selectedClient.email}
                       </p>
-                      <p className="flex items-center gap-2">
-                        <Cake className="w-4 h-4" />
+                      <p className="flex items-center gap-3 text-sm sm:text-base text-gray-700 dark:text-gray-300">
+                        <div className="w-8 h-8 rounded-lg bg-white dark:bg-gray-800 flex items-center justify-center shadow-sm">
+                          <Cake className="w-4 h-4 text-pink-500" />
+                        </div>
                         {selectedClient.birthday}
                       </p>
-                      <p className="flex items-center gap-2">
-                        <MapPin className="w-4 h-4" />
+                      <p className="flex items-center gap-3 text-sm sm:text-base text-gray-700 dark:text-gray-300">
+                        <div className="w-8 h-8 rounded-lg bg-white dark:bg-gray-800 flex items-center justify-center shadow-sm">
+                          <MapPin className="w-4 h-4 text-pink-500" />
+                        </div>
                         {selectedClient.address}
                       </p>
                     </div>
                   </div>
-                  <Badge className="bg-linear-to-r from-amber-500 to-orange-500 text-white px-4 py-2">
-                    {selectedClient.membershipStatus}
-                  </Badge>
-                </div>
 
-                {/* Quick Stats */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <Card className="bg-linear-to-br from-blue-50 to-cyan-50 dark:from-blue-950 dark:to-cyan-950 border-0 p-4">
-                    <Calendar className="w-6 h-6 text-blue-600 dark:text-blue-400 mb-2" />
-                    <p className="text-2xl text-gray-900 dark:text-white">{selectedClient.totalAppointments}</p>
-                    <p className="text-xs text-gray-600 dark:text-gray-400">Visites</p>
-                  </Card>
-                  <Card className="bg-linear-to-br from-green-50 to-emerald-50 dark:from-green-950 dark:to-emerald-950 border-0 p-4">
-                    <DollarSign className="w-6 h-6 text-green-600 dark:text-green-400 mb-2" />
-                    <p className="text-lg text-gray-900 dark:text-white">{selectedClient.totalSpent}</p>
-                    <p className="text-xs text-gray-600 dark:text-gray-400">Dépensé</p>
-                  </Card>
-                  <Card className="bg-linear-to-br from-purple-50 to-pink-50 dark:from-purple-950 dark:to-pink-950 border-0 p-4">
-                    <Award className="w-6 h-6 text-purple-600 dark:text-purple-400 mb-2" />
-                    <p className="text-2xl text-gray-900 dark:text-white">{selectedClient.loyaltyPoints}</p>
-                    <p className="text-xs text-gray-600 dark:text-gray-400">Points Fidélité</p>
-                  </Card>
-                  <Card className="bg-linear-to-br from-amber-50 to-orange-50 dark:from-amber-950 dark:to-orange-950 border-0 p-4">
-                    <Gift className="w-6 h-6 text-amber-600 dark:text-amber-400 mb-2" />
-                    <p className="text-2xl text-gray-900 dark:text-white">{selectedClient.referrals}</p>
-                    <p className="text-xs text-gray-600 dark:text-gray-400">Parrainages</p>
-                  </Card>
-                </div>
-
-                {/* Preferences */}
-                <div className="space-y-4">
-                  <div className="bg-purple-50 dark:bg-purple-900/20 p-4 rounded-xl">
-                    <h4 className="text-gray-900 dark:text-white mb-2">Préférences</h4>
-                    <p className="text-sm text-gray-700 dark:text-gray-300">{selectedClient.preferences}</p>
-                  </div>
-                  <div className="bg-red-50 dark:bg-red-900/20 p-4 rounded-xl">
-                    <h4 className="text-gray-900 dark:text-white mb-2">Allergies / Notes Médicales</h4>
-                    <p className="text-sm text-gray-700 dark:text-gray-300">{selectedClient.allergies}</p>
-                  </div>
-                  <div className="bg-pink-50 dark:bg-pink-900/20 p-4 rounded-xl">
-                    <h4 className="text-gray-900 dark:text-white mb-2">Services Favoris</h4>
-                    <div className="flex flex-wrap gap-2 mt-2">
-                      {selectedClient.favoriteServices.map((service: any, idx: any) => (
-                        <Badge key={idx} className="bg-pink-500 text-white">
-                          {service}
-                        </Badge>
-                      ))}
+                  <div className="space-y-4">
+                    <h4 className="text-xs sm:text-sm font-black text-gray-400 dark:text-gray-500 uppercase tracking-[0.2em]">Notes & Préférences</h4>
+                    <div className="space-y-4">
+                      <div className="p-5 bg-purple-50 dark:bg-purple-900/10 rounded-2xl border border-purple-100 dark:border-purple-900/30">
+                        <p className="text-[10px] font-black text-purple-600 dark:text-purple-400 uppercase tracking-widest mb-2">Préférences</p>
+                        <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed font-medium">{selectedClient.preferences}</p>
+                      </div>
+                      <div className="p-5 bg-red-50 dark:bg-red-900/10 rounded-2xl border border-red-100 dark:border-red-900/30">
+                        <p className="text-[10px] font-black text-red-600 dark:text-red-400 uppercase tracking-widest mb-2">Allergies / Notes</p>
+                        <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed font-medium">{selectedClient.allergies}</p>
+                      </div>
                     </div>
                   </div>
                 </div>
 
-                <div className="flex gap-3">
-                  <Button className="flex-1 bg-linear-to-r from-pink-500 to-purple-500 text-white rounded-full">
-                    Prendre RDV
-                  </Button>
-                  <Button variant="outline" className="rounded-full">
-                    Modifier
-                  </Button>
+                {/* Quick Stats */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                  <div className="bg-linear-to-br from-blue-50 to-cyan-50 dark:from-gray-800 dark:to-gray-800/50 p-5 rounded-3xl border border-blue-100 dark:border-blue-900/30 text-center shadow-sm">
+                    <Calendar className="w-6 h-6 text-blue-600 dark:text-blue-400 mx-auto mb-2" />
+                    <p className="text-2xl font-black text-gray-900 dark:text-gray-100">{selectedClient.totalAppointments}</p>
+                    <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase font-bold tracking-tight">Visites</p>
+                  </div>
+                  <div className="bg-linear-to-br from-green-50 to-emerald-50 dark:from-gray-800 dark:to-gray-800/50 p-5 rounded-3xl border border-green-100 dark:border-green-900/30 text-center shadow-sm">
+                    <DollarSign className="w-6 h-6 text-green-600 dark:text-green-400 mx-auto mb-2" />
+                    <p className="text-lg font-black text-gray-900 dark:text-gray-100 truncate px-1">{selectedClient.totalSpent}</p>
+                    <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase font-bold tracking-tight">Dépensé</p>
+                  </div>
+                  <div className="bg-linear-to-br from-purple-50 to-pink-50 dark:from-gray-800 dark:to-gray-800/50 p-5 rounded-3xl border border-purple-100 dark:border-purple-900/30 text-center shadow-sm">
+                    <Award className="w-6 h-6 text-purple-600 dark:text-purple-400 mx-auto mb-2" />
+                    <p className="text-2xl font-black text-gray-900 dark:text-gray-100">{selectedClient.loyaltyPoints}</p>
+                    <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase font-bold tracking-tight">Points</p>
+                  </div>
+                  <div className="bg-linear-to-br from-amber-50 to-orange-50 dark:from-gray-800 dark:to-gray-800/50 p-5 rounded-3xl border border-amber-100 dark:border-amber-900/30 text-center shadow-sm">
+                    <Gift className="w-6 h-6 text-amber-600 dark:text-amber-400 mx-auto mb-2" />
+                    <p className="text-2xl font-black text-gray-900 dark:text-gray-100">{selectedClient.referrals}</p>
+                    <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase font-bold tracking-tight">Parrains</p>
+                  </div>
+                </div>
+
+                <div className="p-6 bg-pink-50 dark:bg-pink-900/10 rounded-3xl border border-pink-100 dark:border-pink-900/30">
+                  <h4 className="text-xs font-black text-pink-600 dark:text-pink-400 uppercase tracking-[0.2em] mb-4">Services Favoris</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {selectedClient.favoriteServices.map((service: any, idx: any) => (
+                      <Badge key={idx} className="bg-white dark:bg-gray-800 hover:bg-pink-50 dark:hover:bg-pink-900/20 text-pink-600 dark:text-pink-400 border border-pink-100 dark:border-pink-900/50 py-2 px-4 text-xs font-bold rounded-full transition-all">
+                        {service}
+                      </Badge>
+                    ))}
+                  </div>
                 </div>
               </TabsContent>
 
               {/* History Tab */}
-              <TabsContent value="history">
-                <h4 className="text-xl text-gray-900 dark:text-white mb-4">Historique des Visites</h4>
+              <TabsContent value="history" className="space-y-6">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-lg sm:text-xl text-gray-900 dark:text-gray-100 font-bold flex items-center gap-2">
+                    <Calendar className="w-5 h-5 text-pink-500" />
+                    Historique des Visites
+                  </h4>
+                  <Button variant="outline" size="sm" className="rounded-full text-xs font-bold dark:border-gray-700">Exporter PDF</Button>
+                </div>
                 <div className="space-y-3">
                   {appointmentHistory.map((apt, idx) => (
-                    <div key={idx} className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-xl">
-                      <div>
-                        <p className="text-gray-900 dark:text-white">{apt.service}</p>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">avec {apt.worker}</p>
-                        <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">{apt.date}</p>
+                    <div key={idx} className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 bg-gray-50 dark:bg-gray-800/50 rounded-2xl border border-gray-100 dark:border-gray-700 hover:shadow-md transition-all gap-4">
+                      <div className="flex items-center gap-4">
+                        <div className="w-10 h-10 rounded-xl bg-white dark:bg-gray-800 flex items-center justify-center shadow-sm">
+                          <Calendar className="w-5 h-5 text-pink-500" />
+                        </div>
+                        <div>
+                          <p className="text-sm sm:text-base text-gray-900 dark:text-gray-100 font-bold">{apt.service}</p>
+                          <p className="text-xs text-gray-500 dark:text-gray-400">avec {apt.worker} • {apt.date}</p>
+                        </div>
                       </div>
-                      <div className="text-right">
-                        <p className="text-gray-900 dark:text-white">{apt.amount}</p>
-                        <Badge className="bg-green-500 text-white mt-1">
+                      <div className="flex items-center justify-between w-full sm:w-auto gap-4">
+                        <p className="text-sm sm:text-base font-black text-gray-900 dark:text-gray-100">{apt.amount}</p>
+                        <Badge className="bg-green-500/10 text-green-600 dark:text-green-400 border-green-200 dark:border-green-900/30 px-3 py-1 text-[10px] font-bold">
                           {apt.status}
                         </Badge>
                       </div>
@@ -314,87 +358,100 @@ export default function ClientManagement({ showMock }: { showMock?: boolean }) {
               </TabsContent>
 
               {/* Notifications Tab */}
-              <TabsContent value="notifications">
-                <h4 className="text-xl text-gray-900 dark:text-white mb-4">Journal des Notifications</h4>
+              <TabsContent value="notifications" className="space-y-6">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-lg sm:text-xl text-gray-900 dark:text-gray-100 font-bold flex items-center gap-2">
+                    <Bell className="w-5 h-5 text-pink-500" />
+                    Communications Envoyées
+                  </h4>
+                </div>
                 <div className="space-y-3">
                   {notifications.map((notif, idx) => (
-                    <div key={idx} className="flex items-start gap-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-xl">
-                      <Bell className="w-5 h-5 text-pink-500 dark:text-pink-400 mt-1" />
-                      <div className="flex-1">
-                        <div className="flex items-center justify-between mb-1">
-                          <p className="text-gray-900 dark:text-white">{notif.type}</p>
-                          <Badge className={`${notif.status === 'Envoyé' ? 'bg-green-500' :
-                            notif.status === 'Ouvert' ? 'bg-blue-500' : 'bg-gray-500'
-                            } text-white`}>
-                            {notif.status}
-                          </Badge>
+                    <div key={idx} className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 bg-gray-50 dark:bg-gray-800/50 rounded-2xl border border-gray-100 dark:border-gray-700 hover:shadow-md transition-all gap-4">
+                      <div className="flex items-center gap-4">
+                        <div className="w-10 h-10 rounded-xl bg-white dark:bg-gray-800 flex items-center justify-center shadow-sm">
+                          {notif.type === 'Rappel' ? <Clock className="w-5 h-5 text-blue-500" /> :
+                            notif.type === 'Confirmation' ? <Mail className="w-5 h-5 text-green-500" /> :
+                              <Gift className="w-5 h-5 text-purple-500" />}
                         </div>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">{notif.message}</p>
-                        <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">{notif.date}</p>
+                        <div>
+                          <p className="text-sm sm:text-base text-gray-900 dark:text-gray-100 font-bold">{notif.message}</p>
+                          <p className="text-xs text-gray-500 dark:text-gray-400">{notif.type} • {notif.date}</p>
+                        </div>
                       </div>
+                      <Badge variant="outline" className="border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 px-3 py-1 text-[10px] font-bold">
+                        {notif.status}
+                      </Badge>
                     </div>
                   ))}
                 </div>
               </TabsContent>
 
               {/* Finances Tab */}
-              <TabsContent value="finances">
-                <div className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <Card className="bg-linear-to-br from-green-50 to-emerald-50 dark:from-green-950 dark:to-emerald-950 border-0 p-6">
-                      <div className="flex items-center gap-3 mb-4">
-                        <CreditCard className="w-6 h-6 text-green-600 dark:text-green-400" />
-                        <h4 className="text-lg text-gray-900 dark:text-white">Solde Prépaiement</h4>
+              <TabsContent value="finances" className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Card className="p-6 bg-linear-to-br from-green-50 to-emerald-50 dark:from-green-900/10 dark:to-emerald-900/10 border-green-100 dark:border-green-900/30 rounded-3xl">
+                    <div className="flex items-center gap-4 mb-4">
+                      <div className="w-12 h-12 rounded-2xl bg-white dark:bg-gray-800 flex items-center justify-center shadow-md">
+                        <CreditCard className="w-6 h-6 text-green-600" />
                       </div>
-                      <p className="text-3xl text-gray-900 dark:text-white mb-2">{selectedClient.prepaymentBalance}</p>
-                      <Button size="sm" className="bg-green-600 hover:bg-green-700 text-white rounded-full">
-                        Ajouter Fonds
-                      </Button>
-                    </Card>
-
-                    <Card className="bg-linear-to-br from-purple-50 to-pink-50 dark:from-purple-950 dark:to-pink-950 border-0 p-6">
-                      <div className="flex items-center gap-3 mb-4">
-                        <Gift className="w-6 h-6 text-purple-600 dark:text-purple-400" />
-                        <h4 className="text-lg text-gray-900 dark:text-white">Carte Cadeau</h4>
+                      <div>
+                        <p className="text-xs font-black text-green-600 dark:text-green-400 uppercase tracking-widest">Solde Prépayé</p>
+                        <p className="text-2xl font-black text-gray-900 dark:text-gray-100">{selectedClient.prepaymentBalance}</p>
                       </div>
-                      <p className="text-3xl text-gray-900 dark:text-white mb-2">{selectedClient.giftCardBalance}</p>
-                      <Button size="sm" className="bg-purple-600 hover:bg-purple-700 text-white rounded-full">
-                        Gérer Carte
-                      </Button>
-                    </Card>
-                  </div>
-
-                  <Card className="bg-linear-to-br from-amber-50 to-orange-50 dark:from-amber-950 dark:to-orange-950 border-0 p-6">
-                    <h4 className="text-lg text-gray-900 dark:text-white mb-4">Programme de Fidélité</h4>
-                    <div className="space-y-3">
-                      <div className="flex justify-between items-center">
-                        <span className="text-gray-700 dark:text-gray-300">Points actuels</span>
-                        <span className="text-2xl text-gray-900 dark:text-white">{selectedClient.loyaltyPoints}</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-gray-700 dark:text-gray-300">Prochain palier</span>
-                        <span className="text-gray-900 dark:text-white">500 points</span>
-                      </div>
-                      <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3">
-                        <div
-                          className="bg-linear-to-r from-amber-500 to-orange-500 h-3 rounded-full"
-                          style={{ width: `${(selectedClient.loyaltyPoints / 500) * 100}%` }}
-                        />
-                      </div>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">
-                        Encore {500 - selectedClient.loyaltyPoints} points pour une récompense gratuite!
-                      </p>
                     </div>
+                    <Button size="sm" className="w-full bg-green-600 hover:bg-green-700 text-white rounded-full font-bold shadow-md shadow-green-500/20">
+                      Recharger Compte
+                    </Button>
+                  </Card>
+                  <Card className="p-6 bg-linear-to-br from-purple-50 to-pink-50 dark:from-purple-900/10 dark:to-pink-900/10 border-purple-100 dark:border-pink-900/30 rounded-3xl">
+                    <div className="flex items-center gap-4 mb-4">
+                      <div className="w-12 h-12 rounded-2xl bg-white dark:bg-gray-800 flex items-center justify-center shadow-md">
+                        <Gift className="w-6 h-6 text-purple-600" />
+                      </div>
+                      <div>
+                        <p className="text-xs font-black text-purple-600 dark:text-purple-400 uppercase tracking-widest">Carte Cadeau</p>
+                        <p className="text-2xl font-black text-gray-900 dark:text-gray-100">{selectedClient.giftCardBalance}</p>
+                      </div>
+                    </div>
+                    <Button size="sm" className="w-full bg-purple-600 hover:bg-purple-700 text-white rounded-full font-bold shadow-md shadow-purple-500/20">
+                      Gérer Carte
+                    </Button>
                   </Card>
                 </div>
+
+                <Card className="p-6 bg-linear-to-br from-amber-50 to-orange-50 dark:from-amber-900/10 dark:to-orange-900/10 border-amber-100 dark:border-amber-900/30 rounded-3xl">
+                  <h4 className="text-sm font-black text-gray-900 dark:text-gray-100 mb-4 uppercase tracking-widest flex items-center gap-2">
+                    <Award className="w-4 h-4 text-amber-500" />
+                    Programme de Fidélité
+                  </h4>
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-center">
+                      <span className="text-xs text-gray-700 dark:text-gray-400 font-medium">Points actuels</span>
+                      <span className="text-2xl text-gray-900 dark:text-gray-100 font-black">{selectedClient.loyaltyPoints} pts</span>
+                    </div>
+                    <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+                      <div
+                        className="bg-linear-to-r from-amber-500 to-orange-500 h-full rounded-full transition-all duration-500"
+                        style={{ width: `${(selectedClient.loyaltyPoints / 500) * 100}%` }}
+                      />
+                    </div>
+                    <p className="text-xs text-gray-600 dark:text-gray-400 italic">
+                      Encore {500 - selectedClient.loyaltyPoints} points pour votre prochaine récompense !
+                    </p>
+                  </div>
+                </Card>
               </TabsContent>
             </Tabs>
           </Card>
         ) : (
-          <Card className="border-0 shadow-lg rounded-2xl p-8 lg:col-span-2 flex items-center justify-center">
-            <div className="text-center text-gray-500 dark:text-gray-400">
-              <Search className="w-16 h-16 mx-auto mb-4 text-gray-300 dark:text-gray-600" />
-              <p className="text-lg">Sélectionnez une cliente pour voir son profil</p>
+          <Card className="border-0 shadow-lg rounded-2xl p-8 lg:col-span-2 flex items-center justify-center bg-white dark:bg-gray-900 dark:border dark:border-pink-900/30 min-h-[400px]">
+            <div className="text-center">
+              <div className="w-20 h-20 bg-gray-50 dark:bg-gray-800 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-inner">
+                <Search className="w-10 h-10 text-gray-300 dark:text-gray-700" />
+              </div>
+              <p className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">Sélectionnez une cliente</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Consultez son profil complet, son historique et ses finances</p>
             </div>
           </Card>
         )}

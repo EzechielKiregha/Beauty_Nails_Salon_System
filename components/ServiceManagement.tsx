@@ -11,22 +11,6 @@ import { Scissors, Clock, DollarSign, Sparkles, Package, Percent, Globe } from '
 import { useServices } from '@/lib/hooks/useServices';
 import CreateServiceModal from '@/components/modals/CreateServiceModal';
 
-// Axios API calls (commented out for future use)
-// import axios from 'axios';
-// const fetchServices = async () => {
-//   const response = await axiosdb.get('/api/services');
-//   return response.data;
-// };
-// const updateService = async (serviceId: string, data: any) => {
-//   await axiosdb.patch(`/api/services/${serviceId}`, data);
-// };
-// const createPackage = async (packageData: any) => {
-//   await axiosdb.post('/api/packages', packageData);
-// };
-// const createPromotion = async (promoData: any) => {
-//   await axiosdb.post('/api/promotions', promoData);
-// };
-
 interface Service {
   id: string;
   name: string;
@@ -153,17 +137,17 @@ export default function ServiceManagement({ showMock }: { showMock?: boolean }) 
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-3xl text-gray-900">Gestion des Services</h2>
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">Gestion des Services</h2>
         <CreateServiceModal triggerLabel="+ Nouveau Service" />
       </div>
 
       <Tabs defaultValue="services" className="space-y-6">
-        <TabsList className="bg-white border border-gray-200 p-1 rounded-xl">
-          <TabsTrigger value="services" className="rounded-lg">Services</TabsTrigger>
-          <TabsTrigger value="packages" className="rounded-lg">Forfaits</TabsTrigger>
-          <TabsTrigger value="promotions" className="rounded-lg">Promotions</TabsTrigger>
-          <TabsTrigger value="online" className="rounded-lg">Réservation en Ligne</TabsTrigger>
+        <TabsList className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-pink-900/30 p-1 rounded-xl w-full flex overflow-x-auto no-scrollbar justify-start sm:justify-center">
+          <TabsTrigger value="services" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">Services</TabsTrigger>
+          <TabsTrigger value="packages" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">Forfaits</TabsTrigger>
+          <TabsTrigger value="promotions" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">Promotions</TabsTrigger>
+          <TabsTrigger value="online" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">Réservation en Ligne</TabsTrigger>
         </TabsList>
 
         {/* Services Tab */}
@@ -172,41 +156,44 @@ export default function ServiceManagement({ showMock }: { showMock?: boolean }) 
             {/* Services List by Category */}
             <div className="lg:col-span-2 space-y-6">
               {categories.map((category) => (
-                <Card key={category} className="border-0 shadow-lg rounded-2xl p-6">
-                  <h3 className="text-xl text-gray-900 mb-4">{category}</h3>
-                  <div className="space-y-3">
+                <Card key={category} className="p-4 sm:p-6 hover:shadow-lg transition-all border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-900">
+                  <h3 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-gray-100 mb-6 flex items-center gap-2">
+                    <Scissors className="w-5 h-5 text-pink-500" />
+                    {category}
+                  </h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {services.filter(s => s.category === category).map((service) => (
                       <Card
                         key={service.id}
-                        className={`p-4 cursor-pointer transition-all ${selectedService?.id === service.id
-                          ? 'bg-linear-to-r from-pink-100 to-purple-100 border-2 border-pink-300'
-                          : 'bg-gray-50 hover:bg-gray-100'
+                        className={`p-4 cursor-pointer transition-all border-2 ${selectedService?.id === service.id
+                          ? 'bg-linear-to-r from-pink-50 to-purple-50 dark:from-pink-900/20 dark:to-purple-900/20 border-pink-300 dark:border-pink-500 shadow-md'
+                          : 'bg-gray-50 dark:bg-gray-800/50 border-transparent hover:border-pink-200 dark:hover:border-pink-900/50'
                           }`}
                         onClick={() => setSelectedService(service)}
                       >
                         <div className="flex items-start justify-between">
                           <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-2">
-                              <p className="text-gray-900">{service.name}</p>
+                            <div className="flex flex-wrap items-center gap-2 mb-3">
+                              <p className="font-semibold text-gray-900 dark:text-gray-100">{service.name}</p>
                               {service.popular && (
-                                <Badge className="bg-amber-500 text-white text-xs">
+                                <Badge className="bg-amber-500 dark:bg-amber-600 text-white text-[10px] sm:text-xs">
                                   Populaire
                                 </Badge>
                               )}
                               {service.onlineBookable && (
-                                <Badge variant="outline" className="text-xs">
+                                <Badge variant="outline" className="text-[10px] sm:text-xs dark:text-gray-300 dark:border-gray-700">
                                   <Globe className="w-3 h-3 mr-1" />
                                   En ligne
                                 </Badge>
                               )}
                             </div>
-                            <div className="flex items-center gap-4 text-sm text-gray-600">
-                              <span className="flex items-center gap-1">
-                                <DollarSign className="w-4 h-4" />
+                            <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
+                              <span className="flex items-center gap-1 font-medium">
+                                <DollarSign className="w-4 h-4 text-green-500" />
                                 {service.price}
                               </span>
                               <span className="flex items-center gap-1">
-                                <Clock className="w-4 h-4" />
+                                <Clock className="w-4 h-4 text-blue-500" />
                                 {service.duration} min
                               </span>
                             </div>
@@ -221,61 +208,65 @@ export default function ServiceManagement({ showMock }: { showMock?: boolean }) 
 
             {/* Service Details */}
             {selectedService ? (
-              <Card className="border-0 shadow-lg rounded-2xl p-6">
-                <h3 className="text-xl text-gray-900 mb-4">Détails du Service</h3>
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm text-gray-700 mb-2">Nom du Service</label>
-                    <Input defaultValue={selectedService.name} className="rounded-xl" />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm text-gray-700 mb-2">Catégorie</label>
-                    <Input defaultValue={selectedService.category} className="rounded-xl" />
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
+              <div className="lg:sticky lg:top-6">
+                <Card className="p-4 sm:p-6 hover:shadow-lg transition-all border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-900">
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-6">Détails du Service</h3>
+                  <div className="space-y-5">
                     <div>
-                      <label className="block text-sm text-gray-700 mb-2">Prix</label>
-                      <Input defaultValue={selectedService.price} className="rounded-xl" />
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Nom du Service</label>
+                      <Input defaultValue={selectedService.name} className="rounded-xl bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 dark:text-gray-100 focus:ring-pink-500" />
                     </div>
+
                     <div>
-                      <label className="block text-sm text-gray-700 mb-2">Durée (min)</label>
-                      <Input type="number" defaultValue={selectedService.duration} className="rounded-xl" />
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Catégorie</label>
+                      <Input defaultValue={selectedService.category} className="rounded-xl bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 dark:text-gray-100" />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Prix</label>
+                        <Input defaultValue={selectedService.price} className="rounded-xl bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 dark:text-gray-100" />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Durée (min)</label>
+                        <Input type="number" defaultValue={selectedService.duration} className="rounded-xl bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 dark:text-gray-100" />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Description</label>
+                      <Textarea defaultValue={selectedService.description} rows={4} className="rounded-xl bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 dark:text-gray-100" />
+                    </div>
+
+                    <div className="space-y-3 pt-2">
+                      <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700">
+                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Réservable en ligne</span>
+                        <Switch defaultChecked={selectedService.onlineBookable} className="data-[state=checked]:bg-pink-500" />
+                      </div>
+                      <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700">
+                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Service populaire</span>
+                        <Switch defaultChecked={selectedService.popular} className="data-[state=checked]:bg-amber-500" />
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col sm:flex-row gap-3 pt-4">
+                      <Button className="flex-1 bg-linear-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white rounded-full py-6 transition-all">
+                        Sauvegarder
+                      </Button>
+                      <Button variant="outline" className="rounded-full py-6 text-red-600 border-red-200 dark:border-red-900/50 hover:bg-red-50 dark:hover:bg-red-900/20">
+                        Supprimer
+                      </Button>
                     </div>
                   </div>
-
-                  <div>
-                    <label className="block text-sm text-gray-700 mb-2">Description</label>
-                    <Textarea defaultValue={selectedService.description} rows={3} className="rounded-xl" />
-                  </div>
-
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
-                      <span className="text-sm text-gray-700">Réservable en ligne</span>
-                      <Switch defaultChecked={selectedService.onlineBookable} />
-                    </div>
-                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
-                      <span className="text-sm text-gray-700">Service populaire</span>
-                      <Switch defaultChecked={selectedService.popular} />
-                    </div>
-                  </div>
-
-                  <div className="flex gap-2 pt-4">
-                    <Button className="flex-1 bg-linear-to-r from-pink-500 to-purple-500 text-white rounded-full">
-                      Sauvegarder
-                    </Button>
-                    <Button variant="outline" className="rounded-full text-red-600">
-                      Supprimer
-                    </Button>
-                  </div>
-                </div>
-              </Card>
+                </Card>
+              </div>
             ) : (
-              <Card className="border-0 shadow-lg rounded-2xl p-6 flex items-center justify-center">
-                <div className="text-center text-gray-500">
-                  <Scissors className="w-16 h-16 mx-auto mb-4 text-gray-300" />
-                  <p>Sélectionnez un service pour voir ses détails</p>
+              <Card className="p-12 hover:shadow-lg transition-all border border-pink-100 dark:border-pink-900 shadow-xl rounded-2xl bg-white dark:bg-gray-900 flex items-center justify-center min-h-[400px]">
+                <div className="text-center">
+                  <div className="w-20 h-20 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <Scissors className="w-10 h-10 text-gray-300 dark:text-gray-600" />
+                  </div>
+                  <p className="text-gray-500 dark:text-gray-400 font-medium">Sélectionnez un service pour voir ses détails</p>
                 </div>
               </Card>
             )}
@@ -287,54 +278,56 @@ export default function ServiceManagement({ showMock }: { showMock?: boolean }) 
           <div className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {packages.map((pkg) => (
-                <Card key={pkg.id} className="border-0 shadow-lg rounded-2xl p-6">
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="w-12 h-12 rounded-full bg-linear-to-br from-purple-400 to-pink-400 flex items-center justify-center">
-                      <Package className="w-6 h-6 text-white" />
+                <Card key={pkg.id} className="p-4 sm:p-6 hover:shadow-lg transition-all border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-900">
+                  <div className="flex items-start justify-between mb-6">
+                    <div className="w-14 h-14 rounded-2xl bg-linear-to-br from-purple-500 to-pink-500 flex items-center justify-center shadow-lg shadow-pink-500/20">
+                      <Package className="w-7 h-7 text-white" />
                     </div>
-                    <Badge className={`${pkg.active ? 'bg-green-500' : 'bg-gray-400'
-                      } text-white`}>
+                    <Badge className={`${pkg.active ? 'bg-green-500 dark:bg-green-600' : 'bg-gray-400'
+                      } text-white border-0 px-3 py-1`}>
                       {pkg.active ? 'Actif' : 'Inactif'}
                     </Badge>
                   </div>
 
-                  <h3 className="text-xl text-gray-900 mb-2">{pkg.name}</h3>
-                  <p className="text-sm text-gray-600 mb-4">Durée: {pkg.duration}</p>
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">{pkg.name}</h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-6 flex items-center gap-2">
+                    <Clock className="w-4 h-4 text-pink-400" />
+                    Durée de validité: {pkg.duration}
+                  </p>
 
-                  <div className="space-y-2 mb-4">
+                  <div className="space-y-3 mb-8 bg-gray-50 dark:bg-gray-800/50 p-4 rounded-xl border border-gray-100 dark:border-gray-700">
+                    <p className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Services inclus</p>
                     {pkg.services.map((service, idx) => (
-                      <div key={idx} className="flex items-center gap-2 text-sm text-gray-700">
-                        <Sparkles className="w-4 h-4 text-pink-500" />
+                      <div key={idx} className="flex items-center gap-3 text-sm text-gray-700 dark:text-gray-300">
+                        <Sparkles className="w-4 h-4 text-pink-500 shrink-0" />
                         <span>{service}</span>
                       </div>
                     ))}
                   </div>
 
-                  <div className="bg-linear-to-r from-green-50 to-emerald-50 p-4 rounded-xl mb-4">
+                  <div className="bg-linear-to-r from-green-50 to-emerald-50 dark:from-green-900/10 dark:to-emerald-900/10 p-5 rounded-2xl border border-green-100 dark:border-green-900/30 mb-6">
                     <div className="flex justify-between items-center mb-2">
-                      <span className="text-sm text-gray-600 line-through">{pkg.regularPrice}</span>
-                      <span className="text-2xl text-gray-900">{pkg.packagePrice}</span>
+                      <span className="text-sm text-gray-500 dark:text-gray-400 line-through font-medium">{pkg.regularPrice}</span>
+                      <span className="text-2xl font-bold text-green-600 dark:text-green-400">{pkg.packagePrice}</span>
                     </div>
-                    <div className="flex items-center gap-2 text-green-600">
-                      <Badge className="bg-green-500 text-white">
-                        Économie: {pkg.savings}
-                      </Badge>
-                    </div>
+                    <Badge className="bg-green-500 dark:bg-green-600 text-white border-0 w-full justify-center py-1.5">
+                      Économisez {pkg.savings}
+                    </Badge>
                   </div>
 
                   <div className="flex gap-2">
-                    <Button variant="outline" className="flex-1 rounded-full">
+                    <Button variant="outline" className="flex-1 rounded-full py-5 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800">
                       Modifier
                     </Button>
-                    <Button variant="outline" className="rounded-full">
-                      <Package className="w-4 h-4" />
+                    <Button variant="outline" className="rounded-full w-12 h-12 p-0 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800">
+                      <Package className="w-5 h-5" />
                     </Button>
                   </div>
                 </Card>
               ))}
             </div>
 
-            <Button className="w-full bg-linear-to-r from-purple-500 to-pink-500 text-white rounded-full">
+            <Button className="w-full bg-linear-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-full py-7 text-lg font-bold shadow-lg shadow-pink-500/20 transition-all">
               + Créer Nouveau Forfait
             </Button>
           </div>
@@ -342,67 +335,66 @@ export default function ServiceManagement({ showMock }: { showMock?: boolean }) 
 
         {/* Promotions Tab */}
         <TabsContent value="promotions">
-          <Card className="border-0 shadow-lg rounded-2xl p-8">
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-3">
-                <Percent className="w-8 h-8 text-amber-500" />
-                <h3 className="text-2xl text-gray-900">Codes Promotionnels</h3>
+          <Card className="p-4 sm:p-8 hover:shadow-lg transition-all border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-900">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-xl bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
+                  <Percent className="w-6 h-6 text-amber-500" />
+                </div>
+                <h3 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100">Codes Promotionnels</h3>
               </div>
-              <Button className="bg-linear-to-r from-amber-500 to-orange-500 text-white rounded-full">
+              <Button className="w-full sm:w-auto bg-linear-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-full py-6 px-8 transition-all">
                 + Nouvelle Promotion
               </Button>
             </div>
 
-            <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {promotions.map((promo) => (
-                <Card key={promo.id} className="bg-linear-to-r from-amber-50 to-orange-50 border-0 p-6 rounded-xl">
-                  <div className="flex items-start justify-between mb-4">
+                <Card key={promo.id} className="p-6 bg-linear-to-r from-amber-50 to-orange-50 dark:from-gray-800 dark:to-gray-800/50 border border-amber-100 dark:border-amber-900/30 rounded-2xl hover:shadow-md transition-all">
+                  <div className="flex items-start justify-between mb-6">
                     <div>
-                      <div className="flex items-center gap-3 mb-2">
-                        <h4 className="text-lg text-gray-900">{promo.name}</h4>
-                        <Badge className={`${promo.status === 'active' ? 'bg-green-500' : 'bg-gray-400'
-                          } text-white`}>
+                      <div className="flex flex-wrap items-center gap-3 mb-3">
+                        <h4 className="text-lg font-bold text-gray-900 dark:text-gray-100">{promo.name}</h4>
+                        <Badge className={`${promo.status === 'active' ? 'bg-green-500 dark:bg-green-600' : 'bg-gray-400'
+                          } text-white border-0`}>
                           {promo.status === 'active' ? 'Actif' : 'Inactif'}
                         </Badge>
                       </div>
-                      <p className="text-sm text-gray-600">Code: <strong>{promo.code}</strong></p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-900 inline-block px-3 py-1 rounded-lg border border-amber-100 dark:border-amber-900/30">Code: <strong className="text-amber-600 dark:text-amber-400">{promo.code}</strong></p>
                     </div>
                     <div className="text-right">
-                      <p className="text-2xl text-gray-900">{promo.discount}</p>
-                      <p className="text-xs text-gray-600">Réduction</p>
+                      <p className="text-3xl font-black text-amber-600 dark:text-amber-400">{promo.discount}</p>
+                      <p className="text-[10px] sm:text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest">Réduction</p>
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-3 gap-4 text-sm">
-                    <div>
-                      <p className="text-gray-600 mb-1">Valide jusqu'au</p>
-                      <p className="text-gray-900">{promo.validUntil}</p>
+                  <div className="grid grid-cols-3 gap-4 text-sm mb-6">
+                    <div className="p-3 bg-white dark:bg-gray-900 rounded-xl border border-amber-100 dark:border-amber-900/20 text-center">
+                      <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase font-bold mb-1">Valide jusqu'au</p>
+                      <p className="text-gray-900 dark:text-gray-100 font-semibold">{promo.validUntil}</p>
                     </div>
-                    <div>
-                      <p className="text-gray-600 mb-1">Utilisations</p>
-                      <p className="text-gray-900">{promo.usageCount} / {promo.usageLimit}</p>
+                    <div className="p-3 bg-white dark:bg-gray-900 rounded-xl border border-amber-100 dark:border-amber-900/20 text-center">
+                      <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase font-bold mb-1">Utilisations</p>
+                      <p className="text-gray-900 dark:text-gray-100 font-semibold">{promo.usageCount} / {promo.usageLimit}</p>
                     </div>
-                    <div>
-                      <p className="text-gray-600 mb-1">Restant</p>
-                      <p className="text-gray-900">{promo.usageLimit - promo.usageCount}</p>
+                    <div className="p-3 bg-white dark:bg-gray-900 rounded-xl border border-amber-100 dark:border-amber-900/20 text-center">
+                      <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase font-bold mb-1">Restant</p>
+                      <p className="text-green-600 dark:text-green-400 font-bold">{promo.usageLimit - promo.usageCount}</p>
                     </div>
                   </div>
 
-                  <div className="w-full bg-gray-200 rounded-full h-2 mt-4 mb-4">
+                  <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 mb-6 overflow-hidden">
                     <div
-                      className="bg-linear-to-r from-amber-500 to-orange-500 h-2 rounded-full"
+                      className="bg-linear-to-r from-amber-500 to-orange-500 h-3 rounded-full shadow-[0_0_8px_rgba(245,158,11,0.3)]"
                       style={{ width: `${(promo.usageCount / promo.usageLimit) * 100}%` }}
                     />
                   </div>
 
                   <div className="flex gap-2">
-                    <Button size="sm" variant="outline" className="rounded-full">
+                    <Button size="sm" variant="outline" className="flex-1 rounded-full py-5 bg-white dark:bg-gray-900 dark:border-gray-700 dark:text-gray-300">
                       Modifier
                     </Button>
-                    <Button size="sm" variant="outline" className="rounded-full">
-                      Dupliquer
-                    </Button>
-                    <Button size="sm" variant="outline" className="rounded-full text-red-600">
+                    <Button size="sm" variant="outline" className="flex-1 rounded-full py-5 text-red-600 bg-white dark:bg-gray-900 dark:border-red-900/30">
                       Désactiver
                     </Button>
                   </div>
@@ -412,52 +404,58 @@ export default function ServiceManagement({ showMock }: { showMock?: boolean }) 
           </Card>
         </TabsContent>
 
+
         {/* Online Booking Settings Tab */}
         <TabsContent value="online">
-          <Card className="border-0 shadow-lg rounded-2xl p-8">
-            <div className="flex items-center gap-3 mb-6">
-              <Globe className="w-8 h-8 text-blue-500" />
+          <Card className="p-4 sm:p-8 hover:shadow-lg transition-all border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-900">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-8">
+              <div className="w-14 h-14 rounded-2xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center shadow-lg shadow-blue-500/10">
+                <Globe className="w-8 h-8 text-blue-500" />
+              </div>
               <div>
-                <h3 className="text-2xl text-gray-900">Paramètres Réservation en Ligne</h3>
-                <p className="text-sm text-gray-600">Configurez les services disponibles pour la réservation en ligne</p>
+                <h3 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100">Paramètres Réservation en Ligne</h3>
+                <p className="text-sm text-gray-600 dark:text-gray-400">Configurez les services disponibles pour la réservation en ligne</p>
               </div>
             </div>
 
-            <div className="space-y-4 mb-6">
+            <div className="space-y-3 mb-8">
               {services.map((service) => (
-                <div key={service.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+                <div key={service.id} className="flex items-center justify-between p-4 sm:p-5 bg-gray-50 dark:bg-gray-800/50 rounded-2xl border border-gray-100 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-900/50 transition-all">
                   <div>
-                    <p className="text-gray-900">{service.name}</p>
-                    <p className="text-sm text-gray-600">{service.category} • {service.duration} min • {service.price}</p>
+                    <p className="font-bold text-gray-900 dark:text-gray-100">{service.name}</p>
+                    <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-1">{service.category} • {service.duration} min • {service.price}</p>
                   </div>
-                  <Switch defaultChecked={service.onlineBookable} />
+                  <Switch defaultChecked={service.onlineBookable} className="data-[state=checked]:bg-blue-500" />
                 </div>
               ))}
             </div>
 
-            <Card className="bg-linear-to-br from-blue-50 to-cyan-50 border-0 p-6">
-              <h4 className="text-lg text-gray-900 mb-4">Options Supplémentaires</h4>
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-700">Demander confirmation avant acceptation</span>
-                  <Switch defaultChecked={true} />
+            <div className="bg-linear-to-br from-blue-50 to-cyan-50 dark:from-gray-800 dark:to-gray-800/50 p-6 sm:p-8 rounded-2xl border border-blue-100 dark:border-blue-900/30">
+              <h4 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-6 flex items-center gap-2">
+                <Globe className="w-5 h-5 text-blue-500" />
+                Options Supplémentaires
+              </h4>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between p-4 bg-white/50 dark:bg-gray-900/50 rounded-xl backdrop-blur-sm">
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-200">Demander confirmation avant acceptation</span>
+                  <Switch defaultChecked={true} className="data-[state=checked]:bg-blue-500" />
                 </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-700">Envoyer rappel automatique 24h avant</span>
-                  <Switch defaultChecked={true} />
+                <div className="flex items-center justify-between p-4 bg-white/50 dark:bg-gray-900/50 rounded-xl backdrop-blur-sm">
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-200">Envoyer rappel automatique 24h avant</span>
+                  <Switch defaultChecked={true} className="data-[state=checked]:bg-blue-500" />
                 </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-700">Permettre annulation en ligne</span>
-                  <Switch defaultChecked={true} />
+                <div className="flex items-center justify-between p-4 bg-white/50 dark:bg-gray-900/50 rounded-xl backdrop-blur-sm">
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-200">Permettre annulation en ligne</span>
+                  <Switch defaultChecked={true} className="data-[state=checked]:bg-blue-500" />
                 </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-700">Afficher disponibilité en temps réel</span>
-                  <Switch defaultChecked={true} />
+                <div className="flex items-center justify-between p-4 bg-white/50 dark:bg-gray-900/50 rounded-xl backdrop-blur-sm">
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-200">Afficher disponibilité en temps réel</span>
+                  <Switch defaultChecked={true} className="data-[state=checked]:bg-blue-500" />
                 </div>
               </div>
-            </Card>
+            </div>
 
-            <Button className="w-full mt-6 bg-linear-to-r from-blue-500 to-cyan-500 text-white rounded-full">
+            <Button className="w-full mt-8 bg-linear-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white rounded-full py-7 text-lg font-bold shadow-lg shadow-blue-500/20 transition-all">
               Sauvegarder les Paramètres
             </Button>
           </Card>

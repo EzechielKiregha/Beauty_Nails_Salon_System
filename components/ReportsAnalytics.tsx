@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Card } from './ui/card';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
@@ -8,107 +8,103 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { TrendingUp, Download, Calendar, DollarSign, Users, Award, Clock, Target } from 'lucide-react';
-
-// Axios API calls (commented out for future use)
-// import axios from 'axios';
-// const fetchRevenueReport = async (period: string) => {
-//   const response = await axiosdb.get(`/api/reports/revenue?period=${period}`);
-//   return response.data;
-// };
-// const fetchClientAnalytics = async (period: string) => {
-//   const response = await axiosdb.get(`/api/reports/clients?period=${period}`);
-//   return response.data;
-// };
-// const generateCustomReport = async (filters: any) => {
-//   const response = await axiosdb.post('/api/reports/custom', filters);
-//   return response.data;
-// };
+import { useRevenueReport, useClientAnalytics, useServicePerformance, useStaffReport, usePeakHours, useMembershipAnalytics, useMarketingCampaigns } from '../lib/hooks/useReports';
 
 export default function ReportsAnalytics() {
   const [period, setPeriod] = useState('month');
 
-  // Mock data
-  const revenueData = [
-    { month: 'Juin', revenue: 22000000, target: 20000000, appointments: 180 },
-    { month: 'Juillet', revenue: 25000000, target: 22000000, appointments: 205 },
-    { month: 'Août', revenue: 23500000, target: 23000000, appointments: 192 },
-    { month: 'Septembre', revenue: 27000000, target: 24000000, appointments: 225 },
-    { month: 'Octobre', revenue: 28500000, target: 25000000, appointments: 240 },
-    { month: 'Novembre', revenue: 30200000, target: 26000000, appointments: 258 }
-  ];
-
-  const servicePerformance = [
-    { service: 'Onglerie', revenue: 13500000, count: 450, avgPrice: 30000, growth: '+15%' },
-    { service: 'Cils', revenue: 9800000, count: 218, avgPrice: 45000, growth: '+22%' },
-    { service: 'Tresses', revenue: 4200000, count: 84, avgPrice: 50000, growth: '+8%' },
-    { service: 'Maquillage', revenue: 2700000, count: 68, avgPrice: 40000, growth: '+12%' }
-  ];
-
-  const clientFrequency = [
-    { frequency: '1 visite', clients: 98, percentage: 40 },
-    { frequency: '2-3 visites', clients: 75, percentage: 30 },
-    { frequency: '4-6 visites', clients: 49, percentage: 20 },
-    { frequency: '7+ visites', clients: 25, percentage: 10 }
-  ];
-
-  const staffUtilization = [
-    { name: 'Marie Nkumu', utilization: 92, appointments: 62, revenue: 930000 },
-    { name: 'Grace Lumière', utilization: 88, appointments: 58, revenue: 870000 },
-    { name: 'Sophie Kabila', utilization: 78, appointments: 48, revenue: 720000 },
-    { name: 'Élise Makala', utilization: 72, appointments: 38, revenue: 570000 },
-    { name: 'Patricia Kala', utilization: 85, appointments: 52, revenue: 780000 },
-    { name: 'Joséphine Nzuzi', utilization: 80, appointments: 46, revenue: 690000 }
-  ];
-
-  const peakHours = [
-    { hour: '08:00', bookings: 8 },
-    { hour: '09:00', bookings: 22 },
-    { hour: '10:00', bookings: 35 },
-    { hour: '11:00', bookings: 42 },
-    { hour: '12:00', bookings: 28 },
-    { hour: '13:00', bookings: 18 },
-    { hour: '14:00', bookings: 32 },
-    { hour: '15:00', bookings: 45 },
-    { hour: '16:00', bookings: 38 },
-    { hour: '17:00', bookings: 30 },
-    { hour: '18:00', bookings: 15 }
-  ];
-
-  const membershipAnalytics = {
-    totalMembers: 247,
-    vip: 45,
-    premium: 87,
-    regular: 115,
-    memberRevenue: 18500000,
-    nonMemberRevenue: 11700000,
-    averageMemberSpend: 75000,
-    averageNonMemberSpend: 35000
+  // derive from/to ISO strings from the selected period
+  const getPeriodRange = (p: string) => {
+    const now = new Date();
+    const to = now.toISOString();
+    let fromDate = new Date();
+    switch (p) {
+      case 'week':
+        fromDate.setDate(now.getDate() - 7);
+        break;
+      case 'month':
+        fromDate.setMonth(now.getMonth() - 1);
+        break;
+      case 'quarter':
+        fromDate.setMonth(now.getMonth() - 3);
+        break;
+      case 'year':
+        fromDate.setFullYear(now.getFullYear() - 1);
+        break;
+      default:
+        fromDate.setMonth(now.getMonth() - 1);
+    }
+    return { from: fromDate.toISOString(), to };
   };
 
-  const marketingCampaigns = [
-    { name: 'Promo Novembre', conversions: 23, revenue: 690000, roi: '340%' },
-    { name: 'SMS Rappels', conversions: 12, revenue: 360000, roi: '280%' },
-    { name: 'Email Anniversaires', conversions: 8, revenue: 240000, roi: '400%' },
-    { name: 'Parrainage', conversions: 15, revenue: 450000, roi: '∞' }
-  ];
+  const { from, to } = getPeriodRange(period);
+
+  // Hooks to fetch real data
+  const { data: revenueReport, isLoading: revenueLoading } = useRevenueReport({ from, to });
+  const { data: servicesResp, isLoading: servicesLoading } = useServicePerformance(period);
+  const { data: clientsResp, isLoading: clientsLoading } = useClientAnalytics(period);
+
+  const revenueSeries = useMemo(() => {
+    // backend may return a breakdown mapping (e.g., { 'Juin': 22000000, ... })
+    const breakdown = (revenueReport as any)?.breakdown;
+    if (!breakdown) return [];
+    return Object.entries(breakdown).map(([k, v]) => ({ month: k, revenue: v }));
+  }, [revenueReport]);
+
+  const services = (servicesResp as any)?.services ?? [];
+
+  const clientFrequency = useMemo(() => {
+    if (!clientsResp || !clientsResp.totalClients) return [];
+    const total = clientsResp.totalClients || 0;
+    const newClients = clientsResp.newClients || 0;
+    const retainedPct = Math.round(clientsResp.retentionRate || 0);
+    const retained = Math.round((retainedPct / 100) * total);
+    const others = Math.max(0, total - newClients - retained);
+    return [
+      { frequency: 'Nouveaux', clients: newClients, percentage: Math.round((newClients / total) * 100) },
+      { frequency: 'Retenus', clients: retained, percentage: retainedPct },
+      { frequency: 'Autres', clients: others, percentage: Math.max(0, 100 - Math.round((newClients / total) * 100) - retainedPct) }
+    ];
+  }, [clientsResp]);
+
+  // Reports from API: staff, peak hours, membership, marketing
+  const { data: staffResp, isLoading: staffLoading } = useStaffReport({ from, to });
+  const { data: peakResp, isLoading: peakLoading } = usePeakHours({ from, to });
+  const { data: membershipResp, isLoading: membershipLoading } = useMembershipAnalytics({ from, to });
+  const { data: marketingResp, isLoading: marketingLoading } = useMarketingCampaigns({ from, to });
+
+  const staffUtilization = (staffResp as any)?.staff ?? [];
+  const peakHours = (peakResp as any)?.peakHours ?? [];
+  const membershipAnalytics = (membershipResp ?? (clientsResp && {
+    totalMembers: clientsResp.totalClients || 0,
+    vip: 0,
+    premium: 0,
+    regular: 0,
+    memberRevenue: (revenueReport as any)?.memberRevenue ?? 0,
+    nonMemberRevenue: (revenueReport as any)?.nonMemberRevenue ?? 0,
+    averageMemberSpend: 0,
+    averageNonMemberSpend: 0,
+  })) || { totalMembers: 0, vip: 0, premium: 0, regular: 0, memberRevenue: 0, nonMemberRevenue: 0, averageMemberSpend: 0, averageNonMemberSpend: 0 };
+
+  const marketingCampaigns = (marketingResp as any)?.campaigns ?? [];
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-3xl text-gray-900">Rapports & Analyses</h2>
-        <div className="flex items-center gap-3">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">Rapports & Analyses</h2>
+        <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
           <Select value={period} onValueChange={setPeriod}>
-            <SelectTrigger className="w-40 rounded-full">
+            <SelectTrigger className="w-full sm:w-40 rounded-full bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 dark:text-gray-100">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="dark:bg-gray-800 dark:border-gray-700">
               <SelectItem value="week">Cette Semaine</SelectItem>
               <SelectItem value="month">Ce Mois</SelectItem>
               <SelectItem value="quarter">Ce Trimestre</SelectItem>
               <SelectItem value="year">Cette Année</SelectItem>
             </SelectContent>
           </Select>
-          <Button className="bg-linear-to-r from-green-500 to-emerald-500 text-white rounded-full">
+          <Button className="flex-1 sm:flex-none bg-linear-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white rounded-full transition-all">
             <Download className="w-4 h-4 mr-2" />
             Exporter PDF
           </Button>
@@ -116,100 +112,121 @@ export default function ReportsAnalytics() {
       </div>
 
       {/* Key Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="bg-linear-to-br from-green-50 to-emerald-50 border-0 shadow-lg p-6">
-          <DollarSign className="w-8 h-8 text-green-600 mb-2" />
-          <p className="text-sm text-gray-600 mb-1">Revenus Mensuels</p>
-          <p className="text-3xl text-gray-900">30,2M Fc</p>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <Card className="p-4 sm:p-6 hover:shadow-lg transition-all border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-linear-to-br from-green-50 to-emerald-50 dark:from-gray-900 dark:to-gray-800">
+          <DollarSign className="w-8 h-8 text-green-600 dark:text-green-400 mb-2" />
+          <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Revenus Mensuels</p>
+          <p className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">30,2M Fc</p>
           <div className="flex items-center gap-1 mt-2">
-            <TrendingUp className="w-4 h-4 text-green-600" />
-            <p className="text-sm text-green-600">+16% vs objectif</p>
+            <TrendingUp className="w-4 h-4 text-green-600 dark:text-green-400" />
+            <p className="text-sm text-green-600 dark:text-green-400 font-medium">+16% vs objectif</p>
           </div>
         </Card>
 
-        <Card className="bg-linear-to-br from-blue-50 to-cyan-50 border-0 shadow-lg p-6">
-          <Calendar className="w-8 h-8 text-blue-600 mb-2" />
-          <p className="text-sm text-gray-600 mb-1">Rendez-vous</p>
-          <p className="text-3xl text-gray-900">258</p>
+        <Card className="p-4 sm:p-6 hover:shadow-lg transition-all border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-linear-to-br from-blue-50 to-cyan-50 dark:from-gray-900 dark:to-gray-800">
+          <Calendar className="w-8 h-8 text-blue-600 dark:text-blue-400 mb-2" />
+          <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Rendez-vous</p>
+          <p className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">258</p>
           <div className="flex items-center gap-1 mt-2">
-            <TrendingUp className="w-4 h-4 text-blue-600" />
-            <p className="text-sm text-blue-600">+7.5% vs oct</p>
+            <TrendingUp className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+            <p className="text-sm text-blue-600 dark:text-blue-400 font-medium">+7.5% vs oct</p>
           </div>
         </Card>
 
-        <Card className="bg-linear-to-br from-purple-50 to-pink-50 border-0 shadow-lg p-6">
-          <Users className="w-8 h-8 text-purple-600 mb-2" />
-          <p className="text-sm text-gray-600 mb-1">Nouvelles Clientes</p>
-          <p className="text-3xl text-gray-900">32</p>
+        <Card className="p-4 sm:p-6 hover:shadow-lg transition-all border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-linear-to-br from-purple-50 to-pink-50 dark:from-gray-900 dark:to-gray-800">
+          <Users className="w-8 h-8 text-purple-600 dark:text-purple-400 mb-2" />
+          <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Nouvelles Clientes</p>
+          <p className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">32</p>
           <div className="flex items-center gap-1 mt-2">
-            <TrendingUp className="w-4 h-4 text-purple-600" />
-            <p className="text-sm text-purple-600">+18% ce mois</p>
+            <TrendingUp className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+            <p className="text-sm text-purple-600 dark:text-purple-400 font-medium">+18% ce mois</p>
           </div>
         </Card>
 
-        <Card className="bg-linear-to-br from-amber-50 to-orange-50 border-0 shadow-lg p-6">
-          <Award className="w-8 h-8 text-amber-600 mb-2" />
-          <p className="text-sm text-gray-600 mb-1">Rétention</p>
-          <p className="text-3xl text-gray-900">87%</p>
+        <Card className="p-4 sm:p-6 hover:shadow-lg transition-all border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-linear-to-br from-amber-50 to-orange-50 dark:from-gray-900 dark:to-gray-800">
+          <Award className="w-8 h-8 text-amber-600 dark:text-amber-400 mb-2" />
+          <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Rétention</p>
+          <p className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">87%</p>
           <div className="flex items-center gap-1 mt-2">
-            <TrendingUp className="w-4 h-4 text-amber-600" />
-            <p className="text-sm text-amber-600">+3% vs oct</p>
+            <TrendingUp className="w-4 h-4 text-amber-600 dark:text-amber-400" />
+            <p className="text-sm text-amber-600 dark:text-amber-400 font-medium">+3% vs oct</p>
           </div>
         </Card>
       </div>
 
       <Tabs defaultValue="revenue" className="space-y-6">
-        <TabsList className="bg-white border border-gray-200 p-1 rounded-xl">
-          <TabsTrigger value="revenue" className="rounded-lg">Revenus</TabsTrigger>
-          <TabsTrigger value="services" className="rounded-lg">Services</TabsTrigger>
-          <TabsTrigger value="clients" className="rounded-lg">Clientes</TabsTrigger>
-          <TabsTrigger value="staff" className="rounded-lg">Personnel</TabsTrigger>
-          <TabsTrigger value="marketing" className="rounded-lg">Marketing</TabsTrigger>
+        <TabsList className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-pink-900/30 p-1 rounded-xl w-full flex overflow-x-auto no-scrollbar justify-start sm:justify-center">
+          <TabsTrigger value="revenue" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">Revenus</TabsTrigger>
+          <TabsTrigger value="services" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">Services</TabsTrigger>
+          <TabsTrigger value="clients" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">Clientes</TabsTrigger>
+          <TabsTrigger value="staff" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">Personnel</TabsTrigger>
+          <TabsTrigger value="marketing" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">Marketing</TabsTrigger>
         </TabsList>
 
         {/* Revenue Tab */}
         <TabsContent value="revenue">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Card className="border-0 shadow-lg rounded-2xl p-8">
-              <h3 className="text-xl text-gray-900 mb-6">Évolution des Revenus</h3>
-              <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={revenueData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="month" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Line type="monotone" dataKey="revenue" stroke="#10b981" strokeWidth={3} name="Revenus Réels" />
-                  <Line type="monotone" dataKey="target" stroke="#94a3b8" strokeWidth={2} strokeDasharray="5 5" name="Objectif" />
-                </LineChart>
-              </ResponsiveContainer>
+            <Card className="p-4 sm:p-8 hover:shadow-lg transition-all border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-900">
+              <h3 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-gray-100 mb-6">Évolution des Revenus</h3>
+              <div className="h-[300px] w-full">
+                {revenueLoading ? (
+                  <div className="flex items-center justify-center h-full text-gray-500">Chargement...</div>
+                ) : (
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={revenueSeries}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" className="dark:stroke-gray-800" />
+                      <XAxis dataKey="month" stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} />
+                      <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `${value/1000}k`} />
+                      <Tooltip 
+                        contentStyle={{ backgroundColor: 'rgba(255, 255, 255, 0.8)', borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)' }}
+                        itemStyle={{ color: '#1e293b' }}
+                      />
+                      <Legend />
+                      <Line type="monotone" dataKey="revenue" stroke="#10b981" strokeWidth={3} dot={{ r: 4, fill: '#10b981' }} activeDot={{ r: 6 }} name="Revenus Réels" />
+                      <Line type="monotone" dataKey="target" stroke="#94a3b8" strokeWidth={2} strokeDasharray="5 5" dot={false} name="Objectif" />
+                    </LineChart>
+                  </ResponsiveContainer>
+                )}
+              </div>
             </Card>
 
-            <Card className="border-0 shadow-lg rounded-2xl p-8">
-              <h3 className="text-xl text-gray-900 mb-6">Rendez-vous par Mois</h3>
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={revenueData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="month" />
-                  <YAxis />
-                  <Tooltip />
-                  <Bar dataKey="appointments" fill="#ec4899" radius={[8, 8, 0, 0]} name="Rendez-vous" />
-                </BarChart>
-              </ResponsiveContainer>
+            <Card className="p-4 sm:p-8 hover:shadow-lg transition-all border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-900">
+              <h3 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-gray-100 mb-6">Rendez-vous par Mois</h3>
+              <div className="h-[300px] w-full">
+                {revenueLoading ? (
+                  <div className="flex items-center justify-center h-full text-gray-500">Chargement...</div>
+                ) : (
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={revenueSeries}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" className="dark:stroke-gray-800" />
+                      <XAxis dataKey="month" stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} />
+                      <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} />
+                      <Tooltip 
+                        contentStyle={{ backgroundColor: 'rgba(255, 255, 255, 0.8)', borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)' }}
+                      />
+                      <Bar dataKey="appointments" fill="#ec4899" radius={[6, 6, 0, 0]} name="Rendez-vous" />
+                    </BarChart>
+                  </ResponsiveContainer>
+                )}
+              </div>
             </Card>
 
-            <Card className="border-0 shadow-lg rounded-2xl p-8 lg:col-span-2">
-              <h3 className="text-xl text-gray-900 mb-6">Heures de Pointe</h3>
-              <ResponsiveContainer width="100%" height={250}>
-                <BarChart data={peakHours}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="hour" />
-                  <YAxis />
-                  <Tooltip />
-                  <Bar dataKey="bookings" fill="#8b5cf6" radius={[8, 8, 0, 0]} name="Réservations" />
-                </BarChart>
-              </ResponsiveContainer>
-              <p className="text-sm text-gray-600 mt-4 text-center">
+            <Card className="p-4 sm:p-8 hover:shadow-lg transition-all border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-900 lg:col-span-2">
+              <h3 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-gray-100 mb-6">Heures de Pointe</h3>
+              <div className="h-[250px] w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={peakHours}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" className="dark:stroke-gray-800" />
+                    <XAxis dataKey="hour" stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} />
+                    <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} />
+                    <Tooltip 
+                      contentStyle={{ backgroundColor: 'rgba(255, 255, 255, 0.8)', borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)' }}
+                    />
+                    <Bar dataKey="bookings" fill="#8b5cf6" radius={[6, 6, 0, 0]} name="Réservations" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+              <p className="text-sm text-gray-600 dark:text-gray-400 mt-6 text-center italic">
                 💡 Heures de pointe: 15:00-16:00 (45 réservations) • Heures creuses: 13:00-14:00 (18 réservations)
               </p>
             </Card>
@@ -218,43 +235,46 @@ export default function ReportsAnalytics() {
 
         {/* Services Tab */}
         <TabsContent value="services">
-          <Card className="border-0 shadow-lg rounded-2xl p-8">
-            <h3 className="text-2xl text-gray-900 mb-6">Performance des Services</h3>
-            <div className="space-y-4">
-              {servicePerformance.map((service, idx) => (
-                <Card key={idx} className="bg-linear-to-r from-purple-50 to-pink-50 border-0 p-6 rounded-xl">
-                  <div className="flex items-center justify-between mb-4">
-                    <h4 className="text-lg text-gray-900">{service.service}</h4>
-                    <Badge className="bg-green-500 text-white">
-                      {service.growth}
-                    </Badge>
-                  </div>
-                  <div className="grid grid-cols-3 gap-4">
-                    <div>
-                      <p className="text-sm text-gray-600 mb-1">Revenus</p>
-                      <p className="text-xl text-gray-900">
-                        {(service.revenue / 1000000).toFixed(1)}M Fc
-                      </p>
+          <Card className="p-4 sm:p-8 hover:shadow-lg transition-all border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-900">
+            <h3 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Performance des Services</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {servicesLoading ? (
+                <div className="p-6 text-gray-500">Chargement...</div>
+              ) : (
+                services.map((service: any, idx: any) => (
+                  <Card key={idx} className="p-5 sm:p-6 border border-pink-50 dark:border-pink-900/30 bg-linear-to-r from-purple-50 to-pink-50 dark:from-gray-800 dark:to-gray-800/50 rounded-xl hover:shadow-md transition-all">
+                    <div className="flex items-center justify-between mb-4">
+                      <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{service.service}</h4>
+                      <Badge className="bg-green-500 dark:bg-green-600 text-white border-0">
+                        {service.growth}
+                      </Badge>
                     </div>
-                    <div>
-                      <p className="text-sm text-gray-600 mb-1">Réservations</p>
-                      <p className="text-xl text-gray-900">{service.count}</p>
+                    <div className="grid grid-cols-3 gap-2 sm:gap-4">
+                      <div>
+                        <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">Revenus</p>
+                        <p className="text-sm sm:text-lg font-bold text-gray-900 dark:text-gray-100">
+                          {(service.revenue / 1000000).toFixed(1)}M Fc
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">Réservations</p>
+                        <p className="text-sm sm:text-lg font-bold text-gray-900 dark:text-gray-100">{service.count}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">Prix Moyen</p>
+                        <p className="text-sm sm:text-lg font-bold text-gray-900 dark:text-gray-100">
+                          {(service.avgPrice / 1000).toFixed(0)}K Fc
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-sm text-gray-600 mb-1">Prix Moyen</p>
-                      <p className="text-xl text-gray-900">
-                        {(service.avgPrice / 1000).toFixed(0)}K Fc
-                      </p>
+                    <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mt-5">
+                      <div
+                        className="bg-linear-to-r from-purple-500 to-pink-500 h-2 rounded-full shadow-[0_0_8px_rgba(236,72,153,0.4)]"
+                        style={{ width: `${(service.revenue / 13500000) * 100}%` }}
+                      />
                     </div>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2 mt-4">
-                    <div
-                      className="bg-linear-to-r from-purple-500 to-pink-500 h-2 rounded-full"
-                      style={{ width: `${(service.revenue / 13500000) * 100}%` }}
-                    />
-                  </div>
-                </Card>
-              ))}
+                  </Card>
+                )))}
             </div>
           </Card>
         </TabsContent>
@@ -262,66 +282,69 @@ export default function ReportsAnalytics() {
         {/* Clients Tab */}
         <TabsContent value="clients">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Card className="border-0 shadow-lg rounded-2xl p-8">
-              <h3 className="text-xl text-gray-900 mb-6">Fréquence des Visites</h3>
-              <ResponsiveContainer width="100%" height={300}>
-                <PieChart>
-                  <Pie
-                    data={clientFrequency}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    label={(entry: any) => `${entry.frequency}: ${entry.percentage}%`}
-                    outerRadius={100}
-                    fill="#8884d8"
-                    dataKey="clients"
-                  >
-                    {clientFrequency.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={['#ec4899', '#a855f7', '#f59e0b', '#10b981'][index]} />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                </PieChart>
-              </ResponsiveContainer>
+            <Card className="p-4 sm:p-8 hover:shadow-lg transition-all border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-900">
+              <h3 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-gray-100 mb-6">Fréquence des Visites</h3>
+              <div className="h-[300px] w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={clientFrequency}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={false}
+                      label={(entry: any) => `${entry.frequency}: ${entry.percentage}%`}
+                      outerRadius={100}
+                      fill="#8884d8"
+                      dataKey="clients"
+                    >
+                      {clientFrequency.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={['#ec4899', '#a855f7', '#f59e0b', '#10b981'][index]} />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
             </Card>
 
-            <Card className="border-0 shadow-lg rounded-2xl p-8">
-              <h3 className="text-xl text-gray-900 mb-6">Analyse Membres vs Non-Membres</h3>
+            <Card className="p-4 sm:p-8 hover:shadow-lg transition-all border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-900">
+              <h3 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-gray-100 mb-6">Analyse Membres vs Non-Membres</h3>
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
-                  <Card className="bg-linear-to-br from-amber-50 to-orange-50 border-0 p-4">
-                    <p className="text-sm text-gray-600 mb-1">Membres VIP</p>
-                    <p className="text-3xl text-gray-900">{membershipAnalytics.vip}</p>
-                  </Card>
-                  <Card className="bg-linear-to-br from-purple-50 to-pink-50 border-0 p-4">
-                    <p className="text-sm text-gray-600 mb-1">Membres Premium</p>
-                    <p className="text-3xl text-gray-900">{membershipAnalytics.premium}</p>
-                  </Card>
+                  <div className="bg-linear-to-br from-amber-50 to-orange-50 dark:from-gray-800 dark:to-gray-800/50 p-4 rounded-xl border border-amber-100 dark:border-amber-900/30">
+                    <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">Membres VIP</p>
+                    <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{membershipAnalytics.vip}</p>
+                  </div>
+                  <div className="bg-linear-to-br from-purple-50 to-pink-50 dark:from-gray-800 dark:to-gray-800/50 p-4 rounded-xl border border-purple-100 dark:border-purple-900/30">
+                    <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">Membres Premium</p>
+                    <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{membershipAnalytics.premium}</p>
+                  </div>
                 </div>
 
-                <Card className="bg-linear-to-br from-green-50 to-emerald-50 border-0 p-6">
-                  <p className="text-sm text-gray-700 mb-3">Revenus Membres</p>
-                  <p className="text-3xl text-gray-900 mb-2">
+                <div className="bg-linear-to-br from-green-50 to-emerald-50 dark:from-gray-800 dark:to-gray-800/50 p-5 rounded-xl border border-green-100 dark:border-green-900/30">
+                  <p className="text-xs font-semibold text-gray-700 dark:text-gray-300 mb-3 uppercase tracking-wider">Revenus Membres</p>
+                  <p className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
                     {(membershipAnalytics.memberRevenue / 1000000).toFixed(1)}M Fc
                   </p>
-                  <p className="text-sm text-gray-600">
-                    Dépense moyenne: {(membershipAnalytics.averageMemberSpend / 1000).toFixed(0)}K Fc
+                  <p className="text-xs text-gray-600 dark:text-gray-400">
+                    Dépense moyenne: <span className="font-bold">{(membershipAnalytics.averageMemberSpend / 1000).toFixed(0)}K Fc</span>
                   </p>
-                </Card>
+                </div>
 
-                <Card className="bg-linear-to-br from-blue-50 to-cyan-50 border-0 p-6">
-                  <p className="text-sm text-gray-700 mb-3">Revenus Non-Membres</p>
-                  <p className="text-3xl text-gray-900 mb-2">
+                <div className="bg-linear-to-br from-blue-50 to-cyan-50 dark:from-gray-800 dark:to-gray-800/50 p-5 rounded-xl border border-blue-100 dark:border-blue-900/30">
+                  <p className="text-xs font-semibold text-gray-700 dark:text-gray-300 mb-3 uppercase tracking-wider">Revenus Non-Membres</p>
+                  <p className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
                     {(membershipAnalytics.nonMemberRevenue / 1000000).toFixed(1)}M Fc
                   </p>
-                  <p className="text-sm text-gray-600">
-                    Dépense moyenne: {(membershipAnalytics.averageNonMemberSpend / 1000).toFixed(0)}K Fc
+                  <p className="text-xs text-gray-600 dark:text-gray-400">
+                    Dépense moyenne: <span className="font-bold">{(membershipAnalytics.averageNonMemberSpend / 1000).toFixed(0)}K Fc</span>
                   </p>
-                </Card>
+                </div>
 
-                <Card className="bg-linear-to-br from-pink-50 to-rose-50 border-0 p-4">
-                  <p className="text-sm text-gray-700">💡 Les membres dépensent 114% de plus que les non-membres!</p>
-                </Card>
+                <div className="bg-linear-to-br from-pink-50 to-rose-50 dark:from-pink-900/20 dark:to-rose-900/20 p-4 rounded-xl border border-pink-100 dark:border-pink-900/30 flex items-center gap-3">
+                  <span className="text-xl">💡</span>
+                  <p className="text-sm font-medium text-pink-700 dark:text-pink-300">Les membres dépensent <span className="text-lg font-bold">114%</span> de plus que les non-membres!</p>
+                </div>
               </div>
             </Card>
           </div>
@@ -329,51 +352,54 @@ export default function ReportsAnalytics() {
 
         {/* Staff Tab */}
         <TabsContent value="staff">
-          <Card className="border-0 shadow-lg rounded-2xl p-8">
-            <h3 className="text-2xl text-gray-900 mb-6">Taux d'Utilisation du Personnel</h3>
-            <div className="space-y-4">
-              {staffUtilization.map((staff, idx) => (
-                <Card key={idx} className="bg-gray-50 border-0 p-6 rounded-xl">
+          <Card className="p-4 sm:p-8 hover:shadow-lg transition-all border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-900">
+            <h3 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Taux d'Utilisation du Personnel</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {staffUtilization.map((staff: any, idx: any) => (
+                <Card key={idx} className="p-5 sm:p-6 border border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50 rounded-xl hover:shadow-md transition-all">
                   <div className="flex items-center justify-between mb-4">
                     <div>
-                      <p className="text-lg text-gray-900">{staff.name}</p>
-                      <p className="text-sm text-gray-600">{staff.appointments} rendez-vous</p>
+                      <p className="text-lg font-bold text-gray-900 dark:text-gray-100">{staff.name}</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">{staff.appointments} rendez-vous</p>
                     </div>
                     <div className="text-right">
-                      <p className="text-2xl text-gray-900">{staff.utilization}%</p>
-                      <p className="text-sm text-gray-600">Utilisation</p>
+                      <p className="text-2xl font-bold text-pink-600 dark:text-pink-400">{staff.utilization}%</p>
+                      <p className="text-xs text-gray-500 uppercase tracking-widest">Utilisation</p>
                     </div>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-3 mb-3">
+                  <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 mb-4">
                     <div
-                      className={`h-3 rounded-full ${staff.utilization >= 85 ? 'bg-linear-to-r from-green-500 to-emerald-500' :
+                      className={`h-3 rounded-full shadow-sm ${staff.utilization >= 85 ? 'bg-linear-to-r from-green-500 to-emerald-500' :
                         staff.utilization >= 75 ? 'bg-linear-to-r from-blue-500 to-cyan-500' :
                           'bg-linear-to-r from-amber-500 to-orange-500'
                         }`}
                       style={{ width: `${staff.utilization}%` }}
                     />
                   </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Revenus générés:</span>
-                    <span className="text-gray-900">{(staff.revenue / 1000).toFixed(0)}K Fc</span>
+                  <div className="flex justify-between items-center text-sm p-2 bg-white dark:bg-gray-900 rounded-lg border border-gray-100 dark:border-gray-800">
+                    <span className="text-gray-600 dark:text-gray-400">Revenus générés:</span>
+                    <span className="font-bold text-gray-900 dark:text-gray-100">{(staff.revenue / 1000).toFixed(0)}K Fc</span>
                   </div>
                 </Card>
               ))}
             </div>
-            <div className="mt-6 p-6 bg-linear-to-br from-blue-50 to-cyan-50 rounded-xl">
-              <h4 className="text-lg text-gray-900 mb-2">Statistiques Moyennes</h4>
-              <div className="grid grid-cols-3 gap-4 text-center">
-                <div>
-                  <p className="text-3xl text-gray-900">82.5%</p>
-                  <p className="text-sm text-gray-600">Taux Moyen</p>
+            <div className="mt-8 p-6 sm:p-8 bg-linear-to-br from-blue-50 to-cyan-50 dark:from-gray-800 dark:to-gray-800/50 rounded-2xl border border-blue-100 dark:border-blue-900/30">
+              <h4 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-6 flex items-center gap-2">
+                <Target className="w-5 h-5 text-blue-500" />
+                Statistiques Moyennes du Mois
+              </h4>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
+                <div className="p-4 bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-blue-50 dark:border-blue-900/20">
+                  <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">82.5%</p>
+                  <p className="text-xs text-gray-600 dark:text-gray-400 uppercase mt-1 tracking-wider">Taux Moyen</p>
                 </div>
-                <div>
-                  <p className="text-3xl text-gray-900">50.7</p>
-                  <p className="text-sm text-gray-600">RDV/Mois</p>
+                <div className="p-4 bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-blue-50 dark:border-blue-900/20">
+                  <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">50.7</p>
+                  <p className="text-xs text-gray-600 dark:text-gray-400 uppercase mt-1 tracking-wider">RDV / Staff</p>
                 </div>
-                <div>
-                  <p className="text-2xl text-gray-900">760K Fc</p>
-                  <p className="text-sm text-gray-600">Revenus/Mois</p>
+                <div className="p-4 bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-blue-50 dark:border-blue-900/20">
+                  <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">760K Fc</p>
+                  <p className="text-xs text-gray-600 dark:text-gray-400 uppercase mt-1 tracking-wider">Revenus / Staff</p>
                 </div>
               </div>
             </div>
@@ -382,15 +408,15 @@ export default function ReportsAnalytics() {
 
         {/* Marketing Tab */}
         <TabsContent value="marketing">
-          <Card className="border-0 shadow-lg rounded-2xl p-8">
-            <h3 className="text-2xl text-gray-900 mb-6">Performance des Campagnes Marketing</h3>
-            <div className="space-y-4">
-              {marketingCampaigns.map((campaign, idx) => (
-                <Card key={idx} className="bg-linear-to-r from-green-50 to-emerald-50 border-0 p-6 rounded-xl">
+          <Card className="p-4 sm:p-8 hover:shadow-lg transition-all border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-900">
+            <h3 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Performance des Campagnes Marketing</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {marketingCampaigns.map((campaign: any, idx: any) => (
+                <Card key={idx} className="p-5 sm:p-6 border border-green-50 dark:border-green-900/30 bg-linear-to-r from-green-50 to-emerald-50 dark:from-gray-800 dark:to-gray-800/50 rounded-xl hover:shadow-md transition-all">
                   <div className="flex items-center justify-between mb-4">
                     <div>
-                      <p className="text-lg text-gray-900">{campaign.name}</p>
-                      <p className="text-sm text-gray-600">{campaign.conversions} conversions</p>
+                      <p className="text-lg font-bold text-gray-900 dark:text-gray-100">{campaign.name}</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">{campaign.conversions} conversions</p>
                     </div>
                     <Badge className="bg-green-600 text-white px-4 py-2">
                       ROI: {campaign.roi}
@@ -407,18 +433,18 @@ export default function ReportsAnalytics() {
               ))}
             </div>
 
-            <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-              <Card className="bg-linear-to-br from-purple-50 to-pink-50 border-0 p-6">
-                <p className="text-sm text-gray-600 mb-1">Total Conversions</p>
-                <p className="text-3xl text-gray-900">58</p>
+            <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+              <Card className="bg-linear-to-br from-purple-50 to-pink-50 dark:from-purple-900/10 dark:to-pink-900/10 border border-purple-100 dark:border-purple-900/30 p-6 rounded-xl">
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">Total Conversions</p>
+                <p className="text-3xl font-black text-gray-900 dark:text-gray-100">58</p>
               </Card>
-              <Card className="bg-linear-to-br from-blue-50 to-cyan-50 border-0 p-6">
-                <p className="text-sm text-gray-600 mb-1">Total Revenus Marketing</p>
-                <p className="text-2xl text-gray-900">1,74M Fc</p>
+              <Card className="bg-linear-to-br from-blue-50 to-cyan-50 dark:from-blue-900/10 dark:to-cyan-900/10 border border-blue-100 dark:border-blue-900/30 p-6 rounded-xl">
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">Total Revenus Marketing</p>
+                <p className="text-2xl font-black text-gray-900 dark:text-gray-100">1,74M Fc</p>
               </Card>
-              <Card className="bg-linear-to-br from-amber-50 to-orange-50 border-0 p-6">
-                <p className="text-sm text-gray-600 mb-1">ROI Moyen</p>
-                <p className="text-3xl text-green-600">355%</p>
+              <Card className="bg-linear-to-br from-amber-50 to-orange-50 dark:from-amber-900/10 dark:to-orange-900/10 border border-amber-100 dark:border-amber-900/30 p-6 rounded-xl">
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">ROI Moyen</p>
+                <p className="text-3xl font-black text-green-600 dark:text-green-400">355%</p>
               </Card>
             </div>
           </Card>
@@ -426,26 +452,28 @@ export default function ReportsAnalytics() {
       </Tabs>
 
       {/* Custom Report Generator */}
-      <Card className="border-0 shadow-lg rounded-2xl p-8 bg-linear-to-br from-indigo-50 to-purple-50">
-        <div className="flex items-center gap-3 mb-6">
-          <Clock className="w-8 h-8 text-indigo-600" />
-          <div>
-            <h3 className="text-2xl text-gray-900">Générateur de Rapport Personnalisé</h3>
-            <p className="text-sm text-gray-600">Créez des rapports sur mesure selon vos besoins</p>
+      <Card className="border border-indigo-100 dark:border-indigo-900/50 shadow-xl rounded-2xl p-6 sm:p-10 bg-linear-to-br from-indigo-50/50 to-purple-50/50 dark:from-indigo-950/20 dark:to-purple-950/20">
+        <div className="flex flex-col sm:flex-row items-center gap-6 mb-10 text-center sm:text-left">
+          <div className="w-16 h-16 bg-white dark:bg-indigo-900/30 rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-500/10">
+            <Target className="w-10 h-10 text-indigo-600 dark:text-indigo-400" />
+          </div>
+          <div className="flex-1">
+            <h3 className="text-2xl sm:text-3xl font-black text-gray-900 dark:text-gray-100 mb-2">Générateur de Rapport Personnalisé</h3>
+            <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 font-medium">Créez des rapports sur mesure selon vos indicateurs clés de performance</p>
           </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <Button variant="outline" className="rounded-full">
-            📊 Rapport Financier
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <Button variant="outline" className="rounded-full py-7 font-bold border-indigo-100 dark:border-indigo-900 dark:text-gray-300 dark:hover:bg-indigo-900/20 bg-white dark:bg-gray-900/50">
+            📊 Financier
           </Button>
-          <Button variant="outline" className="rounded-full">
-            👥 Analyse Clientes
+          <Button variant="outline" className="rounded-full py-7 font-bold border-indigo-100 dark:border-indigo-900 dark:text-gray-300 dark:hover:bg-indigo-900/20 bg-white dark:bg-gray-900/50">
+            👥 Clientes
           </Button>
-          <Button variant="outline" className="rounded-full">
-            ⭐ Performance Personnel
+          <Button variant="outline" className="rounded-full py-7 font-bold border-indigo-100 dark:border-indigo-900 dark:text-gray-300 dark:hover:bg-indigo-900/20 bg-white dark:bg-gray-900/50">
+            ⭐ Personnel
           </Button>
-          <Button className="bg-linear-to-r from-indigo-500 to-purple-500 text-white rounded-full">
-            + Rapport Personnalisé
+          <Button className="bg-linear-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-full py-7 font-black shadow-lg shadow-indigo-500/20 transition-all active:scale-95">
+            + Nouveau Rapport
           </Button>
         </div>
       </Card>

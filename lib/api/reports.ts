@@ -48,6 +48,30 @@ export const reportsApi = {
     return data;
   },
 
+  // Staff performance
+  getStaffPerformance: async (params: { from: string; to: string }) => {
+    const { data } = await axiosdb.get('/reports/staff', { params });
+    return data;
+  },
+
+  // Peak hours
+  getPeakHours: async (params: { from: string; to: string }) => {
+    const { data } = await axiosdb.get('/reports/peak-hours', { params });
+    return data;
+  },
+
+  // Membership analytics
+  getMembershipAnalytics: async (params?: { from?: string; to?: string }) => {
+    const { data } = await axiosdb.get('/reports/membership', { params });
+    return data;
+  },
+
+  // Marketing campaigns
+  getMarketingCampaigns: async (params?: { from?: string; to?: string }) => {
+    const { data } = await axiosdb.get('/reports/marketing', { params });
+    return data;
+  },
+
   // Custom report
   createCustomReport: async (reportData: {
     metrics: string[];

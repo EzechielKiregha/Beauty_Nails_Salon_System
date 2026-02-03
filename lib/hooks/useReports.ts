@@ -27,6 +27,36 @@ export function useServicePerformance(period?: string) {
   });
 }
 
+export function useStaffReport(params: { from: string; to: string }) {
+  return useQuery({
+    queryKey: ['reports', 'staff', params],
+    queryFn: () => reportsApi.getStaffPerformance(params),
+    enabled: !!params.from && !!params.to,
+  });
+}
+
+export function usePeakHours(params: { from: string; to: string }) {
+  return useQuery({
+    queryKey: ['reports', 'peak-hours', params],
+    queryFn: () => reportsApi.getPeakHours(params),
+    enabled: !!params.from && !!params.to,
+  });
+}
+
+export function useMembershipAnalytics(params?: { from?: string; to?: string }) {
+  return useQuery({
+    queryKey: ['reports', 'membership', params],
+    queryFn: () => reportsApi.getMembershipAnalytics(params),
+  });
+}
+
+export function useMarketingCampaigns(params?: { from?: string; to?: string }) {
+  return useQuery({
+    queryKey: ['reports', 'marketing', params],
+    queryFn: () => reportsApi.getMarketingCampaigns(params),
+  });
+}
+
 export function useCustomReport() {
   const createMutation = useMutation({
     mutationFn: reportsApi.createCustomReport,

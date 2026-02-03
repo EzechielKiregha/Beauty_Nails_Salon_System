@@ -10,7 +10,6 @@ export async function GET(request: NextRequest) {
     await requireRole(['admin', 'worker']);
 
     const { searchParams } = new URL(request.url);
-    const role = searchParams.get('role');
     const isAvailable = searchParams.get('isAvailable');
 
     const where: any = {};
@@ -32,11 +31,49 @@ export async function GET(request: NextRequest) {
           },
         },
         schedules: true,
+        appointments: {
+          where: {
+            status: 'completed',
+          },
+          select: {
+            price: true,
+            clientId: true,
+          },
+        },
       },
       orderBy: { createdAt: 'desc' },
     });
 
-    return successResponse(staff);
+    const daysMap = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
+
+    const formattedStaff = staff.map((s: any) => {
+      const completedApps = s.appointments || [];
+      const totalRevenue = completedApps.reduce((sum:any, app:any) => sum + (app.price || 0), 0);
+      
+      const uniqueClients = new Set(completedApps.map((a: any) => a.clientId)).size;
+      const retention = completedApps.length > 0 
+        ? Math.round((uniqueClients / completedApps.length) * 100) 
+        : 0;
+
+      return {
+        id: s.id,
+        name: s.user.name,
+        role: s.position,
+        phone: s.user.phone,
+        email: s.user.email,
+        workingDays: s.schedules.map((sch:any) => daysMap[sch.dayOfWeek]),
+        workingHours: typeof s.workingHours === 'string' ? s.workingHours : 'Non défini',
+        appointments: completedApps.length,
+        rating: s.rating,
+        revenue: `${totalRevenue.toLocaleString()} Fc`,
+        clientRetention: `${retention}%`,
+        upsellRate: '0%',
+        commission: `${s.commissionRate}%`,
+        status: s.isAvailable ? 'active' : 'off',
+      };
+    });
+
+    return successResponse(formattedStaff);
   } catch (error) {
     return handleApiError(error);
   }
