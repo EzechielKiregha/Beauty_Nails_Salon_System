@@ -39,3 +39,42 @@ export async function GET(request: NextRequest) {
     return handleApiError(error);
   }
 }
+
+export async function POST(request: NextRequest) {
+  try {
+    await requireRole(['admin']);
+    const body = await request.json();
+    const {
+      name,
+      category,
+      description,
+      sku,
+      minStock,
+      unit,
+      price,
+      supplier,
+      status,
+      initialStock,
+      maxStock,
+    } = body;
+
+    const newItem = await prisma.inventoryItem.create({
+      data: {
+        name,
+        category,
+        description,
+        currentStock: initialStock || 0,
+        minStock,
+        maxStock,
+        sku,
+        unit,
+        cost: price,
+        supplier,
+        status,
+      },
+    });
+    return successResponse(newItem, 201);
+  } catch (error) {
+    return handleApiError(error);
+  }
+}

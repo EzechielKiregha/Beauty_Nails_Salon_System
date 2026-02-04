@@ -37,35 +37,42 @@ export default function Header() {
           <div className="hidden md:flex items-center space-x-8">
             <Link
               href="/"
-              className={`transition-colors ${isActive('/') ? 'text-pink-500' : 'text-gray-700 dark:text-gray-300 hover:text-pink-500'
+              className={`transition-colors ${isActive('/') ? 'text-pink-500' : 'text-gray-700 dark:text-gray-400 hover:text-pink-500 dark:hover:text-pink-500'
                 }`}
             >
               Accueil
             </Link>
             <Link
+              href="/catalog"
+              className={`transition-colors ${isActive('/catalog') ? 'text-pink-500' : 'text-gray-700 dark:text-gray-400 hover:text-pink-500 dark:hover:text-pink-500'
+                }`}
+            >
+              Catalogue
+            </Link>
+            {/* <Link
               href="/services"
-              className={`transition-colors ${isActive('/services') ? 'text-pink-500' : 'text-gray-700 dark:text-gray-300 hover:text-pink-500'
+              className={`transition-colors ${isActive('/services') ? 'text-pink-500' : 'text-gray-700 dark:text-gray-400 hover:text-pink-500 dark:hover:text-pink-500'
                 }`}
             >
               Services
-            </Link>
+            </Link> */}
             <Link
               href="/memberships"
-              className={`transition-colors ${isActive('/memberships') ? 'text-pink-500' : 'text-gray-700 dark:text-gray-300 hover:text-pink-500'
+              className={`transition-colors ${isActive('/memberships') ? 'text-pink-500' : 'text-gray-700 dark:text-gray-400 hover:text-pink-500 dark:hover:text-pink-500'
                 }`}
             >
               Abonnements
             </Link>
             <Link
               href="/about"
-              className={`transition-colors ${isActive('/about') ? 'text-pink-500' : 'text-gray-700 dark:text-gray-300 hover:text-pink-500'
+              className={`transition-colors ${isActive('/about') ? 'text-pink-500' : 'text-gray-700 dark:text-gray-400 hover:text-pink-500 dark:hover:text-pink-500'
                 }`}
             >
               À Propos
             </Link>
             <Link
               href="/contact"
-              className={`transition-colors ${isActive('/contact') ? 'text-pink-500' : 'text-gray-700 dark:text-gray-300 hover:text-pink-500'
+              className={`transition-colors ${isActive('/contact') ? 'text-pink-500' : 'text-gray-700 dark:text-gray-400 hover:text-pink-500 dark:hover:text-pink-500'
                 }`}
             >
               Contact

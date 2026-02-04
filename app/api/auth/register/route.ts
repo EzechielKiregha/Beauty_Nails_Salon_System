@@ -3,18 +3,19 @@ import { hash } from 'bcryptjs';
 import prisma from '@/lib/prisma';
 import { errorResponse, successResponse, handleApiError } from '@/lib/api/helpers';
 import { nanoid } from 'nanoid';
+import { toUserDTO } from '@/lib/dto/user.dto';
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { name, email, phone, password, role = 'client', refCode } = body;
+    let { name, email, phone, password, role = 'client', refCode } = body;
 
-    console.log("Received refCode:", refCode);
+    // console.log("Received refCode:", refCode);
 
     // Validation
-    if (!name || !email || !phone || !password || !refCode) {
-      return errorResponse('Tous les champs sont requis', 400);
-    }
+    // if (!name || !email || !phone || !password || !refCode) {
+    //   return errorResponse('Tous les champs sont requis', 400);
+    // }
 
     // Check if user exists
     const existingUser = await prisma.user.findFirst({
@@ -24,7 +25,7 @@ export async function POST(request: NextRequest) {
     }); 
 
     if (existingUser) {
-      return successResponse('Email ou téléphone déjà utilisé', 202);
+      return errorResponse('Email ou téléphone déjà utilisé', 409);
     }
     
     // Hash password
@@ -63,10 +64,10 @@ export async function POST(request: NextRequest) {
     // Create user with profile
     const user = await prisma.user.create({
       data: dataClause,
-      include: {
+      include:{
         clientProfile: true,
-        workerProfile: true,
-      },
+        workerProfile: true
+      }
     });
 
     if (user && referrerID) {
@@ -109,13 +110,10 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Remove password from response
-    const { password: _, ...userWithoutPassword } = user;
-
     return successResponse(
       {
-        user: userWithoutPassword,
-        message: 'Compte créé avec succès',
+        user: toUserDTO(user),
+        message: "Compte créé avec succès"
       },
       201
     );

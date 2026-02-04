@@ -23,8 +23,8 @@ export default function Memberships() {
       answer: 'Les rendez-vous non utilisés expirent à la fin de votre période d\'abonnement. Nous vous recommandons de planifier vos soins à l\'avance pour profiter pleinement de votre abonnement.'
     },
     {
-      question: 'Les prestations à domicile sont-elles disponibles partout à Kinshasa ?',
-      answer: 'Oui, nous couvrons toute la zone de Kinshasa. Des frais de déplacement peuvent s\'appliquer pour les zones éloignées du centre-ville.'
+      question: 'Les prestations à domicile sont-elles disponibles partout à Goma ?',
+      answer: 'Oui, nous couvrons toute la zone de Goma. Des frais de déplacement peuvent s\'appliquer pour les zones éloignées du centre-ville.'
     },
     {
       question: 'Comment renouveler mon abonnement ?',
@@ -33,23 +33,28 @@ export default function Memberships() {
   ];
 
   return (
-    <div className="min-h-screen dark:bg-gray-950">
-      <HeroSection
+    <div className="min-h-screen py-8 dark:bg-gray-950">
+      {/* <HeroSection
         imageUrl='/portrait-beautiful.jpg'
         title="Rejoignez notre cercle de "
         subtitle='clientes privilégiées'
         description="Économisez jusqu'à 30% sur vos soins préférés et profitez d'avantages exclusifs avec nos formules d'abonnement"
         badgeText='nos abonnements'
-      />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 dark:bg-gray-950">
+      /> */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 sm:py-16 dark:bg-gray-950">
+
         {/* Header */}
-        <div className="text-center mb-12 sm:mb-16">
+        <div className="text-center mb-16">
           <Badge className="mb-4 bg-purple-100 dark:bg-purple-900 text-purple-600 dark:text-purple-200">
             <Award className="w-4 h-4 mr-2" />
             Abonnements Premium
           </Badge>
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl text-gray-900 dark:text-gray-100 mb-3 sm:mb-4">Plans d'abonnement</h1>
-          <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300">Choisissez le plan qui correspond à vos besoins</p>
+          <h1 className="text-5xl text-gray-900 dark:text-gray-100 mb-6">
+            Rejoignez notre cercle de clientes privilégiées
+          </h1>
+          <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+            Économisez jusqu'à 30% sur vos soins préférés et profitez d'avantages exclusifs avec nos formules d'abonnement
+          </p>
         </div>
 
         {/* Membership Plans */}
@@ -83,7 +88,7 @@ export default function Memberships() {
                   </div>
                   <div className="ml-3 sm:ml-4">
                     <p className="text-sm sm:text-base text-gray-900 dark:text-gray-100">3 prestations à domicile</p>
-                    <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Dans la zone de Kinshasa</p>
+                    <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Dans la zone de Goma</p>
                   </div>
                 </div>
 
@@ -108,7 +113,7 @@ export default function Memberships() {
                 </div>
               </div>
 
-              <Link href="/signup">
+              <Link href="/auth/signup">
                 <Button className="w-full bg-linear-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white rounded-full py-4 sm:py-6 text-sm sm:text-lg">
                   S'abonner maintenant
                 </Button>
@@ -153,7 +158,7 @@ export default function Memberships() {
                   </div>
                   <div className="ml-3 sm:ml-4">
                     <p className="text-sm sm:text-base text-gray-900 dark:text-gray-100">6 prestations à domicile</p>
-                    <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Dans la zone de Kinshasa</p>
+                    <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Dans la zone de Goma</p>
                   </div>
                 </div>
 
@@ -198,7 +203,7 @@ export default function Memberships() {
                 </div>
               </div>
 
-              <Link href="/signup">
+              <Link href="/auth/signup">
                 <Button className="w-full bg-linear-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-full py-4 sm:py-6 text-sm sm:text-lg">
                   Devenir membre Premium
                 </Button>

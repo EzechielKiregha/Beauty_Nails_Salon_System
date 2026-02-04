@@ -44,6 +44,7 @@ export type InventoryItemMinAggregateOutputType = {
   id: string | null
   name: string | null
   category: string | null
+  description: string | null
   currentStock: number | null
   minStock: number | null
   maxStock: number | null
@@ -61,6 +62,7 @@ export type InventoryItemMaxAggregateOutputType = {
   id: string | null
   name: string | null
   category: string | null
+  description: string | null
   currentStock: number | null
   minStock: number | null
   maxStock: number | null
@@ -78,6 +80,7 @@ export type InventoryItemCountAggregateOutputType = {
   id: number
   name: number
   category: number
+  description: number
   currentStock: number
   minStock: number
   maxStock: number
@@ -111,6 +114,7 @@ export type InventoryItemMinAggregateInputType = {
   id?: true
   name?: true
   category?: true
+  description?: true
   currentStock?: true
   minStock?: true
   maxStock?: true
@@ -128,6 +132,7 @@ export type InventoryItemMaxAggregateInputType = {
   id?: true
   name?: true
   category?: true
+  description?: true
   currentStock?: true
   minStock?: true
   maxStock?: true
@@ -145,6 +150,7 @@ export type InventoryItemCountAggregateInputType = {
   id?: true
   name?: true
   category?: true
+  description?: true
   currentStock?: true
   minStock?: true
   maxStock?: true
@@ -249,6 +255,7 @@ export type InventoryItemGroupByOutputType = {
   id: string
   name: string
   category: string
+  description: string | null
   currentStock: number
   minStock: number
   maxStock: number | null
@@ -289,6 +296,7 @@ export type InventoryItemWhereInput = {
   id?: Prisma.StringFilter<"InventoryItem"> | string
   name?: Prisma.StringFilter<"InventoryItem"> | string
   category?: Prisma.StringFilter<"InventoryItem"> | string
+  description?: Prisma.StringNullableFilter<"InventoryItem"> | string | null
   currentStock?: Prisma.IntFilter<"InventoryItem"> | number
   minStock?: Prisma.IntFilter<"InventoryItem"> | number
   maxStock?: Prisma.IntNullableFilter<"InventoryItem"> | number | null
@@ -309,6 +317,7 @@ export type InventoryItemOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   category?: Prisma.SortOrder
+  description?: Prisma.SortOrderInput | Prisma.SortOrder
   currentStock?: Prisma.SortOrder
   minStock?: Prisma.SortOrder
   maxStock?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -333,6 +342,7 @@ export type InventoryItemWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.InventoryItemWhereInput | Prisma.InventoryItemWhereInput[]
   name?: Prisma.StringFilter<"InventoryItem"> | string
   category?: Prisma.StringFilter<"InventoryItem"> | string
+  description?: Prisma.StringNullableFilter<"InventoryItem"> | string | null
   currentStock?: Prisma.IntFilter<"InventoryItem"> | number
   minStock?: Prisma.IntFilter<"InventoryItem"> | number
   maxStock?: Prisma.IntNullableFilter<"InventoryItem"> | number | null
@@ -352,6 +362,7 @@ export type InventoryItemOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   category?: Prisma.SortOrder
+  description?: Prisma.SortOrderInput | Prisma.SortOrder
   currentStock?: Prisma.SortOrder
   minStock?: Prisma.SortOrder
   maxStock?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -377,6 +388,7 @@ export type InventoryItemScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"InventoryItem"> | string
   name?: Prisma.StringWithAggregatesFilter<"InventoryItem"> | string
   category?: Prisma.StringWithAggregatesFilter<"InventoryItem"> | string
+  description?: Prisma.StringNullableWithAggregatesFilter<"InventoryItem"> | string | null
   currentStock?: Prisma.IntWithAggregatesFilter<"InventoryItem"> | number
   minStock?: Prisma.IntWithAggregatesFilter<"InventoryItem"> | number
   maxStock?: Prisma.IntNullableWithAggregatesFilter<"InventoryItem"> | number | null
@@ -394,6 +406,7 @@ export type InventoryItemCreateInput = {
   id?: string
   name: string
   category: string
+  description?: string | null
   currentStock: number
   minStock: number
   maxStock?: number | null
@@ -414,6 +427,7 @@ export type InventoryItemUncheckedCreateInput = {
   id?: string
   name: string
   category: string
+  description?: string | null
   currentStock: number
   minStock: number
   maxStock?: number | null
@@ -434,6 +448,7 @@ export type InventoryItemUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   currentStock?: Prisma.IntFieldUpdateOperationsInput | number
   minStock?: Prisma.IntFieldUpdateOperationsInput | number
   maxStock?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -454,6 +469,7 @@ export type InventoryItemUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   currentStock?: Prisma.IntFieldUpdateOperationsInput | number
   minStock?: Prisma.IntFieldUpdateOperationsInput | number
   maxStock?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -474,6 +490,7 @@ export type InventoryItemCreateManyInput = {
   id?: string
   name: string
   category: string
+  description?: string | null
   currentStock: number
   minStock: number
   maxStock?: number | null
@@ -491,6 +508,7 @@ export type InventoryItemUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   currentStock?: Prisma.IntFieldUpdateOperationsInput | number
   minStock?: Prisma.IntFieldUpdateOperationsInput | number
   maxStock?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -508,6 +526,7 @@ export type InventoryItemUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   currentStock?: Prisma.IntFieldUpdateOperationsInput | number
   minStock?: Prisma.IntFieldUpdateOperationsInput | number
   maxStock?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -525,6 +544,7 @@ export type InventoryItemCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   category?: Prisma.SortOrder
+  description?: Prisma.SortOrder
   currentStock?: Prisma.SortOrder
   minStock?: Prisma.SortOrder
   maxStock?: Prisma.SortOrder
@@ -549,6 +569,7 @@ export type InventoryItemMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   category?: Prisma.SortOrder
+  description?: Prisma.SortOrder
   currentStock?: Prisma.SortOrder
   minStock?: Prisma.SortOrder
   maxStock?: Prisma.SortOrder
@@ -566,6 +587,7 @@ export type InventoryItemMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   category?: Prisma.SortOrder
+  description?: Prisma.SortOrder
   currentStock?: Prisma.SortOrder
   minStock?: Prisma.SortOrder
   maxStock?: Prisma.SortOrder
@@ -641,6 +663,7 @@ export type InventoryItemCreateWithoutTransactionsInput = {
   id?: string
   name: string
   category: string
+  description?: string | null
   currentStock: number
   minStock: number
   maxStock?: number | null
@@ -660,6 +683,7 @@ export type InventoryItemUncheckedCreateWithoutTransactionsInput = {
   id?: string
   name: string
   category: string
+  description?: string | null
   currentStock: number
   minStock: number
   maxStock?: number | null
@@ -695,6 +719,7 @@ export type InventoryItemUpdateWithoutTransactionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   currentStock?: Prisma.IntFieldUpdateOperationsInput | number
   minStock?: Prisma.IntFieldUpdateOperationsInput | number
   maxStock?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -714,6 +739,7 @@ export type InventoryItemUncheckedUpdateWithoutTransactionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   currentStock?: Prisma.IntFieldUpdateOperationsInput | number
   minStock?: Prisma.IntFieldUpdateOperationsInput | number
   maxStock?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -733,6 +759,7 @@ export type InventoryItemCreateWithoutUsagesInput = {
   id?: string
   name: string
   category: string
+  description?: string | null
   currentStock: number
   minStock: number
   maxStock?: number | null
@@ -752,6 +779,7 @@ export type InventoryItemUncheckedCreateWithoutUsagesInput = {
   id?: string
   name: string
   category: string
+  description?: string | null
   currentStock: number
   minStock: number
   maxStock?: number | null
@@ -787,6 +815,7 @@ export type InventoryItemUpdateWithoutUsagesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   currentStock?: Prisma.IntFieldUpdateOperationsInput | number
   minStock?: Prisma.IntFieldUpdateOperationsInput | number
   maxStock?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -806,6 +835,7 @@ export type InventoryItemUncheckedUpdateWithoutUsagesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   currentStock?: Prisma.IntFieldUpdateOperationsInput | number
   minStock?: Prisma.IntFieldUpdateOperationsInput | number
   maxStock?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -825,6 +855,7 @@ export type InventoryItemCreateWithoutReordersInput = {
   id?: string
   name: string
   category: string
+  description?: string | null
   currentStock: number
   minStock: number
   maxStock?: number | null
@@ -844,6 +875,7 @@ export type InventoryItemUncheckedCreateWithoutReordersInput = {
   id?: string
   name: string
   category: string
+  description?: string | null
   currentStock: number
   minStock: number
   maxStock?: number | null
@@ -879,6 +911,7 @@ export type InventoryItemUpdateWithoutReordersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   currentStock?: Prisma.IntFieldUpdateOperationsInput | number
   minStock?: Prisma.IntFieldUpdateOperationsInput | number
   maxStock?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -898,6 +931,7 @@ export type InventoryItemUncheckedUpdateWithoutReordersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   currentStock?: Prisma.IntFieldUpdateOperationsInput | number
   minStock?: Prisma.IntFieldUpdateOperationsInput | number
   maxStock?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -966,6 +1000,7 @@ export type InventoryItemSelect<ExtArgs extends runtime.Types.Extensions.Interna
   id?: boolean
   name?: boolean
   category?: boolean
+  description?: boolean
   currentStock?: boolean
   minStock?: boolean
   maxStock?: boolean
@@ -987,6 +1022,7 @@ export type InventoryItemSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   id?: boolean
   name?: boolean
   category?: boolean
+  description?: boolean
   currentStock?: boolean
   minStock?: boolean
   maxStock?: boolean
@@ -1004,6 +1040,7 @@ export type InventoryItemSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   id?: boolean
   name?: boolean
   category?: boolean
+  description?: boolean
   currentStock?: boolean
   minStock?: boolean
   maxStock?: boolean
@@ -1021,6 +1058,7 @@ export type InventoryItemSelectScalar = {
   id?: boolean
   name?: boolean
   category?: boolean
+  description?: boolean
   currentStock?: boolean
   minStock?: boolean
   maxStock?: boolean
@@ -1034,7 +1072,7 @@ export type InventoryItemSelectScalar = {
   updatedAt?: boolean
 }
 
-export type InventoryItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "category" | "currentStock" | "minStock" | "maxStock" | "unit" | "cost" | "supplier" | "sku" | "lastRestocked" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["inventoryItem"]>
+export type InventoryItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "category" | "description" | "currentStock" | "minStock" | "maxStock" | "unit" | "cost" | "supplier" | "sku" | "lastRestocked" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["inventoryItem"]>
 export type InventoryItemInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   transactions?: boolean | Prisma.InventoryItem$transactionsArgs<ExtArgs>
   reorders?: boolean | Prisma.InventoryItem$reordersArgs<ExtArgs>
@@ -1055,6 +1093,7 @@ export type $InventoryItemPayload<ExtArgs extends runtime.Types.Extensions.Inter
     id: string
     name: string
     category: string
+    description: string | null
     currentStock: number
     minStock: number
     maxStock: number | null
@@ -1495,6 +1534,7 @@ export interface InventoryItemFieldRefs {
   readonly id: Prisma.FieldRef<"InventoryItem", 'String'>
   readonly name: Prisma.FieldRef<"InventoryItem", 'String'>
   readonly category: Prisma.FieldRef<"InventoryItem", 'String'>
+  readonly description: Prisma.FieldRef<"InventoryItem", 'String'>
   readonly currentStock: Prisma.FieldRef<"InventoryItem", 'Int'>
   readonly minStock: Prisma.FieldRef<"InventoryItem", 'Int'>
   readonly maxStock: Prisma.FieldRef<"InventoryItem", 'Int'>

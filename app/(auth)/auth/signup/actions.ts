@@ -12,7 +12,7 @@ export async function handleSignup(formData: FormData, refCodeParam: string | nu
   // const acceptTerms = !!formData.get("acceptTerms");
   const role = "client";
 
-  if (!name || !email || !phone || !password || !refCodeParam) {
+  if (!name || !email || !phone || !password) {
     return { error: "Veuillez remplir tous les champs" };
   }
 
@@ -45,7 +45,7 @@ export async function handleSignup(formData: FormData, refCodeParam: string | nu
       redirect: false,
     });
     if (result?.error) {
-      return { error: result.error };
+      return { error: "Email ou mot de passe incorrect" };
     }
   }catch(e) {
     return { error: "Une erreur est survenue, ", e };

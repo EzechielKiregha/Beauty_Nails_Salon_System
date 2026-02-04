@@ -7,9 +7,11 @@ import { Textarea } from './ui/textarea';
 import { Badge } from './ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Switch } from './ui/switch';
-import { Scissors, Clock, DollarSign, Sparkles, Package, Percent, Globe } from 'lucide-react';
+import { Scissors, Clock, DollarSign, Sparkles, Package, Percent, Globe, Search, ShoppingBag, Filter } from 'lucide-react';
 import { useServices } from '@/lib/hooks/useServices';
 import CreateServiceModal from '@/components/modals/CreateServiceModal';
+import { AddProductModal } from './modals/InventoryModals';
+import { PackageModal, PromoModal, ServiceModal } from './modals/ServicePackagePromoModal';
 
 interface Service {
   id: string;
@@ -20,6 +22,16 @@ interface Service {
   description: string;
   onlineBookable?: boolean;
   popular?: boolean;
+}
+
+interface Product {
+  id: string;
+  name: string;
+  category: string;
+  price: string;
+  stock: number;
+  brand: string;
+  image?: string;
 }
 
 interface Package {
@@ -66,6 +78,13 @@ export default function ServiceManagement({ showMock }: { showMock?: boolean }) 
     if ((apiServices as any)?.length > 0) return apiServices as unknown as Service[];
     return showMock ? MOCK_SERVICES : [];
   }, [apiServices, showMock]);
+
+  const products: Product[] = [
+    { id: '1', name: 'Huile Cuticules Argan', category: 'Soins', price: '15 000 CDF', stock: 12, brand: 'OPI' },
+    { id: '2', name: 'Shampoing Sans Sulfate', category: 'Cheveux', price: '25 000 CDF', stock: 8, brand: 'L\'Oréal' },
+    { id: '3', name: 'Sérum Cils Pousse', category: 'Cils', price: '35 000 CDF', stock: 5, brand: 'LashPro' },
+    { id: '4', name: 'Kit Entretien Tresses', category: 'Cheveux', price: '20 000 CDF', stock: 20, brand: 'House Brand' },
+  ];
 
   const packages: Package[] = [
     {
@@ -133,18 +152,28 @@ export default function ServiceManagement({ showMock }: { showMock?: boolean }) 
     }
   ];
 
-  const categories = ['Onglerie', 'Cils', 'Tresses', 'Maquillage'];
+  const categories = ['onglerie', 'cils', 'tresses', 'maquillage'];
 
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">Gestion des Services</h2>
-        <CreateServiceModal triggerLabel="+ Nouveau Service" />
+        {/* <CreateServiceModal triggerLabel="+ Nouveau Service" /> */}
+        {/* <ServiceModal
+          trigger={
+            <Button className="bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-full shadow-md hover:shadow-lg transition-all">
+              + Nouveau Service
+            </Button>
+          }
+        /> */}
       </div>
 
       <Tabs defaultValue="services" className="space-y-6">
         <TabsList className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-pink-900/30 p-1 rounded-xl w-full flex overflow-x-auto no-scrollbar justify-start sm:justify-center">
           <TabsTrigger value="services" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">Services</TabsTrigger>
+          <TabsTrigger value="products" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">
+            <ShoppingBag className="w-4 h-4 mr-2" /> Produits Retail
+          </TabsTrigger>
           <TabsTrigger value="packages" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">Forfaits</TabsTrigger>
           <TabsTrigger value="promotions" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">Promotions</TabsTrigger>
           <TabsTrigger value="online" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">Réservation en Ligne</TabsTrigger>
@@ -152,6 +181,19 @@ export default function ServiceManagement({ showMock }: { showMock?: boolean }) 
 
         {/* Services Tab */}
         <TabsContent value="services">
+          <div className="flex justify-between items-center mb-6">
+            <div className="relative w-72">
+              <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+              <Input placeholder="Rechercher un service..." className="pl-9 rounded-full bg-white" />
+            </div>
+            <ServiceModal
+              trigger={
+                <Button className="bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-full shadow-md hover:shadow-lg transition-all">
+                  + Nouveau Service
+                </Button>
+              }
+            />
+          </div>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Services List by Category */}
             <div className="lg:col-span-2 space-y-6">
@@ -273,8 +315,75 @@ export default function ServiceManagement({ showMock }: { showMock?: boolean }) 
           </div>
         </TabsContent>
 
+        {/* Products Retail Tab (New) */}
+        <TabsContent value="products">
+          <div className="flex justify-between items-center mb-6">
+            <div className="relative w-72">
+              <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+              <Input placeholder="Rechercher un produit..." className="pl-9 rounded-full bg-white" />
+            </div>
+            <AddProductModal
+              trigger={
+                <Button className="bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-full shadow-md hover:shadow-lg">
+                  + Nouveau Produit
+                </Button>
+              }
+            />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {products.map((product) => (
+              <Card key={product.id} className="group overflow-hidden border-0 shadow-lg rounded-2xl transition-all hover:-translate-y-1">
+                <div className="h-32 bg-gray-100 relative">
+                  <div className="absolute inset-0 flex items-center justify-center text-gray-300">
+                    <ShoppingBag className="w-10 h-10" />
+                  </div>
+                  <Badge className="absolute top-2 right-2 bg-white text-gray-900 hover:bg-white">{product.stock} en stock</Badge>
+                </div>
+                <div className="p-4">
+                  <p className="text-xs text-amber-600 font-bold uppercase tracking-wider mb-1">{product.brand}</p>
+                  <h3 className="font-bold text-gray-900 mb-1">{product.name}</h3>
+                  <p className="text-gray-500 text-sm mb-3">{product.category}</p>
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-lg">{product.price}</span>
+                    <Button variant="ghost" size="icon" className="rounded-full hover:bg-amber-50 text-gray-400 hover:text-amber-600">
+                      <Filter className="w-4 h-4" /> {/* Edit Icon placeholder */}
+                    </Button>
+                  </div>
+                </div>
+              </Card>
+            ))}
+
+            <Card className="border-2 border-dashed border-gray-200 shadow-none rounded-2xl flex flex-col items-center justify-center cursor-pointer hover:border-amber-300 hover:bg-amber-50/50 transition-colors min-h-[250px]">
+              <AddProductModal
+                trigger={
+                  <div className="text-center p-6 w-full h-full flex flex-col items-center justify-center">
+                    <div className="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center mb-3 text-amber-600">
+                      <ShoppingBag className="w-6 h-6" />
+                    </div>
+                    <p className="font-bold text-gray-900">Ajouter Produit</p>
+                  </div>
+                }
+              />
+            </Card>
+          </div>
+        </TabsContent>
+
         {/* Packages Tab */}
         <TabsContent value="packages">
+          <div className="flex justify-between items-center mb-6">
+            <div className="relative w-72">
+              <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+              <Input placeholder="Rechercher un forfait..." className="pl-9 rounded-full bg-white" />
+            </div>
+            <PackageModal
+              trigger={
+                <Button className="bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full shadow-md">
+                  + Créer Nouveau Forfait
+                </Button>
+              }
+            />
+          </div>
           <div className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {packages.map((pkg) => (
@@ -316,20 +425,25 @@ export default function ServiceManagement({ showMock }: { showMock?: boolean }) 
                   </div>
 
                   <div className="flex gap-2">
-                    <Button variant="outline" className="flex-1 rounded-full py-5 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800">
-                      Modifier
-                    </Button>
-                    <Button variant="outline" className="rounded-full w-12 h-12 p-0 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800">
+                    <PackageModal
+                      pkg={pkg}
+                      trigger={
+                        <Button variant="outline" className="flex-1 rounded-xl border-purple-100 hover:bg-purple-50 text-purple-700">
+                          Modifier
+                        </Button>
+                      }
+                    />
+                    {/* <Button variant="outline" className="rounded-full w-12 h-12 p-0 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800">
                       <Package className="w-5 h-5" />
-                    </Button>
+                    </Button> */}
                   </div>
                 </Card>
               ))}
             </div>
 
-            <Button className="w-full bg-linear-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-full py-7 text-lg font-bold shadow-lg shadow-pink-500/20 transition-all">
+            {/* <Button className="w-full bg-linear-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-full py-7 text-lg font-bold shadow-lg shadow-pink-500/20 transition-all">
               + Créer Nouveau Forfait
-            </Button>
+            </Button> */}
           </div>
         </TabsContent>
 
@@ -341,11 +455,19 @@ export default function ServiceManagement({ showMock }: { showMock?: boolean }) 
                 <div className="w-12 h-12 rounded-xl bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
                   <Percent className="w-6 h-6 text-amber-500" />
                 </div>
-                <h3 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100">Codes Promotionnels</h3>
+                <div>
+                  <h3 className="text-2xl font-bold text-gray-900">Codes Promotionnels</h3>
+                  <p className="text-amber-800 opacity-80">Gérez les réductions et offres spéciales</p>
+                </div>
               </div>
-              <Button className="w-full sm:w-auto bg-linear-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-full py-6 px-8 transition-all">
-                + Nouvelle Promotion
-              </Button>
+              <PromoModal
+                trigger={
+                  <Button className="w-full sm:w-auto bg-linear-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-full py-6 px-8 transition-all">
+                    + Nouvelle Promotion
+                  </Button>
+                }
+              />
+
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -391,12 +513,20 @@ export default function ServiceManagement({ showMock }: { showMock?: boolean }) 
                   </div>
 
                   <div className="flex gap-2">
-                    <Button size="sm" variant="outline" className="flex-1 rounded-full py-5 bg-white dark:bg-gray-900 dark:border-gray-700 dark:text-gray-300">
+                    <PromoModal
+                      promo={promo}
+                      trigger={
+                        <Button size="sm" variant="ghost" className="text-gray-500 hover:text-amber-600">
+                          Modifier
+                        </Button>
+                      }
+                    />
+                    {/* <Button size="sm" variant="outline" className="flex-1 rounded-full py-5 bg-white dark:bg-gray-900 dark:border-gray-700 dark:text-gray-300">
                       Modifier
                     </Button>
                     <Button size="sm" variant="outline" className="flex-1 rounded-full py-5 text-red-600 bg-white dark:bg-gray-900 dark:border-red-900/30">
                       Désactiver
-                    </Button>
+                    </Button> */}
                   </div>
                 </Card>
               ))}

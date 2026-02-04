@@ -22,12 +22,12 @@ export default function Signup() {
     password: '',
     confirmPassword: '',
     acceptTerms: false,
-    refCode: typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('ref') : '',
+    refCode: typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('ref') : 'new_account',
   });
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
-  const refCode = typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('ref') : '';
+  const refCode = typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('ref') : 'new_account';
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();

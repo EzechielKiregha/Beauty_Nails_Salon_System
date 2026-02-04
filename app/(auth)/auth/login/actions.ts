@@ -1,6 +1,6 @@
 "use server";
 
-import { getCurrentUser, signIn } from "@/lib/auth/auth";
+import { signIn } from "@/lib/auth/auth";
 
 export async function handleLogin(formData: FormData, expectedRole: string) {
   const email = formData.get("email") as string;
@@ -14,26 +14,15 @@ export async function handleLogin(formData: FormData, expectedRole: string) {
     });
 
     if (result?.error) {
-      return { error: result.cause || "Échec de la connexion"};
+      return { error: "Email ou mot de passe incorrect" };
     }
+
+    return {
+      success: true,
+      redirectUrl: `/dashboard/${expectedRole}`,
+    };
+
   } catch (err: any) {
     return { error: err?.message ?? "Une erreur inconnue" };
-  }
-
-  const user = await getCurrentUser()
-
-  if (!user) {
-    return { error: "une erreur s'est produite, reessayer encore" };
-  }
-
-  const role = user?.role;
-
-  if (role !== expectedRole) {
-    return { error: "Unauthorized role" };
-  }
-
-  return {
-    success: true,
-    redirectUrl: `/dashboard/${role}`,
   }
 }

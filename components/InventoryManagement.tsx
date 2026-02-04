@@ -8,6 +8,7 @@ import { Input } from './ui/input';
 import { Badge } from './ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Package, AlertCircle, TrendingUp, ShoppingCart, Phone, Mail, Search, Users } from 'lucide-react';
+import { AddProductModal, AdjustStockModal, OrderModal } from './modals/InventoryModals';
 
 interface InventoryItem {
   id: string;
@@ -121,7 +122,14 @@ export default function InventoryManagement({ showMock }: { showMock?: boolean }
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">Gestion de l'Inventaire</h2>
-        <CreateInventoryModal triggerLabel="+ Ajouter Produit" />
+        {/* <CreateInventoryModal triggerLabel="+ Ajouter Produit" /> */}
+        <AddProductModal
+          trigger={
+            <Button className="bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-full">
+              + Ajouter Produit
+            </Button>
+          }
+        />
       </div>
 
       {/* Alert Panel */}
@@ -263,14 +271,27 @@ export default function InventoryManagement({ showMock }: { showMock?: boolean }
 
                 <div className="flex flex-col sm:flex-row gap-2 mt-auto">
                   {(item.status === 'low' || item.status === 'critical' || item.status === 'out') && (
-                    <Button size="sm" className="flex-1 bg-orange-600 hover:bg-orange-700 text-white rounded-full py-5 transition-all">
-                      <ShoppingCart className="w-4 h-4 mr-2" />
-                      Commander
-                    </Button>
+
+                    <OrderModal
+                      productName={item.name}
+                      supplierName={item.supplier}
+                      trigger={
+                        <Button size="sm" className="flex-1 bg-orange-600 hover:bg-orange-700 text-white rounded-full">
+                          <ShoppingCart className="w-3 h-3 mr-1" />
+                          Commander
+                        </Button>
+                      }
+                    />
                   )}
-                  <Button size="sm" variant="outline" className="flex-1 rounded-full py-5 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800">
-                    Ajuster
-                  </Button>
+                  <AdjustStockModal
+                    productName={item.name}
+                    currentStock={item.stock}
+                    trigger={
+                      <Button size="sm" variant="outline" className="flex-1 rounded-full py-5 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800">
+                        Ajuster
+                      </Button>
+                    }
+                  />
                 </div>
               </Card>
             ))}
@@ -328,9 +349,15 @@ export default function InventoryManagement({ showMock }: { showMock?: boolean }
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-3">
-                  <Button className="flex-1 bg-linear-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white rounded-full py-6 font-bold shadow-lg shadow-blue-500/20 transition-all">
-                    Passer Commande
-                  </Button>
+                  <OrderModal
+                    supplierName={supplier.name}
+                    trigger={
+                      <Button className="flex-1 bg-linear-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white rounded-full py-6 font-bold shadow-lg shadow-blue-500/20 transition-all">
+                        Passer Commande
+                      </Button>
+                    }
+                  />
+
                   <Button variant="outline" className="flex-1 rounded-full py-6 font-bold dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800 transition-all">
                     Contacter
                   </Button>

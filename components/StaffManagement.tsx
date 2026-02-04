@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Calendar as CalendarIcon, Clock, DollarSign, Star, TrendingUp, Award, CheckCircle, AlertCircle, Users } from 'lucide-react';
 import { useStaff } from '@/lib/hooks/useStaff';
 import CreateWorkerModal from '@/components/modals/CreateWorkerModal';
+import { EditScheduleModal, PayrollModal, StaffProfileModal } from './modals/StaffModals';
 // import CreateTaskModal from './modals/CreateTaskModal';
 
 interface StaffMember {
@@ -213,10 +214,10 @@ export default function StaffManagement({ showMock }: { showMock?: boolean }) {
         {selectedStaff ? (
           <Card className="border-0 shadow-lg rounded-2xl p-4 sm:p-8 lg:col-span-2 bg-white dark:bg-gray-900 dark:border dark:border-pink-900/30">
             <Tabs defaultValue="performance" className="space-y-6">
-              <TabsList className="w-full bg-gray-100 dark:bg-gray-800 p-1 rounded-xl overflow-x-auto justify-start sm:justify-center">
-                <TabsTrigger value="performance" className="rounded-lg text-xs sm:text-sm">Performance</TabsTrigger>
-                <TabsTrigger value="schedule" className="rounded-lg text-xs sm:text-sm">Horaires</TabsTrigger>
-                <TabsTrigger value="commission" className="rounded-lg text-xs sm:text-sm">Commission</TabsTrigger>
+              <TabsList className="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-pink-900/30 p-1 rounded-xl flex overflow-x-auto no-scrollbar justify-start sm:justify-center">
+                <TabsTrigger value="performance" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">Performance</TabsTrigger>
+                <TabsTrigger value="schedule" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">Horaires</TabsTrigger>
+                <TabsTrigger value="commission" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">Commission</TabsTrigger>
               </TabsList>
 
               {/* Performance Tab */}
@@ -278,13 +279,23 @@ export default function StaffManagement({ showMock }: { showMock?: boolean }) {
                   </div>
                 </div>
 
-                <div className="flex flex-col sm:flex-row gap-3">
-                  <Button className="flex-1 bg-linear-to-r from-purple-500 to-pink-500 text-white rounded-full py-5 sm:py-6">
-                    Modifier Horaires
-                  </Button>
-                  <Button variant="outline" className="rounded-full py-5 sm:py-6 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300">
-                    Voir Profil Complet
-                  </Button>
+                <div className="flex gap-3">
+                  <EditScheduleModal
+                    staffName={selectedStaff.name}
+                    trigger={
+                      <Button className="flex-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full">
+                        Modifier Horaires
+                      </Button>
+                    }
+                  />
+                  <StaffProfileModal
+                    staff={selectedStaff}
+                    trigger={
+                      <Button variant="outline" className="rounded-full">
+                        Voir Profil Complet
+                      </Button>
+                    }
+                  />
                 </div>
               </TabsContent>
 
@@ -318,9 +329,14 @@ export default function StaffManagement({ showMock }: { showMock?: boolean }) {
                     </div>
                   ))}
                 </div>
-                <Button className="w-full mt-4 bg-purple-600 hover:bg-purple-700 text-white rounded-full py-5 sm:py-6">
-                  Modifier Planning
-                </Button>
+                <EditScheduleModal
+                  staffName={selectedStaff.name}
+                  trigger={
+                    <Button className="w-full mt-4 bg-purple-600 hover:bg-purple-700 text-white rounded-full">
+                      Modifier Planning
+                    </Button>
+                  }
+                />
               </TabsContent>
 
               {/* Commission Tab */}
@@ -374,11 +390,20 @@ export default function StaffManagement({ showMock }: { showMock?: boolean }) {
                       </div>
                     </div>
                   </Card>
+
+                  <PayrollModal
+                    staffName={selectedStaff.name}
+                    trigger={
+                      <Button className="w-full bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-full">
+                        Générer Fiche de Paie
+                      </Button>
+                    }
+                  />
                 </div>
 
-                <Button className="w-full bg-linear-to-r from-green-500 to-emerald-500 text-white rounded-full py-5 sm:py-6">
+                {/* <Button className="w-full bg-linear-to-r from-green-500 to-emerald-500 text-white rounded-full py-5 sm:py-6">
                   Générer Fiche de Paie
-                </Button>
+                </Button> */}
               </TabsContent>
             </Tabs>
           </Card>

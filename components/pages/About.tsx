@@ -69,18 +69,25 @@ export default function About() {
   return (
     <div className="min-h-screen dark:bg-gray-950">
       {/* Hero Section */}
-      <HeroSection
-        imageUrl='https://images.unsplash.com/photo-1595944024804-733665a112db?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxsdXh1cnklMjBuYWlsJTIwc2Fsb24lMjBpbnRlcmlvcnxlbnwxfHx8fDE3NjIzNjE1OTd8MA&ixlib=rb-4.1.0&q=80&w=1080'
-        title="La beauté au service du bien-être"
-        subtitle='votre beauté'
-        description="Depuis 2020, Beauty Nails sublime la beauté des femmes de Kinshasa avec passion et professionnalisme"
-        badgeText='notre histoire'
-      />
-      <div className="text-center m-8 sm:m-12 md:m-14 dark:bg-gray-950">
-        <Badge className="mb-4 bg-purple-100 dark:bg-purple-900 text-purple-600 dark:text-purple-200">
-          <History className="w-4 h-4 mr-2" />
-          Notre Histoire
-        </Badge>
+      <div className="relative h-96 mb-24 overflow-hidden">
+        <ImageWithFallback
+          src="https://images.unsplash.com/photo-1595944024804-733665a112db?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxsdXh1cnklMjBuYWlsJTIwc2Fsb24lMjBpbnRlcmlvcnxlbnwxfHx8fDE3NjIzNjE1OTd8MA&ixlib=rb-4.1.0&q=80&w=1080"
+          alt="Beauty Nails Salon"
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-pink-900/80 to-amber-900/60 flex items-center">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center w-full">
+            <Badge className="mb-6 bg-pink-500/20 text-pink-100 border-pink-300/30 backdrop-blur-sm">
+              Notre Histoire
+            </Badge>
+            <h1 className="text-5xl lg:text-6xl text-white mb-6">
+              La beauté au service du bien-être
+            </h1>
+            <p className="text-xl text-pink-100 max-w-3xl mx-auto">
+              Depuis 2020, Beauty Nails sublime la beauté des femmes de Kinshasa avec passion et professionnalisme
+            </p>
+          </div>
+        </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 dark:bg-gray-950">

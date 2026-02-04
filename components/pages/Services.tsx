@@ -59,21 +59,30 @@ export default function Services() {
   }, [services]);
 
   return (
-    <div className="min-h-screen bg-background dark:bg-gray-950">
-      <HeroSection
+    <div className="min-h-screen py-24 bg-background dark:bg-gray-950">
+      {/* <HeroSection
         imageUrl='/nos services.jpg'
         title="Des services d'excellence pour"
         subtitle='votre beauté'
         description="Découvrez notre gamme complète de services professionnels de beauté.
             Chaque prestation est réalisée par nos expertes dans un environnement luxueux et relaxant."
         badgeText='nos services'
-      />
+      /> */}
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        {/* Header */}
         <div className="text-center mb-16">
-          <Badge className="mb-4 bg-pink-100 dark:bg-pink-900 text-pink-600 dark:text-pink-200">
+          <Badge className="mb-4 bg-pink-100 text-pink-600">
             <Sparkles className="w-4 h-4 mr-2" />
             Nos Services
           </Badge>
+          <h1 className="text-5xl text-gray-900 dark:text-gray-100 mb-6">
+            Des services d'excellence pour votre beauté
+          </h1>
+          <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+            Découvrez notre gamme complète de services professionnels de beauté.
+            Chaque prestation est réalisée par nos expertes dans un environnement luxueux et relaxant.
+          </p>
         </div>
 
         {isLoading ? (
@@ -105,7 +114,7 @@ export default function Services() {
                     <div className="order-1 lg:order-2">
                       <div className="text-6xl mb-4">{category.icon}</div>
                       <h2 className="text-4xl text-gray-900 dark:text-gray-100 mb-4">{category.name}</h2>
-                      <p className="text-xl text-gray-600 dark:text-gray-300 mb-6">{category.description}</p>
+                      <p className="text-xl text-gray-600 dark:text-gray-400 mb-6">{category.description}</p>
                       <Link href={`/services/${category.id}`}>
                         <Button
                           disabled={!hasServices}

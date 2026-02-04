@@ -666,6 +666,7 @@ model InventoryItem {
   id            String        @id @default(cuid())
   name          String
   category      String
+  description   String?       @db.Text
   currentStock  Int
   minStock      Int
   maxStock      Int?
@@ -911,7 +912,7 @@ model SalonProfile {
   logo        String?
   openingHours Json?
   socialMedia Json?
-  currency    String   @default("Fc") // Congolese Franc
+  currency    String   @default("CDF") // Congolese Franc
   timezone    String   @default("Africa/Kinshasa")
   language    String   @default("fr")
   createdAt   DateTime @default(now())

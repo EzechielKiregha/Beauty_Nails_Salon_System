@@ -78,12 +78,12 @@ export default function Contact() {
 
   return (
     <div className="min-h-screen dark:bg-gray-950">
-      <HeroSection
+      {/* <HeroSection
         imageUrl='/contact us.jpg'
         title="Contactez-nous"
         description="Une question ? Une demande spéciale ? Nous sommes là pour vous répondre"
         badgeText='nos contacts'
-      />
+      /> */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 bg-background dark:bg-gray-950">
         {/* Header */}
         <div className="text-center mb-12 sm:mb-16">
@@ -93,6 +93,19 @@ export default function Contact() {
           </Badge>
           <h1 className="text-3xl sm:text-4xl text-gray-900 dark:text-gray-100 mb-2 sm:mb-4">Nous contacter</h1>
           <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300">Réponse rapide à vos questions et demandes</p>
+        </div>
+        {/* Header */}
+        <div className="text-center mb-16">
+          <Badge className="mb-4 bg-pink-100 text-pink-600">
+            <MessageCircle className="w-4 h-4 mr-2" />
+            Contact
+          </Badge>
+          <h1 className="text-5xl text-gray-900 dark:text-gray-100 mb-6">
+            Contactez-nous
+          </h1>
+          <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+            Une question ? Une demande spéciale ? Nous sommes là pour vous répondre
+          </p>
         </div>
 
         {/* Contact Info Cards */}

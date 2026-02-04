@@ -22,7 +22,7 @@ export const authConfig: NextAuthConfig = {
       },
       authorize: async (credentials) =>{
         if (!credentials?.email || !credentials?.password) {
-          throw new Error('Email et mot de passe requis');
+          return null;
         }
 
         const user = await prisma.user.findUnique({
@@ -56,7 +56,7 @@ export const authConfig: NextAuthConfig = {
         });
 
         if (!user) {
-          throw new Error('Email ou mot de passe incorrect');
+          return null;
         }
 
         const isPasswordValid = await compare(
@@ -65,7 +65,7 @@ export const authConfig: NextAuthConfig = {
         );
 
         if (!isPasswordValid) {
-          throw new Error('Email ou mot de passe incorrect');
+          return null;
         }
 
         // if (!user.emailVerified) {

@@ -1,11 +1,11 @@
 import NextAuth from 'next-auth';
-import prisma from '@/lib/prisma';
+// import prisma from '@/lib/prisma';
 import { authConfig } from './auth.config';
 import { Decimal } from '@/prisma/generated/internal/prismaNamespaceBrowser';
-import { PrismaAdapter } from '@auth/prisma-adapter';
+// import { PrismaAdapter } from '@auth/prisma-adapter';
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  adapter: PrismaAdapter(prisma),
+  // adapter: PrismaAdapter(prisma),
   session: { strategy: "jwt" },
   ...authConfig,
 });
@@ -32,14 +32,17 @@ export async function requireRole(allowedRoles: ('client' | 'worker' | 'admin')[
   return user;
 }
 
-export function clean(obj: any): any {
-  if (!obj || typeof obj !== 'object') return obj;
+export function clean(obj: any, seen = new WeakSet()): any {
+  if (!obj || typeof obj !== "object") return obj;
+
+  if (seen.has(obj)) return undefined;
+  seen.add(obj);
 
   if (obj instanceof Decimal) return obj.toNumber();
 
-  if (Array.isArray(obj)) return obj.map(clean);
+  if (Array.isArray(obj)) return obj.map(v => clean(v, seen));
 
   return Object.fromEntries(
-    Object.entries(obj).map(([k, v]) => [k, clean(v)])
+    Object.entries(obj).map(([k, v]) => [k, clean(v, seen)])
   );
 }

@@ -6,6 +6,9 @@ import { useAppointments } from '@/lib/hooks/useAppointments';
 import { useRevenueReport, useServicePerformance } from '@/lib/hooks/useReports';
 import { useStaff } from '@/lib/hooks/useStaff';
 import { useInventory } from '@/lib/hooks/useInventory';
+import { AppointmentModal } from './modals/AppointmentModal';
+import { AdjustStockModal } from './modals/InventoryModals';
+import { ClientModal } from './modals/ClientModal';
 
 
 export default function TodayOverview({ showMock }: { showMock?: boolean }) {
@@ -215,22 +218,31 @@ export default function TodayOverview({ showMock }: { showMock?: boolean }) {
         <Card className="border-0 shadow-lg rounded-2xl p-5 sm:p-6 bg-white dark:bg-gray-900 dark:border dark:border-pink-900/30">
           <h3 className="text-lg sm:text-xl text-gray-900 dark:text-gray-100 font-bold mb-6">Actions Rapides</h3>
           <div className="space-y-3">
-            <Button className="w-full bg-linear-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white rounded-full py-6 justify-start px-6 font-bold shadow-lg shadow-pink-500/25 transition-all hover:scale-[1.02]">
-              <Plus className="w-5 h-5 mr-3" />
-              Nouveau Rendez-vous
-            </Button>
+            <AppointmentModal
+              trigger={
+                <Button className="w-full bg-linear-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white rounded-full py-6 justify-start px-6 font-bold shadow-lg shadow-pink-500/25 transition-all hover:scale-[1.02]">
+                  <Plus className="w-5 h-5 mr-3" />
+                  Nouveau Rendez-vous
+                </Button>
+              } />
             <Button className="w-full bg-linear-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white rounded-full py-6 justify-start px-6 font-bold shadow-lg shadow-green-500/25 transition-all hover:scale-[1.02]">
               <CreditCard className="w-5 h-5 mr-3" />
               Encaisser Cliente
             </Button>
-            <Button className="w-full bg-linear-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-full py-6 justify-start px-6 font-bold shadow-lg shadow-amber-500/25 transition-all hover:scale-[1.02]">
-              <Package className="w-5 h-5 mr-3" />
-              Ajouter Stock
-            </Button>
-            <Button variant="outline" className="w-full rounded-full py-6 justify-start px-6 font-bold dark:border-gray-700 dark:hover:bg-gray-800 transition-all hover:scale-[1.02]">
-              <Users className="w-5 h-5 mr-3 text-purple-500" />
-              Nouvelle Cliente
-            </Button>
+            <AdjustStockModal
+              trigger={
+                <Button className="w-full bg-linear-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-full py-6 justify-start px-6 font-bold shadow-lg shadow-amber-500/25 transition-all hover:scale-[1.02]">
+                  <Package className="w-5 h-5 mr-3" />
+                  Ajouter Stock
+                </Button>
+              } />
+            <ClientModal
+              trigger={
+                <Button variant="outline" className="w-full rounded-full py-6 justify-start px-6 font-bold dark:border-gray-700 dark:hover:bg-gray-800 transition-all hover:scale-[1.02]">
+                  <Users className="w-5 h-5 mr-3 text-purple-500" />
+                  Nouvelle Cliente
+                </Button>
+              } />
             <Button variant="outline" className="w-full rounded-full py-6 justify-start px-6 font-bold dark:border-gray-700 dark:hover:bg-gray-800 transition-all hover:scale-[1.02]">
               <Clock className="w-5 h-5 mr-3 text-blue-500" />
               Voir Planning

@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Clock, User, Phone, Mail } from 'lucide-react';
 import { useAppointments } from '@/lib/hooks/useAppointments';
 import { useStaff } from '@/lib/hooks/useStaff';
+import { AppointmentModal } from './modals/AppointmentModal';
 
 interface Appointment {
   id: string;
@@ -26,6 +27,9 @@ export default function BookingCalendar({ showMock }: { showMock?: boolean }) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [view, setView] = useState<'day' | 'week'>('day');
   const [selectedStaff, setSelectedStaff] = useState<string>('all');
+  const [isEditAppointmentOpen, setIsEditAppointmentOpen] = useState(false);
+  const [isNewAppointmentOpen, setIsNewAppointmentOpen] = useState(false);
+  const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
 
   const dateStr = currentDate.toISOString().split('T')[0];
 
@@ -174,9 +178,16 @@ export default function BookingCalendar({ showMock }: { showMock?: boolean }) {
               </Button>
             </div>
 
-            <Button className="bg-linear-to-r from-pink-500 to-purple-500 text-white rounded-full">
+            <Button
+              className="bg-linear-to-r from-pink-500 to-purple-500 text-white rounded-full"
+              onClick={() => setIsNewAppointmentOpen(true)}
+            >
               + Nouveau RDV
             </Button>
+            <AppointmentModal
+              open={isNewAppointmentOpen}
+              onOpenChange={setIsNewAppointmentOpen}
+            />
           </div>
         </div>
       </Card>
@@ -364,6 +375,13 @@ export default function BookingCalendar({ showMock }: { showMock?: boolean }) {
           <p className="text-sm text-gray-600 dark:text-gray-400">Personnel Disponible</p>
         </Card>
       </div>
+      {selectedAppointment && (
+        <AppointmentModal
+          open={isEditAppointmentOpen}
+          onOpenChange={setIsEditAppointmentOpen}
+          appointment={selectedAppointment}
+        />
+      )}
     </div>
   );
 }

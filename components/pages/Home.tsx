@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Button } from '../ui/button';
 import { Card } from '../ui/card';
 import { Badge } from '../ui/badge';
-import { Calendar, Star, Gift, Award, Users, Heart, CalendarIcon, Clock } from 'lucide-react';
+import { Calendar, Star, Gift, Award, Users, Heart, CalendarIcon, Clock, Sparkles } from 'lucide-react';
 import { ImageWithFallback } from '../figma/ImageWithFallback';
 import HeroSection, { CarouselService } from '../HeroSection';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
@@ -92,7 +92,48 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <HeroSection
+      <section className="relative h-[600px] flex items-center overflow-hidden">
+        <div className="absolute inset-0">
+          <ImageWithFallback
+            src="https://images.unsplash.com/photo-1632643746039-de953cb0f260?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxiZWF1dHklMjBzYWxvbiUyMGVsZWdhbnR8ZW58MXx8fHwxNzYyMjYzMDgyfDA&ixlib=rb-4.1.0&q=80&w=1080"
+            alt="Beauty Nails Salon"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-linear-to-r from-pink-900/80 via-purple-900/70 to-amber-900/60" />
+        </div>
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
+          <div className="max-w-2xl">
+            <Badge className="mb-6 bg-pink-500/20 text-pink-100 border-pink-300/30 backdrop-blur-sm">
+              <Sparkles className="w-4 h-4 mr-2" />
+              Votre Destination Beauté Premium
+            </Badge>
+            <h1 className="text-5xl lg:text-6xl text-white mb-6 leading-tight">
+              Sublimez votre beauté,<br />
+              <span className="text-transparent bg-clip-text bg-linear-to-r from-pink-200 to-amber-200">
+                un soin à la fois
+              </span>
+            </h1>
+            <p className="text-xl text-pink-100 mb-8">
+              Spécialistes en ongles, cils, tresses et maquillage. Découvrez l'excellence de nos services dans une ambiance luxueuse et relaxante.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Link href="/appointments">
+                <Button size="lg" className="bg-linear-to-r from-pink-500 to-amber-400 hover:from-pink-600 hover:to-amber-500 text-white rounded-full px-8">
+                  <Calendar className="w-5 h-5 mr-2" />
+                  Prendre rendez-vous maintenant
+                </Button>
+              </Link>
+              <Link href="/catalog">
+                <Button size="lg" variant="link" className="border-2 border-white text-white dark:text-gray-900 hover:bg-white/10 rounded-full px-8 backdrop-blur-sm">
+                  Découvrir Nos Services, Produits & Offres
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+      {/* <HeroSection
         imageUrl='https://images.unsplash.com/photo-1632643746039-de953cb0f260?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxiZWF1dHklMjBzYWxvbiUyMGVsZWdhbnR8ZW58MXx8fHwxNzYyMjYzMDgyfDA&ixlib=rb-4.1.0&q=80&w=1080'
         title='Sublimez votre élégance'
         subtitle='La beauté qui vous ressemble'
@@ -114,7 +155,7 @@ export default function Home() {
         autoPlayInterval={10000}
         onServiceChange={handleServiceChange}
 
-      />
+      /> */}
 
       {/* Quick Appointment Bar */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-16 relative z-20 text-gray-200">

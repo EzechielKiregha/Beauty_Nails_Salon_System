@@ -31,6 +31,8 @@ export async function GET(request: NextRequest) {
       ],
     });
 
+    console.log('Fetched services:', services);
+
     return successResponse(services);
   } catch (error) {
     return handleApiError(error);
