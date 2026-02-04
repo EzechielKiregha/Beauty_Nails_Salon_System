@@ -14,6 +14,7 @@ export interface Notification {
 export const notificationsApi = {
   // Get notifications
   getNotifications: async (params?: {
+    userId?: string;
     unread?: boolean;
     limit?: number;
   }): Promise<{

@@ -3,6 +3,7 @@ import { notificationsApi } from '../api/notifications';
 import { toast } from 'sonner';
 
 export function useNotifications(params?: {
+  userId?: string;
   unread?: boolean;
   limit?: number;
 }) {

@@ -6,8 +6,12 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Badge } from './ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
-import { Search, Phone, Calendar, DollarSign, Gift, Bell, CreditCard, Award, Mail, MapPin, Cake, Clock, Users } from 'lucide-react';
+import { Search, Phone, Calendar, DollarSign, Gift, Bell, CreditCard, Award, Mail, MapPin, Cake, Clock, Users, Plus } from 'lucide-react';
 import { useClients } from '@/lib/hooks/useClients';
+import { ClientModal } from './modals/ClientModal';
+import { useAppointments } from '@/lib/hooks/useAppointments';
+import { useNotifications } from '@/lib/hooks/useNotifications';
+import { AppointmentModal } from './modals/AppointmentModal';
 
 interface Client {
   id: string;
@@ -31,10 +35,23 @@ interface Client {
 
 export default function ClientManagement({ showMock }: { showMock?: boolean }) {
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedClient, setSelectedClient] = useState<any | null>(null);
+  const [selectedClient, setSelectedClient] = useState<any>();
 
   // API hook
   const { clients: apiClients = [] } = useClients() // placeholder
+
+  const {
+    appointments = [],
+    isLoading: isAppointmentsLoading,
+    cancelAppointment,
+  } = useAppointments({
+    clientId: selectedClient?.id,
+  });
+
+  const {
+    notifications: notificationList = [],
+    unreadCount = 0,
+  } = useNotifications({ userId: selectedClient?.id, limit: 50 });
 
   // Fallback mock data (used only if showMock=true)
   const MOCK_CLIENTS: Client[] = [
@@ -120,12 +137,12 @@ export default function ClientManagement({ showMock }: { showMock?: boolean }) {
     }))
     : (showMock ? MOCK_CLIENTS : []);
 
-  const appointmentHistory = [
-    { date: '2024-11-28', service: 'Manucure Gel', worker: 'Marie N.', amount: '30 000 Fc', status: 'Complété' },
-    { date: '2024-11-15', service: 'Extension Cils', worker: 'Grace L.', amount: '45 000 Fc', status: 'Complété' },
-    { date: '2024-11-01', service: 'Maquillage', worker: 'Élise M.', amount: '40 000 Fc', status: 'Complété' },
-    { date: '2024-10-20', service: 'Pédicure', worker: 'Sophie K.', amount: '25 000 Fc', status: 'Complété' }
-  ];
+  // const appointmentHistory = [
+  //   { date: '2024-11-28', service: 'Manucure Gel', worker: 'Marie N.', amount: '30 000 Fc', status: 'Complété' },
+  //   { date: '2024-11-15', service: 'Extension Cils', worker: 'Grace L.', amount: '45 000 Fc', status: 'Complété' },
+  //   { date: '2024-11-01', service: 'Maquillage', worker: 'Élise M.', amount: '40 000 Fc', status: 'Complété' },
+  //   { date: '2024-10-20', service: 'Pédicure', worker: 'Sophie K.', amount: '25 000 Fc', status: 'Complété' }
+  // ];
 
   const notifications = [
     { date: '2024-11-27', type: 'Rappel', message: 'Rappel RDV envoyé - SMS', status: 'Envoyé' },
@@ -139,13 +156,35 @@ export default function ClientManagement({ showMock }: { showMock?: boolean }) {
     client.phone.includes(searchQuery)
   );
 
+  // Filter appointments
+  const upcomingAppointments = appointments.filter(
+    (apt) => apt.status === "confirmed" || apt.status === "pending"
+  );
+
+  const appointmentHistory = appointments.filter(
+    (apt) => apt.status === "completed" || apt.status === "cancelled"
+  );
+
+  // Calculate stats
+  const totalAppointments = appointments.length;
+  const completedAppointments = appointments.filter(
+    (apt) => apt.status === "completed"
+  ).length;
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <h2 className="text-2xl sm:text-3xl text-gray-900 dark:text-gray-100 font-bold">Gestion des Clientes</h2>
         <div className="flex items-center gap-2 w-full sm:w-auto">
-          <CreateClientModal triggerLabel="+ Nouvelle Cliente" />
-          <Button variant="ghost" size="sm" className="dark:text-gray-400 dark:hover:text-gray-200">Importer</Button>
+          {/* <CreateClientModal triggerLabel="+ Nouvelle Cliente" /> */}
+          <ClientModal
+            trigger={
+              <Button variant="outline" className="w-full rounded-full py-6 justify-start px-6 font-bold dark:border-gray-700 dark:hover:bg-gray-800 transition-all hover:scale-[1.02]">
+                <Users className="w-5 h-5 mr-3 text-purple-500" />
+                + Nouvelle Cliente
+              </Button>
+            } />
+          {/* <Button variant="ghost" size="sm" className="dark:text-gray-400 dark:hover:text-gray-200">Importer</Button> */}
         </div>
       </div>
       {/* Search Bar */}
@@ -168,7 +207,7 @@ export default function ClientManagement({ showMock }: { showMock?: boolean }) {
             <Users className="w-5 h-5 text-pink-500" />
             Liste des Clientes
           </h3>
-          <div className="space-y-3 max-h-[500px] sm:max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
+          <div className="space-y-3 max-h-125 sm:max-h-150 overflow-y-auto pr-2 custom-scrollbar">
             {filteredClients.map((client) => (
               <div
                 key={client.id}
@@ -234,12 +273,23 @@ export default function ClientManagement({ showMock }: { showMock?: boolean }) {
                     </div>
                   </div>
                   <div className="grid grid-cols-2 gap-3 w-full sm:w-auto">
-                    <Button className="bg-linear-to-r from-pink-500 to-purple-500 text-white rounded-full py-5 px-6 shadow-lg shadow-pink-500/20 font-bold transition-all text-sm">
-                      Prendre RDV
-                    </Button>
-                    <Button variant="outline" className="rounded-full py-5 px-6 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 font-bold transition-all text-sm">
-                      Modifier
-                    </Button>
+                    <AppointmentModal
+                      client={selectedClient}
+                      trigger={
+                        <Button className="bg-linear-to-r from-pink-500 to-purple-500 text-white rounded-full py-5 px-6 shadow-lg shadow-pink-500/20 font-bold transition-all text-sm">
+                          <Plus className="w-5 h-5 mr-3" />
+                          Prendre RDV
+                        </Button>
+                      } />
+
+                    <ClientModal
+                      client={selectedClient}
+                      trigger={
+                        <Button variant="outline" className="rounded-full py-5 px-6 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 font-bold transition-all text-sm">
+                          Modifier
+                        </Button>
+                      } />
+
                   </div>
                 </div>
 
@@ -284,6 +334,7 @@ export default function ClientManagement({ showMock }: { showMock?: boolean }) {
                       <div className="p-5 bg-red-50 dark:bg-red-900/10 rounded-2xl border border-red-100 dark:border-red-900/30">
                         <p className="text-[10px] font-black text-red-600 dark:text-red-400 uppercase tracking-widest mb-2">Allergies / Notes</p>
                         <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed font-medium">{selectedClient.allergies}</p>
+                        <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed font-normal">{selectedClient.notes}</p>
                       </div>
                     </div>
                   </div>
@@ -299,7 +350,7 @@ export default function ClientManagement({ showMock }: { showMock?: boolean }) {
                   <div className="bg-linear-to-br from-green-50 to-emerald-50 dark:from-gray-800 dark:to-gray-800/50 p-5 rounded-3xl border border-green-100 dark:border-green-900/30 text-center shadow-sm">
                     <DollarSign className="w-6 h-6 text-green-600 dark:text-green-400 mx-auto mb-2" />
                     <p className="text-lg font-black text-gray-900 dark:text-gray-100 truncate px-1">{selectedClient.totalSpent}</p>
-                    <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase font-bold tracking-tight">Dépensé</p>
+                    <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase font-bold tracking-tight">Dépensé en Fc</p>
                   </div>
                   <div className="bg-linear-to-br from-purple-50 to-pink-50 dark:from-gray-800 dark:to-gray-800/50 p-5 rounded-3xl border border-purple-100 dark:border-purple-900/30 text-center shadow-sm">
                     <Award className="w-6 h-6 text-purple-600 dark:text-purple-400 mx-auto mb-2" />
@@ -347,7 +398,7 @@ export default function ClientManagement({ showMock }: { showMock?: boolean }) {
                         </div>
                       </div>
                       <div className="flex items-center justify-between w-full sm:w-auto gap-4">
-                        <p className="text-sm sm:text-base font-black text-gray-900 dark:text-gray-100">{apt.amount}</p>
+                        <p className="text-sm sm:text-base font-black text-gray-900 dark:text-gray-100">{apt.price}</p>
                         <Badge className="bg-green-500/10 text-green-600 dark:text-green-400 border-green-200 dark:border-green-900/30 px-3 py-1 text-[10px] font-bold">
                           {apt.status}
                         </Badge>
@@ -366,21 +417,24 @@ export default function ClientManagement({ showMock }: { showMock?: boolean }) {
                   </h4>
                 </div>
                 <div className="space-y-3">
-                  {notifications.map((notif, idx) => (
-                    <div key={idx} className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 bg-gray-50 dark:bg-gray-800/50 rounded-2xl border border-gray-100 dark:border-gray-700 hover:shadow-md transition-all gap-4">
+                  {notificationList.map((notif, idx) => (
+                    <div
+                      key={idx}
+                      className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 bg-gray-50 dark:bg-gray-800/50 rounded-2xl border border-gray-100 dark:border-gray-700 hover:shadow-md transition-all gap-4"
+                    >
                       <div className="flex items-center gap-4">
                         <div className="w-10 h-10 rounded-xl bg-white dark:bg-gray-800 flex items-center justify-center shadow-sm">
-                          {notif.type === 'Rappel' ? <Clock className="w-5 h-5 text-blue-500" /> :
-                            notif.type === 'Confirmation' ? <Mail className="w-5 h-5 text-green-500" /> :
+                          {notif.type === 'appointment_reminder' ? <Clock className="w-5 h-5 text-blue-500" /> :
+                            notif.type === 'appointment_confirmed' ? <Mail className="w-5 h-5 text-green-500" /> :
                               <Gift className="w-5 h-5 text-purple-500" />}
                         </div>
                         <div>
                           <p className="text-sm sm:text-base text-gray-900 dark:text-gray-100 font-bold">{notif.message}</p>
-                          <p className="text-xs text-gray-500 dark:text-gray-400">{notif.type} • {notif.date}</p>
+                          <p className="text-xs text-gray-500 dark:text-gray-400">{notif.type} • {notif.createdAt}</p>
                         </div>
                       </div>
                       <Badge variant="outline" className="border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 px-3 py-1 text-[10px] font-bold">
-                        {notif.status}
+                        {notif.isRead ? 'Lu' : 'Non Lu'}
                       </Badge>
                     </div>
                   ))}

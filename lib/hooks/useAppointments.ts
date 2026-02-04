@@ -41,6 +41,19 @@ export function useAppointments(params?: {
       toast.error(error.response?.data?.error?.message || 'Erreur lors de la création');
     },
   });
+  // Create appointment
+  const createMutationAsAdmin = useMutation({
+    mutationFn: appointmentsApi.createAppointment,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['appointments'] });
+      toast.success("Rendez-vous confirmé !", {
+          description: `Votre rendez-vous est prévu le ${data.appointment.date} à ${data.appointment.time}`,
+        });
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.error?.message || 'Erreur lors de la création');
+    },
+  });
 
   // Update status
   const updateStatusMutation = useMutation({
@@ -86,6 +99,7 @@ export function useAppointments(params?: {
     isLoading,
     error,
     createAppointment: createMutation.mutate,
+    createAppointmentAsAdmin: createMutationAsAdmin.mutate,
     updateStatus: updateStatusMutation.mutate,
     cancelAppointment: cancelMutation.mutate,
     rescheduleAppointment: rescheduleMutation.mutate,

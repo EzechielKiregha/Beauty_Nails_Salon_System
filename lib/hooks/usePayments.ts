@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { paymentsApi, ProcessPaymentData, CloseRegisterData } from '../api/payments';
+import { paymentsApi, ProcessPaymentData, CloseRegisterData, RefundData, Sale } from '../api/payments';
 import { toast } from 'sonner';
 
 export function usePayments(params?: {
@@ -43,16 +43,57 @@ export function usePayments(params?: {
     },
   });
 
+  // Refund sale
+  const refundSaleMutation = useMutation({
+    mutationFn: ({ saleId, refundData }: { saleId: string; refundData?: RefundData }) => 
+      paymentsApi.refundSale(saleId, refundData),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['sales'] });
+      toast.success(data.message);
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.error?.message || 'Erreur lors du remboursement');
+    },
+  });
+
+  // Update sale
+  const updateSaleMutation = useMutation({
+    mutationFn: ({ saleId, saleData }: { saleId: string; saleData: Partial<Sale> }) => 
+      paymentsApi.updateSale(saleId, saleData),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['sales'] });
+      toast.success('Vente mise à jour');
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.error?.message || 'Erreur lors de la mise à jour');
+    },
+  });
+
   return {
     sales,
     isLoading,
     error,
     processPayment: processPaymentMutation.mutate,
     closeRegister: closeRegisterMutation.mutate,
+    refundSale: refundSaleMutation.mutate,
+    updateSale: updateSaleMutation.mutate,
     isProcessing: processPaymentMutation.isPending,
     isClosing: closeRegisterMutation.isPending,
+    isRefunding: refundSaleMutation.isPending,
+    isUpdating: updateSaleMutation.isPending,
     paymentResult: processPaymentMutation.data,
   };
+}
+
+export function useTransactions(params?: {
+  from?: string;
+  to?: string;
+  status?: string;
+}) {
+  return useQuery({
+    queryKey: ['transactions', params],
+    queryFn: () => paymentsApi.getTransactions(params),
+  });
 }
 
 export function useReceipt(saleId: string) {

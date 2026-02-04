@@ -6,11 +6,13 @@ import { getAuthenticatedUser, successResponse, handleApiError } from '@/lib/api
 export async function GET(request: NextRequest) {
   try {
     const user = await getAuthenticatedUser();
+
     const { searchParams } = new URL(request.url);
     const unread = searchParams.get('unread');
     const limit = parseInt(searchParams.get('limit') || '50');
+    const userId = searchParams.get('userId');
 
-    const where: any = { userId: user.id };
+    const where: any = userId ? { userId } : { userId: user.id };
     if (unread === 'true') {
       where.isRead = false;
     }

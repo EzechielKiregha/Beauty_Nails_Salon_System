@@ -158,7 +158,7 @@ export default function ServiceManagement({ showMock }: { showMock?: boolean }) 
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">Gestion des Services</h2>
-        {/* <CreateServiceModal triggerLabel="+ Nouveau Service" /> */}
+        <CreateServiceModal triggerLabel="+ Nouveau Service" />
         {/* <ServiceModal
           trigger={
             <Button className="bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-full shadow-md hover:shadow-lg transition-all">

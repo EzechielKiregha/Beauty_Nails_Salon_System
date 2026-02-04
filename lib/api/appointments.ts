@@ -23,6 +23,7 @@ export interface Appointment {
 }
 
 export interface CreateAppointmentData {
+  clientId?: string;
   serviceId: string;
   workerId: string;
   date: string;

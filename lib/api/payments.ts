@@ -41,6 +41,21 @@ export interface CloseRegisterData {
   actualCash: number;
 }
 
+export interface RefundData {
+  amount?: number;
+  reason?: string;
+}
+
+export interface PaymentTransaction {
+  id: string;
+  saleId: string;
+  amount: number;
+  method: 'cash' | 'card' | 'mobile' | 'mixed';
+  status: 'pending' | 'completed' | 'failed' | 'refunded';
+  createdAt: string;
+  transactionId?: string;
+}
+
 export const paymentsApi = {
   // Process payment
   processPayment: async (paymentData: ProcessPaymentData): Promise<{
@@ -77,6 +92,31 @@ export const paymentsApi = {
     clientId?: string;
   }): Promise<Sale[]> => {
     const { data } = await axiosdb.get('/sales', { params });
+    return data;
+  },
+
+  // Refund a sale
+  refundSale: async (saleId: string, refundData?: RefundData): Promise<{
+    sale: Sale;
+    message: string;
+  }> => {
+    const { data } = await axiosdb.post(`/sales/${saleId}/refund`, refundData);
+    return data;
+  },
+
+  // Update a sale
+  updateSale: async (saleId: string, saleData: Partial<Sale>): Promise<Sale> => {
+    const { data } = await axiosdb.patch(`/sales/${saleId}`, saleData);
+    return data;
+  },
+
+  // Get transactions
+  getTransactions: async (params?: {
+    from?: string;
+    to?: string;
+    status?: string;
+  }): Promise<PaymentTransaction[]> => {
+    const { data } = await axiosdb.get('/payments/transactions', { params });
     return data;
   },
 };
