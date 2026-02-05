@@ -143,7 +143,7 @@ export default function FAQ() {
                   <AccordionItem
                     key={index}
                     value={`${categoryIndex}-${index}`}
-                    className="bg-white dark:bg-gray-900 border-0 border-b border-pink-100 dark:border-pink-900 shadow-md dark:shadow-gray-900/50 rounded-2xl px-4 sm:px-6"
+                    className="bg-white dark:bg-gray-950 border-0 border-b border-pink-100 dark:border-pink-900 shadow-md dark:shadow-gray-900/50 rounded-2xl px-4 sm:px-6"
                   >
                     <AccordionTrigger className="text-left text-sm sm:text-base text-gray-900 dark:text-gray-100 hover:text-pink-600 dark:hover:text-pink-400 py-4 sm:py-6">
                       {item.question}
@@ -160,7 +160,7 @@ export default function FAQ() {
 
         {/* Still Have Questions */}
         <Card className="bg-linear-to-br from-pink-500 via-purple-500 to-amber-500 border-0 shadow-2xl rounded-3xl p-6 sm:p-12 text-center text-white mt-12 sm:mt-16">
-          <h2 className="text-2xl sm:text-3xl mb-3 sm:mb-4">
+          <h2 className="text-2xl  sm:text-3xl mb-3 sm:mb-4">
             Vous avez d'autres questions ?
           </h2>
           <p className="text-lg sm:text-xl text-pink-100 mb-6 sm:mb-8 max-w-2xl mx-auto">

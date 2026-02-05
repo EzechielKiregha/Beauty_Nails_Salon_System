@@ -63,7 +63,7 @@ export default function Signup() {
           <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300">Rejoignez notre communauté beauté</p>
         </div>
 
-        <Card className="p-6 sm:p-8 border-b border-pink-100 dark:border-pink-900 bg-white dark:bg-gray-900 shadow-2xl rounded-3xl">
+        <Card className="p-6 sm:p-8 border-b border-pink-100 dark:border-pink-900 bg-white dark:bg-gray-950 shadow-2xl rounded-3xl">
           <form onSubmit={onSubmit} className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
@@ -187,7 +187,7 @@ export default function Signup() {
                 <div className="w-full border-t border-gray-300 dark:border-gray-700"></div>
               </div>
               <div className="relative flex justify-center text-xs sm:text-sm">
-                <span className="px-3 sm:px-4 bg-white dark:bg-gray-900 text-gray-500 dark:text-gray-400">Ou</span>
+                <span className="px-3 sm:px-4 bg-white dark:bg-gray-950 text-gray-500 dark:text-gray-400">Ou</span>
               </div>
             </div>
 

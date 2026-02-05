@@ -55,7 +55,7 @@ export const membershipsApi = {
   },
 
   // Purchases
-  getPurchases: async (params?: { clientId?: string }): Promise<MembershipPurchase[]> => {
+  getPurchases: async (params?: { clientId?: string, membershipId?: string }): Promise<MembershipPurchase[]> => {
     const { data } = await axiosdb.get('/memberships/purchases', { params });
     return data;
   },

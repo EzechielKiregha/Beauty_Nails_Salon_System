@@ -123,7 +123,7 @@ export default function ServiceDetail() {
               {categoryServices?.map((service) => (
                 <Card
                   key={service.id}
-                  className="bg-white dark:bg-gray-900 border-0 border-b border-pink-100 dark:border-pink-900 shadow-lg hover:shadow-xl transition-shadow p-6 sm:p-8 rounded-2xl"
+                  className="bg-white dark:bg-gray-950 border-0 border-b border-pink-100 dark:border-pink-900 shadow-lg hover:shadow-xl transition-shadow p-6 sm:p-8 rounded-2xl"
                 >
                   <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <div className="lg:col-span-2">

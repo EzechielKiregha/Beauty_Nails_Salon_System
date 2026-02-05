@@ -175,10 +175,10 @@ export function AppointmentModal({ open, onOpenChange, appointment, trigger, cli
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
-      <DialogContent className="sm:max-w-150 max-h-[90vh] overflow-y-auto p-0 gap-0 overflow-hidden rounded-2xl">
+      <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto p-0 gap-0 rounded-2xl">
         <div className="bg-linear-to-r from-pink-500 to-purple-600 p-6 text-white">
           <DialogHeader>
-            <DialogTitle className="text-2xl font-bold flex items-center gap-2 text-white">
+            <DialogTitle className="text-2xl  flex items-center gap-2 text-white">
               {appointment ? 'Modifier le Rendez-vous' : 'Nouveau Rendez-vous'}
             </DialogTitle>
             <p className="text-pink-100 opacity-90">
@@ -410,16 +410,16 @@ export function AppointmentModal({ open, onOpenChange, appointment, trigger, cli
             </TabsContent>
 
             <TabsContent value="payment" className="space-y-4">
-              <div className="p-4 border border-pink-100 dark:border-pink-900 shadow-xl rounded-2xl bg-white dark:bg-gray-900 space-y-4">
+              <div className="p-4 border border-pink-100 dark:border-pink-900 shadow-xl rounded-2xl bg-white dark:bg-gray-950 space-y-4">
                 <div className="flex justify-between items-center">
                   <Label className="text-base">Montant à payer</Label>
                   <div className="flex items-center gap-2">
                     <Input
                       // value={service ? service.price.toString() : '0'}
                       onChange={(e) => setPrice(e.target.value)}
-                      className="w-32 text-right font-bold"
+                      className="w-32 text-right "
                     />
-                    <span className="font-bold text-gray-600 dark:text-gray-400">Fc</span>
+                    <span className=" text-gray-600 dark:text-gray-400">Fc</span>
                   </div>
                 </div>
 

@@ -148,13 +148,13 @@ export default function BookingCalendar({ showMock }: { showMock?: boolean }) {
             </Button>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="grid w-full grid-cols-2 items-center gap-3">
             <Select value={selectedStaff} onValueChange={setSelectedStaff}>
-              <SelectTrigger className="w-48 rounded-full">
+              <SelectTrigger className="lg:w-48 rounded-full">
                 <SelectValue placeholder="Toutes les employées" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Toutes les employées</SelectItem>
+                <SelectItem value="all">Employées</SelectItem>
                 {staff.map((s) => (
                   <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>
                 ))}
@@ -195,7 +195,7 @@ export default function BookingCalendar({ showMock }: { showMock?: boolean }) {
       {/* Calendar View */}
       <Card className="border-0 shadow-lg rounded-2xl p-6">
         <div className="overflow-x-auto">
-          <div className="min-w-225">
+          <div className="min-w-22 lg:min-w-225">
             {/* Header Row - Staff Names */}
             <div className="grid gap-2 mb-4" style={{ gridTemplateColumns: `100px repeat(${filteredStaff.length}, 1fr)` }}>
               <div className="p-3 text-center">

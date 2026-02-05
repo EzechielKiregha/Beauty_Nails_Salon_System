@@ -78,25 +78,9 @@ export default function Contact() {
 
   return (
     <div className="min-h-screen dark:bg-gray-950">
-      {/* <HeroSection
-        imageUrl='/contact us.jpg'
-        title="Contactez-nous"
-        description="Une question ? Une demande spéciale ? Nous sommes là pour vous répondre"
-        badgeText='nos contacts'
-      /> */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 bg-background dark:bg-gray-950">
-        {/* Header */}
-        <div className="text-center mb-12 sm:mb-16">
+      <section className="bg-linear-to-b from-pink-50 to-white dark:from-gray-900 dark:to-gray-950 py-16 sm:py-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <Badge className="mb-4 bg-pink-100 dark:bg-pink-900 text-pink-600 dark:text-pink-200">
-            <MessageCircle className="w-4 h-4 mr-2" />
-            Contact
-          </Badge>
-          <h1 className="text-3xl sm:text-4xl text-gray-900 dark:text-gray-100 mb-2 sm:mb-4">Nous contacter</h1>
-          <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300">Réponse rapide à vos questions et demandes</p>
-        </div>
-        {/* Header */}
-        <div className="text-center mb-16">
-          <Badge className="mb-4 bg-pink-100 text-pink-600">
             <MessageCircle className="w-4 h-4 mr-2" />
             Contact
           </Badge>
@@ -107,11 +91,13 @@ export default function Contact() {
             Une question ? Une demande spéciale ? Nous sommes là pour vous répondre
           </p>
         </div>
+      </section>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 bg-background dark:bg-gray-950">
 
         {/* Contact Info Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-12 sm:mb-16">
           {contactInfo.map((info, index) => (
-            <Card key={index} className="bg-white dark:bg-gray-900 border-b border-pink-100 dark:border-pink-900 shadow-lg hover:shadow-xl transition-shadow p-6 sm:p-8 rounded-2xl text-center">
+            <Card key={index} className="bg-white dark:bg-gray-950 border-b border-pink-100 dark:border-pink-900 shadow-lg hover:shadow-xl transition-shadow p-6 sm:p-8 rounded-2xl text-center">
               <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-linear-to-br from-pink-100 to-purple-100 dark:from-pink-900/30 dark:to-purple-900/30 flex items-center justify-center mx-auto mb-4 sm:mb-6">
                 {info.icon}
               </div>
@@ -136,8 +122,8 @@ export default function Contact() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
           {/* Contact Form */}
           <div className="lg:col-span-2">
-            <Card className="bg-white dark:bg-gray-900 border-b border-pink-100 dark:border-pink-900 shadow-xl rounded-2xl p-6 sm:p-8">
-              <h2 className="text-2xl sm:text-3xl text-gray-900 dark:text-gray-100 mb-6 sm:mb-8">Envoyez-nous un message</h2>
+            <Card className="bg-white dark:bg-gray-950 border-b border-pink-100 dark:border-pink-900 shadow-xl rounded-2xl p-6 sm:p-8">
+              <h2 className="text-2xl  sm:text-3xl text-gray-900 dark:text-gray-100 mb-6 sm:mb-8">Envoyez-nous un message</h2>
               <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                   <div>
@@ -239,7 +225,7 @@ export default function Contact() {
             </Card>
 
             {/* Hours Card */}
-            <Card className="bg-white dark:bg-gray-900 border-b border-pink-100 dark:border-pink-900 shadow-lg p-6 sm:p-8 rounded-2xl">
+            <Card className="bg-white dark:bg-gray-950 border-b border-pink-100 dark:border-pink-900 shadow-lg p-6 sm:p-8 rounded-2xl">
               <h3 className="text-lg sm:text-xl text-gray-900 dark:text-gray-100 mb-4 sm:mb-6 flex items-center">
                 <Clock className="w-5 h-5 mr-2 text-pink-500" />
                 Horaires d'ouverture
@@ -266,7 +252,7 @@ export default function Contact() {
                   rel="noopener noreferrer"
                   className="flex items-center gap-3 p-3 sm:p-4 bg-white dark:bg-gray-800 rounded-xl hover:shadow-md dark:hover:shadow-gray-900/50 transition-shadow"
                 >
-                  <div className="w-10 h-10 rounded-full bg-blue-500 dark:bg-blue-600 flex items-center justify-center text-white text-xs sm:text-sm font-bold">
+                  <div className="w-10 h-10 rounded-full bg-blue-500 dark:bg-blue-600 flex items-center justify-center text-white text-xs sm:text-sm ">
                     F
                   </div>
                   <span className="text-sm sm:text-base text-gray-700 dark:text-gray-300">Facebook</span>
@@ -277,7 +263,7 @@ export default function Contact() {
                   rel="noopener noreferrer"
                   className="flex items-center gap-3 p-3 sm:p-4 bg-white dark:bg-gray-800 rounded-xl hover:shadow-md dark:hover:shadow-gray-900/50 transition-shadow"
                 >
-                  <div className="w-10 h-10 rounded-full bg-linear-to-br from-purple-500 to-pink-500 dark:from-purple-600 dark:to-pink-600 flex items-center justify-center text-white text-xs sm:text-sm font-bold">
+                  <div className="w-10 h-10 rounded-full bg-linear-to-br from-purple-500 to-pink-500 dark:from-purple-600 dark:to-pink-600 flex items-center justify-center text-white text-xs sm:text-sm ">
                     I
                   </div>
                   <span className="text-sm sm:text-base text-gray-700 dark:text-gray-300">Instagram</span>
@@ -288,7 +274,7 @@ export default function Contact() {
                   rel="noopener noreferrer"
                   className="flex items-center gap-3 p-3 sm:p-4 bg-white dark:bg-gray-800 rounded-xl hover:shadow-md dark:hover:shadow-gray-900/50 transition-shadow"
                 >
-                  <div className="w-10 h-10 rounded-full bg-blue-400 dark:bg-blue-500 flex items-center justify-center text-white text-xs sm:text-sm font-bold">
+                  <div className="w-10 h-10 rounded-full bg-blue-400 dark:bg-blue-500 flex items-center justify-center text-white text-xs sm:text-sm ">
                     T
                   </div>
                   <span className="text-sm sm:text-base text-gray-700 dark:text-gray-300">Twitter</span>
@@ -300,9 +286,9 @@ export default function Contact() {
 
         {/* Map Section */}
         <div className="mt-16 sm:mt-24">
-          <Card className="bg-white dark:bg-gray-900 border-b border-pink-100 dark:border-pink-900 shadow-xl rounded-2xl overflow-hidden">
+          <Card className="bg-white dark:bg-gray-950 border-b border-pink-100 dark:border-pink-900 shadow-xl rounded-2xl overflow-hidden">
             <div className="p-6 sm:p-8 bg-linear-to-r from-pink-50 to-purple-50 dark:from-gray-800 dark:to-gray-800">
-              <h2 className="text-2xl sm:text-3xl text-gray-900 dark:text-gray-100 flex items-center">
+              <h2 className="text-2xl  sm:text-3xl text-gray-900 dark:text-gray-100 flex items-center">
                 <MapPin className="w-6 h-6 mr-2 sm:mr-3 text-pink-500" />
                 Notre Emplacement
               </h2>

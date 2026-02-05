@@ -141,12 +141,12 @@ export default function StaffManagement({ showMock }: { showMock?: boolean }) {
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <h2 className="text-2xl sm:text-3xl text-gray-900 dark:text-gray-100">Gestion du Personnel</h2>
+        <h2 className="text-2xl  sm:text-3xl text-gray-900 dark:text-gray-100">Gestion du Personnel</h2>
         <CreateWorkerModal triggerLabel="+ Nouvelle Employée" />
       </div>
 
       {/* Staff Roster - Who's Working Now */}
-      <Card className="border-0 shadow-lg rounded-2xl p-4 sm:p-6 bg-white dark:bg-gray-900 dark:border dark:border-pink-900/30">
+      <Card className="border-0 shadow-lg rounded-2xl p-4 sm:p-6 bg-white dark:bg-gray-950 dark:border dark:border-pink-900/30">
         <h3 className="text-lg sm:text-xl text-gray-900 dark:text-gray-100 mb-4">Personnel Aujourd'hui</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {staff.map((member) => (
@@ -181,7 +181,7 @@ export default function StaffManagement({ showMock }: { showMock?: boolean }) {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Staff List */}
-        <Card className="border-0 shadow-lg rounded-2xl p-4 sm:p-6 bg-white dark:bg-gray-900 dark:border dark:border-pink-900/30">
+        <Card className="border-0 shadow-lg rounded-2xl p-4 sm:p-6 bg-white dark:bg-gray-950 dark:border dark:border-pink-900/30">
           <h3 className="text-lg sm:text-xl text-gray-900 dark:text-gray-100 mb-4">Toutes les Employées</h3>
           <div className="space-y-3">
             {staff.map((member) => (
@@ -212,9 +212,9 @@ export default function StaffManagement({ showMock }: { showMock?: boolean }) {
 
         {/* Staff Details */}
         {selectedStaff ? (
-          <Card className="border-0 shadow-lg rounded-2xl p-4 sm:p-8 lg:col-span-2 bg-white dark:bg-gray-900 dark:border dark:border-pink-900/30">
+          <Card className="border-0 shadow-lg rounded-2xl p-4 sm:p-8 lg:col-span-2 bg-white dark:bg-gray-950 dark:border dark:border-pink-900/30">
             <Tabs defaultValue="performance" className="space-y-6">
-              <TabsList className="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-pink-900/30 p-1 rounded-xl flex overflow-x-auto no-scrollbar justify-start sm:justify-center">
+              <TabsList className="w-full bg-white dark:bg-gray-950 border border-gray-200 dark:border-pink-900/30 p-1 rounded-xl flex overflow-x-auto no-scrollbar justify-start sm:justify-center">
                 <TabsTrigger value="performance" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">Performance</TabsTrigger>
                 <TabsTrigger value="schedule" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">Horaires</TabsTrigger>
                 <TabsTrigger value="commission" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">Commission</TabsTrigger>
@@ -234,7 +234,7 @@ export default function StaffManagement({ showMock }: { showMock?: boolean }) {
                   </div>
                   <div className="flex items-center gap-2 bg-amber-50 dark:bg-amber-900/10 p-3 sm:p-4 rounded-2xl border border-amber-100 dark:border-amber-900/30">
                     <Star className="w-5 h-5 sm:w-6 sm:h-6 fill-amber-400 text-amber-400" />
-                    <span className="text-2xl sm:text-3xl text-gray-900 dark:text-gray-100 font-bold">{selectedStaff.rating}</span>
+                    <span className="text-2xl sm:text-3xl text-gray-900 dark:text-gray-100 ">{selectedStaff.rating}</span>
                   </div>
                 </div>
 
@@ -242,22 +242,22 @@ export default function StaffManagement({ showMock }: { showMock?: boolean }) {
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
                   <Card className="bg-linear-to-br from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 border-0 p-3 sm:p-4 shadow-sm">
                     <CalendarIcon className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600 dark:text-blue-400 mb-2" />
-                    <p className="text-xl sm:text-2xl text-gray-900 dark:text-gray-100 font-bold">{selectedStaff.appointments}</p>
+                    <p className="text-xl sm:text-2xl text-gray-900 dark:text-gray-100 ">{selectedStaff.appointments}</p>
                     <p className="text-[10px] sm:text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wider font-medium">RDV ce mois</p>
                   </Card>
                   <Card className="bg-linear-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-0 p-3 sm:p-4 shadow-sm">
                     <DollarSign className="w-5 h-5 sm:w-6 sm:h-6 text-green-600 dark:text-green-400 mb-2" />
-                    <p className="text-base sm:text-lg text-gray-900 dark:text-gray-100 font-bold">{selectedStaff.revenue}</p>
+                    <p className="text-base sm:text-lg text-gray-900 dark:text-gray-100 ">{selectedStaff.revenue}</p>
                     <p className="text-[10px] sm:text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wider font-medium">Revenus</p>
                   </Card>
                   <Card className="bg-linear-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border-0 p-3 sm:p-4 shadow-sm">
                     <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600 dark:text-purple-400 mb-2" />
-                    <p className="text-xl sm:text-2xl text-gray-900 dark:text-gray-100 font-bold">{selectedStaff.clientRetention}</p>
+                    <p className="text-xl sm:text-2xl text-gray-900 dark:text-gray-100 ">{selectedStaff.clientRetention}</p>
                     <p className="text-[10px] sm:text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wider font-medium">Rétention</p>
                   </Card>
                   <Card className="bg-linear-to-br from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 border-0 p-3 sm:p-4 shadow-sm">
                     <Award className="w-5 h-5 sm:w-6 sm:h-6 text-amber-600 dark:text-amber-400 mb-2" />
-                    <p className="text-xl sm:text-2xl text-gray-900 dark:text-gray-100 font-bold">{selectedStaff.upsellRate}</p>
+                    <p className="text-xl sm:text-2xl text-gray-900 dark:text-gray-100 ">{selectedStaff.upsellRate}</p>
                     <p className="text-[10px] sm:text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wider font-medium">Taux Vente+</p>
                   </Card>
                 </div>
@@ -344,18 +344,18 @@ export default function StaffManagement({ showMock }: { showMock?: boolean }) {
                 <h4 className="text-lg sm:text-xl text-gray-900 dark:text-gray-100 mb-4 font-medium">Calcul Commission & Paie</h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <Card className="bg-linear-to-br from-green-50 to-emerald-50 dark:from-green-900/10 dark:to-emerald-900/10 border-0 p-5 sm:p-6 shadow-sm">
-                    <h5 className="text-sm sm:text-base text-gray-900 dark:text-gray-100 mb-4 font-bold flex items-center gap-2">
+                    <h5 className="text-sm sm:text-base text-gray-900 dark:text-gray-100 mb-4  flex items-center gap-2">
                       <span className="w-2 h-2 rounded-full bg-green-500"></span>
                       Ce Mois (Novembre)
                     </h5>
                     <div className="space-y-4">
                       <div className="flex justify-between items-center">
                         <span className="text-xs sm:text-sm text-gray-700 dark:text-gray-400">Revenus générés</span>
-                        <span className="text-base sm:text-lg text-gray-900 dark:text-gray-100 font-bold">{selectedStaff.revenue}</span>
+                        <span className="text-base sm:text-lg text-gray-900 dark:text-gray-100 ">{selectedStaff.revenue}</span>
                       </div>
                       <div className="flex justify-between items-center">
                         <span className="text-xs sm:text-sm text-gray-700 dark:text-gray-400">Taux commission</span>
-                        <span className="text-base sm:text-lg text-gray-900 dark:text-gray-100 font-bold">20%</span>
+                        <span className="text-base sm:text-lg text-gray-900 dark:text-gray-100 ">20%</span>
                       </div>
                       <div className="w-full h-px bg-gray-200 dark:bg-gray-700" />
                       <div className="flex justify-between items-center pt-2">
@@ -366,7 +366,7 @@ export default function StaffManagement({ showMock }: { showMock?: boolean }) {
                   </Card>
 
                   <Card className="bg-linear-to-br from-blue-50 to-cyan-50 dark:from-blue-900/10 dark:to-cyan-900/10 border-0 p-5 sm:p-6 shadow-sm">
-                    <h5 className="text-sm sm:text-base text-gray-900 dark:text-gray-100 mb-4 font-bold flex items-center gap-2">
+                    <h5 className="text-sm sm:text-base text-gray-900 dark:text-gray-100 mb-4  flex items-center gap-2">
                       <span className="w-2 h-2 rounded-full bg-blue-500"></span>
                       Détails de Paie
                     </h5>
@@ -408,7 +408,7 @@ export default function StaffManagement({ showMock }: { showMock?: boolean }) {
             </Tabs>
           </Card>
         ) : (
-          <Card className="border-0 shadow-lg rounded-2xl p-8 lg:col-span-2 flex items-center justify-center bg-white dark:bg-gray-900 dark:border dark:border-pink-900/30">
+          <Card className="border-0 shadow-lg rounded-2xl p-8 lg:col-span-2 flex items-center justify-center bg-white dark:bg-gray-950 dark:border dark:border-pink-900/30">
             <div className="text-center text-gray-500 dark:text-gray-400">
               <Users className="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-4 text-gray-300 dark:text-gray-700" />
               <p className="text-base sm:text-lg font-medium">Sélectionnez une employée pour voir ses détails</p>
@@ -418,7 +418,7 @@ export default function StaffManagement({ showMock }: { showMock?: boolean }) {
       </div>
 
       {/* Task Assignment Board */}
-      {/* <Card className="border-0 shadow-lg rounded-2xl p-4 sm:p-8 bg-white dark:bg-gray-900 dark:border dark:border-pink-900/30">
+      {/* <Card className="border-0 shadow-lg rounded-2xl p-4 sm:p-8 bg-white dark:bg-gray-950 dark:border dark:border-pink-900/30">
         <h3 className="text-xl sm:text-2xl text-gray-900 dark:text-gray-100 mb-6">Tableau des Tâches</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {tasks.map((task) => (

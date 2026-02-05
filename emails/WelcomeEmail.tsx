@@ -50,7 +50,7 @@ export const WelcomeEmail = ({
     >
       <Preview>Welcome to Intelligent ERP</Preview>
       <Body className="bg-offwhite font-sans text-base">
-        <h1 className='text-center text-2xl font-bold text-[#80410e] mb-8'>
+        <h1 className='text-center text-2xl  text-[#80410e] mb-8'>
           Intelligent ERP
         </h1>
         <Container className="bg-white p-45 rounded-lg shadow-md">
@@ -81,7 +81,7 @@ export const WelcomeEmail = ({
               {links?.map((link) => (
                 <Column key={link.title}>
                   <Link
-                    className="font-bold text-[#80410e] underline"
+                    className=" text-[#80410e] underline"
                     href={link.href}
                   >
                     {link.title}

@@ -111,7 +111,7 @@ export default function POSCheckout({ showMock }: { showMock?: boolean }) {
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">Caisse (POS)</h2>
+        <h2 className="text-2xl  sm:text-3xl  text-gray-900 dark:text-gray-100">Caisse (POS)</h2>
         <div className="flex items-center gap-3 w-full sm:w-auto">
           <Badge className="flex-1 sm:flex-none justify-center bg-linear-to-r from-green-500 to-emerald-500 text-white px-4 py-2 border-0 shadow-lg shadow-green-500/20">
             Caisse Ouverte
@@ -124,8 +124,8 @@ export default function POSCheckout({ showMock }: { showMock?: boolean }) {
         {/* Services & Products Selection */}
         <div className="lg:col-span-2 space-y-6">
           {/* Services */}
-          <Card className="p-4 sm:p-6 hover:shadow-lg transition-all border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-900">
-            <h3 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-gray-100 mb-6 flex items-center gap-2">
+          <Card className="p-4 sm:p-6 hover:shadow-lg transition-all border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950">
+            <h3 className="text-lg sm:text-xl  text-gray-900 dark:text-gray-100 mb-6 flex items-center gap-2">
               <Plus className="w-5 h-5 text-pink-500" />
               Services
             </h3>
@@ -138,15 +138,15 @@ export default function POSCheckout({ showMock }: { showMock?: boolean }) {
                   className="h-auto flex flex-col items-start p-4 rounded-xl border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-800/30 hover:bg-pink-50 dark:hover:bg-pink-900/20 hover:border-pink-300 dark:hover:border-pink-500 transition-all group"
                 >
                   <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 group-hover:text-pink-600 dark:group-hover:text-pink-400">{service.name}</p>
-                  <p className="text-lg font-bold text-pink-600 dark:text-pink-400">{(service.price).toLocaleString()} Fc</p>
+                  <p className="text-lg  text-pink-600 dark:text-pink-400">{(service.price).toLocaleString()} Fc</p>
                 </Button>
               ))}
             </div>
           </Card>
 
           {/* Products */}
-          <Card className="p-4 sm:p-6 hover:shadow-lg transition-all border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-900">
-            <h3 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-gray-100 mb-6 flex items-center gap-2">
+          <Card className="p-4 sm:p-6 hover:shadow-lg transition-all border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950">
+            <h3 className="text-lg sm:text-xl  text-gray-900 dark:text-gray-100 mb-6 flex items-center gap-2">
               <ShoppingCart className="w-5 h-5 text-purple-500" />
               Produits
             </h3>
@@ -159,7 +159,7 @@ export default function POSCheckout({ showMock }: { showMock?: boolean }) {
                   className="h-auto flex flex-col items-start p-4 rounded-xl border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-800/30 hover:bg-purple-50 dark:hover:bg-purple-900/20 hover:border-purple-300 dark:hover:border-purple-500 transition-all group"
                 >
                   <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 group-hover:text-purple-600 dark:group-hover:text-purple-400">{product.name}</p>
-                  <p className="text-lg font-bold text-purple-600 dark:text-purple-400">{(product.price).toLocaleString()} Fc</p>
+                  <p className="text-lg  text-purple-600 dark:text-purple-400">{(product.price).toLocaleString()} Fc</p>
                 </Button>
               ))}
             </div>
@@ -168,12 +168,12 @@ export default function POSCheckout({ showMock }: { showMock?: boolean }) {
 
         {/* Cart & Checkout */}
         <div className="space-y-6">
-          <Card className="p-4 sm:p-6 hover:shadow-lg transition-all border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-900 lg:sticky lg:top-6">
+          <Card className="p-4 sm:p-6 hover:shadow-lg transition-all border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950 lg:sticky lg:top-6">
             <div className="flex items-center gap-3 mb-6">
               <div className="w-10 h-10 rounded-xl bg-pink-100 dark:bg-pink-900/30 flex items-center justify-center">
                 <ShoppingCart className="w-6 h-6 text-pink-500" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">Panier</h3>
+              <h3 className="text-xl  text-gray-900 dark:text-gray-100">Panier</h3>
               {cart.length > 0 && (
                 <Badge className="bg-pink-500 dark:bg-pink-600 text-white ml-auto border-0">
                   {cart.length}
@@ -202,7 +202,7 @@ export default function POSCheckout({ showMock }: { showMock?: boolean }) {
                   <div key={item.id} className="bg-gray-50 dark:bg-gray-800/50 p-4 rounded-2xl border border-gray-100 dark:border-gray-800 hover:border-pink-200 dark:hover:border-pink-900/50 transition-all">
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex-1">
-                        <p className="font-bold text-gray-900 dark:text-gray-100 mb-1">{item.name}</p>
+                        <p className=" text-gray-900 dark:text-gray-100 mb-1">{item.name}</p>
                         <p className="text-xs font-medium text-gray-500 dark:text-gray-400">
                           {item.price.toLocaleString()} Fc × {item.quantity}
                         </p>
@@ -217,7 +217,7 @@ export default function POSCheckout({ showMock }: { showMock?: boolean }) {
                       </Button>
                     </div>
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-1 bg-white dark:bg-gray-900 p-1 rounded-full border border-gray-100 dark:border-gray-800">
+                      <div className="flex items-center gap-1 bg-white dark:bg-gray-950 p-1 rounded-full border border-gray-100 dark:border-gray-800">
                         <Button
                           size="icon"
                           variant="ghost"
@@ -226,7 +226,7 @@ export default function POSCheckout({ showMock }: { showMock?: boolean }) {
                         >
                           <Minus className="w-3 h-3" />
                         </Button>
-                        <span className="text-sm font-bold text-gray-900 dark:text-gray-100 w-8 text-center">
+                        <span className="text-sm  text-gray-900 dark:text-gray-100 w-8 text-center">
                           {item.quantity}
                         </span>
                         <Button
@@ -272,13 +272,13 @@ export default function POSCheckout({ showMock }: { showMock?: boolean }) {
                 <span className="text-gray-900 dark:text-gray-100">{subtotal.toLocaleString()} Fc</span>
               </div>
               {discountPercent > 0 && (
-                <div className="flex justify-between text-sm font-bold text-green-600 dark:text-green-400">
+                <div className="flex justify-between text-sm  text-green-600 dark:text-green-400">
                   <span>Remise ({discountPercent}%):</span>
                   <span>- {discountAmount.toLocaleString()} Fc</span>
                 </div>
               )}
               <div className="pt-3 border-t border-gray-200 dark:border-gray-700 flex justify-between items-center">
-                <span className="text-lg font-bold text-gray-900 dark:text-gray-100">Total:</span>
+                <span className="text-lg  text-gray-900 dark:text-gray-100">Total:</span>
                 <span className="text-2xl font-black text-pink-600 dark:text-pink-400">{total.toLocaleString()} Fc</span>
               </div>
             </div>
@@ -286,7 +286,7 @@ export default function POSCheckout({ showMock }: { showMock?: boolean }) {
             <Button
               onClick={() => setShowPayment(true)}
               disabled={cart.length === 0}
-              className="w-full bg-linear-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white rounded-full py-8 text-lg font-bold shadow-lg shadow-pink-500/20 transition-all active:scale-95"
+              className="w-full bg-linear-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white rounded-full py-8 text-lg  shadow-lg shadow-pink-500/20 transition-all active:scale-95"
             >
               Procéder au Paiement
             </Button>
@@ -295,7 +295,7 @@ export default function POSCheckout({ showMock }: { showMock?: boolean }) {
           {/* Payment Section */}
           {showPayment && cart.length > 0 && (
             <Card className="p-4 sm:p-6 hover:shadow-lg transition-all border border-green-100 dark:border-green-900 shadow-xl rounded-2xl bg-linear-to-br from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20">
-              <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-6 flex items-center gap-2">
+              <h3 className="text-xl  text-gray-900 dark:text-gray-100 mb-6 flex items-center gap-2">
                 <CreditCard className="w-5 h-5 text-green-600 dark:text-green-400" />
                 Mode de Paiement
               </h3>
@@ -303,11 +303,11 @@ export default function POSCheckout({ showMock }: { showMock?: boolean }) {
               {/* Payment Methods */}
               <div className="space-y-3 mb-6">
                 {paymentMethods.map((pm, index) => (
-                  <div key={index} className="flex items-center gap-3 bg-white dark:bg-gray-900 p-4 rounded-2xl border border-green-100 dark:border-green-900/50 shadow-sm">
+                  <div key={index} className="flex items-center gap-3 bg-white dark:bg-gray-950 p-4 rounded-2xl border border-green-100 dark:border-green-900/50 shadow-sm">
                     <Badge className={`${pm.type === 'cash' ? 'bg-green-500 dark:bg-green-600' :
                       pm.type === 'card' ? 'bg-blue-500 dark:bg-blue-600' :
                         pm.type === 'mobile' ? 'bg-purple-500 dark:bg-purple-600' : 'bg-amber-500 dark:bg-amber-600'
-                      } text-white border-0 px-3 py-1 font-bold`}>
+                      } text-white border-0 px-3 py-1 `}>
                       {pm.type === 'cash' ? 'Espèces' :
                         pm.type === 'card' ? 'Carte' :
                           pm.type === 'mobile' ? 'Mobile Money' : 'Cadeau'}
@@ -316,7 +316,7 @@ export default function POSCheckout({ showMock }: { showMock?: boolean }) {
                       type="number"
                       value={pm.amount}
                       onChange={(e) => updatePaymentAmount(index, Number(e.target.value))}
-                      className="rounded-xl border-gray-100 dark:border-gray-800 font-bold dark:text-gray-100"
+                      className="rounded-xl border-gray-100 dark:border-gray-800  dark:text-gray-100"
                     />
                     <Button
                       size="icon"
@@ -335,38 +335,38 @@ export default function POSCheckout({ showMock }: { showMock?: boolean }) {
                 <Button
                   onClick={() => addPayment('cash')}
                   variant="outline"
-                  className="rounded-2xl h-16 flex flex-col gap-1 border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 hover:bg-green-50 dark:hover:bg-green-900/20 transition-all group"
+                  className="rounded-2xl h-16 flex flex-col gap-1 border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-950 hover:bg-green-50 dark:hover:bg-green-900/20 transition-all group"
                   disabled={remaining <= 0}
                 >
                   <Banknote className="w-5 h-5 text-green-600 group-hover:scale-110 transition-transform" />
-                  <span className="text-[10px] font-bold uppercase tracking-widest dark:text-gray-300">Espèces</span>
+                  <span className="text-[10px]  uppercase tracking-widest dark:text-gray-300">Espèces</span>
                 </Button>
                 <Button
                   onClick={() => addPayment('card')}
                   variant="outline"
-                  className="rounded-2xl h-16 flex flex-col gap-1 border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all group"
+                  className="rounded-2xl h-16 flex flex-col gap-1 border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-950 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all group"
                   disabled={remaining <= 0}
                 >
                   <CreditCard className="w-5 h-5 text-blue-600 group-hover:scale-110 transition-transform" />
-                  <span className="text-[10px] font-bold uppercase tracking-widest dark:text-gray-300">Carte</span>
+                  <span className="text-[10px]  uppercase tracking-widest dark:text-gray-300">Carte</span>
                 </Button>
                 <Button
                   onClick={() => addPayment('mobile')}
                   variant="outline"
-                  className="rounded-2xl h-16 flex flex-col gap-1 border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-all group"
+                  className="rounded-2xl h-16 flex flex-col gap-1 border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-950 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-all group"
                   disabled={remaining <= 0}
                 >
                   <Smartphone className="w-5 h-5 text-purple-600 group-hover:scale-110 transition-transform" />
-                  <span className="text-[10px] font-bold uppercase tracking-widest dark:text-gray-300">Mobile</span>
+                  <span className="text-[10px]  uppercase tracking-widest dark:text-gray-300">Mobile</span>
                 </Button>
                 <Button
                   onClick={() => addPayment('giftcard')}
                   variant="outline"
-                  className="rounded-2xl h-16 flex flex-col gap-1 border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 hover:bg-amber-50 dark:hover:bg-amber-900/20 transition-all group"
+                  className="rounded-2xl h-16 flex flex-col gap-1 border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-950 hover:bg-amber-50 dark:hover:bg-amber-900/20 transition-all group"
                   disabled={remaining <= 0}
                 >
                   <Gift className="w-5 h-5 text-amber-600 group-hover:scale-110 transition-transform" />
-                  <span className="text-[10px] font-bold uppercase tracking-widest dark:text-gray-300">Cadeau</span>
+                  <span className="text-[10px]  uppercase tracking-widest dark:text-gray-300">Cadeau</span>
                 </Button>
               </div>
 
@@ -385,7 +385,7 @@ export default function POSCheckout({ showMock }: { showMock?: boolean }) {
                 <Separator className="dark:bg-gray-800" />
                 <div className={`flex justify-between items-center ${remaining > 0 ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-400'
                   }`}>
-                  <span className="text-sm font-bold uppercase tracking-wider">{remaining > 0 ? 'Reste à payer:' : 'Monnaie:'}</span>
+                  <span className="text-sm  uppercase tracking-wider">{remaining > 0 ? 'Reste à payer:' : 'Monnaie:'}</span>
                   <span className="text-2xl font-black">{Math.abs(remaining).toLocaleString()} Fc</span>
                 </div>
               </div>
@@ -393,7 +393,7 @@ export default function POSCheckout({ showMock }: { showMock?: boolean }) {
               <Button
                 onClick={completeTransaction}
                 disabled={remaining > 0}
-                className="w-full bg-linear-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white rounded-full py-8 text-lg font-bold shadow-lg shadow-green-500/20 transition-all active:scale-95"
+                className="w-full bg-linear-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white rounded-full py-8 text-lg  shadow-lg shadow-green-500/20 transition-all active:scale-95"
               >
                 Finaliser la Transaction
               </Button>
@@ -417,7 +417,7 @@ export default function POSCheckout({ showMock }: { showMock?: boolean }) {
           <p className="text-2xl font-black text-gray-900 dark:text-gray-100">39 063 Fc</p>
         </Card>
         <Card className="bg-linear-to-br from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 border-0 p-6 rounded-2xl flex items-center">
-          <Button className="w-full bg-linear-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-full py-6 font-bold shadow-lg shadow-amber-500/20 transition-all">
+          <Button className="w-full bg-linear-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-full py-6  shadow-lg shadow-amber-500/20 transition-all">
             Clôture de Caisse
           </Button>
         </Card>

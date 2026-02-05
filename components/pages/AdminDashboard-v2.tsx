@@ -12,7 +12,8 @@ import {
   Loader2,
   CheckCircle,
   Clock,
-  AlertCircle
+  AlertCircle,
+  CreditCard
 } from 'lucide-react';
 import { LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import TodayOverview from '../TodayOverview';
@@ -40,6 +41,8 @@ import { useRouter } from 'next/navigation';
 // import CreateClientModal from '@/components/modals/CreateClientModal';
 import TasksManagement from '@/components/TasksManagement';
 import LoadingSpinner from '../LoadingSpinner';
+import MembershipsManagement from '../MembershipsManagement';
+import LoaderBN from '../Loader-BN';
 
 export default function AdminDashboardV2() {
   const [notificationOpen, setNotificationOpen] = useState(false);
@@ -164,7 +167,7 @@ export default function AdminDashboardV2() {
   // Loading state
   if (isAuthLoading || isClientsLoading || isStaffLoading || isAnalyticsLoading || isRevenueLoading || isServicePerformanceLoading || isInventoryLoading) {
     return (
-      <LoadingSpinner />
+      <LoaderBN />
     );
   }
 
@@ -180,7 +183,7 @@ export default function AdminDashboardV2() {
         <div className="mb-12">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
             <div>
-              <h1 className="text-3xl sm:text-4xl font-bold bg-linear-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">
+              <h1 className="text-3xl sm:text-4xl  bg-linear-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">
                 Tableau de Bord Admin
               </h1>
               <p className="text-gray-600 dark:text-gray-300 text-base sm:text-lg">
@@ -189,7 +192,7 @@ export default function AdminDashboardV2() {
             </div>
 
             {/* Notifications */}
-            <div className="flex items-center gap-2 flex-wrap">
+            <div className="flex items-center gap-2 flex-wrap ">
               <Sheet open={notificationOpen} onOpenChange={setNotificationOpen}>
                 <SheetTrigger asChild>
                   <Button variant="outline" size="icon" className="relative dark:border-gray-700 dark:text-gray-200">
@@ -201,21 +204,13 @@ export default function AdminDashboardV2() {
                     )}
                   </Button>
                 </SheetTrigger>
-                <SheetContent className="dark:bg-gray-900 dark:border-gray-800">
+                <SheetContent className="border-rb border-pink-100 dark:border-pink-900 shadow-xl rounded-2xl p-4 sm:p-6 bg-white dark:bg-gray-950">
                   <NotificationCenter />
                 </SheetContent>
               </Sheet>
 
-              {/* Quick create actions */}
-              {/* <CreateTaskModal triggerLabel="Nouvelle tâche" />
-              <CreateClientModal triggerLabel="Nouvelle cliente" /> */}
-              {/* <CreateServiceModal triggerLabel="Nouveau service" />
-              <CreateWorkerModal triggerLabel="Nouveau membre" />
-              <CreateInventoryModal triggerLabel="Nouveau article" />
-              <POSOperationModal triggerLabel="POS" /> */}
-
               {/* Mock toggle */}
-              <div className="flex items-center space-x-2">
+              {/* <div className="flex items-center space-x-2">
                 <label className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">Données simulées</label>
                 <button
                   type="button"
@@ -223,7 +218,7 @@ export default function AdminDashboardV2() {
                   className={`px-2 py-1 rounded text-xs sm:text-sm transition-colors ${showMock ? 'bg-pink-500 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300'}`}>
                   {showMock ? 'ON' : 'OFF'}
                 </button>
-              </div>
+              </div> */}
             </div>
           </div>
 
@@ -238,7 +233,7 @@ export default function AdminDashboardV2() {
                 <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 opacity-80" />
               </div>
               <p className="text-xs sm:text-sm opacity-90 mb-1">Revenus du mois</p>
-              <p className="text-2xl sm:text-3xl font-bold mb-2">
+              <p className="text-2xl sm:text-3xl  mb-2">
                 {(stats.monthlyRevenue / 1000000).toFixed(1)}M
               </p>
               <p className="text-xs opacity-80">
@@ -247,28 +242,28 @@ export default function AdminDashboardV2() {
             </Card>
 
             {/* Clients Card */}
-            <Card className="p-4 sm:p-6 hover:shadow-lg transition-shadow dark:bg-gray-900 dark:border-gray-800 dark:hover:shadow-gray-800/50">
+            <Card className="p-4 sm:p-6 hover:shadow-lg transition-shadow dark:bg-gray-950 dark:border-gray-800 dark:hover:shadow-gray-800/50">
               <div className="flex items-center justify-between mb-4">
                 <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
                   <Users className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600 dark:text-blue-400" />
                 </div>
               </div>
               <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mb-1">Clients</p>
-              <p className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">{stats.totalClients}</p>
+              <p className="text-2xl sm:text-3xl  text-gray-900 dark:text-gray-100">{stats.totalClients}</p>
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
                 +{stats.newClients} ce mois
               </p>
             </Card>
 
             {/* Appointments Card */}
-            <Card className="p-4 sm:p-6 hover:shadow-lg transition-shadow dark:bg-gray-900 dark:border-gray-800 dark:hover:shadow-gray-800/50">
+            <Card className="p-4 sm:p-6 hover:shadow-lg transition-shadow dark:bg-gray-950 dark:border-gray-800 dark:hover:shadow-gray-800/50">
               <div className="flex items-center justify-between mb-4">
                 <div className="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
                   <Calendar className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600 dark:text-purple-400" />
                 </div>
               </div>
               <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mb-1">Rendez-vous aujourd'hui</p>
-              <p className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">{stats.todayAppointments}</p>
+              <p className="text-2xl sm:text-3xl  text-gray-900 dark:text-gray-100">{stats.todayAppointments}</p>
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
                 {stats.completedAppointments} terminés
               </p>
@@ -283,7 +278,7 @@ export default function AdminDashboardV2() {
                 <Star className="w-4 h-4 sm:w-5 sm:h-5 opacity-80" />
               </div>
               <p className="text-xs sm:text-sm opacity-90 mb-1">Personnel actif</p>
-              <p className="text-2xl sm:text-3xl font-bold mb-2">{stats.activeWorkers}</p>
+              <p className="text-2xl sm:text-3xl  mb-2">{stats.activeWorkers}</p>
               <p className="text-xs opacity-80">
                 Note moyenne: {stats.avgRating.toFixed(1)}⭐
               </p>
@@ -292,31 +287,31 @@ export default function AdminDashboardV2() {
 
           {/* Quick Stats Bar */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
-            <Card className="p-3 sm:p-4 dark:bg-gray-900 dark:border-gray-800">
+            <Card className="p-3 sm:p-4 dark:bg-gray-950 dark:border-gray-800">
               <div className="flex items-center gap-2 sm:gap-3">
                 <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-lg">
                   <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-600 dark:text-green-400" />
                 </div>
                 <div>
                   <p className="text-xs text-gray-600 dark:text-gray-300">Complétés</p>
-                  <p className="text-lg sm:text-xl font-bold text-gray-900 dark:text-gray-100">{stats.completedAppointments}</p>
+                  <p className="text-lg sm:text-xl  text-gray-900 dark:text-gray-100">{stats.completedAppointments}</p>
                 </div>
               </div>
             </Card>
 
-            <Card className="p-3 sm:p-4 dark:bg-gray-900 dark:border-gray-800">
+            <Card className="p-3 sm:p-4 dark:bg-gray-950 dark:border-gray-800">
               <div className="flex items-center gap-2 sm:gap-3">
                 <div className="p-2 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg">
                   <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-600 dark:text-yellow-400" />
                 </div>
                 <div>
                   <p className="text-xs text-gray-600 dark:text-gray-300">En attente</p>
-                  <p className="text-lg sm:text-xl font-bold text-gray-900 dark:text-gray-100">{stats.pendingAppointments}</p>
+                  <p className="text-lg sm:text-xl  text-gray-900 dark:text-gray-100">{stats.pendingAppointments}</p>
                 </div>
               </div>
             </Card>
 
-            <Card className="p-3 sm:p-4 dark:bg-gray-900 dark:border-gray-800">
+            <Card className="p-3 sm:p-4 dark:bg-gray-950 dark:border-gray-800">
               <div className="flex items-center gap-2 sm:gap-3">
                 <div className={`p-2 rounded-lg ${stats.lowStockItems > 0 ? 'bg-red-100 dark:bg-red-900/30' : 'bg-gray-100 dark:bg-gray-800'
                   }`}>
@@ -325,19 +320,19 @@ export default function AdminDashboardV2() {
                 </div>
                 <div>
                   <p className="text-xs text-gray-600 dark:text-gray-300">Stock bas</p>
-                  <p className="text-lg sm:text-xl font-bold text-gray-900 dark:text-gray-100">{stats.lowStockItems}</p>
+                  <p className="text-lg sm:text-xl  text-gray-900 dark:text-gray-100">{stats.lowStockItems}</p>
                 </div>
               </div>
             </Card>
 
-            <Card className="p-3 sm:p-4 dark:bg-gray-900 dark:border-gray-800">
+            <Card className="p-3 sm:p-4 dark:bg-gray-950 dark:border-gray-800">
               <div className="flex items-center gap-2 sm:gap-3">
                 <div className="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
                   <Activity className="w-4 h-4 sm:w-5 sm:h-5 text-purple-600 dark:text-purple-400" />
                 </div>
                 <div>
                   <p className="text-xs text-gray-600 dark:text-gray-300">Taux occupation</p>
-                  <p className="text-lg sm:text-xl font-bold text-gray-900 dark:text-gray-100">
+                  <p className="text-lg sm:text-xl  text-gray-900 dark:text-gray-100">
                     {stats.todayAppointments > 0
                       ? Math.round((stats.completedAppointments / stats.todayAppointments) * 100)
                       : 0}%
@@ -351,7 +346,7 @@ export default function AdminDashboardV2() {
         {/* Charts Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           {/* Revenue Trend */}
-          <Card className="p-4 sm:p-6 dark:bg-gray-900 dark:border-gray-800">
+          <Card className="p-4 sm:p-6 dark:bg-gray-950 dark:border-gray-800">
             <h3 className="text-base sm:text-lg font-semibold mb-4 flex items-center text-gray-900 dark:text-gray-100">
               <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-green-500" />
               Évolution des Revenus
@@ -381,7 +376,7 @@ export default function AdminDashboardV2() {
           </Card>
 
           {/* Service Distribution */}
-          <Card className="p-4 sm:p-6 dark:bg-gray-900 dark:border-gray-800">
+          <Card className="p-4 sm:p-6 dark:bg-gray-950 dark:border-gray-800">
             <h3 className="text-base sm:text-lg font-semibold mb-4 flex items-center text-gray-900 dark:text-gray-100">
               <Scissors className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-pink-500" />
               Distribution des Services
@@ -411,101 +406,110 @@ export default function AdminDashboardV2() {
         </div>
 
         {/* Main Tabs */}
-        <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2 lg:grid-cols-5">
-            <TabsTrigger value="overview">
+        <Tabs defaultValue="overview" className="space-y-8">
+          <TabsList className="grid w-full grid-cols-2 lg:grid-cols-6  bg-white dark:bg-gray-950 border border-gray-200 dark:border-pink-900/30 rounded-xl justify-start sm:justify-center ">
+            <TabsTrigger value="overview" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">
               <Activity className="w-4 h-4 mr-2" />
               Aperçu
             </TabsTrigger>
-            <TabsTrigger value="calendar">
+            <TabsTrigger value="calendar" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">
               <Calendar className="w-4 h-4 mr-2" />
               Calendrier
             </TabsTrigger>
-            <TabsTrigger value="clients">
+            <TabsTrigger value="clients" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">
               <Users className="w-4 h-4 mr-2" />
               Clients
             </TabsTrigger>
-            <TabsTrigger value="staff">
+            <TabsTrigger value="staff" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">
               <Award className="w-4 h-4 mr-2" />
               Personnel
             </TabsTrigger>
-            <TabsTrigger value="more">
+            <TabsTrigger value="membership" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">
+              <CreditCard className="w-4 h-4 mr-2" />
+              Membership
+            </TabsTrigger>
+            <TabsTrigger value="more" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">
               <SettingsIcon className="w-4 h-4 mr-2" />
               Plus
             </TabsTrigger>
           </TabsList>
 
           {/* Overview Tab */}
-          <TabsContent value="overview">
+          <TabsContent value="overview" className="mt-14 lg:mt-2">
             <TodayOverview showMock={showMock} />
           </TabsContent>
 
           {/* Calendar Tab */}
-          <TabsContent value="calendar">
+          <TabsContent value="calendar" className="mt-14 lg:mt-2">
             <BookingCalendar showMock={showMock} />
           </TabsContent>
 
           {/* Clients Tab */}
-          <TabsContent value="clients">
+          <TabsContent value="clients" className="mt-14 lg:mt-2">
             <ClientManagement showMock={showMock} />
           </TabsContent>
 
           {/* Staff Tab */}
-          <TabsContent value="staff">
+          <TabsContent value="staff" className="mt-14 lg:mt-2">
             <StaffManagement showMock={showMock} />
+          </TabsContent>
+
+          {/* membership Tab */}
+          <TabsContent value="membership" className="mt-14 lg:mt-2">
+            <MembershipsManagement />
           </TabsContent>
 
           {/* More Tab */}
           <TabsContent value="more" className="space-y-6">
-            <Tabs defaultValue="services">
-              <TabsList className="grid w-full grid-cols-3 lg:grid-cols-6">
-                <TabsTrigger value="services">
+            <Tabs defaultValue="services" >
+              <TabsList className="grid w-full grid-cols-2 lg:grid-cols-6 mt-8 lg:mt-6 bg-white dark:bg-gray-950 border border-gray-200 dark:border-pink-900/30 p-1 rounded-xl justify-start sm:justify-center ">
+                <TabsTrigger value="services" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">
                   <Scissors className="w-4 h-4 mr-2" />
                   Services
                 </TabsTrigger>
-                <TabsTrigger value="inventory">
+                <TabsTrigger value="inventory" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">
                   <Package className="w-4 h-4 mr-2" />
                   Inventaire
                 </TabsTrigger>
-                <TabsTrigger value="pos">
+                <TabsTrigger value="pos" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">
                   <ShoppingCart className="w-4 h-4 mr-2" />
                   Caisse
                 </TabsTrigger>
-                <TabsTrigger value="reports">
+                <TabsTrigger value="reports" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">
                   <BarChart3 className="w-4 h-4 mr-2" />
                   Rapports
                 </TabsTrigger>
-                <TabsTrigger value="marketing">
+                <TabsTrigger value="marketing" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">
                   <MessageSquare className="w-4 h-4 mr-2" />
                   Marketing
                 </TabsTrigger>
-                <TabsTrigger value="settings">
+                <TabsTrigger value="settings" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">
                   <SettingsIcon className="w-4 h-4 mr-2" />
                   Paramètres
                 </TabsTrigger>
               </TabsList>
 
-              <TabsContent value="services" className="mt-6">
+              <TabsContent value="services" className="mt-14 lg:mt-6">
                 <ServiceManagement showMock={showMock} />
               </TabsContent>
 
-              <TabsContent value="inventory" className="mt-6">
+              <TabsContent value="inventory" className="mt-14 lg:mt-6">
                 <InventoryManagement showMock={showMock} />
               </TabsContent>
 
-              <TabsContent value="pos" className="mt-6">
+              <TabsContent value="pos" className="mt-14 lg:mt-6">
                 <POSCheckout showMock={showMock} />
               </TabsContent>
 
-              <TabsContent value="reports" className="mt-6">
+              <TabsContent value="reports" className="mt-14 lg:mt-6">
                 <ReportsAnalytics />
               </TabsContent>
 
-              <TabsContent value="marketing" className="mt-6">
+              <TabsContent value="marketing" className="mt-14 lg:mt-6">
                 <MarketingLoyalty />
               </TabsContent>
 
-              <TabsContent value="settings" className="mt-6">
+              <TabsContent value="settings" className="mt-14 lg:mt-6">
                 <SystemSettings />
               </TabsContent>
             </Tabs>

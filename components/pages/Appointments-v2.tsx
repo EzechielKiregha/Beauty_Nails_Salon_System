@@ -36,6 +36,7 @@ import { useAppointments, useAvailableSlots } from "@/lib/hooks/useAppointments"
 import { CreateAppointmentData } from "@/lib/api/appointments";
 import { Service } from "@/lib/api/services";
 import LoadingSpinner from "../LoadingSpinner";
+import LoaderBN from "../Loader-BN";
 
 export default function AppointmentsV2() {
   const router = useRouter();
@@ -45,6 +46,9 @@ export default function AppointmentsV2() {
   const paramService = searchParams.get("service");
   const paramDate = searchParams.get("date");
   const paramTime = searchParams.get("time");
+
+  const servicePackage = searchParams.get('package');
+  const packagePrice = parseInt(searchParams.get('price') || '0', 10);
 
   // Initialize states with URL parameters
   const [selectedDate, setSelectedDate] = useState<
@@ -111,7 +115,7 @@ export default function AppointmentsV2() {
 
   if (servicesLoading || staffLoading || appointmentLoading) {
     return (
-      <LoadingSpinner />
+      <LoaderBN />
     )
   }
 
@@ -122,45 +126,60 @@ export default function AppointmentsV2() {
       return;
     }
 
-    if (
-      !selectedCategory ||
-      !selectedServiceId ||
-      !selectedWorker ||
-      !selectedDate ||
-      !selectedTime
-    ) {
-      toast.error(
-        "Veuillez remplir tous les champs obligatoires",
-      );
-      return;
+    if (!servicePackage) {
+      if (
+        !selectedCategory ||
+        !selectedServiceId ||
+        !selectedWorker ||
+        !selectedDate ||
+        !selectedTime
+      ) {
+        toast.error(
+          "Veuillez remplir tous les champs obligatoires",
+        );
+        return;
+      }
+
+      const appointmentData: CreateAppointmentData = {
+        serviceId: selectedServiceId,
+        workerId: selectedWorker,
+        date: selectedDate.toISOString(),
+        time: selectedTime,
+        location: location,
+        addOns: addOns,
+      };
+      createAppointment(appointmentData)
+    } else {
+      if (
+        !selectedWorker ||
+        !selectedDate ||
+        !selectedTime
+      ) {
+        toast.error(
+          "Veuillez remplir tous les champs obligatoires",
+        );
+        return;
+      }
+
+      const appointmentData: CreateAppointmentData = {
+        // serviceId: selectedServiceId,
+        packageId: servicePackage,
+        price: packagePrice,
+        workerId: selectedWorker,
+        date: selectedDate.toISOString(),
+        time: selectedTime,
+        location: location,
+        addOns: addOns,
+      };
+      createAppointment(appointmentData)
     }
-
-    const appointmentData: CreateAppointmentData = {
-      serviceId: selectedServiceId,
-      workerId: selectedWorker,
-      date: selectedDate.toISOString(),
-      time: selectedTime,
-      location: location,
-      addOns: addOns,
-    };
-
-    createAppointment(appointmentData)
   };
 
   return (
     <div className="min-h-screen bg-background">
-      {!user && (
-        <HeroSection
-          imageUrl='/reservation.jpg'
-          title="Réservation"
-          description="Choisissez votre service, votre spécialiste et votre
-                  créneau horaire."
-          badgeText='reservation'
-        />
-      )}
-      <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="text-center mb-16">
+      {/* Header */}
+      <section className="bg-linear-to-b from-pink-50 to-white dark:from-gray-900 dark:to-gray-950 py-16 sm:py-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <Badge className="my-8 bg-pink-100 dark:bg-pink-900 text-pink-600 dark:text-pink-200">
             <CalendarIcon className="w-4 h-4 mr-2" />
             Réservation
@@ -173,12 +192,14 @@ export default function AppointmentsV2() {
             créneau horaire
           </p>
         </div>
+      </section>
+      <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
           {/* Booking Form */}
           <div className="lg:col-span-2 space-y-4 sm:space-y-6">
             {/* Step 1: Service Category */}
-            <Card className="p-4 sm:p-6 lg:p-8 border border-pink-100 dark:border-pink-900 shadow-xl rounded-2xl bg-white dark:bg-gray-900">
+            <Card className="p-4 sm:p-6 lg:p-8 border border-pink-100 dark:border-pink-900 shadow-xl rounded-2xl bg-white dark:bg-gray-950">
               <div className="flex items-center mb-6">
                 <div className="w-10 h-10 rounded-full bg-linear-to-br from-pink-500 to-amber-400 flex items-center justify-center text-white mr-4 shrink-0">
                   1
@@ -249,7 +270,7 @@ export default function AppointmentsV2() {
             </Card>
 
             {/* Step 2: Worker */}
-            <Card className="p-4 sm:p-6 lg:p-8 border border-pink-100 dark:border-pink-900 shadow-xl rounded-2xl bg-white dark:bg-gray-900">
+            <Card className="p-4 sm:p-6 lg:p-8 border border-pink-100 dark:border-pink-900 shadow-xl rounded-2xl bg-white dark:bg-gray-950">
               <div className="flex items-center mb-6">
                 <div className="w-10 h-10 rounded-full bg-linear-to-br from-pink-500 to-amber-400 flex items-center justify-center text-white mr-4 shrink-0">
                   2
@@ -280,7 +301,7 @@ export default function AppointmentsV2() {
             </Card>
 
             {/* Step 3: Date & Time */}
-            <Card className="p-4 sm:p-6 lg:p-8 border border-pink-100 dark:border-pink-900 shadow-xl rounded-2xl bg-white dark:bg-gray-900">
+            <Card className="p-4 sm:p-6 lg:p-8 border border-pink-100 dark:border-pink-900 shadow-xl rounded-2xl bg-white dark:bg-gray-950">
               <div className="flex items-center mb-6">
                 <div className="w-10 h-10 rounded-full bg-linear-to-br from-pink-500 to-amber-400 flex items-center justify-center text-white mr-4 shrink-0">
                   3
@@ -332,7 +353,7 @@ export default function AppointmentsV2() {
             </Card>
 
             {/* Step 4: Location */}
-            <Card className="p-4 sm:p-6 lg:p-8 border border-pink-100 dark:border-pink-900 shadow-xl rounded-2xl bg-white dark:bg-gray-900">
+            <Card className="p-4 sm:p-6 lg:p-8 border border-pink-100 dark:border-pink-900 shadow-xl rounded-2xl bg-white dark:bg-gray-950">
               <div className="flex items-center mb-6">
                 <div className="w-10 h-10 rounded-full bg-linear-to-br from-pink-500 to-amber-400 flex items-center justify-center text-white mr-4 shrink-0">
                   4
@@ -389,7 +410,7 @@ export default function AppointmentsV2() {
             </Card>
 
             {/* Step 5: Add-ons */}
-            <Card className="p-4 sm:p-6 lg:p-8 border border-pink-100 dark:border-pink-900 shadow-xl rounded-2xl bg-white dark:bg-gray-900">
+            <Card className="p-4 sm:p-6 lg:p-8 border border-pink-100 dark:border-pink-900 shadow-xl rounded-2xl bg-white dark:bg-gray-950">
               <div className="flex items-center mb-6">
                 <div className="w-10 h-10 rounded-full bg-linear-to-br from-pink-500 to-amber-400 flex items-center justify-center text-white mr-4 shrink-0">
                   5
@@ -433,7 +454,7 @@ export default function AppointmentsV2() {
 
           {/* Summary Sidebar */}
           <div className="lg:col-span-1">
-            <Card className="p-4 sm:p-6 lg:p-8 border border-pink-100 dark:border-pink-900 shadow-xl rounded-2xl sticky top-24 bg-white dark:bg-gray-900">
+            <Card className="p-4 sm:p-6 lg:p-8 border border-pink-100 dark:border-pink-900 shadow-xl rounded-2xl sticky top-24 bg-white dark:bg-gray-950">
               <h3 className="text-xl sm:text-2xl text-gray-900 dark:text-gray-100 mb-6">
                 Récapitulatif
               </h3>

@@ -147,7 +147,7 @@ export default function About() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             {values.map((value, index) => (
-              <Card key={index} className="bg-white dark:bg-gray-900 border-b border-pink-100 dark:border-pink-900 shadow-xl rounded-2xl p-6 sm:p-8 text-center hover:shadow-2xl transition-shadow">
+              <Card key={index} className="bg-white dark:bg-gray-950 border-b border-pink-100 dark:border-pink-900 shadow-xl rounded-2xl p-6 sm:p-8 text-center hover:shadow-2xl transition-shadow">
                 <div className={`w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-linear-to-br ${value.color} flex items-center justify-center mx-auto mb-4 sm:mb-6`}>
                   {value.icon}
                 </div>
@@ -172,7 +172,7 @@ export default function About() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
             {team.map((member, index) => (
-              <Card key={index} className="bg-white dark:bg-gray-900 border-b border-pink-100 dark:border-pink-900 shadow-xl rounded-2xl overflow-hidden hover:shadow-2xl transition-shadow">
+              <Card key={index} className="bg-white dark:bg-gray-950 border-b border-pink-100 dark:border-pink-900 shadow-xl rounded-2xl overflow-hidden hover:shadow-2xl transition-shadow">
                 <div className="relative h-48 sm:h-56 md:h-64">
                   <ImageWithFallback
                     src={member.image}
@@ -216,7 +216,7 @@ export default function About() {
         <div className="bg-linear-to-br from-pink-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 border-b border-pink-100 dark:border-pink-900 rounded-3xl p-8 sm:p-12 mb-16 sm:mb-24">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 items-center">
             <div>
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl text-gray-900 dark:text-gray-100 mb-6 sm:mb-8">
+              <h2 className="text-2xl  sm:text-3xl lg:text-4xl text-gray-900 dark:text-gray-100 mb-6 sm:mb-8">
                 Notre engagement envers vous
               </h2>
               <div className="space-y-3 sm:space-y-4">
@@ -278,7 +278,7 @@ export default function About() {
 
         {/* CTA Section */}
         <div className="text-center mb-16 sm:mb-24">
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl text-gray-900 dark:text-gray-100 mb-6 sm:mb-8">
+          <h2 className="text-2xl  sm:text-3xl lg:text-4xl text-gray-900 dark:text-gray-100 mb-6 sm:mb-8">
             Prête à vivre l'expérience Beauty Nails ?
           </h2>
           <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center">

@@ -132,7 +132,7 @@ export default function Services() {
                       {categoryServices.map((service) => (
                         <Card
                           key={service.id}
-                          className="bg-white dark:bg-gray-900 border-0 border-b border-pink-100 dark:border-pink-900 shadow-lg hover:shadow-xl transition-shadow p-6 rounded-2xl"
+                          className="bg-white dark:bg-gray-950 border-0 border-b border-pink-100 dark:border-pink-900 shadow-lg hover:shadow-xl transition-shadow p-6 rounded-2xl"
                         >
                           <h3 className="text-xl text-gray-900 dark:text-gray-100 mb-4 font-medium">{service.name}</h3>
                           <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">{service.description}</p>
@@ -176,21 +176,21 @@ export default function Services() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <Card className="bg-white dark:bg-gray-900 border-0 border-b border-pink-100 dark:border-pink-900 shadow-md p-6 rounded-2xl text-center">
+            <Card className="bg-white dark:bg-gray-950 border-0 border-b border-pink-100 dark:border-pink-900 shadow-md p-6 rounded-2xl text-center">
               <div className="text-4xl mb-4">🏠</div>
               <h3 className="text-xl text-gray-900 dark:text-gray-100 mb-2 font-medium">Prestation à domicile</h3>
               <p className="text-gray-600 dark:text-gray-400 mb-3 font-semibold">+ 20 000 Fc</p>
               <p className="text-sm text-gray-500 dark:text-gray-400">Profitez de nos services dans le confort de votre domicile</p>
             </Card>
 
-            <Card className="bg-white dark:bg-gray-900 border-0 border-b border-pink-100 dark:border-pink-900 shadow-md p-6 rounded-2xl text-center">
+            <Card className="bg-white dark:bg-gray-950 border-0 border-b border-pink-100 dark:border-pink-900 shadow-md p-6 rounded-2xl text-center">
               <div className="text-4xl mb-4">⏰</div>
               <h3 className="text-xl text-gray-900 dark:text-gray-100 mb-2 font-medium">Rendez-vous express</h3>
               <p className="text-gray-600 dark:text-gray-400 mb-3 font-semibold">+ 10 000 Fc</p>
               <p className="text-sm text-gray-500 dark:text-gray-400">Service prioritaire pour les emplois du temps chargés</p>
             </Card>
 
-            <Card className="bg-white dark:bg-gray-900 border-0 border-b border-pink-100 dark:border-pink-900 shadow-md p-6 rounded-2xl text-center">
+            <Card className="bg-white dark:bg-gray-950 border-0 border-b border-pink-100 dark:border-pink-900 shadow-md p-6 rounded-2xl text-center">
               <div className="text-4xl mb-4">✨</div>
               <h3 className="text-xl text-gray-900 dark:text-gray-100 mb-2 font-medium">Produits premium</h3>
               <p className="text-gray-600 dark:text-gray-400 mb-3 font-semibold">+ 15 000 Fc</p>

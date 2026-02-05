@@ -91,7 +91,7 @@ export default function CreateWorkerModal({ triggerLabel = "Ajouter un employé"
       <DialogTrigger asChild>
         <Button variant="ghost">{triggerLabel}</Button>
       </DialogTrigger>
-      <DialogContent className="max-w-2xl ">
+      <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Créer un nouvel employé</DialogTitle>
         </DialogHeader>

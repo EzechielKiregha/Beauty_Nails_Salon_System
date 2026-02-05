@@ -23,6 +23,7 @@ import { useNotifications } from '@/lib/hooks/useNotifications';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import LoadingSpinner from '../LoadingSpinner';
+import LoaderBN from '../Loader-BN';
 
 export default function WorkerDashboardV2() {
   const [notificationOpen, setNotificationOpen] = useState(false);
@@ -239,7 +240,7 @@ export default function WorkerDashboardV2() {
   // Loading state
   if (isAuthLoading || isAppointmentsLoading) {
     return (
-      <LoadingSpinner />
+      <LoaderBN />
     );
   }
 
@@ -255,7 +256,7 @@ export default function WorkerDashboardV2() {
         <div className="mb-12">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
             <div>
-              <h1 className="text-3xl sm:text-4xl font-bold bg-linear-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">
+              <h1 className="text-3xl sm:text-4xl  bg-linear-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">
                 Espace Employé
               </h1>
               <p className="text-gray-600 dark:text-gray-300 text-base sm:text-lg">
@@ -275,8 +276,8 @@ export default function WorkerDashboardV2() {
                   )}
                 </Button>
               </SheetTrigger>
-              <SheetContent className="p-2 border-r-0 border-pink-100 dark:border-pink-900 shadow-xl rounded-l-2xl bg-white dark:bg-gray-900">
-                <h2 className="text-2xl font-bold mb-6 dark:text-gray-100">Notifications</h2>
+              <SheetContent className="p-2 border-r-0 border-pink-100 dark:border-pink-900 shadow-xl rounded-l-2xl bg-white dark:bg-gray-950">
+                <h2 className="text-2xl   mb-6 dark:text-gray-100">Notifications</h2>
                 <ScrollArea className="h-[calc(100vh-150px)]">
                   <div className="space-y-4">
                     {notificationList.length === 0 ? (
@@ -310,36 +311,36 @@ export default function WorkerDashboardV2() {
 
           {/* Stats Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-            <Card className="p-4 sm:p-6 hover:shadow-lg transition-shadow border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-900">
+            <Card className="p-4 sm:p-6 hover:shadow-lg transition-shadow border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950">
               <div className="flex items-center justify-between mb-4">
                 <div className="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
                   <Calendar className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600 dark:text-purple-400" />
                 </div>
               </div>
               <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300  mb-1">Aujourd'hui</p>
-              <p className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">{stats.todayAppointments}</p>
+              <p className="text-2xl sm:text-3xl  text-gray-900 dark:text-gray-100">{stats.todayAppointments}</p>
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">{stats.completed} terminés</p>
             </Card>
 
-            <Card className="p-4 sm:p-6 hover:shadow-lg transition-shadow border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-900">
+            <Card className="p-4 sm:p-6 hover:shadow-lg transition-shadow border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950">
               <div className="flex items-center justify-between mb-4">
                 <div className="p-3 bg-green-100 dark:bg-green-900/30 rounded-lg">
                   <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6 text-green-600 dark:text-green-400" />
                 </div>
               </div>
               <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300  mb-1">Complétés</p>
-              <p className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">{stats.completed}</p>
+              <p className="text-2xl sm:text-3xl  text-gray-900 dark:text-gray-100">{stats.completed}</p>
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">aujourd'hui</p>
             </Card>
 
-            <Card className="p-4 sm:p-6 hover:shadow-lg transition-shadow border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-900">
+            <Card className="p-4 sm:p-6 hover:shadow-lg transition-shadow border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950">
               <div className="flex items-center justify-between mb-4">
                 <div className="p-3 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg">
                   <Clock className="w-5 h-5 sm:w-6 sm:h-6 text-yellow-600 dark:text-yellow-400" />
                 </div>
               </div>
               <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300  mb-1">En attente</p>
-              <p className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">{stats.pending}</p>
+              <p className="text-2xl sm:text-3xl  text-gray-900 dark:text-gray-100">{stats.pending}</p>
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">à confirmer</p>
             </Card>
             <Card className="p-4 sm:p-6 bg-linear-to-br from-amber-500 to-pink-500 text-white border-0 shadow-xl">
@@ -350,7 +351,7 @@ export default function WorkerDashboardV2() {
                 <Star className="w-4 h-4 sm:w-5 sm:h-5" />
               </div>
               <p className="text-xs sm:text-sm opacity-90 mb-1">Note moyenne</p>
-              <p className="text-2xl sm:text-3xl font-bold">{stats.rating.toFixed(1)}</p>
+              <p className="text-2xl sm:text-3xl ">{stats.rating.toFixed(1)}</p>
               <p className="text-xs opacity-80 mt-2">
                 {user?.workerProfile?.totalReviews || 0} avis
               </p>
@@ -378,7 +379,7 @@ export default function WorkerDashboardV2() {
           {/* Schedule Tab */}
           <TabsContent value="schedule" className="space-y-6">
             <Card className="p-6">
-              <h2 className="text-2xl font-bold mb-6 flex items-center">
+              <h2 className="text-2xl   mb-6 flex items-center">
                 <Clock className="w-6 h-6 mr-2 text-purple-500" />
                 Planning d'aujourd'hui
               </h2>
@@ -393,12 +394,12 @@ export default function WorkerDashboardV2() {
                   {todaySchedule.map((appointment) => (
                     <div
                       key={appointment.id}
-                      className=" p-6 hover:shadow-lg border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-900"
+                      className=" p-6 hover:shadow-lg border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950"
                     >
                       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                         <div className="flex items-center gap-4 flex-1">
                           <div className="text-center">
-                            <div className="text-2xl font-bold text-purple-600">
+                            <div className="text-2xl  text-purple-600">
                               {appointment.time}
                             </div>
                             <div className="text-xs text-gray-500">
@@ -475,7 +476,7 @@ export default function WorkerDashboardV2() {
                   {pendingAppointments.map((appointment) => (
                     <div
                       key={appointment.id}
-                      className="flex items-center justify-between p-4 border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-900"
+                      className="flex items-center justify-between p-4 border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950"
                     >
                       <div>
                         <p className="font-semibold">{appointment.client?.user?.name}</p>
@@ -516,7 +517,7 @@ export default function WorkerDashboardV2() {
           {/* Performance Tab */}
           <TabsContent value="performance" className="space-y-6">
             <Card className="p-6">
-              <h2 className="text-2xl font-bold mb-6">Performance hebdomadaire</h2>
+              <h2 className="text-2xl   mb-6">Performance hebdomadaire</h2>
               <div className="h-80">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={weeklyData}>
@@ -536,11 +537,11 @@ export default function WorkerDashboardV2() {
                 <div className="space-y-4">
                   <div className="flex items-center justify-between py-2 border-b">
                     <span className="text-gray-600 dark:text-gray-300">Rendez-vous cette semaine</span>
-                    <span className="font-bold">{commissionData?.appointmentsCount || 0}</span>
+                    <span className="">{commissionData?.appointmentsCount || 0}</span>
                   </div>
                   <div className="flex items-center justify-between py-2 border-b">
                     <span className="text-gray-600 dark:text-gray-300">Taux de complétion</span>
-                    <span className="font-bold text-green-600">
+                    <span className=" text-green-600">
                       {completedToday.length > 0
                         ? Math.round((completedToday.length / todaySchedule.length) * 100)
                         : 0}
@@ -551,7 +552,7 @@ export default function WorkerDashboardV2() {
                     <span className="text-gray-600 dark:text-gray-300">Note moyenne</span>
                     <div className="flex items-center gap-1">
                       <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                      <span className="font-bold">{stats.rating.toFixed(1)}</span>
+                      <span className="">{stats.rating.toFixed(1)}</span>
                     </div>
                   </div>
                 </div>
@@ -564,11 +565,11 @@ export default function WorkerDashboardV2() {
                     <p className="text-gray-500">Aucun rendez-vous cette semaine</p>
                   ) : (
                     serviceStats.map((service, index) => {
-                      const colors = ['bg-purple-50 dark:bg-gray-900', 'bg-pink-50 dark:bg-gray-900', 'bg-amber-50 dark:bg-gray-900'];
+                      const colors = ['bg-purple-50 dark:bg-gray-950', 'bg-pink-50 dark:bg-gray-950', 'bg-amber-50 dark:bg-gray-950'];
                       return (
                         <div
                           key={service.name}
-                          className={`flex items-center justify-between p-3 ${colors[index] || 'bg-white dark:bg-gray-900'} border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-lg `}
+                          className={`flex items-center justify-between p-3 ${colors[index] || 'bg-white dark:bg-gray-950'} border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-lg `}
                         >
                           <span>{service.name}</span>
                           <Badge>{service.percentage}%</Badge>
@@ -584,12 +585,12 @@ export default function WorkerDashboardV2() {
           {/* Earnings Tab */}
           <TabsContent value="earnings" className="space-y-6">
             <Card className="p-6">
-              <h2 className="text-2xl font-bold mb-6">Commissions</h2>
+              <h2 className="text-2xl   mb-6">Commissions</h2>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                 <div className="p-6 bg-linear-to-br from-green-100 to-emerald-100  rounded-xl">
                   <p className="text-sm text-gray-600 mb-2">Cette semaine</p>
-                  <p className="text-3xl font-bold text-gray-900">
+                  <p className="text-3xl  text-gray-900">
                     {stats.commission.toLocaleString()} Fc
                   </p>
                   <p className="text-sm text-gray-600 mt-2">
@@ -599,7 +600,7 @@ export default function WorkerDashboardV2() {
 
                 <div className="p-6 bg-linear-to-br from-blue-100 to-purple-100 rounded-xl">
                   <p className="text-sm text-gray-600 mb-2">Revenus générés</p>
-                  <p className="text-3xl font-bold text-gray-900">
+                  <p className="text-3xl  text-gray-900">
                     {stats.revenue.toLocaleString()} Fc
                   </p>
                   <p className="text-sm text-gray-600 mt-2">
@@ -609,7 +610,7 @@ export default function WorkerDashboardV2() {
 
                 <div className="p-6 bg-linear-to-br from-amber-100 to-orange-100 rounded-xl">
                   <p className="text-sm text-gray-600  mb-2">Moyenne par service</p>
-                  <p className="text-3xl font-bold text-gray-900">
+                  <p className="text-3xl  text-gray-900">
                     {commissionData?.appointmentsCount
                       ? Math.round(stats.revenue / commissionData.appointmentsCount).toLocaleString()
                       : 0}{' '}
@@ -628,7 +629,7 @@ export default function WorkerDashboardV2() {
                     </p>
                   </div>
                   <div className="text-right">
-                    <p className="text-xl font-bold text-green-600">
+                    <p className="text-xl  text-green-600">
                       {stats.commission.toLocaleString()} Fc
                     </p>
                   </div>

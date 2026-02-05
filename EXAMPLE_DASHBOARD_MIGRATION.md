@@ -163,7 +163,7 @@ function ClientDashboard() {
     <div className="container mx-auto px-4 py-8">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold">
+        <h1 className="text-3xl ">
           Bonjour, {user.name} 👋
         </h1>
         <p className="text-gray-600">Bienvenue dans votre espace client</p>
@@ -173,7 +173,7 @@ function ClientDashboard() {
       <Card className="p-6 mb-8 bg-linear-to-br from-pink-500 to-amber-400 text-white">
         <div className="flex justify-between items-center">
           <div>
-            <h2 className="text-2xl font-bold mb-2">
+            <h2 className="text-2xl   mb-2">
               {points} Points
             </h2>
             <Badge variant="secondary" className="bg-white/20">
@@ -192,23 +192,23 @@ function ClientDashboard() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <Card className="p-6">
           <h3 className="text-sm text-gray-600 mb-2">Rendez-vous</h3>
-          <p className="text-3xl font-bold">{appointments.length}</p>
+          <p className="text-3xl ">{appointments.length}</p>
         </Card>
         
         <Card className="p-6">
           <h3 className="text-sm text-gray-600 mb-2">Points de fidélité</h3>
-          <p className="text-3xl font-bold">{points}</p>
+          <p className="text-3xl ">{points}</p>
         </Card>
         
         <Card className="p-6">
           <h3 className="text-sm text-gray-600 mb-2">Notifications</h3>
-          <p className="text-3xl font-bold">{unreadCount}</p>
+          <p className="text-3xl ">{unreadCount}</p>
         </Card>
       </div>
 
       {/* Upcoming Appointments */}
       <Card className="p-6 mb-8">
-        <h2 className="text-xl font-bold mb-4">
+        <h2 className="text-xl  mb-4">
           Rendez-vous à venir
         </h2>
 
@@ -267,7 +267,7 @@ function ClientDashboard() {
 
       {/* Recent Loyalty Transactions */}
       <Card className="p-6">
-        <h2 className="text-xl font-bold mb-4">
+        <h2 className="text-xl  mb-4">
           Historique de points
         </h2>
 
@@ -284,7 +284,7 @@ function ClientDashboard() {
                 </p>
               </div>
               <p
-                className={`font-bold ${
+                className={` ${
                   transaction.points > 0 ? 'text-green-600' : 'text-red-600'
                 }`}
               >

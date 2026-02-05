@@ -183,7 +183,7 @@ export default function Testimonials() {
         {/* Testimonials Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-12 sm:mb-16">
           {testimonials.map((testimonial, index) => (
-            <Card key={index} className="bg-white dark:bg-gray-900 border-0 border-b border-pink-100 dark:border-pink-900 shadow-lg hover:shadow-xl transition-shadow p-4 sm:p-6 rounded-2xl">
+            <Card key={index} className="bg-white dark:bg-gray-950 border-0 border-b border-pink-100 dark:border-pink-900 shadow-lg hover:shadow-xl transition-shadow p-4 sm:p-6 rounded-2xl">
               <div className="flex items-center justify-between mb-3 sm:mb-4">
                 <div className="flex items-center gap-0.5">
                   {[...Array(5)].map((_, i) => (
@@ -219,7 +219,7 @@ export default function Testimonials() {
 
         {/* CTA Section */}
         <div className="bg-linear-to-br from-pink-500 via-purple-500 to-amber-500 rounded-3xl p-6 sm:p-12 text-center text-white">
-          <h2 className="text-2xl sm:text-4xl mb-4 sm:mb-6">
+          <h2 className="text-2xl  sm:text-4xl mb-4 sm:mb-6">
             Rejoignez nos clientes satisfaites
           </h2>
           <p className="text-base sm:text-xl text-pink-100 mb-6 sm:mb-8 max-w-2xl mx-auto">

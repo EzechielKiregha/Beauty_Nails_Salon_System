@@ -27,6 +27,7 @@ export function useReferral() {
   const {
     data,
     isLoading,
+    error,
   } = useQuery({
     queryKey: ['loyalty', 'referral'],
     queryFn: loyaltyApi.getReferralCode,
@@ -49,6 +50,7 @@ export function useReferral() {
     referrals: data?.referrals || 0,
     // referralList: data?.referralList || [],
     isLoading,
+    error,
     applyReferralCode: applyReferralMutation.mutate,
     isApplying: applyReferralMutation.isPending,
   };

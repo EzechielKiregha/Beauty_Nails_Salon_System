@@ -58,7 +58,7 @@ export default function Login() {
           </p>
         </div>
 
-        <Card className="p-6 sm:p-8 border-b border-pink-100 dark:border-pink-900 bg-white dark:bg-gray-900 shadow-2xl rounded-3xl">
+        <Card className="p-6 sm:p-8 border-b border-pink-100 dark:border-pink-900 bg-white dark:bg-gray-950 shadow-2xl rounded-3xl">
           <Tabs
             defaultValue="client"
           >

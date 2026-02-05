@@ -122,11 +122,11 @@ export default function JoinTeam() {
               de l'excellence et du service client exceptionnel.
             </p>
             <div className="grid grid-cols-2 gap-4 sm:gap-6">
-              <div className="text-center p-4 sm:p-6 bg-pink-50 dark:bg-gray-900 border-b border-pink-100 dark:border-pink-900 rounded-2xl">
+              <div className="text-center p-4 sm:p-6 bg-pink-50 dark:bg-gray-950 border-b border-pink-100 dark:border-pink-900 rounded-2xl">
                 <div className="text-3xl sm:text-4xl text-pink-600 dark:text-pink-400 mb-1 sm:mb-2">8</div>
                 <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">Membres de l'équipe</div>
               </div>
-              <div className="text-center p-4 sm:p-6 bg-purple-50 dark:bg-gray-900 border-b border-pink-100 dark:border-pink-900 rounded-2xl">
+              <div className="text-center p-4 sm:p-6 bg-purple-50 dark:bg-gray-950 border-b border-pink-100 dark:border-pink-900 rounded-2xl">
                 <div className="text-3xl sm:text-4xl text-purple-600 dark:text-purple-400 mb-1 sm:mb-2">5+</div>
                 <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">Années d'expérience</div>
               </div>
@@ -152,7 +152,7 @@ export default function JoinTeam() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             {benefits.map((benefit, index) => (
-              <Card key={index} className="bg-white dark:bg-gray-900 border-b border-pink-100 dark:border-pink-900 shadow-xl rounded-2xl p-6 sm:p-8 text-center hover:shadow-2xl transition-shadow">
+              <Card key={index} className="bg-white dark:bg-gray-950 border-b border-pink-100 dark:border-pink-900 shadow-xl rounded-2xl p-6 sm:p-8 text-center hover:shadow-2xl transition-shadow">
                 <div className={`w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-linear-to-br ${benefit.color} flex items-center justify-center mx-auto mb-4 sm:mb-6`}>
                   {benefit.icon}
                 </div>
@@ -172,7 +172,7 @@ export default function JoinTeam() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
             {positions.map((position, index) => (
-              <Card key={index} className="bg-white dark:bg-gray-900 border-b border-pink-100 dark:border-pink-900 shadow-lg hover:shadow-xl transition-shadow p-6 sm:p-8 rounded-2xl">
+              <Card key={index} className="bg-white dark:bg-gray-950 border-b border-pink-100 dark:border-pink-900 shadow-lg hover:shadow-xl transition-shadow p-6 sm:p-8 rounded-2xl">
                 <h3 className="text-xl sm:text-2xl text-gray-900 dark:text-gray-100 mb-2 sm:mb-3">{position.title}</h3>
                 <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300 mb-4 sm:mb-6">{position.description}</p>
                 <div className="mb-6">
@@ -194,7 +194,7 @@ export default function JoinTeam() {
         {/* Application Form */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
           <div className="lg:col-span-2">
-            <Card className="bg-white dark:bg-gray-900 border-b border-pink-100 dark:border-pink-900 shadow-xl rounded-2xl p-6 sm:p-8">
+            <Card className="bg-white dark:bg-gray-950 border-b border-pink-100 dark:border-pink-900 shadow-xl rounded-2xl p-6 sm:p-8">
               <h2 className="text-xl sm:text-2xl text-gray-900 dark:text-gray-100 mb-4 sm:mb-6">Postulez Maintenant</h2>
               <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">

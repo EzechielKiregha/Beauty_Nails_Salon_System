@@ -22,15 +22,15 @@ export function AddProductModal({ trigger }: AddProductModalProps) {
         <DialogHeader>
           <DialogTitle>Ajouter un Nouveau Produit</DialogTitle>
         </DialogHeader>
-        
+
         <Tabs defaultValue="details" className="w-full py-2">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="details">Détails Produit</TabsTrigger>
             <TabsTrigger value="inventory">Stock & Fournisseur</TabsTrigger>
           </TabsList>
-          
+
           <TabsContent value="details" className="space-y-4 pt-4">
-             {/* Image Upload Placeholder */}
+            {/* Image Upload Placeholder */}
             <div className="flex justify-center">
               <div className="w-32 h-32 bg-gray-100 rounded-xl border-2 border-dashed border-gray-300 flex flex-col items-center justify-center cursor-pointer hover:bg-gray-50 hover:border-pink-300 transition-colors">
                 <ImageIcon className="w-8 h-8 text-gray-400" />
@@ -69,8 +69,8 @@ export function AddProductModal({ trigger }: AddProductModalProps) {
                 </Select>
               </div>
               <div className="space-y-2">
-                 <Label>Marque</Label>
-                 <Input placeholder="Ex: OPI, L'Oréal..." />
+                <Label>Marque</Label>
+                <Input placeholder="Ex: OPI, L'Oréal..." />
               </div>
             </div>
 
@@ -84,13 +84,13 @@ export function AddProductModal({ trigger }: AddProductModalProps) {
                 <Input placeholder="25000" type="number" />
               </div>
             </div>
-            
-             <div className="space-y-2">
-               <Label>Description</Label>
-               <Textarea placeholder="Détails, usage, contenance..." className="h-20 resize-none" />
-             </div>
+
+            <div className="space-y-2">
+              <Label>Description</Label>
+              <Textarea placeholder="Détails, usage, contenance..." className="h-20 resize-none" />
+            </div>
           </TabsContent>
-          
+
           <TabsContent value="inventory" className="space-y-4 pt-4">
             <div className="bg-orange-50 p-4 rounded-lg border border-orange-100 flex items-start gap-3">
               <AlertTriangle className="w-5 h-5 text-orange-500 mt-0.5" />
@@ -102,7 +102,7 @@ export function AddProductModal({ trigger }: AddProductModalProps) {
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label>Stock Initial</Label>
-                <Input placeholder="0" type="number" className="font-bold" />
+                <Input placeholder="0" type="number" className="" />
               </div>
               <div className="space-y-2">
                 <Label>Seuil d'alerte (Min)</Label>
@@ -164,12 +164,12 @@ export function AdjustStockModal({ productName, currentStock, trigger }: AdjustS
         <div className="grid gap-4 py-4">
           <div className="bg-gray-50 p-4 rounded-xl text-sm flex justify-between items-center border">
             <div>
-              <span className="font-bold block text-base text-gray-900">{productName || 'Produit'}</span>
+              <span className=" block text-base text-gray-900">{productName || 'Produit'}</span>
               <span className="text-gray-500">Stock actuel</span>
             </div>
-            <div className="text-2xl font-bold text-gray-900">{currentStock || 0}</div>
+            <div className="text-2xl  text-gray-900">{currentStock || 0}</div>
           </div>
-          
+
           <div className="space-y-2">
             <Label>Type d'ajustement</Label>
             <Select value={reason} onValueChange={setReason}>
@@ -189,9 +189,9 @@ export function AdjustStockModal({ productName, currentStock, trigger }: AdjustS
 
           <div className="space-y-2">
             <Label>Quantité à {['damage', 'usage', 'correction_neg'].includes(reason) ? 'retirer' : 'ajouter'}</Label>
-            <Input 
-              type="number" 
-              placeholder="Ex: 5" 
+            <Input
+              type="number"
+              placeholder="Ex: 5"
               value={qty}
               onChange={(e) => setQty(e.target.value)}
               className={['damage', 'usage', 'correction_neg'].includes(reason) ? "border-red-300 focus-visible:ring-red-500" : "border-green-300 focus-visible:ring-green-500"}
@@ -232,10 +232,10 @@ export function OrderModal({ productName, supplierName, trigger }: OrderModalPro
         <div className="grid gap-4 py-4">
           <div className="flex items-center gap-4 bg-orange-50 p-4 rounded-xl border border-orange-200">
             <div className="bg-white p-2 rounded-full shadow-sm">
-               <Truck className="h-6 w-6 text-orange-600" />
+              <Truck className="h-6 w-6 text-orange-600" />
             </div>
             <div>
-              <p className="font-bold text-orange-900">{supplierName || 'Beauty Supplies DRC'}</p>
+              <p className=" text-orange-900">{supplierName || 'Beauty Supplies DRC'}</p>
               <p className="text-xs text-orange-700 font-medium uppercase tracking-wide">Fournisseur Principal</p>
             </div>
           </div>
@@ -258,10 +258,10 @@ export function OrderModal({ productName, supplierName, trigger }: OrderModalPro
               </div>
             </div>
           </div>
-          
+
           <div className="flex justify-between items-center bg-gray-900 text-white p-4 rounded-lg">
             <span>Total Estimé</span>
-            <span className="font-bold text-lg">150 000 CDF</span>
+            <span className=" text-lg">150 000 CDF</span>
           </div>
         </div>
         <DialogFooter>

@@ -53,7 +53,8 @@ import { useAuth } from "@/lib/hooks/useAuth";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import LoadingSpinner from "../LoadingSpinner";
-import { env } from "node:process";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../ui/accordion";
+import LoaderBN from "../Loader-BN";
 
 export default function ClientDashboardV2() {
   const [notificationOpen, setNotificationOpen] = useState(false);
@@ -65,7 +66,6 @@ export default function ClientDashboardV2() {
   const router = useRouter();
   // Get authenticated user
   const { user, isLoading: isAuthLoading } = useAuth();
-
   // Get appointments
   const {
     appointments = [],
@@ -77,8 +77,8 @@ export default function ClientDashboardV2() {
 
   // Get loyalty data
   const {
-    points = 0,
-    tier = "Regular",
+    points: loyaltyPoints,
+    tier: loyaltyTier,
     transactions = [],
     isLoading: isLoyaltyLoading,
   } = useLoyalty();
@@ -116,10 +116,10 @@ export default function ClientDashboardV2() {
   const nextFreeReferral = Math.max(0, 5 - referrals);
 
   const stats = {
-    loyaltyPoints: points,
+    loyaltyPoints,
     totalAppointments: completedAppointments,
     referrals,
-    status: tier,
+    status: loyaltyTier,
     unreadNotifications: unreadCount,
     nextFreeService,
     nextFreeReferral,
@@ -236,7 +236,7 @@ export default function ClientDashboardV2() {
   // Loading state
   if (isAuthLoading || isAppointmentsLoading || isLoyaltyLoading) {
     return (
-      <LoadingSpinner />
+      <LoaderBN />
     );
   }
 
@@ -252,7 +252,7 @@ export default function ClientDashboardV2() {
         <div className="mb-12">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
             <div>
-              <h1 className="text-3xl sm:text-4xl font-bold bg-linear-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent mb-2">
+              <h1 className="text-3xl sm:text-4xl  bg-linear-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent mb-2">
                 Bonjour, {user?.name} 👋
               </h1>
               <p className="text-gray-900  dark:text-gray-300 text-base sm:text-lg">
@@ -272,9 +272,9 @@ export default function ClientDashboardV2() {
                   )}
                 </Button>
               </SheetTrigger>
-              <SheetContent className="p-2 border-r-0 border-pink-100 dark:border-pink-900 shadow-xl rounded-l-2xl bg-white dark:bg-gray-900">
+              <SheetContent className="p-2 border-r-0 border-pink-100 dark:border-pink-900 shadow-xl rounded-l-2xl bg-white dark:bg-gray-950">
                 <div className="mb-6">
-                  <h2 className="text-2xl font-bold mb-2 dark:text-gray-100">Notifications</h2>
+                  <h2 className="text-2xl   mb-2 dark:text-gray-100">Notifications</h2>
                   <div className="flex items-center justify-between">
                     <p className="text-sm text-gray-900  dark:text-gray-300">
                       {unreadCount} non lues
@@ -340,25 +340,25 @@ export default function ClientDashboardV2() {
                 <div className="p-3 bg-white/20 rounded-lg backdrop-blur-sm">
                   <Gift className="w-5 h-5 sm:w-6 sm:h-6" />
                 </div>
-                {tier === "VIP" && <Crown className="w-4 h-4 sm:w-5 sm:h-5 opacity-80" />}
-                {tier === "Premium" && <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 opacity-80" />}
+                {loyaltyTier === "VIP" && <Crown className="w-4 h-4 sm:w-5 sm:h-5 opacity-80" />}
+                {loyaltyTier === "Premium" && <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 opacity-80" />}
               </div>
               <p className="text-xs sm:text-sm opacity-90 mb-1">Points de fidélité</p>
-              <p className="text-2xl sm:text-3xl font-bold mb-2">{points}</p>
+              <p className="text-2xl sm:text-3xl  mb-2">{loyaltyPoints}</p>
               <Badge className="bg-white/20 hover:bg-white/30 text-white border-0 text-xs sm:text-sm">
-                {tier}
+                {loyaltyTier}
               </Badge>
             </Card>
 
             {/* Total Appointments */}
-            <Card className="p-4 sm:p-6 hover:shadow-lg transition-shadow border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-900">
+            <Card className="p-4 sm:p-6 hover:shadow-lg transition-shadow border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950">
               <div className="flex items-center justify-between mb-4">
                 <div className="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
                   <Calendar className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600 dark:text-purple-400" />
                 </div>
               </div>
               <p className="text-xs sm:text-sm text-gray-900 dark:text-gray-300 mb-1">Rendez-vous</p>
-              <p className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">
+              <p className="text-2xl sm:text-3xl  text-gray-900 dark:text-gray-100">
                 {completedAppointments}
               </p>
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
@@ -367,28 +367,28 @@ export default function ClientDashboardV2() {
             </Card>
 
             {/* Referrals */}
-            <Card className="p-4 sm:p-6 hover:shadow-lg transition-shadow border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-900">
+            <Card className="p-4 sm:p-6 hover:shadow-lg transition-shadow border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950">
               <div className="flex items-center justify-between mb-4">
                 <div className="p-3 bg-amber-100 dark:bg-amber-900/30 rounded-lg">
                   <Users className="w-5 h-5 sm:w-6 sm:h-6 text-amber-600 dark:text-amber-400" />
                 </div>
               </div>
               <p className="text-xs sm:text-sm text-gray-900  dark:text-gray-300 mb-1">Parrainages</p>
-              <p className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">{referrals}</p>
+              <p className="text-2xl sm:text-3xl  text-gray-900 dark:text-gray-100">{referrals}</p>
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
                 {nextFreeReferral} pour service gratuit
               </p>
             </Card>
 
             {/* Next Free Service */}
-            <Card className="p-4 sm:p-6 hover:shadow-lg transition-shadow border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-900">
+            <Card className="p-4 sm:p-6 hover:shadow-lg transition-shadow border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950">
               <div className="flex items-center justify-between mb-4">
                 <div className="p-3 bg-green-100 dark:bg-green-900/30 rounded-lg">
                   <Award className="w-5 h-5 sm:w-6 sm:h-6 text-green-600 dark:text-green-400" />
                 </div>
               </div>
               <p className="text-xs sm:text-sm text-gray-900 dark:text-gray-300 mb-1">Service gratuit dans</p>
-              <p className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">
+              <p className="text-2xl sm:text-3xl  text-gray-900 dark:text-gray-100">
                 {nextFreeService}
               </p>
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">rendez-vous</p>
@@ -417,7 +417,7 @@ export default function ClientDashboardV2() {
           <TabsContent value="appointments" className="space-y-6">
             {/* Upcoming Appointments */}
             <Card className="p-6">
-              <h2 className="text-2xl font-bold mb-6 flex items-center">
+              <h2 className="text-2xl   mb-6 flex items-center">
                 <Clock className="w-6 h-6 mr-2 text-pink-500" />
                 Rendez-vous à venir
               </h2>
@@ -439,12 +439,12 @@ export default function ClientDashboardV2() {
                   {upcomingAppointments.map((appointment) => (
                     <div
                       key={appointment.id}
-                      className="p-6 hover:shadow-lg border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-900"
+                      className="p-6 hover:shadow-lg border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950"
                     >
                       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                         <div className="flex-1">
                           <div className="flex items-center gap-3 mb-3">
-                            <h3 className="text-xl font-bold">
+                            <h3 className="text-xl ">
                               {appointment.service?.name || "Service"}
                             </h3>
                             {getStatusBadge(appointment.status)}
@@ -487,7 +487,7 @@ export default function ClientDashboardV2() {
 
                         <div className="flex flex-col gap-2">
                           <div className="text-right mb-2">
-                            <p className="text-2xl font-bold text-pink-600">
+                            <p className="text-2xl  text-pink-600">
                               {appointment.price?.toLocaleString()} Fc
                             </p>
                           </div>
@@ -522,7 +522,7 @@ export default function ClientDashboardV2() {
 
             {/* Appointment History */}
             <Card className="p-6">
-              <h2 className="text-2xl font-bold mb-6 flex items-center">
+              <h2 className="text-2xl   mb-6 flex items-center">
                 <Package className="w-6 h-6 mr-2 text-purple-500" />
                 Historique
               </h2>
@@ -537,7 +537,7 @@ export default function ClientDashboardV2() {
                   {appointmentHistory.map((appointment) => (
                     <div
                       key={appointment.id}
-                      className="flex items-center justify-between p-4 border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-900"
+                      className="flex items-center justify-between p-4 border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950"
                     >
                       <div className="flex-1">
                         <div className="flex items-center gap-3 mb-2">
@@ -554,7 +554,7 @@ export default function ClientDashboardV2() {
                       </div>
 
                       <div className="flex items-center gap-4">
-                        <p className="font-bold text-gray-900">
+                        <p className=" text-gray-900">
                           {appointment.price?.toLocaleString()} Fc
                         </p>
                         {appointment.status === "completed" &&
@@ -582,17 +582,16 @@ export default function ClientDashboardV2() {
           {/* Loyalty Tab */}
           <TabsContent value="loyalty" className="space-y-6">
             <Card className="p-6">
-              <h2 className="text-2xl font-bold mb-6 flex items-center">
+              {/* <h2 className="text-2xl   mb-6 flex items-center">
                 <Gift className="w-6 h-6 mr-2 text-pink-500" />
                 Programme de Fidélité
               </h2>
 
-              {/* Loyalty Progress */}
-              <div className="mb-8 p-6 border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-900">
+              <div className="mb-8 p-6 border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950">
                 <div className="flex items-center justify-between mb-4">
                   <div>
                     <p className="text-sm text-gray-900 dark:text-gray-100 mb-1">Vos points</p>
-                    <p className="text-4xl font-bold text-gray-900 dark:text-gray-100">{points}</p>
+                    <p className="text-4xl  text-gray-900 dark:text-gray-100">{points}</p>
                   </div>
                   <div className="text-right">
                     <Badge className="bg-linear-to-r from-pink-500 to-purple-500 text-white border-0 text-lg px-4 py-2">
@@ -611,6 +610,46 @@ export default function ClientDashboardV2() {
                     </span>
                   </div>
                   <Progress value={(5 - nextFreeService) * 20} className="h-3" />
+                </div>
+              </div> */}
+
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+                {/* Loyalty Stats & Info */}
+                <div>
+                  <div className="flex items-center gap-4 mb-8">
+                    <div className="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
+                      <Award className="w-6 h-6 text-amber-600 dark:text-amber-400" />
+                    </div>
+                    <div>
+                      <h2 className="text-2xl   text-gray-900 dark:text-gray-100">Votre Statut Fidélité</h2>
+                      <Badge className="bg-amber-500 text-white">{loyaltyTier || 'Standard'}</Badge>
+                    </div>
+                  </div>
+                  <div className="bg-white dark:bg-gray-800/50 p-6 rounded-2xl border border-amber-100 dark:border-amber-900/30 mb-8">
+                    <p className="text-center text-gray-700 dark:text-gray-300">
+                      Points actuels: <span className=" text-amber-600 dark:text-amber-400 text-2xl">{loyaltyPoints}</span>
+                    </p>
+                  </div>
+
+                  <Accordion type="single" collapsible className="w-full">
+                    <AccordionItem value="item-1">
+                      <AccordionTrigger>Comment accumuler des points ?</AccordionTrigger>
+                      <AccordionContent>
+                        Gagnez 1 point pour chaque 1000 Fc dépensés. Obtenez des points bonus pour les anniversaires, parrainages et participation à des événements.
+                      </AccordionContent>
+                    </AccordionItem>
+                    <AccordionItem value="item-2">
+                      <AccordionTrigger>Quels sont les paliers de récompenses ?</AccordionTrigger>
+                      <AccordionContent>
+                        <ul className="list-disc pl-5 space-y-1">
+                          <li>100 points: Manucure gratuite</li>
+                          <li>250 points: Extension cils gratuite</li>
+                          <li>500 points: 50% sur tous services</li>
+                          <li>1000 points: Journée beauté complète gratuite</li>
+                        </ul>
+                      </AccordionContent>
+                    </AccordionItem>
+                  </Accordion>
                 </div>
               </div>
 
@@ -652,7 +691,7 @@ export default function ClientDashboardV2() {
                         </div>
                       </div>
                       <p
-                        className={`text-lg font-bold ${transaction.points > 0
+                        className={`text-lg  ${transaction.points > 0
                           ? "text-green-600"
                           : "text-red-600"
                           }`}
@@ -670,19 +709,19 @@ export default function ClientDashboardV2() {
           {/* Referrals Tab */}
           <TabsContent value="referrals" className="space-y-6">
             <Card className="p-6">
-              <h2 className="text-2xl font-bold mb-6 flex items-center">
+              <h2 className="text-2xl   mb-6 flex items-center">
                 <Share2 className="w-6 h-6 mr-2 text-pink-500" />
                 Programme de Parrainage
               </h2>
 
               {/* Referral Code */}
-              <div className="mb-8 p-6 border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-900">
+              <div className="mb-8 p-6 border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950">
                 <h3 className="text-lg font-semibold mb-4">
                   Votre code de parrainage
                 </h3>
-                <div className="flex items-center gap-3 mb-4">
+                <div className="flex items-center gap-3 mb-4 flex-col">
                   <div className="flex-1 p-4 bg-background rounded-lg border-2 border-dashed border-pink-300">
-                    <p className="text-3xl font-bold text-center text-pink-600 tracking-wider">
+                    <p className="text-sm lg:text-3xl text-center text-pink-600 tracking-wider">
                       {referralCode ? "https://beauty-nails.vercel.app/auth/signup?ref=" + referralCode.toLocaleLowerCase() : "Chargement..."}
                     </p>
                   </div>
@@ -698,13 +737,13 @@ export default function ClientDashboardV2() {
 
                 <div className="grid grid-cols-2 gap-4 text-center">
                   <div className="p-4 bg-white dark:bg-gray-800 rounded-lg">
-                    <p className="text-2xl font-bold text-pink-600">
+                    <p className="text-2xl  text-pink-600">
                       {referrals}
                     </p>
                     <p className="text-sm text-gray-900 dark:text-gray-100">Parrainages réussis</p>
                   </div>
                   <div className="p-4 bg-white dark:bg-gray-800 rounded-lg">
-                    <p className="text-2xl font-bold text-purple-600">
+                    <p className="text-2xl  text-purple-600">
                       {nextFreeReferral}
                     </p>
                     <p className="text-sm text-gray-900 dark:text-gray-100">
@@ -718,9 +757,9 @@ export default function ClientDashboardV2() {
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold">Comment ça marche ?</h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="p-4 border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-900">
+                  <div className="p-4 border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950">
                     <div className="w-12 h-12 bg-pink-100 rounded-full flex items-center justify-center mb-3">
-                      <span className="text-2xl font-bold text-pink-600">
+                      <span className="text-2xl  text-pink-600">
                         1
                       </span>
                     </div>
@@ -729,9 +768,9 @@ export default function ClientDashboardV2() {
                       Partagez votre code avec vos amis
                     </p>
                   </div>
-                  <div className="p-4 border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-900">
+                  <div className="p-4 border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950">
                     <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mb-3">
-                      <span className="text-2xl font-bold text-purple-600">
+                      <span className="text-2xl  text-purple-600">
                         2
                       </span>
                     </div>
@@ -740,9 +779,9 @@ export default function ClientDashboardV2() {
                       Vos amis utilisent votre code à l'inscription
                     </p>
                   </div>
-                  <div className="p-4 border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-900">
+                  <div className="p-4 border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950">
                     <div className="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center mb-3">
-                      <span className="text-2xl font-bold text-amber-600">
+                      <span className="text-2xl  text-amber-600">
                         3
                       </span>
                     </div>

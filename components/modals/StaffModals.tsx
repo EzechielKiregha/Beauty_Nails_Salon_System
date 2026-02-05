@@ -23,7 +23,7 @@ interface EditScheduleModalProps {
 
 export function EditScheduleModal({ staffName, trigger }: EditScheduleModalProps) {
   const days = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
-  
+
   return (
     <Dialog>
       {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
@@ -44,17 +44,17 @@ export function EditScheduleModal({ staffName, trigger }: EditScheduleModalProps
               <div className="col-span-4">Après-midi</div>
               <div className="col-span-1">Actif</div>
             </div>
-            
+
             {days.map((day) => (
               <div key={day} className="grid grid-cols-12 gap-2 items-center p-3 bg-gray-50 rounded-lg border border-gray-100">
                 <div className="col-span-3 font-medium text-gray-900">{day}</div>
-                
+
                 <div className="col-span-4 flex items-center gap-1">
                   <Input type="time" defaultValue="09:00" className="h-8 text-xs" />
                   <span className="text-gray-400">-</span>
                   <Input type="time" defaultValue="13:00" className="h-8 text-xs" />
                 </div>
-                
+
                 <div className="col-span-4 flex items-center gap-1">
                   <Input type="time" defaultValue="14:00" className="h-8 text-xs" />
                   <span className="text-gray-400">-</span>
@@ -103,11 +103,11 @@ export function StaffProfileModal({ staff, trigger }: StaffProfileModalProps) {
       {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
       <DialogContent className="sm:max-w-[800px] max-h-[90vh] overflow-y-auto p-0 gap-0 overflow-hidden">
         <div className="h-32 bg-gradient-to-r from-pink-400 to-purple-500 relative">
-           <Button variant="secondary" size="sm" className="absolute top-4 right-4 bg-white/20 text-white hover:bg-white/30 border-0">
-             Modifier Profil
-           </Button>
+          <Button variant="secondary" size="sm" className="absolute top-4 right-4 bg-white/20 text-white hover:bg-white/30 border-0">
+            Modifier Profil
+          </Button>
         </div>
-        
+
         <div className="px-8 pb-8">
           <div className="flex flex-col md:flex-row gap-6">
             {/* Sidebar Profile Info */}
@@ -119,13 +119,13 @@ export function StaffProfileModal({ staff, trigger }: StaffProfileModalProps) {
                 </AvatarFallback>
               </Avatar>
               <div>
-                <h3 className="text-xl font-bold text-gray-900">{data.name}</h3>
+                <h3 className="text-xl  text-gray-900">{data.name}</h3>
                 <p className="text-pink-600 font-medium">{data.role}</p>
               </div>
               <Badge className={data.status === 'active' ? 'bg-green-500' : 'bg-gray-400'}>
                 {data.status === 'active' ? 'Employée Active' : 'Inactif'}
               </Badge>
-              
+
               <div className="w-full pt-4 space-y-4 text-left bg-gray-50 p-4 rounded-xl">
                 <div className="flex items-center gap-3 text-gray-700 text-sm">
                   <Phone className="w-4 h-4 text-gray-400" /> {data.phone}
@@ -150,7 +150,7 @@ export function StaffProfileModal({ staff, trigger }: StaffProfileModalProps) {
                   <TabsTrigger value="performance" className="rounded-none border-b-2 border-transparent data-[state=active]:border-pink-500 data-[state=active]:bg-transparent px-4 pb-2">Performance</TabsTrigger>
                   <TabsTrigger value="documents" className="rounded-none border-b-2 border-transparent data-[state=active]:border-pink-500 data-[state=active]:bg-transparent px-4 pb-2">Documents</TabsTrigger>
                 </TabsList>
-                
+
                 <TabsContent value="overview" className="space-y-6 mt-6">
                   <div className="grid grid-cols-2 gap-4">
                     <Card className="p-4 bg-blue-50 border-blue-100">
@@ -158,7 +158,7 @@ export function StaffProfileModal({ staff, trigger }: StaffProfileModalProps) {
                         <Star className="w-4 h-4 text-blue-600" />
                         <span className="font-medium text-blue-900">Note Moyenne</span>
                       </div>
-                      <p className="text-3xl font-bold text-blue-700">4.9</p>
+                      <p className="text-3xl  text-blue-700">4.9</p>
                       <p className="text-xs text-blue-600">Basé sur 124 avis</p>
                     </Card>
                     <Card className="p-4 bg-green-50 border-green-100">
@@ -166,15 +166,15 @@ export function StaffProfileModal({ staff, trigger }: StaffProfileModalProps) {
                         <DollarSign className="w-4 h-4 text-green-600" />
                         <span className="font-medium text-green-900">Ventes (Mois)</span>
                       </div>
-                      <p className="text-3xl font-bold text-green-700">1.2M</p>
+                      <p className="text-3xl  text-green-700">1.2M</p>
                       <p className="text-xs text-green-600">CDF ce mois-ci</p>
                     </Card>
                   </div>
-                  
+
                   <div className="space-y-2">
                     <Label className="text-gray-900 font-semibold">Biographie</Label>
                     <p className="text-sm text-gray-600 leading-relaxed bg-white border p-3 rounded-lg">
-                      Spécialiste en onglerie avec plus de 5 ans d'expérience. 
+                      Spécialiste en onglerie avec plus de 5 ans d'expérience.
                       Experte en Nail Art et soins des mains. Appréciée pour sa douceur et sa créativité.
                       Parle Français et Lingala couramment.
                     </p>
@@ -202,7 +202,7 @@ export function StaffProfileModal({ staff, trigger }: StaffProfileModalProps) {
                           <p className="text-xs text-gray-500">Hier, 14:00</p>
                         </div>
                         <div className="text-right">
-                          <p className="font-bold text-green-600">30 000 CDF</p>
+                          <p className=" text-green-600">30 000 CDF</p>
                           <div className="flex text-yellow-400 text-xs">★★★★★</div>
                         </div>
                       </div>
@@ -265,10 +265,10 @@ export function PayrollModal({ staffName, trigger }: PayrollModalProps) {
         <DialogHeader>
           <DialogTitle>Générer Fiche de Paie</DialogTitle>
         </DialogHeader>
-        
+
         <div className="py-4 space-y-5">
           <div className="flex gap-4">
-             <div className="w-1/2 space-y-2">
+            <div className="w-1/2 space-y-2">
               <Label>Employée</Label>
               <Input value={staffName || 'Marie Nkumu'} disabled className="bg-gray-100" />
             </div>
@@ -290,13 +290,13 @@ export function PayrollModal({ staffName, trigger }: PayrollModalProps) {
 
           <div className="space-y-4">
             <h4 className="font-medium text-gray-900">Détails du Calcul</h4>
-            
+
             <div className="grid grid-cols-2 gap-4 items-center">
               <Label className="text-gray-600">Salaire de base</Label>
               <div className="relative">
-                <Input 
-                  type="number" 
-                  value={baseSalary} 
+                <Input
+                  type="number"
+                  value={baseSalary}
                   onChange={(e) => setBaseSalary(Number(e.target.value))}
                   className="text-right pr-12"
                 />
@@ -306,7 +306,7 @@ export function PayrollModal({ staffName, trigger }: PayrollModalProps) {
 
             <div className="grid grid-cols-2 gap-4 items-center">
               <Label className="text-gray-600">Commissions (Auto)</Label>
-               <div className="relative">
+              <div className="relative">
                 <Input value={commission} disabled className="text-right pr-12 bg-gray-50" />
                 <span className="absolute right-3 top-2.5 text-xs text-gray-500">CDF</span>
               </div>
@@ -315,9 +315,9 @@ export function PayrollModal({ staffName, trigger }: PayrollModalProps) {
             <div className="grid grid-cols-2 gap-4 items-center">
               <Label className="text-green-600">Bonus / Primes</Label>
               <div className="relative">
-                <Input 
-                  type="number" 
-                  value={bonus} 
+                <Input
+                  type="number"
+                  value={bonus}
                   onChange={(e) => setBonus(Number(e.target.value))}
                   className="text-right pr-12 text-green-700 border-green-200 focus-visible:ring-green-500"
                 />
@@ -328,9 +328,9 @@ export function PayrollModal({ staffName, trigger }: PayrollModalProps) {
             <div className="grid grid-cols-2 gap-4 items-center">
               <Label className="text-red-600">Retenues / Avances</Label>
               <div className="relative">
-                <Input 
-                  type="number" 
-                  value={deductions} 
+                <Input
+                  type="number"
+                  value={deductions}
                   onChange={(e) => setDeductions(Number(e.target.value))}
                   className="text-right pr-12 text-red-700 border-red-200 focus-visible:ring-red-500"
                 />
@@ -341,9 +341,9 @@ export function PayrollModal({ staffName, trigger }: PayrollModalProps) {
 
           <div className="bg-gray-900 text-white p-4 rounded-xl flex justify-between items-center shadow-lg">
             <span className="font-medium">Net à Payer</span>
-            <span className="text-xl font-bold">{netSalary.toLocaleString()} CDF</span>
+            <span className="text-xl ">{netSalary.toLocaleString()} CDF</span>
           </div>
-          
+
           <div className="flex items-center gap-2">
             <Checkbox id="email-slip" defaultChecked className="border-gray-400" />
             <Label htmlFor="email-slip" className="text-gray-600 cursor-pointer">Envoyer par email à l'employée</Label>

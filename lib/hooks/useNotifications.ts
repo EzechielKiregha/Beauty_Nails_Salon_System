@@ -38,6 +38,18 @@ export function useNotifications(params?: {
       toast.success('Toutes les notifications marquées comme lues');
     },
   });
+  
+  // Create notification
+  const createNotificationMutation = useMutation({
+    mutationFn: notificationsApi.createNotification,
+    onSuccess: () => {
+      // Optionally invalidate queries if needed, or just show a toast
+      toast.success('Notification envoyée');
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.error?.message || 'Erreur lors de l\'envoi de la notification');
+    },
+  });
 
   return {
     notifications: data?.notifications || [],
@@ -46,5 +58,7 @@ export function useNotifications(params?: {
     error,
     markAsRead: markAsReadMutation.mutate,
     markAllAsRead: markAllAsReadMutation.mutate,
+    createNotification: createNotificationMutation.mutate,
+    isCreatingNotification: createNotificationMutation.isPending,
   };
 }

@@ -187,7 +187,7 @@ const { data: revenue } = useRevenueReport({ from: '2024-01-01', to: '2024-01-31
 function MyList() {
   const { items, isLoading, error } = useItems();
 
-  if (isLoading) return <LoadingSpinner />;
+  if (isLoading) return <LoaderBN />;
   if (error) return <ErrorMessage error={error} />;
 
   return (

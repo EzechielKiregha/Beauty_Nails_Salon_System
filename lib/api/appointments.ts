@@ -24,7 +24,9 @@ export interface Appointment {
 
 export interface CreateAppointmentData {
   clientId?: string;
-  serviceId: string;
+  serviceId?: string;
+  packageId?: string;
+  price?: number;
   workerId: string;
   date: string;
   time: string;

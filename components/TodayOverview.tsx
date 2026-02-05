@@ -90,7 +90,7 @@ export default function TodayOverview({ showMock }: { showMock?: boolean }) {
             <div className="min-w-0">
               <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1 font-medium">RDV Aujourd'hui</p>
               <p className="text-2xl sm:text-3xl text-gray-900 dark:text-gray-100 font-black">{todayStats.upcomingAppointments}</p>
-              <p className="text-[10px] sm:text-xs text-blue-600 dark:text-blue-400 mt-1 font-bold">+ {todayStats.completedAppointments} complétés</p>
+              <p className="text-[10px] sm:text-xs text-blue-600 dark:text-blue-400 mt-1 ">+ {todayStats.completedAppointments} complétés</p>
             </div>
             <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-linear-to-br from-blue-400 to-cyan-400 flex items-center justify-center shrink-0 shadow-lg shadow-blue-500/30">
               <Calendar className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
@@ -103,7 +103,7 @@ export default function TodayOverview({ showMock }: { showMock?: boolean }) {
             <div className="min-w-0">
               <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1 font-medium">Revenus du Jour</p>
               <p className="text-xl sm:text-2xl text-gray-900 dark:text-gray-100 font-black">{todayStats.dailyRevenue.toLocaleString()} Fc</p>
-              <p className="text-[10px] sm:text-xs text-green-600 dark:text-green-400 mt-1 font-bold">+8% vs hier</p>
+              <p className="text-[10px] sm:text-xs text-green-600 dark:text-green-400 mt-1 ">+8% vs hier</p>
             </div>
             <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-linear-to-br from-green-400 to-emerald-400 flex items-center justify-center shrink-0 shadow-lg shadow-green-500/30">
               <DollarSign className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
@@ -116,7 +116,7 @@ export default function TodayOverview({ showMock }: { showMock?: boolean }) {
             <div className="min-w-0">
               <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1 font-medium">Clientes Servies</p>
               <p className="text-2xl sm:text-3xl text-gray-900 dark:text-gray-100 font-black">{todayStats.clientsServed}</p>
-              <p className="text-[10px] sm:text-xs text-purple-600 dark:text-purple-400 mt-1 font-bold">En cours: 3</p>
+              <p className="text-[10px] sm:text-xs text-purple-600 dark:text-purple-400 mt-1 ">En cours: 3</p>
             </div>
             <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-linear-to-br from-purple-400 to-pink-400 flex items-center justify-center shrink-0 shadow-lg shadow-purple-500/30">
               <Users className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
@@ -134,7 +134,7 @@ export default function TodayOverview({ showMock }: { showMock?: boolean }) {
               <p className="text-xl sm:text-2xl text-gray-900 dark:text-gray-100 font-black">
                 {todayStats.walkInAvailable ? 'Disponible' : 'Complet'}
               </p>
-              <p className="text-[10px] sm:text-xs text-gray-600 dark:text-gray-400 mt-1 font-bold italic">Attente: ~{todayStats.averageWaitTime} min</p>
+              <p className="text-[10px] sm:text-xs text-gray-600 dark:text-gray-400 mt-1  italic">Attente: ~{todayStats.averageWaitTime} min</p>
             </div>
             <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center shrink-0 shadow-lg ${todayStats.walkInAvailable
               ? 'bg-linear-to-br from-amber-400 to-orange-400 shadow-amber-500/30'
@@ -147,17 +147,17 @@ export default function TodayOverview({ showMock }: { showMock?: boolean }) {
       </div>
 
       {/* Current Occupancy */}
-      <Card className="border-0 shadow-lg rounded-2xl p-5 sm:p-6 bg-white dark:bg-gray-900 dark:border dark:border-pink-900/30">
+      <Card className="border-0 shadow-lg rounded-2xl p-5 sm:p-6 bg-white dark:bg-gray-950 dark:border dark:border-pink-900/30">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-purple-100 dark:bg-purple-900/20 rounded-full flex items-center justify-center">
               <Activity className="w-5 h-5 text-purple-600 dark:text-purple-400" />
             </div>
-            <h3 className="text-lg sm:text-xl text-gray-900 dark:text-gray-100 font-bold">Occupation Actuelle</h3>
+            <h3 className="text-lg sm:text-xl text-gray-900 dark:text-gray-100 ">Occupation Actuelle</h3>
           </div>
           <Badge className={`${todayStats.currentOccupancy >= 80 ? 'bg-red-500 dark:bg-red-900/40 text-white dark:text-red-200' :
             todayStats.currentOccupancy >= 60 ? 'bg-amber-500 dark:bg-amber-900/40 text-white dark:text-amber-200' : 'bg-green-500 dark:bg-green-900/40 text-white dark:text-green-200'
-            } border-0 px-4 py-2 text-xs sm:text-sm font-bold`}>
+            } border-0 px-4 py-2 text-xs sm:text-sm `}>
             {todayStats.currentOccupancy}% Occupé
           </Badge>
         </div>
@@ -171,19 +171,19 @@ export default function TodayOverview({ showMock }: { showMock?: boolean }) {
           />
         </div>
         <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-3 font-medium">
-          <span className="text-gray-900 dark:text-gray-200 font-bold">{staffRoster.filter(s => s.status === 'busy').length}</span> employées occupées • {' '}
-          <span className="text-gray-900 dark:text-gray-200 font-bold">{staffRoster.filter(s => s.status === 'available').length}</span> disponibles
+          <span className="text-gray-900 dark:text-gray-200 ">{staffRoster.filter(s => s.status === 'busy').length}</span> employées occupées • {' '}
+          <span className="text-gray-900 dark:text-gray-200 ">{staffRoster.filter(s => s.status === 'available').length}</span> disponibles
         </p>
       </Card>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Upcoming Appointments */}
-        <Card className="border-0 shadow-lg rounded-2xl p-5 sm:p-6 lg:col-span-2 bg-white dark:bg-gray-900 dark:border dark:border-pink-900/30">
+        <Card className="border-0 shadow-lg rounded-2xl p-5 sm:p-6 lg:col-span-2 bg-white dark:bg-gray-950 dark:border dark:border-pink-900/30">
           <div className="flex items-center gap-3 mb-6">
             <div className="w-10 h-10 bg-pink-100 dark:bg-pink-900/20 rounded-full flex items-center justify-center">
               <Clock className="w-5 h-5 text-pink-500" />
             </div>
-            <h3 className="text-lg sm:text-xl text-gray-900 dark:text-gray-100 font-bold">Prochains Rendez-vous</h3>
+            <h3 className="text-lg sm:text-xl text-gray-900 dark:text-gray-100 ">Prochains Rendez-vous</h3>
           </div>
           <div className="space-y-3">
             {upcomingAppointments.length > 0 ? (
@@ -192,16 +192,16 @@ export default function TodayOverview({ showMock }: { showMock?: boolean }) {
                   <div className="flex items-center gap-4">
                     <div className="text-center min-w-15 bg-white dark:bg-gray-800 p-2 rounded-lg shadow-sm">
                       <p className="text-base sm:text-lg text-gray-900 dark:text-gray-100 font-black">{apt.time}</p>
-                      <p className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 font-bold uppercase">{apt.duration} min</p>
+                      <p className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400  uppercase">{apt.duration} min</p>
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm sm:text-base text-gray-900 dark:text-gray-100 font-bold truncate">{apt.client}</p>
+                      <p className="text-sm sm:text-base text-gray-900 dark:text-gray-100  truncate">{apt.client}</p>
                       <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 font-medium truncate">{apt.service}</p>
                     </div>
                   </div>
                   <div className="hidden sm:block w-px h-10 bg-pink-200 dark:bg-pink-800/30" />
                   <div className="flex items-center justify-between sm:justify-end gap-3 flex-1">
-                    <p className="text-xs sm:text-sm text-gray-700 dark:text-gray-300">avec <span className="font-bold">{apt.staff}</span></p>
+                    <p className="text-xs sm:text-sm text-gray-700 dark:text-gray-300">avec <span className="">{apt.staff}</span></p>
                     <Badge className="bg-blue-500 dark:bg-blue-900/40 text-white dark:text-blue-200 border-0 text-[10px] sm:text-xs font-black">Confirmé</Badge>
                   </div>
                 </div>
@@ -215,35 +215,35 @@ export default function TodayOverview({ showMock }: { showMock?: boolean }) {
         </Card>
 
         {/* Quick Actions */}
-        <Card className="border-0 shadow-lg rounded-2xl p-5 sm:p-6 bg-white dark:bg-gray-900 dark:border dark:border-pink-900/30">
-          <h3 className="text-lg sm:text-xl text-gray-900 dark:text-gray-100 font-bold mb-6">Actions Rapides</h3>
+        <Card className="border-0 shadow-lg rounded-2xl p-5 sm:p-6 bg-white dark:bg-gray-950 dark:border dark:border-pink-900/30">
+          <h3 className="text-lg sm:text-xl text-gray-900 dark:text-gray-100  mb-6">Actions Rapides</h3>
           <div className="space-y-3">
             <AppointmentModal
               trigger={
-                <Button className="w-full bg-linear-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white rounded-full py-6 justify-start px-6 font-bold shadow-lg shadow-pink-500/25 transition-all hover:scale-[1.02]">
+                <Button className="w-full bg-linear-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white rounded-full py-6 justify-start px-6  shadow-lg shadow-pink-500/25 transition-all hover:scale-[1.02]">
                   <Plus className="w-5 h-5 mr-3" />
                   Nouveau Rendez-vous
                 </Button>
               } />
-            <Button className="w-full bg-linear-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white rounded-full py-6 justify-start px-6 font-bold shadow-lg shadow-green-500/25 transition-all hover:scale-[1.02]">
+            <Button className="w-full bg-linear-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white rounded-full py-6 justify-start px-6  shadow-lg shadow-green-500/25 transition-all hover:scale-[1.02]">
               <CreditCard className="w-5 h-5 mr-3" />
               Encaisser Cliente
             </Button>
             <AdjustStockModal
               trigger={
-                <Button className="w-full bg-linear-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-full py-6 justify-start px-6 font-bold shadow-lg shadow-amber-500/25 transition-all hover:scale-[1.02]">
+                <Button className="w-full bg-linear-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-full py-6 justify-start px-6  shadow-lg shadow-amber-500/25 transition-all hover:scale-[1.02]">
                   <Package className="w-5 h-5 mr-3" />
                   Ajouter Stock
                 </Button>
               } />
             <ClientModal
               trigger={
-                <Button variant="outline" className="w-full rounded-full py-6 justify-start px-6 font-bold dark:border-gray-700 dark:hover:bg-gray-800 transition-all hover:scale-[1.02]">
+                <Button variant="outline" className="w-full rounded-full py-6 justify-start px-6  dark:border-gray-700 dark:hover:bg-gray-800 transition-all hover:scale-[1.02]">
                   <Users className="w-5 h-5 mr-3 text-purple-500" />
                   Nouvelle Cliente
                 </Button>
               } />
-            <Button variant="outline" className="w-full rounded-full py-6 justify-start px-6 font-bold dark:border-gray-700 dark:hover:bg-gray-800 transition-all hover:scale-[1.02]">
+            <Button variant="outline" className="w-full rounded-full py-6 justify-start px-6  dark:border-gray-700 dark:hover:bg-gray-800 transition-all hover:scale-[1.02]">
               <Clock className="w-5 h-5 mr-3 text-blue-500" />
               Voir Planning
             </Button>
@@ -252,12 +252,12 @@ export default function TodayOverview({ showMock }: { showMock?: boolean }) {
       </div>
 
       {/* Staff Roster */}
-      <Card className="border-0 shadow-lg rounded-2xl p-5 sm:p-6 bg-white dark:bg-gray-900 dark:border dark:border-pink-900/30">
+      <Card className="border-0 shadow-lg rounded-2xl p-5 sm:p-6 bg-white dark:bg-gray-950 dark:border dark:border-pink-900/30">
         <div className="flex items-center gap-3 mb-6">
           <div className="w-10 h-10 bg-purple-100 dark:bg-purple-900/20 rounded-full flex items-center justify-center">
             <Users className="w-5 h-5 text-purple-600 dark:text-purple-400" />
           </div>
-          <h3 className="text-lg sm:text-xl text-gray-900 dark:text-gray-100 font-bold">Personnel Aujourd'hui</h3>
+          <h3 className="text-lg sm:text-xl text-gray-900 dark:text-gray-100 ">Personnel Aujourd'hui</h3>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {staffRoster.map((staff, idx) => (
@@ -266,7 +266,7 @@ export default function TodayOverview({ showMock }: { showMock?: boolean }) {
                 'bg-amber-50 dark:bg-amber-900/10 border-amber-200 dark:border-amber-900/30'
               }`}>
               <div className="flex items-center justify-between mb-4">
-                <p className="text-base text-gray-900 dark:text-gray-100 font-bold">{staff.name}</p>
+                <p className="text-base text-gray-900 dark:text-gray-100 ">{staff.name}</p>
                 <Badge className={`${staff.status === 'busy' ? 'bg-blue-500 dark:bg-blue-900/40 text-white dark:text-blue-200' :
                   staff.status === 'available' ? 'bg-green-500 dark:bg-green-900/40 text-white dark:text-green-200' : 'bg-amber-500 dark:bg-amber-900/40 text-white dark:text-amber-200'
                   } border-0 text-[10px] sm:text-xs font-black`}>
@@ -277,7 +277,7 @@ export default function TodayOverview({ showMock }: { showMock?: boolean }) {
               <div className="space-y-1.5 mb-4">
                 {staff.currentClient ? (
                   <>
-                    <p className="text-xs sm:text-sm text-gray-700 dark:text-gray-300 font-medium">Cliente: <span className="font-bold">{staff.currentClient}</span></p>
+                    <p className="text-xs sm:text-sm text-gray-700 dark:text-gray-300 font-medium">Cliente: <span className="">{staff.currentClient}</span></p>
                     <p className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 italic">{staff.service}</p>
                   </>
                 ) : (
@@ -286,7 +286,7 @@ export default function TodayOverview({ showMock }: { showMock?: boolean }) {
               </div>
               <div className="flex items-center gap-2 text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 pt-3 border-t border-gray-100 dark:border-gray-800">
                 <Clock className="w-3 h-3" />
-                <span>Disponible: <span className="font-bold text-gray-700 dark:text-gray-300">{staff.nextAvailable}</span></span>
+                <span>Disponible: <span className=" text-gray-700 dark:text-gray-300">{staff.nextAvailable}</span></span>
               </div>
             </Card>
           ))}
@@ -300,7 +300,7 @@ export default function TodayOverview({ showMock }: { showMock?: boolean }) {
             <div className="w-10 h-10 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center">
               <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400" />
             </div>
-            <h3 className="text-lg sm:text-xl text-gray-900 dark:text-gray-100 font-bold">Alertes Urgentes</h3>
+            <h3 className="text-lg sm:text-xl text-gray-900 dark:text-gray-100 ">Alertes Urgentes</h3>
             <Badge className="bg-red-600 dark:bg-red-900/40 text-white dark:text-red-200 border-0 ml-auto px-3 font-black">{urgentAlerts.length}</Badge>
           </div>
           <div className="space-y-3">
@@ -315,14 +315,14 @@ export default function TodayOverview({ showMock }: { showMock?: boolean }) {
                         }`} />
                     </div>
                     <div>
-                      <p className="text-sm sm:text-base text-gray-900 dark:text-gray-100 font-bold">{alert.message}</p>
-                      <Badge className={`text-[10px] sm:text-xs mt-1 border-0 font-bold ${alert.priority === 'high' ? 'bg-red-500/10 text-red-600 dark:text-red-400' : 'bg-amber-500/10 text-amber-600 dark:text-amber-400'
+                      <p className="text-sm sm:text-base text-gray-900 dark:text-gray-100 ">{alert.message}</p>
+                      <Badge className={`text-[10px] sm:text-xs mt-1 border-0  ${alert.priority === 'high' ? 'bg-red-500/10 text-red-600 dark:text-red-400' : 'bg-amber-500/10 text-amber-600 dark:text-amber-400'
                         }`}>
                         {alert.priority === 'high' ? 'Urgent' : 'Attention'}
                       </Badge>
                     </div>
                   </div>
-                  <Button size="sm" variant="outline" className="w-full sm:w-auto rounded-full py-5 px-6 font-bold dark:border-gray-700 dark:hover:bg-gray-800">
+                  <Button size="sm" variant="outline" className="w-full sm:w-auto rounded-full py-5 px-6  dark:border-gray-700 dark:hover:bg-gray-800">
                     Résoudre
                   </Button>
                 </div>
@@ -333,20 +333,20 @@ export default function TodayOverview({ showMock }: { showMock?: boolean }) {
       )}
 
       {/* Popular Services Today */}
-      <Card className="border-0 shadow-lg rounded-2xl p-5 sm:p-6 bg-white dark:bg-gray-900 dark:border dark:border-pink-900/30">
-        <h3 className="text-lg sm:text-xl text-gray-900 dark:text-gray-100 font-bold mb-6">Services Populaires Aujourd'hui</h3>
+      <Card className="border-0 shadow-lg rounded-2xl p-5 sm:p-6 bg-white dark:bg-gray-950 dark:border dark:border-pink-900/30">
+        <h3 className="text-lg sm:text-xl text-gray-900 dark:text-gray-100  mb-6">Services Populaires Aujourd'hui</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {popularServices.map((service, idx) => (
             <Card key={idx} className="bg-linear-to-br from-purple-50 to-pink-50 dark:from-purple-900/10 dark:to-pink-900/10 border-0 p-5 shadow-sm transition-all hover:scale-[1.03]">
-              <p className="text-sm sm:text-base text-gray-900 dark:text-gray-100 font-bold mb-3 truncate">{service.name}</p>
+              <p className="text-sm sm:text-base text-gray-900 dark:text-gray-100  mb-3 truncate">{service.name}</p>
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-2xl sm:text-3xl text-gray-900 dark:text-gray-100 font-black tracking-tight">{service.count}</p>
-                  <p className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 font-bold uppercase">Réservations</p>
+                  <p className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400  uppercase">Réservations</p>
                 </div>
                 <div className="text-right">
                   <p className="text-base sm:text-lg text-pink-600 dark:text-pink-400 font-black">{service.revenue}</p>
-                  <p className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 font-bold uppercase">Revenu</p>
+                  <p className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400  uppercase">Revenu</p>
                 </div>
               </div>
             </Card>

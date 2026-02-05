@@ -45,6 +45,15 @@ export async function GET(request: NextRequest) {
               createdAt: true,
             },
           },
+          referralsRel: {
+            select: {
+              id: true,
+              referrerId: true,
+              referredId: true,
+              status: true,
+              rewardGranted: true,
+            }
+          }
         },
         orderBy: { createdAt: 'desc' },
         skip: (page - 1) * limit,

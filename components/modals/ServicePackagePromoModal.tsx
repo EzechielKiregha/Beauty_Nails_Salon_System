@@ -7,115 +7,168 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Calendar } from '@/components/ui/calendar';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { format } from 'date-fns';
-import { fr } from 'date-fns/locale';
-import { Calendar as CalendarIcon, Upload, Users, Scissors, Percent, Package as PackageIcon } from 'lucide-react';
+import { Calendar as CalendarIcon, Upload, Scissors, Percent, Package as PackageIcon } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import { cn } from '../ui/utils';
+import { useServices } from '@/lib/hooks/useServices';
+import { usePackages } from '@/lib/hooks/usePackages';
+import { useDiscounts } from '@/lib/hooks/useMarketing';
+import { CreateServiceData, Service } from '@/lib/api/services';
+import { CreatePackageData, ServicePackage } from '@/lib/api/packages';
+import { DiscountCode } from '@/lib/api/marketing';
 
 // --- Service Modal ---
-
 interface ServiceModalProps {
-  service?: any;
+  service?: Service; // Use the correct interface
   trigger?: React.ReactNode;
+  onSubmit?: (data: Service) => void; // Callback receives the created/updated service
 }
+export function ServiceModal({ service, trigger, onSubmit }: ServiceModalProps) {
+  const [formData, setFormData] = useState<Partial<CreateServiceData>>({
+    name: service?.name || '',
+    category: service?.category || 'onglerie',
+    price: service?.price || 0,
+    duration: service?.duration || 0,
+    description: service?.description || '',
+    onlineBookable: service?.onlineBookable ?? true,
+    isPopular: service?.isPopular ?? false,
+    // Note: imageUrl is not handled in this basic example
+  });
 
-export function ServiceModal({ service, trigger }: ServiceModalProps) {
+  const { createService, updateService, isCreating, isUpdating } = useServices();
+
+  const handleChange = (field: keyof CreateServiceData, value: any) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleSubmit = () => {
+    if (service) {
+      // Update existing service
+      updateService({ id: service.id, updates: formData as Partial<Service> }); // Cast to Partial<Service> if needed
+    } else {
+      // Create new service
+      createService(formData as CreateServiceData);
+    }
+    // Optionally call onSubmit callback
+    // onSubmit?.(/* new/updated service object - usually returned by mutation */);
+  };
+
   return (
     <Dialog>
       {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
-      <DialogContent className="sm:max-w-[700px] max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <Scissors className="w-5 h-5 text-pink-500" />
-            {service ? 'Modifier Service' : 'Nouveau Service'}
-          </DialogTitle>
+          <DialogTitle>{service ? 'Modifier Service' : 'Nouveau Service'}</DialogTitle>
         </DialogHeader>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 py-4">
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label>Nom du Service</Label>
-              <Input placeholder="Ex: Manucure Gel" defaultValue={service?.name} />
-            </div>
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="serviceName">Nom du Service</Label>
+            <Input
+              id="serviceName"
+              placeholder="Ex: Manucure Gel"
+              value={formData.name || ''}
+              onChange={(e) => handleChange('name', e.target.value)}
+            />
+          </div>
 
-            <div className="space-y-2">
-              <Label>Catégorie</Label>
-              <Select defaultValue={service?.category || 'nails'}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Choisir catégorie" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="nails">Onglerie</SelectItem>
-                  <SelectItem value="lashes">Cils</SelectItem>
-                  <SelectItem value="hair">Coiffure</SelectItem>
-                  <SelectItem value="makeup">Maquillage</SelectItem>
-                  <SelectItem value="spa">Soins Spa</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+          <div className="space-y-2">
+            <Label>Catégorie</Label>
+            <Select value={formData.category} onValueChange={(v) => handleChange('category', v as any)}>
+              <SelectTrigger>
+                <SelectValue placeholder="Choisir catégorie" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="onglerie">Onglerie</SelectItem>
+                <SelectItem value="cils">Cils</SelectItem>
+                <SelectItem value="tresses">Tresses</SelectItem>
+                <SelectItem value="maquillage">Maquillage</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label>Prix (CDF)</Label>
-                <div className="relative">
-                  <Input type="number" placeholder="30000" defaultValue={service?.price} className="pl-9" />
-                  <span className="absolute left-3 top-2.5 text-xs text-gray-500">Fr</span>
-                </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="servicePrice">Prix (CDF)</Label>
+              <div className="relative">
+                <Input
+                  id="servicePrice"
+                  type="number"
+                  placeholder="30000"
+                  value={formData.price || ''}
+                  onChange={(e) => handleChange('price', parseFloat(e.target.value) || 0)}
+                  className="pl-9"
+                />
+                <span className="absolute left-3 top-2.5 text-xs text-gray-500">Fr</span>
               </div>
-              <div className="space-y-2">
-                <Label>Durée (min)</Label>
-                <Input type="number" placeholder="60" defaultValue={service?.duration} />
-              </div>
             </div>
-
             <div className="space-y-2">
-              <Label>Description</Label>
-              <Textarea placeholder="Détails du service pour le site web..." defaultValue={service?.description} className="h-24 resize-none" />
+              <Label htmlFor="serviceDuration">Durée (min)</Label>
+              <Input
+                id="serviceDuration"
+                type="number"
+                placeholder="60"
+                value={formData.duration || ''}
+                onChange={(e) => handleChange('duration', parseInt(e.target.value) || 0)}
+              />
             </div>
           </div>
 
-          <div className="space-y-4">
-            <div className="border-2 border-dashed border-gray-200 rounded-xl h-40 flex flex-col items-center justify-center text-gray-400 hover:border-pink-300 hover:bg-pink-50 transition-colors cursor-pointer">
-              <Upload className="w-8 h-8 mb-2" />
-              <span className="text-sm">Photo du Service</span>
-            </div>
+          <div className="space-y-2">
+            <Label htmlFor="serviceDescription">Description</Label>
+            <Textarea
+              id="serviceDescription"
+              placeholder="Détails du service pour le site web..."
+              value={formData.description || ''}
+              onChange={(e) => handleChange('description', e.target.value)}
+              className="h-24 resize-none"
+            />
+          </div>
+        </div>
 
-            <div className="space-y-2">
-              <Label>Employées Qualifiées</Label>
-              <div className="border rounded-lg p-3 space-y-2 max-h-[150px] overflow-y-auto">
-                {['Marie Nkumu', 'Grace Lumière', 'Sophie Kabila', 'Élise Makala'].map((staff) => (
-                  <div key={staff} className="flex items-center space-x-2">
-                    <Checkbox id={`staff-${staff}`} />
-                    <Label htmlFor={`staff-${staff}`} className="text-sm cursor-pointer">{staff}</Label>
-                  </div>
-                ))}
-              </div>
-            </div>
+        <div className="space-y-4">
+          <div className="border-2 border-dashed border-gray-200 rounded-xl h-40 flex flex-col items-center justify-center text-gray-400 hover:border-pink-300 hover:bg-pink-50 transition-colors cursor-pointer">
+            <Upload className="w-8 h-8 mb-2" />
+            <span className="text-sm">Photo du Service</span>
+          </div>
 
-            <div className="bg-gray-50 p-4 rounded-xl space-y-3">
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label className="text-sm">Réservation en ligne</Label>
-                  <p className="text-xs text-gray-500">Visible sur le site</p>
-                </div>
-                <Switch defaultChecked={service?.onlineBookable ?? true} />
+          {/* Placeholder for staff selection */}
+          <div className="space-y-2">
+            <Label>Employées Qualifiées</Label>
+            <div className="border rounded-lg p-3 space-y-2 max-h-[150px] overflow-y-auto">
+              <p className="text-sm text-gray-500 italic">Sélection des employés à implémenter</p>
+            </div>
+          </div>
+
+          <div className="bg-gray-50 p-4 rounded-xl space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="space-y-0.5">
+                <Label className="text-sm">Réservation en ligne</Label>
+                <p className="text-xs text-gray-500">Visible sur le site</p>
               </div>
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label className="text-sm">Service Populaire</Label>
-                  <p className="text-xs text-gray-500">Mettre en avant</p>
-                </div>
-                <Switch defaultChecked={service?.popular ?? false} />
+              <Switch
+                checked={formData.onlineBookable}
+                onCheckedChange={(checked) => handleChange('onlineBookable', checked)}
+              />
+            </div>
+            <div className="flex items-center justify-between">
+              <div className="space-y-0.5">
+                <Label className="text-sm">Service Populaire</Label>
+                <p className="text-xs text-gray-500">Mettre en avant</p>
               </div>
+              <Switch
+                checked={formData.isPopular}
+                onCheckedChange={(checked) => handleChange('isPopular', checked)}
+              />
             </div>
           </div>
         </div>
         <DialogFooter>
-          <Button variant="outline">Annuler</Button>
-          <Button className="bg-gradient-to-r from-pink-500 to-purple-500 text-white">
-            {service ? 'Enregistrer Modifications' : 'Créer Service'}
+          <Button variant="outline" type="button">Annuler</Button>
+          <Button
+            onClick={handleSubmit}
+            disabled={isCreating || isUpdating} // Disable during mutation
+            className="bg-gradient-to-r from-pink-500 to-purple-500 text-white"
+          >
+            {isCreating || isUpdating ? 'Chargement...' : service ? 'Enregistrer Modifications' : 'Créer Service'}
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -124,49 +177,93 @@ export function ServiceModal({ service, trigger }: ServiceModalProps) {
 }
 
 // --- Package Modal ---
-
 interface PackageModalProps {
-  pkg?: any;
+  pkg?: ServicePackage; // Use the correct interface
   trigger?: React.ReactNode;
+  onSubmit?: (data: ServicePackage) => void; // Callback receives the created/updated package
 }
+export function PackageModal({ pkg, trigger, onSubmit }: PackageModalProps) {
+  const { services: allServices, isLoading: servicesLoading } = useServices(); // Fetch services to select from
+  const [selectedServiceIds, setSelectedServiceIds] = useState<string[]>(pkg?.services?.map((s: Service) => s.id) || []);
+  const [formData, setFormData] = useState<Partial<CreatePackageData>>({
+    name: pkg?.name || '',
+    description: pkg?.description || '',
+    price: pkg?.price || 0,
+    discount: pkg?.discount || 0, // Include discount if needed
+    isActive: pkg?.isActive ?? true, // Include isActive if needed
+    serviceIds: selectedServiceIds, // Include serviceIds in state for updates
+  });
 
-export function PackageModal({ pkg, trigger }: PackageModalProps) {
-  const [selectedServices, setSelectedServices] = useState<string[]>([]);
-  const [price, setPrice] = useState(pkg?.price || '');
+  const { createPackage, updatePackage, isCreating, isUpdating } = usePackages();
 
-  // Mock calculation
-  const totalValue = selectedServices.length * 35000;
+  const handleChange = (field: keyof CreatePackageData, value: any) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleServiceToggle = (id: string) => {
+    setSelectedServiceIds(prev =>
+      prev.includes(id) ? prev.filter(sid => sid !== id) : [...prev, id]
+    );
+  };
+
+  const handleSubmit = () => {
+    const submitData = {
+      ...formData,
+      serviceIds: selectedServiceIds,
+    };
+    if (pkg) {
+      // Update existing package
+      updatePackage({ id: pkg.id, updates: submitData as Partial<ServicePackage> }); // Cast if needed
+    } else {
+      // Create new package
+      createPackage(submitData as CreatePackageData);
+    }
+    // Optionally call onSubmit callback
+    // onSubmit?.(/* new/updated package object - usually returned by mutation */);
+  };
+
+  // Calculate estimated value (based on selected services)
+  const totalEstimatedValue = selectedServiceIds.reduce((acc, id) => {
+    const service = allServices.find((s: any) => s.id === id);
+    return acc + (service?.price || 0);
+  }, 0);
+
+  if (servicesLoading) {
+    return <div>Loading services...</div>; // Or a spinner component
+  }
 
   return (
     <Dialog>
       {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
-      <DialogContent className="sm:max-w-[600px] max-h-[85vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <PackageIcon className="w-5 h-5 text-purple-500" />
-            {pkg ? 'Modifier Forfait' : 'Nouveau Forfait'}
-          </DialogTitle>
+          <DialogTitle>{pkg ? 'Modifier Forfait' : 'Nouveau Forfait'}</DialogTitle>
         </DialogHeader>
-        <div className="space-y-4 py-4">
+        <div className="space-y-4">
           <div className="space-y-2">
-            <Label>Nom du Forfait</Label>
-            <Input placeholder="Ex: Pack Mariée VIP" defaultValue={pkg?.name} />
+            <Label htmlFor="packageName">Nom du Forfait</Label>
+            <Input
+              id="packageName"
+              placeholder="Ex: Pack Mariée VIP"
+              value={formData.name || ''}
+              onChange={(e) => handleChange('name', e.target.value)}
+            />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4">
             <div className="space-y-2">
               <Label>Services Inclus</Label>
               <div className="border rounded-lg p-4 space-y-2 h-[200px] overflow-y-auto bg-gray-50">
-                {['Manucure Gel (30$)', 'Pédicure Spa (25$)', 'Maquillage Soirée (40$)', 'Coiffure Complète (50$)', 'Soin Visage (35$)', 'Massage (45$)'].map((svc, i) => (
-                  <div key={i} className="flex items-center space-x-2 p-2 hover:bg-white rounded-md transition-colors">
+                {allServices.map((svc: any) => (
+                  <div key={svc.id} className="flex items-center space-x-2 p-2 hover:bg-white rounded-md transition-colors">
                     <Checkbox
-                      id={`svc-${i}`}
-                      onCheckedChange={(checked) => {
-                        if (checked) setSelectedServices([...selectedServices, svc]);
-                        else setSelectedServices(selectedServices.filter(s => s !== svc));
-                      }}
+                      id={`svc-${svc.id}`}
+                      checked={selectedServiceIds.includes(svc.id)}
+                      onCheckedChange={() => handleServiceToggle(svc.id)}
                     />
-                    <Label htmlFor={`svc-${i}`} className="cursor-pointer flex-1 text-sm">{svc}</Label>
+                    <Label htmlFor={`svc-${svc.id}`} className="cursor-pointer flex-1 text-sm">
+                      {svc.name} ({svc.price.toLocaleString()} CDF)
+                    </Label>
                   </div>
                 ))}
               </div>
@@ -176,8 +273,8 @@ export function PackageModal({ pkg, trigger }: PackageModalProps) {
               <div className="bg-purple-50 p-4 rounded-xl space-y-4">
                 <div className="space-y-2">
                   <Label className="text-purple-900">Valeur Totale (Estimée)</Label>
-                  <div className="text-2xl font-bold text-gray-400 line-through decoration-red-500">
-                    {totalValue > 0 ? totalValue.toLocaleString() : '0'} CDF
+                  <div className="text-2xl  text-gray-400 line-through decoration-red-500">
+                    {totalEstimatedValue > 0 ? totalEstimatedValue.toLocaleString() : '0'} CDF
                   </div>
                 </div>
 
@@ -186,20 +283,21 @@ export function PackageModal({ pkg, trigger }: PackageModalProps) {
                   <Input
                     type="number"
                     placeholder="Prix spécial"
-                    value={price}
-                    onChange={(e) => setPrice(e.target.value)}
-                    className="text-lg font-bold border-purple-200 focus-visible:ring-purple-500"
+                    value={formData.price || ''}
+                    onChange={(e) => handleChange('price', parseFloat(e.target.value) || 0)}
+                    className="text-lg  border-purple-200 focus-visible:ring-purple-500"
                   />
                 </div>
 
-                {totalValue > 0 && price && (
+                {totalEstimatedValue > 0 && formData.price && (
                   <Badge className="bg-green-500 text-white w-full justify-center py-1">
-                    Économie: {(totalValue - Number(price)).toLocaleString()} CDF
+                    Économie: {(totalEstimatedValue - Number(formData.price)).toLocaleString()} CDF
                   </Badge>
                 )}
               </div>
 
-              <div className="space-y-2">
+              {/* Validity period could be added here if needed in the future */}
+              {/* <div className="space-y-2">
                 <Label>Validité</Label>
                 <Select defaultValue="3">
                   <SelectTrigger>
@@ -212,19 +310,29 @@ export function PackageModal({ pkg, trigger }: PackageModalProps) {
                     <SelectItem value="12">1 An</SelectItem>
                   </SelectContent>
                 </Select>
-              </div>
+              </div> */}
             </div>
           </div>
 
           <div className="space-y-2">
-            <Label>Description Marketing</Label>
-            <Textarea placeholder="Pourquoi choisir ce forfait ?" className="resize-none" />
+            <Label htmlFor="packageDescription">Description Marketing</Label>
+            <Textarea
+              id="packageDescription"
+              placeholder="Pourquoi choisir ce forfait ?"
+              value={formData.description || ''}
+              onChange={(e) => handleChange('description', e.target.value)}
+              className="resize-none"
+            />
           </div>
         </div>
         <DialogFooter>
-          <Button variant="outline">Annuler</Button>
-          <Button className="bg-purple-600 hover:bg-purple-700 text-white">
-            {pkg ? 'Mettre à jour' : 'Créer Forfait'}
+          <Button variant="outline" type="button">Annuler</Button>
+          <Button
+            onClick={handleSubmit}
+            disabled={isCreating || isUpdating} // Disable during mutation
+            className="bg-purple-600 hover:bg-purple-700 text-white"
+          >
+            {isCreating || isUpdating ? 'Chargement...' : pkg ? 'Mettre à jour' : 'Créer Forfait'}
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -232,108 +340,159 @@ export function PackageModal({ pkg, trigger }: PackageModalProps) {
   );
 }
 
+
 // --- Promo Modal ---
-
 interface PromoModalProps {
-  promo?: any;
+  promo?: DiscountCode; // Use the correct interface
   trigger?: React.ReactNode;
+  onSubmit?: (data: DiscountCode) => void; // Callback receives the created/updated discount
 }
+export function PromoModal({ promo, trigger, onSubmit }: PromoModalProps) {
+  const [formData, setFormData] = useState<Partial<DiscountCode>>({
+    code: promo?.code || '',
+    type: promo?.type || 'percentage',
+    value: promo?.value || 0,
+    minPurchase: promo?.minPurchase || 0,
+    maxUses: promo?.maxUses || 1,
+    startDate: promo?.startDate || new Date().toISOString(),
+    endDate: promo?.endDate || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(), // Default: 30 days
+    isActive: promo?.isActive ?? true,
+  });
 
-export function PromoModal({ promo, trigger }: PromoModalProps) {
-  const [date, setDate] = useState<Date | undefined>(new Date());
-  const [type, setType] = useState('percentage');
+  const { createDiscount, updateDiscount, isCreating, isUpdating } = useDiscounts();
+
+  const handleChange = (field: keyof DiscountCode, value: any) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleSubmit = () => {
+    if (promo) {
+      // Update existing discount
+      updateDiscount({ id: promo.id, data: formData as Partial<DiscountCode> }); // Cast if needed
+    } else {
+      // Create new discount
+      createDiscount(formData as any); // Casting as any due to potential mismatch in partial fields vs required by API
+    }
+    // Optionally call onSubmit callback
+    // onSubmit?.(/* new/updated discount object - usually returned by mutation */);
+  };
 
   return (
     <Dialog>
       {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <Percent className="w-5 h-5 text-amber-500" />
-            {promo ? 'Modifier Promotion' : 'Nouvelle Promotion'}
-          </DialogTitle>
+          <DialogTitle>{promo ? 'Modifier Promotion' : 'Nouvelle Promotion'}</DialogTitle>
         </DialogHeader>
-        <div className="space-y-5 py-4">
+        <div className="space-y-4">
           <div className="space-y-2">
-            <Label>Nom de la campagne</Label>
-            <Input placeholder="Ex: Offre Spéciale Fêtes" defaultValue={promo?.name} />
+            <Label htmlFor="promoName">Nom de la campagne</Label>
+            <Input
+              id="promoName"
+              placeholder="Ex: Offre Spéciale Fêtes"
+              value={formData.code || ''} // Assuming 'code' is used as name too, or add a separate name field
+              onChange={(e) => handleChange('code', e.target.value.toUpperCase())} // Convert to uppercase
+            />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label>Code Promo</Label>
+              <Label htmlFor="promoCode">Code Promo</Label>
               <div className="relative">
-                <Input placeholder="FETES2024" className="uppercase font-mono pl-9 bg-amber-50 border-amber-200 text-amber-800" defaultValue={promo?.code} />
+                <Input
+                  id="promoCode"
+                  placeholder="FETES2024"
+                  value={formData.code || ''}
+                  onChange={(e) => handleChange('code', e.target.value.toUpperCase())}
+                  className="uppercase font-mono pl-9 bg-amber-50 border-amber-200 text-amber-800"
+                />
                 <span className="absolute left-3 top-2.5 text-xs text-amber-500">#</span>
               </div>
             </div>
             <div className="space-y-2">
               <Label>Type de réduction</Label>
-              <Select defaultValue="percentage" onValueChange={setType}>
+              <Select value={formData.type} onValueChange={(v) => handleChange('type', v as any)}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="percentage">Pourcentage (%)</SelectItem>
-                  <SelectItem value="fixed">Montant Fixe (CDF)</SelectItem>
+                  <SelectItem value="fixed_amount">Montant Fixe (CDF)</SelectItem>
                 </SelectContent>
               </Select>
             </div>
           </div>
 
-          <div className="bg-gray-50 p-4 rounded-xl space-y-4 border">
-            <div className="grid grid-cols-2 gap-4">
+          <div className="bg-gray-50 dark:bg-gray-950 p-4 rounded-xl space-y-4 border">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label>Valeur</Label>
+                <Label htmlFor="promoValue">Valeur</Label>
                 <div className="relative">
-                  <Input type="number" placeholder="20" defaultValue={promo?.value} className="font-bold text-lg" />
+                  <Input
+                    id="promoValue"
+                    type="number"
+                    placeholder="20"
+                    value={formData.value || ''}
+                    onChange={(e) => handleChange('value', parseFloat(e.target.value) || 0)}
+                    className=" text-lg"
+                  />
                   <span className="absolute right-3 top-2.5 text-gray-400">
-                    {type === 'percentage' ? '%' : 'CDF'}
+                    {formData.type === 'percentage' ? '%' : 'CDF'}
                   </span>
                 </div>
               </div>
               <div className="space-y-2">
-                <Label>Limite Usage</Label>
-                <Input type="number" placeholder="100" defaultValue={promo?.limit} />
+                <Label htmlFor="promoMaxUses">Limite Usage</Label>
+                <Input
+                  id="promoMaxUses"
+                  type="number"
+                  placeholder="100"
+                  value={formData.maxUses || ''}
+                  onChange={(e) => handleChange('maxUses', parseInt(e.target.value) || 1)}
+                />
               </div>
             </div>
 
-            <div className="space-y-2">
-              <Label>Expire le</Label>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant={"outline"}
-                    className={cn(
-                      "w-full justify-start text-left font-normal",
-                      !date && "text-muted-foreground"
-                    )}
-                  >
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {date ? format(date, "PPP", { locale: fr }) : <span>Choisir date</span>}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0">
-                  <Calendar
-                    mode="single"
-                    selected={date}
-                    onSelect={setDate}
-                    initialFocus
-                  />
-                </PopoverContent>
-              </Popover>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="promoMinPurchase">Achat Min. (CDF)</Label>
+                <Input
+                  id="promoMinPurchase"
+                  type="number"
+                  placeholder="50000"
+                  value={formData.minPurchase || ''}
+                  onChange={(e) => handleChange('minPurchase', parseFloat(e.target.value) || 0)}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="promoEndDate">Expire le</Label>
+                <Input
+                  id="promoEndDate"
+                  type="date"
+                  value={formData.endDate ? new Date(formData.endDate).toISOString().split('T')[0] : ''}
+                  onChange={(e) => handleChange('endDate', new Date(e.target.value).toISOString())}
+                />
+              </div>
             </div>
           </div>
 
           <div className="flex items-center gap-2">
-            <Checkbox id="active" defaultChecked />
-            <Label htmlFor="active">Activer immédiatement cette promotion</Label>
+            <Switch
+              id="promoActive"
+              checked={formData.isActive}
+              onCheckedChange={(checked) => handleChange('isActive', checked)}
+            />
+            <Label htmlFor="promoActive">Activer immédiatement cette promotion</Label>
           </div>
         </div>
         <DialogFooter>
-          <Button variant="outline">Brouillon</Button>
-          <Button className="bg-gradient-to-r from-amber-500 to-orange-500 text-white">
-            Lancer Promotion
+          <Button variant="outline" type="button">Brouillon</Button>
+          <Button
+            onClick={handleSubmit}
+            disabled={isCreating || isUpdating} // Disable during mutation
+            className="bg-gradient-to-r from-amber-500 to-orange-500 text-white"
+          >
+            {isCreating || isUpdating ? 'Chargement...' : 'Lancer Promotion'}
           </Button>
         </DialogFooter>
       </DialogContent>

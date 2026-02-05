@@ -9,7 +9,7 @@ Comprehensive dark mode and mobile responsiveness has been successfully applied 
 **Status**: FULLY UPDATED
 - **Header section**: Dark background `dark:bg-gray-950`, responsive sizing `py-16 sm:py-24`, badge dark mode
 - **Why Join Us section**: Dark text colors, responsive spacing
-- **Benefits grid**: 4 benefit cards with dark backgrounds `dark:bg-gray-900 dark:border-pink-900`
+- **Benefits grid**: 4 benefit cards with dark backgrounds `dark:bg-gray-950 dark:border-pink-900`
 - **Open Positions section**: Position cards with dark styling, requirement lists responsive
 - **Application form**: All inputs dark mode `dark:bg-gray-800 dark:border-gray-700`, labels `dark:text-gray-200`
 - **Sidebar**: Recruitment process cards and FAQ cards with dark styling
@@ -24,7 +24,7 @@ Comprehensive dark mode and mobile responsiveness has been successfully applied 
   - h3 headers: `text-lg sm:text-xl text-gray-900 dark:text-gray-100`
   - Paragraphs: `text-sm sm:text-base text-gray-700 dark:text-gray-300`
   - Lists: `text-sm sm:text-base text-gray-700 dark:text-gray-300 space-y-1 sm:space-y-2`
-- **Card**: Dark styling `dark:bg-gray-900 dark:border-pink-900 dark:prose-invert`
+- **Card**: Dark styling `dark:bg-gray-950 dark:border-pink-900 dark:prose-invert`
 
 ### ✅ 3. PrivacyPolicy.tsx (109 lines)
 **Status**: FULLY UPDATED
@@ -40,11 +40,11 @@ Comprehensive dark mode and mobile responsiveness has been successfully applied 
 **Status**: FULLY UPDATED
 - **Container**: Dark background `dark:bg-gray-950 min-h-screen`
 - **Header**: Responsive `py-16 sm:py-24`, badge dark mode
-- **Contact Info Cards**: Dark backgrounds `dark:bg-gray-900 dark:border-pink-900`, responsive spacing
+- **Contact Info Cards**: Dark backgrounds `dark:bg-gray-950 dark:border-pink-900`, responsive spacing
   - Icon sizing: `w-5 h-5 sm:w-6 sm:h-6`
   - Text sizing: `text-sm sm:text-base`
 - **Contact Form**: 
-  - Card: `dark:bg-gray-900 dark:border-pink-900`
+  - Card: `dark:bg-gray-950 dark:border-pink-900`
   - Inputs: `dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100`
   - Labels: `dark:text-gray-200`
   - Button: Responsive `py-5 sm:py-6 text-sm sm:text-base`
@@ -63,7 +63,7 @@ Comprehensive dark mode and mobile responsiveness has been successfully applied 
   - Text: Responsive sizing with dark colors
   - Stats boxes: Dark styling with color variants
 - **Values Section**:
-  - Cards: `dark:bg-gray-900 dark:border-pink-900`
+  - Cards: `dark:bg-gray-950 dark:border-pink-900`
   - Titles: `text-lg sm:text-xl dark:text-gray-100`
   - Descriptions: `text-sm sm:text-base dark:text-gray-300`
 - **Team Section**:
@@ -90,7 +90,7 @@ Comprehensive dark mode and mobile responsiveness has been successfully applied 
   - Rows: Dark styling with alternate row colors `dark:bg-gray-800`
   - Text: All dark color variants
 - **FAQ Accordion**:
-  - Items: `dark:bg-gray-900 dark:border-pink-900`
+  - Items: `dark:bg-gray-950 dark:border-pink-900`
   - Triggers: Dark text with hover `dark:hover:text-pink-400`
   - Content: `dark:text-gray-300`
 - **CTA Section**:
@@ -103,7 +103,7 @@ Comprehensive dark mode and mobile responsiveness has been successfully applied 
 ### Background Colors
 ```
 Page background: dark:bg-gray-950
-Card backgrounds: dark:bg-gray-900
+Card backgrounds: dark:bg-gray-950
 Gradient backgrounds: dark:from-gray-900 dark:to-gray-800
 Section backgrounds: dark:bg-gray-800 (for secondary sections)
 ```
@@ -212,7 +212,7 @@ Container sizes: max-w-3xl sm:max-w-4xl lg:max-w-6xl
 - **ALL backgrounds** have `dark:bg-gray-{X}` colors
 - **ALL borders** have `dark:border-{color}-{X}` colors
 - **ALL inputs/forms** have `dark:bg-gray-800 dark:border-gray-700` styling
-- **ALL cards** follow the standard `dark:bg-gray-900 dark:border-pink-900` pattern
+- **ALL cards** follow the standard `dark:bg-gray-950 dark:border-pink-900` pattern
 
 ### Responsive Design Coverage
 - **Mobile-first approach**: Base styles for mobile, `sm:` breakpoint for tablet+

@@ -26,52 +26,8 @@ import {
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import HeroSection from "../HeroSection";
 import { useAuth } from "@/lib/hooks/useAuth";
 import { useAppointments, useAvailableSlots } from "@/lib/hooks/useAppointments";
-
-// Axios API calls (commented out for future backend integration)
-/*
-const fetchAvailableSlots = async (date: string, workerId: string) => {
-  try {
-    const response = await axiosdb.get(`/api/appointments/available-slots?date=${date}&workerId=${workerId}`);
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching available slots:', error);
-    return [];
-  }
-};
-
-const createAppointment = async (appointmentData: any) => {
-  try {
-    const response = await axiosdb.post('/api/appointments', appointmentData);
-    return response.data;
-  } catch (error) {
-    console.error('Error creating appointment:', error);
-    throw error;
-  }
-};
-
-const fetchServices = async () => {
-  try {
-    const response = await axiosdb.get('/api/services');
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching services:', error);
-    return [];
-  }
-};
-
-const fetchWorkers = async (category?: string) => {
-  try {
-    const response = await axiosdb.get(`/api/staff/available${category ? `?category=${category}` : ''}`);
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching workers:', error);
-    return [];
-  }
-};
-*/
 
 export default function Appointments() {
   const navigate = useRouter();
@@ -201,21 +157,16 @@ export default function Appointments() {
 
   return (
     <div className="min-h-screen">
-      <HeroSection
-        imageUrl='/reservation.jpg'
-        title="Réservation"
-        description="Choisissez votre service, votre spécialiste et votre
-            créneau horaire."
-        badgeText='reservation'
-      />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        {/* Header */}
-        <div className="text-center mb-16">
+      {/* Header */}
+      <section className="bg-linear-to-b from-pink-50 to-white dark:from-gray-900 dark:to-gray-950 py-16 sm:py-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <Badge className="mb-4 bg-pink-100 text-pink-600">
             <CalendarIcon className="w-4 h-4 mr-2" />
             Réservation
           </Badge>
         </div>
+      </section>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Booking Form */}
@@ -226,7 +177,7 @@ export default function Appointments() {
                 <div className="w-10 h-10 rounded-full bg-linear-to-br from-pink-500 to-amber-400 flex items-center justify-center text-white mr-4">
                   1
                 </div>
-                <h2 className="text-2xl text-gray-900">
+                <h2 className="text-2xl  text-gray-900">
                   Choisissez votre service
                 </h2>
               </div>
@@ -299,7 +250,7 @@ export default function Appointments() {
                 <div className="w-10 h-10 rounded-full bg-linear-to-br from-pink-500 to-amber-400 flex items-center justify-center text-white mr-4">
                   2
                 </div>
-                <h2 className="text-2xl text-gray-900">
+                <h2 className="text-2xl  text-gray-900">
                   Choisissez votre spécialiste
                 </h2>
               </div>
@@ -330,7 +281,7 @@ export default function Appointments() {
                 <div className="w-10 h-10 rounded-full bg-linear-to-br from-pink-500 to-amber-400 flex items-center justify-center text-white mr-4">
                   3
                 </div>
-                <h2 className="text-2xl text-gray-900">
+                <h2 className="text-2xl  text-gray-900">
                   Date et heure
                 </h2>
               </div>
@@ -383,7 +334,7 @@ export default function Appointments() {
                 <div className="w-10 h-10 rounded-full bg-linear-to-br from-pink-500 to-amber-400 flex items-center justify-center text-white mr-4">
                   4
                 </div>
-                <h2 className="text-2xl text-gray-900">
+                <h2 className="text-2xl  text-gray-900">
                   Lieu du rendez-vous
                 </h2>
               </div>
@@ -440,7 +391,7 @@ export default function Appointments() {
                 <div className="w-10 h-10 rounded-full bg-linear-to-br from-pink-500 to-amber-400 flex items-center justify-center text-white mr-4">
                   5
                 </div>
-                <h2 className="text-2xl text-gray-900">
+                <h2 className="text-2xl  text-gray-900">
                   Options supplémentaires
                 </h2>
               </div>

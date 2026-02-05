@@ -62,7 +62,7 @@ export function ClientModal({ trigger, client }: ClientModalProps) {
   return (
     <Dialog>
       {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
-      <DialogContent className="sm:max-w-125">
+      <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Nouvelle Cliente</DialogTitle>
         </DialogHeader>

@@ -11,6 +11,14 @@ export interface Notification {
   createdAt: string;
 }
 
+export interface CreateNotificationData {
+  userId: string;
+  type: Notification['type'];
+  title: string;
+  message: string;
+  link?: string;
+}
+
 export const notificationsApi = {
   // Get notifications
   getNotifications: async (params?: {
@@ -34,6 +42,12 @@ export const notificationsApi = {
   // Mark all as read
   markAllAsRead: async (): Promise<{ message: string }> => {
     const { data } = await axiosdb.put('/notifications/mark-all-read');
+    return data;
+  },
+
+  // Create a new notification
+  createNotification: async (notificationData: CreateNotificationData): Promise<Notification> => {
+    const { data } = await axiosdb.post('/notifications', notificationData);
     return data;
   },
 };

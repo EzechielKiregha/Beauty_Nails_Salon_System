@@ -25,7 +25,7 @@ export default function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md border-b border-pink-100 dark:border-pink-900 shadow-sm">
+    <header className="sticky top-0 z-50 bg-white/90 dark:bg-gray-950 backdrop-blur-md border-b border-pink-100 dark:border-pink-900 shadow-sm">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
@@ -145,13 +145,20 @@ export default function Header() {
                 Accueil
               </Link>
               <Link
+                href="/catalog"
+                className={`px-4 py-2 rounded-lg transition-colors ${isActive('/services') ? 'bg-pink-50 dark:bg-pink-900/20 text-pink-500' : 'text-gray-700 dark:text-gray-300 hover:bg-pink-50 dark:hover:bg-gray-800'
+                  }`}
+              >
+                Catalogue
+              </Link>
+              {/* <Link
                 href="/services"
                 onClick={() => setMobileMenuOpen(false)}
                 className={`px-4 py-2 rounded-lg transition-colors ${isActive('/services') ? 'bg-pink-50 dark:bg-pink-900/20 text-pink-500' : 'text-gray-700 dark:text-gray-300 hover:bg-pink-50 dark:hover:bg-gray-800'
                   }`}
               >
                 Services
-              </Link>
+              </Link> */}
               <Link
                 href="/memberships"
                 onClick={() => setMobileMenuOpen(false)}

@@ -21,8 +21,8 @@ export interface DiscountCode {
   code: string;
   type: 'percentage' | 'fixed_amount';
   value: number;
-  minPurchase?: number;
-  maxUses?: number;
+  minPurchase: number;
+  maxUses: number;
   usedCount: number;
   startDate: string;
   endDate: string;

@@ -170,7 +170,7 @@ function MyComponent() {
     status: 'confirmed',
   });
 
-  if (isLoading) return <LoadingSpinner />;
+  if (isLoading) return <LoaderBN />;
 
   return (
     <div>

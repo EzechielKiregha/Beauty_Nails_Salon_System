@@ -17,71 +17,73 @@ interface Notification {
 }
 
 export default function NotificationCenter() {
-  const [notifications, setNotifications] = useState<Notification[]>([
-    {
-      id: '1',
-      type: 'appointment',
-      priority: 'high',
-      title: 'Cliente en Attente',
-      message: 'Marie Kabila vient d\'arriver pour son rendez-vous de 14:00',
-      time: 'Il y a 2 minutes',
-      read: false
-    },
-    {
-      id: '2',
-      type: 'stock',
-      priority: 'high',
-      title: 'Stock Critique',
-      message: 'Colle Cils - Stock épuisé. Commander immédiatement.',
-      time: 'Il y a 15 minutes',
-      read: false
-    },
-    {
-      id: '3',
-      type: 'appointment',
-      priority: 'medium',
-      title: 'Rendez-vous Annulé',
-      message: 'Sophie Makala a annulé son RDV de 15:00 aujourd\'hui',
-      time: 'Il y a 30 minutes',
-      read: false
-    },
-    {
-      id: '4',
-      type: 'payment',
-      priority: 'high',
-      title: 'Facture Impayée',
-      message: 'Facture #2024-0428 non payée - Cliente: Grace Lumière (45 000 Fc)',
-      time: 'Il y a 1 heure',
-      read: false
-    },
-    {
-      id: '5',
-      type: 'stock',
-      priority: 'medium',
-      title: 'Stock Bas',
-      message: 'Rajouts Cheveux Box Braids - 15 unités restantes (min: 20)',
-      time: 'Il y a 2 heures',
-      read: true
-    },
-    {
-      id: '6',
-      type: 'client',
-      priority: 'low',
-      title: 'Nouvelle Cliente',
-      message: 'Nouvelle inscription: Patricia Nzuzi - Téléphone: +243 856 789 012',
-      time: 'Il y a 3 heures',
-      read: true
-    },
-    {
-      id: '7',
-      type: 'appointment',
-      priority: 'medium',
-      title: 'Rappel RDV à Envoyer',
-      message: '12 clientes ont RDV demain - Rappels SMS non encore envoyés',
-      time: 'Il y a 4 heures',
-      read: true
-    }
-  ]);
+  const [notifications, setNotifications] = useState<Notification[]>(
+    [
+      //   {
+      //     id: '1',
+      //     type: 'appointment',
+      //     priority: 'high',
+      //     title: 'Cliente en Attente',
+      //     message: 'Marie Kabila vient d\'arriver pour son rendez-vous de 14:00',
+      //     time: 'Il y a 2 minutes',
+      //     read: false
+      //   },
+      //   {
+      //     id: '2',
+      //     type: 'stock',
+      //     priority: 'high',
+      //     title: 'Stock Critique',
+      //     message: 'Colle Cils - Stock épuisé. Commander immédiatement.',
+      //     time: 'Il y a 15 minutes',
+      //     read: false
+      //   },
+      //   {
+      //     id: '3',
+      //     type: 'appointment',
+      //     priority: 'medium',
+      //     title: 'Rendez-vous Annulé',
+      //     message: 'Sophie Makala a annulé son RDV de 15:00 aujourd\'hui',
+      //     time: 'Il y a 30 minutes',
+      //     read: false
+      //   },
+      //   {
+      //     id: '4',
+      //     type: 'payment',
+      //     priority: 'high',
+      //     title: 'Facture Impayée',
+      //     message: 'Facture #2024-0428 non payée - Cliente: Grace Lumière (45 000 Fc)',
+      //     time: 'Il y a 1 heure',
+      //     read: false
+      //   },
+      //   {
+      //     id: '5',
+      //     type: 'stock',
+      //     priority: 'medium',
+      //     title: 'Stock Bas',
+      //     message: 'Rajouts Cheveux Box Braids - 15 unités restantes (min: 20)',
+      //     time: 'Il y a 2 heures',
+      //     read: true
+      //   },
+      //   {
+      //     id: '6',
+      //     type: 'client',
+      //     priority: 'low',
+      //     title: 'Nouvelle Cliente',
+      //     message: 'Nouvelle inscription: Patricia Nzuzi - Téléphone: +243 856 789 012',
+      //     time: 'Il y a 3 heures',
+      //     read: true
+      //   },
+      //   {
+      //     id: '7',
+      //     type: 'appointment',
+      //     priority: 'medium',
+      //     title: 'Rappel RDV à Envoyer',
+      //     message: '12 clientes ont RDV demain - Rappels SMS non encore envoyés',
+      //     time: 'Il y a 4 heures',
+      //     read: true
+      //   }
+    ]
+  );
 
   const unreadCount = notifications.filter(n => !n.read).length;
 
@@ -115,18 +117,18 @@ export default function NotificationCenter() {
   };
 
   return (
-    <Card className="border border-pink-100 dark:border-pink-900 shadow-xl rounded-2xl p-4 sm:p-6 w-full max-w-md bg-white dark:bg-gray-950">
+    <Card className="bg-transparent dark:bg-transparent border-none">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
           <div className="relative">
             <Bell className="w-6 h-6 text-pink-500" />
             {unreadCount > 0 && (
               <div className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center border-2 border-white dark:border-gray-950">
-                <span className="text-[10px] font-bold text-white">{unreadCount}</span>
+                <span className="text-[10px]  text-white">{unreadCount}</span>
               </div>
             )}
           </div>
-          <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">Notifications</h3>
+          <h3 className="text-xl  text-gray-900 dark:text-gray-100">Notifications</h3>
         </div>
         {unreadCount > 0 && (
           <Button
@@ -143,7 +145,7 @@ export default function NotificationCenter() {
       <div className="space-y-3 max-h-[500px] overflow-y-auto pr-1 custom-scrollbar">
         {notifications.length === 0 ? (
           <div className="text-center py-12">
-            <div className="w-16 h-16 bg-gray-50 dark:bg-gray-900 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="w-16 h-16 bg-gray-50 dark:bg-gray-950 rounded-full flex items-center justify-center mx-auto mb-4">
               <Bell className="w-8 h-8 text-gray-300 dark:text-gray-700" />
             </div>
             <p className="text-gray-500 dark:text-gray-400 font-medium">Aucune notification</p>
@@ -171,7 +173,7 @@ export default function NotificationCenter() {
 
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between mb-1">
-                      <p className={`font-bold truncate ${!notification.read ? 'text-gray-900 dark:text-gray-100' : 'text-gray-700 dark:text-gray-400'}`}>
+                      <p className={` truncate ${!notification.read ? 'text-gray-900 dark:text-gray-100' : 'text-gray-700 dark:text-gray-400'}`}>
                         {notification.title}
                       </p>
                       <Button
@@ -192,7 +194,7 @@ export default function NotificationCenter() {
                         <Clock className="w-3 h-3" />
                         {notification.time}
                       </span>
-                      <Badge className={`text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 border-0 ${notification.priority === 'high' ? 'bg-red-500 text-white' :
+                      <Badge className={`text-[10px] uppercase  tracking-wider px-2 py-0.5 border-0 ${notification.priority === 'high' ? 'bg-red-500 text-white' :
                         notification.priority === 'medium' ? 'bg-amber-500 text-white' : 'bg-blue-500 text-white'
                         }`}>
                         {notification.priority === 'high' ? 'Urgent' :
@@ -210,7 +212,7 @@ export default function NotificationCenter() {
       {/* Quick Actions */}
       {unreadCount > 0 && (
         <div className="mt-6 pt-6 border-t border-gray-100 dark:border-pink-900/30">
-          <p className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-4">Actions Rapides</p>
+          <p className="text-xs  text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-4">Actions Rapides</p>
           <div className="grid grid-cols-2 gap-3">
             <Button size="sm" variant="outline" className="rounded-full py-5 border-pink-100 dark:border-pink-900 dark:text-gray-300 dark:hover:bg-pink-900/20">
               <MessageSquare className="w-3.5 h-3.5 mr-2 text-pink-500" />
@@ -228,24 +230,24 @@ export default function NotificationCenter() {
       <Card className="bg-linear-to-br from-red-50 to-orange-50 dark:from-red-900/10 dark:to-orange-900/10 border border-red-100 dark:border-red-900/30 p-4 mt-6 rounded-xl">
         <div className="flex items-center gap-2 mb-3">
           <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400" />
-          <p className="text-sm font-bold text-gray-900 dark:text-gray-100">Alertes Actives</p>
+          <p className="text-sm  text-gray-900 dark:text-gray-100">Alertes Actives</p>
         </div>
         <div className="space-y-2 text-xs font-medium text-gray-600 dark:text-gray-400">
           <div className="flex items-center justify-between">
             <span>Alertes Stock</span>
-            <Badge variant="outline" className="h-5 bg-white dark:bg-gray-900 border-red-100 dark:border-red-900/50">
+            <Badge variant="outline" className="h-5 bg-white dark:bg-gray-950 border-red-100 dark:border-red-900/50">
               {notifications.filter(n => n.type === 'stock' && !n.read).length}
             </Badge>
           </div>
           <div className="flex items-center justify-between">
             <span>Paiements en attente</span>
-            <Badge variant="outline" className="h-5 bg-white dark:bg-gray-900 border-red-100 dark:border-red-900/50">
+            <Badge variant="outline" className="h-5 bg-white dark:bg-gray-950 border-red-100 dark:border-red-900/50">
               {notifications.filter(n => n.type === 'payment' && !n.read).length}
             </Badge>
           </div>
           <div className="flex items-center justify-between">
             <span>Notifications RDV</span>
-            <Badge variant="outline" className="h-5 bg-white dark:bg-gray-900 border-red-100 dark:border-red-900/50">
+            <Badge variant="outline" className="h-5 bg-white dark:bg-gray-950 border-red-100 dark:border-red-900/50">
               {notifications.filter(n => n.type === 'appointment' && !n.read).length}
             </Badge>
           </div>

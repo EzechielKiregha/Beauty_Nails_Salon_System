@@ -30,6 +30,13 @@ export interface Client {
     isActive: boolean;
     createdAt: string;
   };
+  referralsRel: {
+    id: string,
+    referrerId: string,
+    referredId: string,
+    status: "pending" | "completed" | "rewarded",
+    rewardGranted: boolean,
+  }[]
   appointments?: any[];
   loyaltyTransactions?: any[];
   membershipPurchases?: any[];
