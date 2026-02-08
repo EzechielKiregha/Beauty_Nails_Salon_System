@@ -13,6 +13,8 @@ export interface Worker {
   hireDate: string;
   createdAt: string;
   updatedAt: string;
+  totalSales: number;
+  totalEarnings: number;
   user?: {
     id: string;
     name: string;
@@ -23,6 +25,18 @@ export interface Worker {
   };
   schedules?: WorkerSchedule[];
   appointments?: any[];
+  name: string;
+  role: string;
+  phone: string;
+  email: string;
+  workingDays: string[];
+  workingHoursString: string;
+  appointmentsCount: number;
+  revenue: string;
+  clientRetention: string;
+  upsellRate: string;
+  commission: string;
+  status: 'active' | 'off' | 'busy';
 }
 
 export interface WorkerSchedule {

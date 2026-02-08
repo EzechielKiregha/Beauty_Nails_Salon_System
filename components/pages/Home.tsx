@@ -301,134 +301,88 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Membership & Loyalty Cards Section */}
+      {/* Membership Plans */}
       <section className="py-16 bg-background dark:bg-gray-950">
+        <div className="text-center mb-16">
+          <Badge className="mb-4 bg-pink-100 dark:bg-pink-900 text-pink-600 dark:text-pink-200">Nos Abonnements</Badge>
+          <h2 className="  text-4xl text-gray-900 dark:text-gray-100 mb-4">
+            Rejoignez notre cercle de clientes privilégiées
+          </h2>
+          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+            Économisez jusqu'à 30% sur vos soins préférés et profitez d'avantages exclusifs avec nos formules.
+          </p>
+        </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
-            {/* Membership Cards Column */}
-            <div>
-              <div className="flex items-center gap-4 mb-8">
-                <Sparkles className="w-8 h-8 text-purple-500" />
-                <h2 className="text-3xl  text-gray-900 dark:text-gray-100">
-                  Abonnements
-                </h2>
-                <Link href="/memberships">
-                  <Button variant="link" className="text-purple-600 dark:text-purple-400 underline">
-                    Voir tout
-                  </Button>
-                </Link>
-              </div>
-              <div className="space-y-6">
-                {displayedMemberships.map((membership, index) => (
-                  <Card key={membership.id} className={`bg-linear-to-br ${index === 0 ? 'from-purple-50 to-pink-50 dark:from-purple-900/10 dark:to-pink-900/10 border-2 border-purple-200 dark:border-purple-900' :
-                    index === 1 ? 'from-amber-50 to-orange-50 dark:from-amber-900/10 dark:to-orange-900/10 border-2 border-amber-200 dark:border-amber-900' :
-                      'from-blue-50 to-cyan-50 dark:from-blue-900/10 dark:to-cyan-900/10 border-2 border-blue-200 dark:border-blue-900'
-                    } shadow-xl rounded-3xl p-6 relative transform hover:scale-[1.02] transition-transform`}>
-                    <div className="flex justify-between items-start mb-4">
-                      <div>
-                        <h3 className="text-xl  text-gray-900 dark:text-gray-100">{membership.name}</h3>
-                        <p className="text-gray-600 dark:text-gray-300 text-sm">{membership.duration} jours</p>
-                      </div>
-                      <Badge className={`${index === 0 ? 'bg-purple-500' : index === 1 ? 'bg-amber-500' : 'bg-blue-500'
-                        } text-white`}>
-                        {membership.price.toLocaleString()} CDF
-                      </Badge>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {displayedMemberships.map((membership, index) => {
+              // Assign colors based on index or specific plan characteristics
+              const colorClasses = [
+                "from-purple-50 to-pink-50 dark:from-purple-900/10 dark:to-pink-900/10 border-2 border-purple-300 dark:border-purple-900",
+                "from-amber-50 to-orange-50 dark:from-amber-900/10 dark:to-orange-900/10 border-2 border-amber-300 dark:border-amber-900",
+                "from-blue-50 to-cyan-50 dark:from-blue-900/10 dark:to-cyan-900/10 border-2 border-blue-300 dark:border-blue-900",
+              ][index % 3];
+
+              const badgeColor = [
+                "bg-purple-500",
+                "bg-amber-500",
+                "bg-blue-500",
+              ][index % 3];
+
+              const linearBg = [
+                "bg-linear-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600",
+                "bg-linear-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600",
+                "bg-linear-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600",
+              ][index % 3];
+
+              return (
+                <Card key={membership.id} className={`bg-linear-to-br ${colorClasses} shadow-2xl rounded-3xl overflow-hidden relative transform hover:scale-[1.02] transition-transform ${index === 1 ? 'ring-4 ring-amber-400 dark:ring-amber-600 -translate-y-2' : ''}`}>
+                  {/* Popular Badge for second item (example logic) */}
+                  {index === 1 && (
+                    <div className="absolute top-0 right-0 bg-linear-to-r from-amber-500 to-orange-500 dark:from-amber-600 dark:to-orange-600 text-white px-6 py-2 rounded-bl-3xl z-10">
+                      <span className="flex items-center text-sm ">
+                        <Star className="w-4 h-4 mr-1" />
+                        Populaire
+                      </span>
                     </div>
-                    <ul className="space-y-2 mb-6">
-                      {membership.benefits.slice(0, 3).map((benefit: any, idx: any) => ( // Show first 3 benefits
-                        <li key={idx} className="flex items-center text-sm text-gray-700 dark:text-gray-300">
-                          <span className="w-1.5 h-1.5 bg-pink-500 rounded-full mr-2"></span>
-                          {benefit}
+                  )}
+                  <div className="p-8">
+                    <div className="flex justify-between items-start mb-6">
+                      <div>
+                        <Badge className={`${badgeColor} text-white`}>
+                          {membership.name}
+                        </Badge>
+                        <h3 className="text-3xl text-gray-900 dark:text-gray-100 mt-4 mb-2">{membership.name}</h3>
+                        <div className="flex items-baseline mb-6">
+                          <span className="text-5xl text-gray-900 dark:text-gray-100">{membership.price.toLocaleString()}</span>
+                          <span className="text-xl text-gray-600 dark:text-gray-300 ml-2">Fc</span>
+                        </div>
+                      </div>
+                    </div>
+                    <ul className="space-y-4 mb-8">
+                      {membership.benefits.map((benefit: any, idx: any) => (
+                        <li key={idx} className="flex items-start">
+                          <div className="w-6 h-6 rounded-full bg-pink-500 dark:bg-pink-600 flex items-center justify-center mr-3 shrink-0">
+                            <span className="text-white text-xs ">✓</span>
+                          </div>
+                          <span className="text-gray-700 dark:text-gray-300">{benefit}</span>
                         </li>
                       ))}
                     </ul>
-                    <Link href="/memberships">
-                      <Button className={`w-full ${index === 0 ? 'bg-linear-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600' :
-                        index === 1 ? 'bg-linear-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600' :
-                          'bg-linear-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600'
-                        } text-white rounded-full py-3  shadow-md`}>
-                        Choisir {membership.name}
+                    <Link href="/auth/signup"> {/* Or a specific purchase route */}
+                      <Button className={`w-full ${linearBg} text-white rounded-full py-4 text-lg  shadow-md`}>
+                        {membership.name.includes('Premium') ? 'Devenir membre Premium' : 'S\'abonner maintenant'}
                       </Button>
                     </Link>
-                  </Card>
-                ))}
-              </div>
-            </div>
-
-            {/* Loyalty Cards Column */}
-            <div>
-              <div className="flex items-center gap-4 mb-8">
-                <Award className="w-8 h-8 text-amber-500" />
-                <h2 className="  text-3xl  text-gray-900 dark:text-gray-100">
-                  Programme Fidélité
-                </h2>
-                <Link href="/catalog#loyalty"> {/* Assuming a loyalty section on Catalog page */}
-                  <Button variant="link" className="text-amber-600 dark:text-amber-400 underline">
-                    Voir récompenses
-                  </Button>
-                </Link>
-              </div>
-              <div className="space-y-6">
-                <Card className="bg-linear-to-br from-amber-50 to-orange-50 dark:from-amber-900/10 dark:to-orange-900/10 border-2 border-amber-200 dark:border-amber-900 shadow-xl rounded-3xl p-6 relative">
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
-                      <Award className="w-6 h-6 text-amber-600 dark:text-amber-400" />
-                    </div>
-                    <div>
-                      <h3 className="text-xl  text-gray-900 dark:text-gray-100">Votre Statut</h3>
-                      <Badge className="bg-amber-500 text-white">{loyaltyTier || 'Standard'}</Badge>
-                    </div>
-                  </div>
-                  <div className="bg-white dark:bg-gray-800/50 p-4 rounded-xl border border-amber-100 dark:border-amber-900/30 mb-4">
-                    <p className="text-center text-gray-700 dark:text-gray-300">
-                      Points actuels: <span className=" text-amber-600 dark:text-amber-400">{loyaltyPoints}</span>
-                    </p>
                   </div>
                 </Card>
-
-                <Card className="bg-linear-to-br from-green-50 to-emerald-50 dark:from-green-900/10 dark:to-emerald-900/10 border-2 border-green-200 dark:border-green-900 shadow-xl rounded-3xl p-6 relative">
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="w-12 h-12 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
-                      <Gift className="w-6 h-6 text-green-600 dark:text-green-400" />
-                    </div>
-                    <div>
-                      <h3 className="text-xl  text-gray-900 dark:text-gray-100">Récompenses Disponibles</h3>
-                      <p className="text-gray-600 dark:text-gray-300 text-sm">Consultez le catalogue</p>
-                    </div>
-                  </div>
-                  <Link href="/catalog#loyalty">
-                    <Button variant="secondary" className="w-full border-2 border-green-200 dark:border-green-800 text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-full py-3 ">
-                      Explorer
-                    </Button>
-                  </Link>
-                </Card>
-
-                <Card className="bg-linear-to-br from-blue-50 to-cyan-50 dark:from-blue-900/10 dark:to-cyan-900/10 border-2 border-blue-200 dark:border-blue-900 shadow-xl rounded-3xl p-6 relative">
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
-                      <Calendar className="w-6 h-6 text-blue-600 dark:text-blue-400" />
-                    </div>
-                    <div>
-                      <h3 className="text-xl  text-gray-900 dark:text-gray-100">Historique Récent</h3>
-                      <p className="text-gray-600 dark:text-gray-300 text-sm">Vos dernières activités</p>
-                    </div>
-                  </div>
-                  <div className="space-y-3">
-                    {recentRewards.length > 0 ? (
-                      recentRewards.map((tx, idx) => (
-                        <div key={tx.id} className="flex justify-between items-center p-2 bg-white dark:bg-gray-800/30 rounded-lg">
-                          <span className="text-sm text-gray-700 dark:text-gray-300">{tx.type}</span>
-                          <Badge variant="outline" className="text-xs">{tx.points} pts</Badge>
-                        </div>
-                      ))
-                    ) : (
-                      <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-2">Aucune activité récente</p>
-                    )}
-                  </div>
-                </Card>
-              </div>
-            </div>
+              );
+            })}
           </div>
+          <Link href="/memberships">
+            <Button variant="link" className="text-purple-600 dark:text-purple-400 underline">
+              Voir tout
+            </Button>
+          </Link>
         </div>
       </section>
 

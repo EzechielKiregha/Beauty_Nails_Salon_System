@@ -38,6 +38,17 @@ export function useClients(params?: ClientsParams) {
       toast.error(error.response?.data?.error?.message || 'Erreur création du client');
     },
   });
+  // Update client
+  const updateClientMutation = useMutation({
+    mutationFn: (payload: { id:string, name: string; email: string; phone: string; tier?: string; notes?: string; password?: string; birthday?: string; address?: string; allergies?: string; favoriteServices?: string[]; prepaymentBalance?: number | string; giftCardBalance?: number | string; referrals?: number; }) => clientsApi.updateClient(payload),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['clients'] });
+      toast.success(data.message || 'Client modifié');
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.error?.message || 'Erreur création du client');
+    },
+  });
 
   return {
     clients: data?.clients || [],
@@ -47,6 +58,8 @@ export function useClients(params?: ClientsParams) {
     updateNotes: updateNotesMutation.mutate,
     isUpdatingNotes: updateNotesMutation.isPending,
     createClient: createClientMutation.mutate,
+    updateClient: updateClientMutation.mutate,
+    isUpdatingClient: updateClientMutation.isPending,
     isCreatingClient: createClientMutation.isPending,
   };
 }

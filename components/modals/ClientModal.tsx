@@ -14,12 +14,15 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 interface ClientModalProps {
   trigger?: React.ReactNode;
   client?: any;
+  edit?: boolean;
 }
 
-export function ClientModal({ trigger, client }: ClientModalProps) {
+export function ClientModal({ trigger, client, edit }: ClientModalProps) {
+  const [id, setId] = useState(client?.id || '');
   const [name, setName] = useState(client?.name || '');
   const [email, setEmail] = useState(client?.email || '');
   const [phone, setPhone] = useState(client?.phone || '');
+  const [password, setPassword] = useState('');
   const [tier, setTier] = useState<'Regular' | 'VIP' | 'Premium'>(client?.tier || 'Regular');
   const [notes, setNotes] = useState(client?.notes || '');
   const [birthday, setBirthday] = useState<string>(client?.birthday || '');
@@ -30,7 +33,7 @@ export function ClientModal({ trigger, client }: ClientModalProps) {
   const [giftCardBalance, setGiftCardBalance] = useState<number | ''>(client?.giftCardBalance ?? '');
   const [referrals, setReferrals] = useState<number | ''>(client?.referrals ?? '');
 
-  const { createClient, isCreatingClient } = useClients();
+  const { createClient, updateClient, isCreatingClient, isUpdatingClient } = useClients();
 
   const reset = () => {
     setName(''); setEmail(''); setPhone(''); setTier('Regular'); setNotes(''); setBirthday(''); setAddress(''); setAllergies(''); setFavoriteServices(''); setPrepaymentBalance(''); setGiftCardBalance(''); setReferrals('');
@@ -39,24 +42,48 @@ export function ClientModal({ trigger, client }: ClientModalProps) {
   const onSubmit = () => {
     if (!name || !email || !phone) { toast.error('Nom, email et téléphone requis'); return; }
 
-    const payload: any = {
-      name,
-      email,
-      phone,
-      tier,
-      notes,
-      birthday: birthday || undefined,
-      address: address || undefined,
-      allergies: allergies || undefined,
-      favoriteServices: favoriteServices ? favoriteServices.split(',').map((s: any) => s.trim()).filter(Boolean) : undefined,
-      prepaymentBalance: prepaymentBalance !== '' ? Number(prepaymentBalance) : undefined,
-      giftCardBalance: giftCardBalance !== '' ? Number(giftCardBalance) : undefined,
-      referrals: referrals !== '' ? Number(referrals) : undefined,
-    };
+    if (!edit) {
+      const payload: any = {
+        name,
+        email,
+        phone,
+        tier,
+        notes,
+        password: password ?? '25854565',
+        birthday: birthday || undefined,
+        address: address || undefined,
+        allergies: allergies || undefined,
+        favoriteServices: favoriteServices ? favoriteServices.split(',').map((s: any) => s.trim()).filter(Boolean) : undefined,
+        prepaymentBalance: prepaymentBalance !== '' ? Number(prepaymentBalance) : undefined,
+        giftCardBalance: giftCardBalance !== '' ? Number(giftCardBalance) : undefined,
+        referrals: referrals !== '' ? Number(referrals) : undefined,
+      };
 
-    createClient(payload);
+      createClient(payload);
 
-    reset();
+      reset();
+    } else {
+      const payload: any = {
+        id,
+        name,
+        email,
+        phone,
+        tier,
+        notes,
+        password: password ?? '25854565',
+        birthday: birthday || undefined,
+        address: address || undefined,
+        allergies: allergies || undefined,
+        favoriteServices: favoriteServices ? favoriteServices.split(',').map((s: any) => s.trim()).filter(Boolean) : undefined,
+        prepaymentBalance: prepaymentBalance !== '' ? Number(prepaymentBalance) : undefined,
+        giftCardBalance: giftCardBalance !== '' ? Number(giftCardBalance) : undefined,
+        referrals: referrals !== '' ? Number(referrals) : undefined,
+      };
+
+      updateClient(payload);
+
+      reset();
+    }
   };
 
   return (
@@ -80,6 +107,10 @@ export function ClientModal({ trigger, client }: ClientModalProps) {
               <Label>Email</Label>
               <Input value={email} onChange={(e) => setEmail(e.target.value)} placeholder="marie@email.com" />
             </div>
+          </div>
+          <div className="space-y-2">
+            <Label>Mot de passe</Label>
+            <Input value={password} onChange={(e) => setPassword(e.target.value)} placeholder="*****" />
           </div>
           <div>
             <Label>Tier</Label>
@@ -154,7 +185,13 @@ export function ClientModal({ trigger, client }: ClientModalProps) {
           <DialogClose asChild>
             <Button variant="outline">Annuler</Button>
           </DialogClose>
-          <Button onClick={onSubmit} disabled={isCreatingClient} className="bg-linear-to-r from-pink-500 to-purple-500 text-white">{isCreatingClient ? 'Création...' : 'Créer une fiche cliente'}</Button>
+          {edit ? <Button onClick={onSubmit} disabled={isCreatingClient} className="bg-linear-to-r from-pink-500 to-purple-500 text-white">
+            {isCreatingClient ? 'Création...' : 'Créer une fiche cliente'}
+          </Button>
+            : <Button onClick={onSubmit} disabled={isUpdatingClient} className="bg-linear-to-r from-pink-500 to-purple-500 text-white">
+              {isUpdatingClient ? 'Editing...' : 'Modifier cette fiche cliente'}
+            </Button>
+          }
         </DialogFooter>
       </DialogContent>
     </Dialog>

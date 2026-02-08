@@ -116,12 +116,12 @@ export function useAppointment(id: string) {
   });
 }
 
-export function useAvailableSlots(params: { date?: string; workerId: string }) {
+export function useAvailableSlots(params?: { date?: string; workerId: string }) {
 
   const { data, isLoading } =  useQuery({
     queryKey: ['appointments', 'available-slots', params],
     queryFn: () => appointmentsApi.getAvailableSlots(params),
-    enabled: !!params.date && !!params.workerId,
+    enabled: !!params?.date && !!params?.workerId,
   });
   return {
     data,

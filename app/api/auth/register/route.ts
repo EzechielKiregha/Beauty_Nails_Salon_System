@@ -10,13 +10,6 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     let { name, email, phone, password, role = 'client', refCode } = body;
 
-    // console.log("Received refCode:", refCode);
-
-    // Validation
-    // if (!name || !email || !phone || !password || !refCode) {
-    //   return errorResponse('Tous les champs sont requis', 400);
-    // }
-
     // Check if user exists
     const existingUser = await prisma.user.findFirst({
       where: {
@@ -84,7 +77,7 @@ export async function POST(request: NextRequest) {
       const referrerProfile = await prisma.clientProfile.update({
         where: { id: referrerID },
         data: {
-          loyaltyPoints: { increment: 100 },
+          loyaltyPoints: { increment: 5 },
           referrals: { increment: 1 },
         },
       });
@@ -92,7 +85,7 @@ export async function POST(request: NextRequest) {
       const loyaltyTransaction = await prisma.loyaltyTransaction.create({
         data: {
           clientId: referrerID,
-          points: 100,
+          points: 5,
           type: 'earned_referral',
           description: `Bonus de parrainage pour avoir référé ${name}`,
         },

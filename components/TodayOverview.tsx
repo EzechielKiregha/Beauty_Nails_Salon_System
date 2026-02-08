@@ -4,7 +4,7 @@ import { Badge } from './ui/badge';
 import { Calendar, Clock, DollarSign, Users, AlertCircle, UserCheck, Activity, Plus, CreditCard, Package } from 'lucide-react';
 import { useAppointments } from '@/lib/hooks/useAppointments';
 import { useRevenueReport, useServicePerformance } from '@/lib/hooks/useReports';
-import { useStaff } from '@/lib/hooks/useStaff';
+import { useAvailableStaff, useStaff } from '@/lib/hooks/useStaff';
 import { useInventory } from '@/lib/hooks/useInventory';
 import { AppointmentModal } from './modals/AppointmentModal';
 import { AdjustStockModal } from './modals/InventoryModals';
@@ -17,7 +17,7 @@ export default function TodayOverview({ showMock }: { showMock?: boolean }) {
   // Hooks
   const { appointments: apiAppointments = [] } = useAppointments({ date: today });
   const { data: revenueData } = useRevenueReport({ from: today, to: today });
-  const { staff: apiStaff = [] } = useStaff();
+  const { staff: apiStaff = [] } = useAvailableStaff();
   const { inventory: apiInventory = [] } = useInventory();
   const { data: servicePerformance } = useServicePerformance('daily');
 
@@ -57,6 +57,8 @@ export default function TodayOverview({ showMock }: { showMock?: boolean }) {
       duration: apt.duration || 60,
     }))
     : (showMock ? MOCK_UPCOMING : []);
+
+  const ongoingAppointments = apiAppointments.filter((a) => ['confirmed', 'pending'].includes(a.status));
 
   const staffRoster = (apiStaff && apiStaff.length > 0)
     ? apiStaff.map((s: any) => ({ name: s.name || s.fullName || 'Employé', status: s.isAvailable ? 'available' : 'busy', currentClient: null, service: null, nextAvailable: 'Maintenant' }))
@@ -103,7 +105,7 @@ export default function TodayOverview({ showMock }: { showMock?: boolean }) {
             <div className="min-w-0">
               <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1 font-medium">Revenus du Jour</p>
               <p className="text-xl sm:text-2xl text-gray-900 dark:text-gray-100 font-black">{todayStats.dailyRevenue.toLocaleString()} Fc</p>
-              <p className="text-[10px] sm:text-xs text-green-600 dark:text-green-400 mt-1 ">+8% vs hier</p>
+              <p className="text-[10px] sm:text-xs text-green-600 dark:text-green-400 mt-1 ">n/a% vs hier</p>
             </div>
             <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-linear-to-br from-green-400 to-emerald-400 flex items-center justify-center shrink-0 shadow-lg shadow-green-500/30">
               <DollarSign className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
@@ -116,7 +118,7 @@ export default function TodayOverview({ showMock }: { showMock?: boolean }) {
             <div className="min-w-0">
               <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1 font-medium">Clientes Servies</p>
               <p className="text-2xl sm:text-3xl text-gray-900 dark:text-gray-100 font-black">{todayStats.clientsServed}</p>
-              <p className="text-[10px] sm:text-xs text-purple-600 dark:text-purple-400 mt-1 ">En cours: 3</p>
+              <p className="text-[10px] sm:text-xs text-purple-600 dark:text-purple-400 mt-1 ">En cours: {ongoingAppointments.length}</p>
             </div>
             <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-linear-to-br from-purple-400 to-pink-400 flex items-center justify-center shrink-0 shadow-lg shadow-purple-500/30">
               <Users className="w-5 h-5 sm:w-6 sm:h-6 text-white" />

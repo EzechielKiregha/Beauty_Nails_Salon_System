@@ -33,6 +33,19 @@ export interface CreateAppointmentData {
   location?: 'salon' | 'home';
   addOns?: string[];
   notes?: string;
+  decidedToPay?: boolean;
+  paymentInfo?: any | {
+    discountCode : string;
+    subtotal : number;
+    discountAmount : number,
+    taxAmount : number,
+    tip : number,
+    total : number,
+    method: "card" | "momo",
+    status: string,
+    loyaltyPointUsed: 0,
+    receipt: string,
+}
 }
 
 export interface UpdateAppointmentStatusData {
@@ -70,6 +83,13 @@ export const appointmentsApi = {
 
   // Create appointment
   createAppointment: async (appointmentData: CreateAppointmentData): Promise<{ appointment: Appointment; message: string }> => {
+
+    if (appointmentData.paymentInfo.discountCode){
+      const discount = await axiosdb.get(`/discounts/validate/${appointmentData.paymentInfo.discountCode}`)
+
+    console.log(discount.data)
+    }
+
     const { data } = await axiosdb.post('/appointments', appointmentData);
     return data;
   },
@@ -95,7 +115,7 @@ export const appointmentsApi = {
   },
 
   // Get available slots
-  getAvailableSlots: async (params: AvailableSlotsParams): Promise<{ slots: {
+  getAvailableSlots: async (params?: AvailableSlotsParams): Promise<{ slots: {
     time: string,
     available: boolean
   }[] }> => {

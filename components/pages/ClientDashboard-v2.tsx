@@ -55,6 +55,7 @@ import { useRouter } from "next/navigation";
 import LoadingSpinner from "../LoadingSpinner";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../ui/accordion";
 import LoaderBN from "../Loader-BN";
+import { LoyaltyTransaction } from "@/lib/api/loyalty";
 
 export default function ClientDashboardV2() {
   const [notificationOpen, setNotificationOpen] = useState(false);
@@ -64,6 +65,7 @@ export default function ClientDashboardV2() {
   const [rating, setRating] = useState(0);
   const [reviewText, setReviewText] = useState("");
   const router = useRouter();
+  const { transactions: loyaltyTransactions, isLoading: loyaltyLoading } = useLoyalty();
   // Get authenticated user
   const { user, isLoading: isAuthLoading } = useAuth();
   // Get appointments
@@ -582,75 +584,95 @@ export default function ClientDashboardV2() {
           {/* Loyalty Tab */}
           <TabsContent value="loyalty" className="space-y-6">
             <Card className="p-6">
-              {/* <h2 className="text-2xl   mb-6 flex items-center">
-                <Gift className="w-6 h-6 mr-2 text-pink-500" />
-                Programme de Fidélité
-              </h2>
+              <div>
+                <div className="flex items-center gap-4 mb-8">
+                  <Award className="w-8 h-8 text-amber-500" />
+                  <h2 className="  text-2xl  text-gray-900 dark:text-gray-100">
+                    Programme Fidélité
+                  </h2>
 
-              <div className="mb-8 p-6 border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950">
-                <div className="flex items-center justify-between mb-4">
-                  <div>
-                    <p className="text-sm text-gray-900 dark:text-gray-100 mb-1">Vos points</p>
-                    <p className="text-4xl  text-gray-900 dark:text-gray-100">{points}</p>
-                  </div>
-                  <div className="text-right">
-                    <Badge className="bg-linear-to-r from-pink-500 to-purple-500 text-white border-0 text-lg px-4 py-2">
-                      {tier}
-                    </Badge>
-                  </div>
                 </div>
-
-                <div className="space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-900 dark:text-gray-100">
-                      Prochain service gratuit
-                    </span>
-                    <span className="font-semibold">
-                      {nextFreeService} rendez-vous restants
-                    </span>
-                  </div>
-                  <Progress value={(5 - nextFreeService) * 20} className="h-3" />
-                </div>
-              </div> */}
-
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
-                {/* Loyalty Stats & Info */}
-                <div>
-                  <div className="flex items-center gap-4 mb-8">
-                    <div className="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
-                      <Award className="w-6 h-6 text-amber-600 dark:text-amber-400" />
+                <div className="space-y-6">
+                  <Card className="bg-linear-to-br from-amber-50 to-orange-50 dark:from-amber-900/10 dark:to-orange-900/10 border-2 border-amber-200 dark:border-amber-900 shadow-xl rounded-3xl p-6 relative">
+                    <div className="flex items-center gap-4 mb-4">
+                      <div className="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
+                        <Award className="w-6 h-6 text-amber-600 dark:text-amber-400" />
+                      </div>
+                      <div>
+                        <h3 className="text-xl  text-gray-900 dark:text-gray-100">Votre Statut</h3>
+                        <Badge className="bg-amber-500 text-white">{loyaltyTier || 'Standard'}</Badge>
+                      </div>
                     </div>
-                    <div>
-                      <h2 className="text-2xl   text-gray-900 dark:text-gray-100">Votre Statut Fidélité</h2>
-                      <Badge className="bg-amber-500 text-white">{loyaltyTier || 'Standard'}</Badge>
+                    <div className="bg-white dark:bg-gray-800/50 p-4 rounded-xl border border-amber-100 dark:border-amber-900/30 mb-4">
+                      <p className="text-center text-gray-700 dark:text-gray-300">
+                        Points actuels: <span className=" text-amber-600 dark:text-amber-400">{loyaltyPoints}</span>
+                      </p>
                     </div>
-                  </div>
-                  <div className="bg-white dark:bg-gray-800/50 p-6 rounded-2xl border border-amber-100 dark:border-amber-900/30 mb-8">
-                    <p className="text-center text-gray-700 dark:text-gray-300">
-                      Points actuels: <span className=" text-amber-600 dark:text-amber-400 text-2xl">{loyaltyPoints}</span>
-                    </p>
-                  </div>
+                  </Card>
 
-                  <Accordion type="single" collapsible className="w-full">
-                    <AccordionItem value="item-1">
-                      <AccordionTrigger>Comment accumuler des points ?</AccordionTrigger>
-                      <AccordionContent>
-                        Gagnez 1 point pour chaque 1000 Fc dépensés. Obtenez des points bonus pour les anniversaires, parrainages et participation à des événements.
-                      </AccordionContent>
-                    </AccordionItem>
-                    <AccordionItem value="item-2">
-                      <AccordionTrigger>Quels sont les paliers de récompenses ?</AccordionTrigger>
-                      <AccordionContent>
-                        <ul className="list-disc pl-5 space-y-1">
-                          <li>100 points: Manucure gratuite</li>
-                          <li>250 points: Extension cils gratuite</li>
-                          <li>500 points: 50% sur tous services</li>
-                          <li>1000 points: Journée beauté complète gratuite</li>
-                        </ul>
-                      </AccordionContent>
-                    </AccordionItem>
-                  </Accordion>
+                  <Card className="bg-linear-to-br from-green-50 to-emerald-50 dark:from-green-900/10 dark:to-emerald-900/10 border-2 border-green-200 dark:border-green-900 shadow-xl rounded-3xl p-6 relative">
+                    <div className="flex items-center gap-4 mb-4">
+                      <div className="w-12 h-12 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
+                        <Gift className="w-6 h-6 text-green-600 dark:text-green-400" />
+                      </div>
+                      <div>
+                        <h3 className="text-xl  text-gray-900 dark:text-gray-100">Récompenses Disponibles</h3>
+                        <p className="text-gray-600 dark:text-gray-300 text-sm">Consultez le catalogue</p>
+                      </div>
+                    </div>
+                    <Link href="/catalog#loyalty">
+                      <Button variant="secondary" className="w-full border-2 border-green-200 dark:border-green-800 text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-full py-3 ">
+                        Explorer
+                      </Button>
+                    </Link>
+                  </Card>
+
+                  <Card className="bg-linear-to-br from-blue-50 to-cyan-50 dark:from-blue-900/10 dark:to-cyan-900/10 border-2 border-blue-200 dark:border-blue-900 shadow-xl rounded-3xl p-6 relative">
+                    <div className="flex items-center gap-4 mb-4">
+                      <div className="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
+                        <Calendar className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+                      </div>
+                      <div>
+                        <h3 className="text-xl  text-gray-900 dark:text-gray-100">Historique Récent</h3>
+                        <p className="text-gray-600 dark:text-gray-300 text-sm">Vos dernières activités</p>
+                      </div>
+                    </div>
+                    <div className="space-y-3">
+                      {loyaltyTransactions.length > 0 ? (
+                        loyaltyTransactions.map((tx, idx) => (
+                          <div key={tx.id} className="flex justify-between items-center p-2 bg-white dark:bg-gray-800/30 rounded-lg">
+                            <span className="text-sm text-gray-700 dark:text-gray-300">{tx.type}</span>
+                            <Badge variant="outline" className="text-xs">{tx.points} pts</Badge>
+                          </div>
+                        ))
+                      ) : (
+                        <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-2">Aucune activité récente</p>
+                      )}
+                    </div>
+                  </Card>
                 </div>
+              </div>
+              {/* Loyalty Stats & Info */}
+              <div>
+                <Accordion type="single" collapsible className="w-full">
+                  <AccordionItem value="item-1">
+                    <AccordionTrigger>Comment accumuler des points ?</AccordionTrigger>
+                    <AccordionContent>
+                      Gagnez 1 point pour chaque 1000 Fc dépensés. Obtenez des points bonus pour les anniversaires, parrainages et participation à des événements.
+                    </AccordionContent>
+                  </AccordionItem>
+                  <AccordionItem value="item-2">
+                    <AccordionTrigger>Quels sont les paliers de récompenses ?</AccordionTrigger>
+                    <AccordionContent>
+                      <ul className="list-disc pl-5 space-y-1">
+                        <li>100 points: Manucure gratuite</li>
+                        <li>250 points: Extension cils gratuite</li>
+                        <li>500 points: 50% sur tous services</li>
+                        <li>1000 points: Journée beauté complète gratuite</li>
+                      </ul>
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
               </div>
 
               {/* Loyalty Transactions */}

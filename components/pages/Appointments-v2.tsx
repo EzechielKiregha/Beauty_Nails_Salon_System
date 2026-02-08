@@ -19,24 +19,40 @@ import {
 import { Label } from "../ui/label";
 import { Checkbox } from "../ui/checkbox";
 import {
+  Banknote,
   Calendar as CalendarIcon,
   Clock,
+  CreditCard,
   Home,
-  Loader2,
   Sparkles,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import HeroSection from "../HeroSection";
 import { useAuth } from "@/lib/hooks/useAuth";
 import { useServices } from "@/lib/hooks/useServices";
 import { useAvailableStaff } from "@/lib/hooks/useStaff";
-import { useAppointments, useAvailableSlots } from "@/lib/hooks/useAppointments";
+import { useAppointments } from "@/lib/hooks/useAppointments";
 import { CreateAppointmentData } from "@/lib/api/appointments";
 import { Service } from "@/lib/api/services";
-import LoadingSpinner from "../LoadingSpinner";
 import LoaderBN from "../Loader-BN";
+import { StaffProfileModal } from "../modals/StaffModals";
+import { Worker } from "@/lib/api/staff";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogTrigger } from '@/components/ui/dialog';
+
+import { useDiscounts } from "@/lib/hooks/useMarketing";
+import { Alert, AlertDescription } from "../ui/alert";
+import { Input } from "../ui/input";
+import { Separator } from "../ui/separator";
+
+interface PaymentCalculation {
+  subtotal: number;
+  discount: number;
+  tax: number;
+  tip: number;
+  total: number;
+}
+
 
 export default function AppointmentsV2() {
   const router = useRouter();
@@ -46,7 +62,6 @@ export default function AppointmentsV2() {
   const paramService = searchParams.get("service");
   const paramDate = searchParams.get("date");
   const paramTime = searchParams.get("time");
-
   const servicePackage = searchParams.get('package');
   const packagePrice = parseInt(searchParams.get('price') || '0', 10);
 
@@ -64,27 +79,94 @@ export default function AppointmentsV2() {
   const [selectedCategory, setSelectedCategory] = useState(paramService || "");
   const [selectedWorker, setSelectedWorker] = useState("");
   const [selectedTime, setSelectedTime] = useState(paramTime || "");
-  const [location, setLocation] = useState<"salon" | "home">(
-    "salon",
-  );
+  const [location, setLocation] = useState<"salon" | "home">("salon");
   const [addOns, setAddOns] = useState<string[]>([]);
+  const [decideToPay, setDecideToPay] = useState("false");
+  const [addOnsTotalPrice, setAddOnsTotalPrice] = useState<number>(0);
+  const [baseServicePrice, setBaseServicePrice] = useState<number>(0);
+
+  const { discounts, isLoading: discountsLoading } = useDiscounts();
+
+  const [discountCode, setDiscountCode] = useState("");
+  const [tip, setTip] = useState(0);
+  const [selectedMethod, setSelectedMethod] = useState<"mobile" | "card">("mobile");
+
+  const TAX_RATE = 0.16; // 18% example
+
+  const PAYMENT_DETAILS = {
+    mobile: {
+      label: "Mobile Money",
+      instructions: "Envoyer au numéro : +250 78X XXX XXX"
+    },
+    card: {
+      label: "Virement Bancaire",
+      instructions: "Bank of Kigali - 123456789 - Salon Beauty"
+    }
+  };
+
 
   const { user } = useAuth();
+
   const { services, isLoading: servicesLoading } = useServices();
   const { staff, isLoading: staffLoading } = useAvailableStaff();
-  const { data: availableSlotsData, isLoading: slotsLoading } = useAvailableSlots({ date: selectedDate?.toLocaleDateString(), workerId: selectedWorker });
   const { createAppointment, isLoading: appointmentLoading } = useAppointments();
+
+  const subtotal = useMemo(() => {
+    const servicePrice = baseServicePrice || 0;
+    return servicePrice + addOnsTotalPrice;
+  }, [baseServicePrice, addOnsTotalPrice]);
+
+  const appliedDiscount = useMemo(() => {
+    if (!discountCode) return null;
+
+    return discounts.find(
+      (d) =>
+        d.code.toLowerCase() === discountCode.toLowerCase() &&
+        d.isActive
+    );
+  }, [discountCode, discounts]);
+
+  const discountAmount = useMemo(() => {
+    if (!appliedDiscount) return 0;
+
+    if (appliedDiscount.type === "percentage") {
+      return subtotal * (appliedDiscount.value / 100);
+    }
+
+    return appliedDiscount.value;
+  }, [appliedDiscount, subtotal]);
+
+  const taxAmount = useMemo(() => {
+    return (subtotal - discountAmount) * TAX_RATE;
+  }, [subtotal, discountAmount]);
+
+  const total = useMemo(() => {
+    return subtotal - discountAmount + taxAmount + tip;
+  }, [subtotal, discountAmount, taxAmount, tip]);
+
+
+  const paymentStatus = useMemo(() => {
+    if (!selectedMethod) return "pending";
+    return "paid";
+  }, [selectedMethod]);
+
 
   // Sync service when services load from API
   useEffect(() => {
     if (paramService && services.length > 0) {
       const service = services.find((s: Service) => s.id === paramService);
-      if (service) {
-        setSelectedServiceId(service.id);
-        setSelectedCategory(service.category); // Set to actual category, not service ID
-      }
+      if (!service) return
+      setSelectedServiceId(service.id);
+      setSelectedCategory(service.category);
+      setBaseServicePrice(service.price);
     }
-  }, [services, paramService]);
+    if (selectedServiceId) {
+      const service = services.find((s: Service) => s.id === selectedServiceId);
+
+      if (!service) return;
+      setBaseServicePrice(service.price);
+    }
+  }, [services, paramService, selectedServiceId]);
 
   const timeSlots = [
     "09:00",
@@ -108,12 +190,30 @@ export default function AppointmentsV2() {
     "Produits premium (+15 000 Fc)",
   ];
 
-  const availableMap = useMemo(() => {
-    if (!availableSlotsData?.slots) return null;
-    return new Map(availableSlotsData.slots.map((s: any) => [s.time, s.available]));
-  }, [availableSlotsData]);
+  const paymentInfo = useMemo(() => ({
+    discountCode,
+    subtotal,
+    discount: discountAmount,
+    tax: taxAmount,
+    tip,
+    total,
+    method: selectedMethod,
+    status: paymentStatus,
+    loyaltyPointUsed: 0,
+    receipt: `RCT-${Date.now()}`
+  }), [
+    discountCode,
+    subtotal,
+    discountAmount,
+    taxAmount,
+    tip,
+    total,
+    selectedMethod,
+    paymentStatus
+  ]);
 
-  if (servicesLoading || staffLoading || appointmentLoading) {
+
+  if (servicesLoading || staffLoading || appointmentLoading || discountsLoading) {
     return (
       <LoaderBN />
     )
@@ -147,6 +247,8 @@ export default function AppointmentsV2() {
         time: selectedTime,
         location: location,
         addOns: addOns,
+        decidedToPay: decideToPay === "true" ? true : false,
+        paymentInfo,
       };
       createAppointment(appointmentData)
     } else {
@@ -170,6 +272,8 @@ export default function AppointmentsV2() {
         time: selectedTime,
         location: location,
         addOns: addOns,
+        decidedToPay: decideToPay === "true" ? true : false,
+        paymentInfo,
       };
       createAppointment(appointmentData)
     }
@@ -291,9 +395,10 @@ export default function AppointmentsV2() {
                   <SelectItem value="any">
                     Peu importe (première disponible)
                   </SelectItem>
-                  {staff.map((worker) => (
+                  {staff.map((worker: Worker) => (
                     <SelectItem key={worker.id} value={worker.id}>
                       {worker?.user?.name}
+
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -465,9 +570,12 @@ export default function AppointmentsV2() {
                     <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mb-1">
                       Service
                     </p>
-                    <p className="text-sm sm:text-base text-gray-900 dark:text-gray-100 font-medium">
-                      {service.name}
-                    </p>
+                    <div className="flex flex-row justify-between">
+                      <p className="text-sm sm:text-base text-gray-900 dark:text-gray-100 font-medium">
+                        {service.name}
+                      </p>
+                      <span className="text-xs sm:text-base text-gray-900 dark:text-gray-100 font-medium" >{service.price.toLocaleString()} Fc</span>
+                    </div>
                   </div>
                 ))}
 
@@ -476,9 +584,19 @@ export default function AppointmentsV2() {
                     <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mb-1">
                       Spécialiste
                     </p>
-                    <p className="text-sm sm:text-base text-gray-900 dark:text-gray-100 font-medium">
-                      {worker?.user?.name}
-                    </p>
+                    <div className="flex flex-row justify-between">
+                      <p className="text-sm sm:text-base text-gray-900 dark:text-gray-100 font-medium">
+                        {worker.user?.name}
+                      </p>
+                      <StaffProfileModal
+                        staff={worker}
+                        trigger={
+                          <Button variant="outline" size="sm" className="rounded-full">
+                            Voir Profil
+                          </Button>
+                        }
+                      />
+                    </div>
                   </div>
                 ))}
 
@@ -539,9 +657,56 @@ export default function AppointmentsV2() {
                     </ul>
                   </div>
                 )}
+
+                {selectedTime && (
+                  <RadioGroup
+                    value={decideToPay}
+                    onValueChange={(value: any) =>
+                      setDecideToPay(value)
+                    }
+                  >
+                    <div className="space-y-4">
+                      <div className="flex items-start sm:items-center space-x-3 p-3 sm:p-4 border border-gray-200 dark:border-gray-700 rounded-xl hover:border-pink-300 dark:hover:border-pink-600 transition-colors">
+                        <RadioGroupItem value="true" id="decidedToPay" className="mt-1 sm:mt-0" />
+                        <Label
+                          htmlFor="decidedToPay"
+                          className="flex items-start sm:items-center cursor-pointer flex-1"
+                        >
+                          <CreditCard className="w-5 h-5 mr-3 text-pink-500 shrink-0 mt-0.5 sm:mt-0" />
+                          <div>
+                            <p className="text-gray-900 dark:text-gray-100 font-medium">
+                              Ajoutez vos informations de payement.
+                            </p>
+                            <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
+                              Faites vos payements en ligne avec nos ligne de payements tres securisees.
+                            </p>
+                          </div>
+                        </Label>
+                      </div>
+
+                      <div className="flex items-start sm:items-center space-x-3 p-3 sm:p-4 border border-gray-200 dark:border-gray-700 rounded-xl hover:border-pink-300 dark:hover:border-pink-600 transition-colors">
+                        <RadioGroupItem value="false" id="false" className="mt-1 sm:mt-0" />
+                        <Label
+                          htmlFor="false"
+                          className="flex items-start sm:items-center cursor-pointer flex-1"
+                        >
+                          <Banknote className="w-5 h-5 mr-3 text-amber-500 shrink-0 mt-0.5 sm:mt-0" />
+                          <div>
+                            <p className="text-gray-900 dark:text-gray-100 font-medium">
+                              Faite vos payements sur place
+                            </p>
+                            <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
+                              Q. HIMBI, C. de Goma, Ville de Goma, No - 22
+                            </p>
+                          </div>
+                        </Label>
+                      </div>
+                    </div>
+                  </RadioGroup>
+                )}
               </div>
 
-              {!user && (
+              {!user ? (
                 <div className="mb-6 p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl">
                   <p className="text-xs sm:text-sm text-amber-800 dark:text-amber-200">
                     Vous devez être connecté(e) pour réserver un
@@ -554,15 +719,128 @@ export default function AppointmentsV2() {
                     Se connecter
                   </Link>
                 </div>
-              )}
+              ) : decideToPay === "true" ? (
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button className="w-full bg-linear-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-full py-6 justify-start px-6  shadow-lg shadow-amber-500/25 transition-all hover:scale-[1.02]">
+                      <Banknote className="w-5 h-5 mr-3" />
+                      Ajoutez vos informations de payement.
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto p-0 gap-0 rounded-2xl">
+                    <div className="bg-linear-to-r from-pink-500 to-purple-600 p-6 text-white">
+                      <DialogHeader>
+                        <DialogTitle className="text-2xl  flex items-center gap-2 text-white">
+                          {decideToPay ? 'Modifier la fiche de paie' : 'Nouveau fiche de paie'}
+                        </DialogTitle>
+                        <p className="text-pink-100 opacity-90">
+                          {decideToPay ? 'Gérez les détails du fiche de paie existant.' : 'Confirmez le payement et les détails du rendez-vous pour une nouvelle séance beauté.'}
+                        </p>
+                      </DialogHeader>
+                    </div>
 
-              <Button
+                    {/* <form onSubmit={handleSubmit} className="p-6 space-y-6"> */}
+                    <div className="p-6 space-y-6">
+                      <div className="space-y-2">
+                        <Label>Code Promo</Label>
+
+                        <Select value={discountCode} onValueChange={setDiscountCode}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Choisir un code" />
+                          </SelectTrigger>
+
+                          <SelectContent>
+                            {discounts.map((d) => (
+                              <SelectItem key={d.id} value={d.code}>
+                                {d.code} ({d.type === "percentage" ? `${d.value}%` : `${d.value} Fc`})
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+
+                        <Input
+                          placeholder="Ou entrer un code manuellement"
+                          value={discountCode}
+                          onChange={(e) => setDiscountCode(e.target.value)}
+                        />
+                      </div>
+                      <div>
+                        <Label>Pourboire</Label>
+                        <Input
+                          type="number"
+                          value={tip}
+                          onChange={(e) => setTip(Number(e.target.value))}
+                        />
+                      </div>
+                      <Card className="p-4 space-y-2 text-sm">
+                        <div className="flex justify-between">
+                          <span>Sous-total</span>
+                          <span>{subtotal.toLocaleString()} Fc</span>
+                        </div>
+
+                        <div className="flex justify-between text-green-600">
+                          <span>Remise</span>
+                          <span>- {discountAmount.toLocaleString()} Fc</span>
+                        </div>
+
+                        <div className="flex justify-between">
+                          <span>Taxe</span>
+                          <span>{taxAmount.toLocaleString()} Fc</span>
+                        </div>
+
+                        <div className="flex justify-between">
+                          <span>Pourboire</span>
+                          <span>{tip.toLocaleString()} Fc</span>
+                        </div>
+
+                        <Separator />
+
+                        <div className="flex justify-between font-semibold text-lg">
+                          <span>Total</span>
+                          <span>{total.toLocaleString()} Fc</span>
+                        </div>
+                      </Card>
+                      <div className="space-y-3">
+                        <Label>Méthode de paiement</Label>
+
+                        <div className="grid grid-cols-2 gap-3">
+                          {Object.entries(PAYMENT_DETAILS).map(([key, val]) => (
+                            <Button
+                              key={key}
+                              variant={selectedMethod === key ? "default" : "outline"}
+                              onClick={() => setSelectedMethod(key === "mobile" ? "mobile" : "card")}
+                            >
+                              {val.label}
+                            </Button>
+                          ))}
+                        </div>
+
+                        {selectedMethod && (
+                          <Alert>
+                            <AlertDescription>
+                              {PAYMENT_DETAILS[selectedMethod].instructions}
+                            </AlertDescription>
+                          </Alert>
+                        )}
+                      </div>
+                      <DialogFooter className="gap-2 sm:gap-0">
+                        <Button onClick={handleSubmit} className="bg-linear-to-r from-pink-500 to-purple-500 text-white">
+                          {decideToPay === "true" ? 'Confirmer Le Payement' : 'Enregistrer Modification'}
+                        </Button>
+                      </DialogFooter>
+                    </div>
+                    {/* </form> */}
+                  </DialogContent>
+                </Dialog>
+              ) : null}
+
+              {decideToPay === "false" && (<Button
                 onClick={handleSubmit}
                 disabled={!user}
                 className="w-full bg-linear-to-r from-pink-500 to-amber-400 hover:from-pink-600 hover:to-amber-500 text-white rounded-full py-4 sm:py-6 text-sm sm:text-base font-medium"
               >
                 Confirmer le rendez-vous
-              </Button>
+              </Button>)}
 
               <p className="text-xs text-gray-500 dark:text-gray-400 text-center mt-4">
                 Vous recevrez une confirmation par email et

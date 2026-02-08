@@ -8,70 +8,226 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Calendar, Clock, MapPin, Phone, Mail, DollarSign, Star, FileText, Download, Copy, Save } from 'lucide-react';
+import { Calendar, Clock, MapPin, Phone, Mail, DollarSign, Star, FileText, Download, Copy, Save, Loader2 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { Separator } from '@/components/ui/separator';
-
-// --- Edit Schedule Modal ---
+import { useWorkerSchedule } from '@/lib/hooks/useStaff';
+import { Worker } from '@/lib/api/staff';
 
 interface EditScheduleModalProps {
-  staffId?: string;
+  staffId: string;
   staffName?: string;
-  currentSchedule?: any;
   trigger?: React.ReactNode;
 }
 
-export function EditScheduleModal({ staffName, trigger }: EditScheduleModalProps) {
-  const days = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
+type DaySchedule = {
+  startTime: string;
+  endTime: string;
+  isAvailable: boolean;
+};
+
+export function EditScheduleModal({
+  staffId,
+  staffName,
+  trigger,
+}: EditScheduleModalProps) {
+  const { updateSchedule, schedule, isUpdating } = useWorkerSchedule(staffId);
+
+  const [weekSchedule, setWeekSchedule] = useState<Record<number, DaySchedule>>({});
+  const [savingDays, setSavingDays] = useState<Record<number, boolean>>({});
+
+  const daysOfWeek = [
+    { idx: 0, day: "Lundi" },
+    { idx: 1, day: "Mardi" },
+    { idx: 2, day: "Mercredi" },
+    { idx: 3, day: "Jeudi" },
+    { idx: 4, day: "Vendredi" },
+    { idx: 5, day: "Samedi" },
+    { idx: 6, day: "Dimanche" },
+  ];
+
+  /* ----------------------------------
+     Map API schedule → UI state
+  -----------------------------------*/
+  useEffect(() => {
+    if (!schedule) return;
+
+    const map: Record<number, DaySchedule> = {};
+
+    schedule.forEach((s: any) => {
+      map[s.dayOfWeek] = {
+        startTime: s.startTime,
+        endTime: s.endTime,
+        isAvailable: s.isAvailable,
+      };
+    });
+
+    daysOfWeek.forEach((d) => {
+      if (!map[d.idx]) {
+        map[d.idx] = {
+          startTime: "09:00",
+          endTime: "18:00",
+          isAvailable: d.idx !== 6,
+        };
+      }
+    });
+
+    // 🔥 Prevent infinite loop
+    setWeekSchedule((prev) => {
+      if (JSON.stringify(prev) === JSON.stringify(map)) {
+        return prev;
+      }
+      return map;
+    });
+  }, [schedule]);
+
+  /* ----------------------------------
+    Local updater
+  -----------------------------------*/
+  const updateDay = (day: number, changes: Partial<DaySchedule>) => {
+    setWeekSchedule((prev) => ({
+      ...prev,
+      [day]: {
+        ...prev[day],
+        ...changes,
+      },
+    }));
+  };
+
+  /* ----------------------------------
+    Save one day
+  -----------------------------------*/
+  const saveDay = async (day: number) => {
+    const d = weekSchedule[day];
+    if (!d) return;
+
+    try {
+      setSavingDays((prev) => ({ ...prev, [day]: true }));
+
+      await updateSchedule({
+        dayOfWeek: day,
+        startTime: d.startTime,
+        endTime: d.endTime,
+        isAvailable: d.isAvailable,
+      });
+    } finally {
+      setSavingDays((prev) => ({ ...prev, [day]: false }));
+    }
+  };
+
+  /* ----------------------------------
+    Optional full save fallback
+  -----------------------------------*/
+  const saveAll = async () => {
+    for (const day of Object.keys(weekSchedule)) {
+      await saveDay(Number(day));
+    }
+  };
 
   return (
     <Dialog>
       {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
-      <DialogContent className="sm:max-w-[700px] max-h-[85vh] overflow-y-auto">
+
+      <DialogContent className="sm:max-w-180 max-h-[85vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex justify-between items-center">
-            <span>Modifier Planning - {staffName || 'Employée'}</span>
+            <span>Modifier Planning - {staffName || "Employée"}</span>
+
             <Button variant="outline" size="sm" className="gap-2 text-xs">
               <Copy className="w-3 h-3" /> Copier semaine précédente
             </Button>
           </DialogTitle>
         </DialogHeader>
+
+        {/* ---------------- TABLE ---------------- */}
         <div className="py-4 space-y-4">
           <div className="grid grid-cols-1 gap-2">
-            <div className="grid grid-cols-12 gap-2 text-sm font-medium text-gray-500 mb-2 px-3">
+
+            <div className="grid grid-cols-12 gap-2 text-sm font-medium text-muted-foreground mb-2 px-3">
               <div className="col-span-3">Jour</div>
-              <div className="col-span-4">Matin</div>
-              <div className="col-span-4">Après-midi</div>
-              <div className="col-span-1">Actif</div>
+              <div className="col-span-4">Début</div>
+              <div className="col-span-4">Fin</div>
+              <div className="col-span-1 text-center">Actif</div>
             </div>
 
-            {days.map((day) => (
-              <div key={day} className="grid grid-cols-12 gap-2 items-center p-3 bg-gray-50 rounded-lg border border-gray-100">
-                <div className="col-span-3 font-medium text-gray-900">{day}</div>
+            {daysOfWeek.map((day) => {
+              const row = weekSchedule[day.idx];
+              const saving = savingDays[day.idx];
 
-                <div className="col-span-4 flex items-center gap-1">
-                  <Input type="time" defaultValue="09:00" className="h-8 text-xs" />
-                  <span className="text-gray-400">-</span>
-                  <Input type="time" defaultValue="13:00" className="h-8 text-xs" />
-                </div>
+              return (
+                <div
+                  key={day.idx}
+                  className="grid grid-cols-12 gap-2 items-center p-3 bg-muted/30 rounded-lg border"
+                >
+                  {/* Day */}
+                  <div className="col-span-3 font-medium">
+                    {day.day}
+                  </div>
 
-                <div className="col-span-4 flex items-center gap-1">
-                  <Input type="time" defaultValue="14:00" className="h-8 text-xs" />
-                  <span className="text-gray-400">-</span>
-                  <Input type="time" defaultValue="18:00" className="h-8 text-xs" />
-                </div>
+                  {/* Start Time */}
+                  <div className="col-span-4">
+                    <Input
+                      type="time"
+                      value={row?.startTime || "09:00"}
+                      disabled={!row?.isAvailable}
+                      onChange={(e) =>
+                        updateDay(day.idx, { startTime: e.target.value })
+                      }
+                      onBlur={() => saveDay(day.idx)}
+                      className="h-8 text-xs"
+                    />
+                  </div>
 
-                <div className="col-span-1 flex justify-center">
-                  <Checkbox id={`day-${day}`} defaultChecked={day !== 'Dimanche'} />
+                  {/* End Time */}
+                  <div className="col-span-4">
+                    <Input
+                      type="time"
+                      value={row?.endTime || "18:00"}
+                      disabled={!row?.isAvailable}
+                      onChange={(e) =>
+                        updateDay(day.idx, { endTime: e.target.value })
+                      }
+                      onBlur={() => saveDay(day.idx)}
+                      className="h-8 text-xs"
+                    />
+                  </div>
+
+                  {/* Availability */}
+                  <div className="col-span-1 flex justify-center">
+                    {saving ? (
+                      <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />
+                    ) : (
+                      <Checkbox
+                        id={`day-${day.idx}`}
+                        checked={row?.isAvailable ?? true}
+                        onCheckedChange={(checked: boolean) => {
+                          updateDay(day.idx, { isAvailable: checked });
+                          saveDay(day.idx);
+                        }}
+                      />
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
-        <DialogFooter className="gap-2">
+
+        {/* Optional fallback save */}
+        <DialogFooter>
           <Button variant="outline">Annuler</Button>
-          <Button className="bg-purple-600 hover:bg-purple-700 text-white gap-2">
-            <Save className="w-4 h-4" /> Enregistrer Planning
+
+          <Button
+            onClick={saveAll}
+            disabled={isUpdating}
+            className="bg-purple-600 hover:bg-purple-700 text-white gap-2"
+          >
+            {isUpdating ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <Save className="w-4 h-4" />
+            )}
+            Enregistrer Planning
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -79,30 +235,21 @@ export function EditScheduleModal({ staffName, trigger }: EditScheduleModalProps
   );
 }
 
+
 // --- Staff Profile Modal ---
 
 interface StaffProfileModalProps {
-  staff?: any;
+  staff?: Worker;
   trigger?: React.ReactNode;
 }
 
 export function StaffProfileModal({ staff, trigger }: StaffProfileModalProps) {
-  // Mock data if not provided
-  const data = staff || {
-    name: 'Marie Nkumu',
-    role: 'Spécialiste Ongles',
-    email: 'marie.n@beautynails.com',
-    phone: '+243 810 111 222',
-    address: '123 Av. Kasa-Vubu, Kinshasa',
-    joinDate: '12 Jan 2023',
-    status: 'active'
-  };
 
   return (
     <Dialog>
       {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
-      <DialogContent className="sm:max-w-[800px] max-h-[90vh] overflow-y-auto p-0 gap-0 overflow-hidden">
-        <div className="h-32 bg-gradient-to-r from-pink-400 to-purple-500 relative">
+      <DialogContent className="sm:max-w-200 max-h-[90vh] overflow-y-auto p-0 gap-0 overflow-hidden">
+        <div className="h-32 bg-linear-to-r from-pink-400 to-purple-500 relative">
           <Button variant="secondary" size="sm" className="absolute top-4 right-4 bg-white/20 text-white hover:bg-white/30 border-0">
             Modifier Profil
           </Button>
@@ -115,29 +262,29 @@ export function StaffProfileModal({ staff, trigger }: StaffProfileModalProps) {
               <Avatar className="w-32 h-32 border-4 border-white shadow-lg">
                 <AvatarImage src="" />
                 <AvatarFallback className="text-4xl bg-gray-100 text-gray-600">
-                  {data.name.charAt(0)}
+                  {staff?.user?.name.split(" ")[0]?.charAt(0) || staff?.user?.name.charAt(0)}
                 </AvatarFallback>
               </Avatar>
               <div>
-                <h3 className="text-xl  text-gray-900">{data.name}</h3>
-                <p className="text-pink-600 font-medium">{data.role}</p>
+                <h3 className="text-xl  text-gray-900 dark:text-gray-100">{staff?.user?.name}</h3>
+                <p className="text-pink-600 font-medium">Employee</p>
               </div>
-              <Badge className={data.status === 'active' ? 'bg-green-500' : 'bg-gray-400'}>
-                {data.status === 'active' ? 'Employée Active' : 'Inactif'}
+              <Badge className={staff?.isAvailable ? 'bg-green-500' : 'bg-gray-400'}>
+                {staff?.isAvailable ? 'Employée Active' : 'Inactif'}
               </Badge>
 
-              <div className="w-full pt-4 space-y-4 text-left bg-gray-50 p-4 rounded-xl">
+              <div className="w-full pt-4 space-y-4 text-left bg-gray-50 dark:bg-background p-4 rounded-xl">
                 <div className="flex items-center gap-3 text-gray-700 text-sm">
-                  <Phone className="w-4 h-4 text-gray-400" /> {data.phone}
+                  <Phone className="w-4 h-4 text-gray-400" /> {staff?.user?.phone}
                 </div>
                 <div className="flex items-center gap-3 text-gray-700 text-sm">
-                  <Mail className="w-4 h-4 text-gray-400" /> {data.email}
+                  <Mail className="w-4 h-4 text-gray-400" /> {staff?.user?.email}
                 </div>
                 <div className="flex items-center gap-3 text-gray-700 text-sm">
-                  <MapPin className="w-4 h-4 text-gray-400" /> {data.address}
+                  <MapPin className="w-4 h-4 text-gray-400" /> {staff?.position}
                 </div>
                 <div className="flex items-center gap-3 text-gray-700 text-sm">
-                  <Calendar className="w-4 h-4 text-gray-400" /> Embauche: {data.joinDate}
+                  <Calendar className="w-4 h-4 text-gray-400" /> Embauche: {staff?.hireDate.split('T')[0].split('-').reverse().join('/')}
                 </div>
               </div>
             </div>
@@ -158,21 +305,21 @@ export function StaffProfileModal({ staff, trigger }: StaffProfileModalProps) {
                         <Star className="w-4 h-4 text-blue-600" />
                         <span className="font-medium text-blue-900">Note Moyenne</span>
                       </div>
-                      <p className="text-3xl  text-blue-700">4.9</p>
-                      <p className="text-xs text-blue-600">Basé sur 124 avis</p>
+                      <p className="text-3xl  text-blue-700">{staff?.rating.toFixed(1)}</p>
+                      <p className="text-xs text-blue-600">Basé sur {staff?.totalReviews} avis</p>
                     </Card>
                     <Card className="p-4 bg-green-50 border-green-100">
                       <div className="flex items-center gap-2 mb-2">
                         <DollarSign className="w-4 h-4 text-green-600" />
                         <span className="font-medium text-green-900">Ventes (Mois)</span>
                       </div>
-                      <p className="text-3xl  text-green-700">1.2M</p>
+                      <p className="text-3xl  text-green-700">{staff?.totalSales} CDF</p>
                       <p className="text-xs text-green-600">CDF ce mois-ci</p>
                     </Card>
                   </div>
 
                   <div className="space-y-2">
-                    <Label className="text-gray-900 font-semibold">Biographie</Label>
+                    <Label className="text-gray-900 dark:text-gray-100 font-semibold">Biographie</Label>
                     <p className="text-sm text-gray-600 leading-relaxed bg-white border p-3 rounded-lg">
                       Spécialiste en onglerie avec plus de 5 ans d'expérience.
                       Experte en Nail Art et soins des mains. Appréciée pour sa douceur et sa créativité.
@@ -181,7 +328,7 @@ export function StaffProfileModal({ staff, trigger }: StaffProfileModalProps) {
                   </div>
 
                   <div className="space-y-2">
-                    <Label className="text-gray-900 font-semibold">Compétences</Label>
+                    <Label className="text-gray-900 dark:text-gray-100 font-semibold">Compétences</Label>
                     <div className="flex flex-wrap gap-2">
                       {['Manucure', 'Pédicure', 'Nail Art', 'Gel', 'Acrylique', 'Massage des mains'].map(skill => (
                         <Badge key={skill} variant="secondary" className="px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 font-normal">
@@ -193,10 +340,10 @@ export function StaffProfileModal({ staff, trigger }: StaffProfileModalProps) {
                 </TabsContent>
 
                 <TabsContent value="performance" className="mt-6 space-y-4">
-                  <h4 className="font-semibold text-gray-900">Historique des Services</h4>
+                  <h4 className="font-semibold text-gray-900 dark:text-gray-100">Historique des Services</h4>
                   <div className="space-y-2">
                     {[1, 2, 3].map((i) => (
-                      <div key={i} className="flex justify-between items-center p-3 bg-gray-50 rounded-lg border">
+                      <div key={i} className="flex justify-between items-center p-3 bg-gray-50 dark:bg-background rounded-lg border">
                         <div>
                           <p className="font-medium">Manucure Gel</p>
                           <p className="text-xs text-gray-500">Hier, 14:00</p>
@@ -213,13 +360,13 @@ export function StaffProfileModal({ staff, trigger }: StaffProfileModalProps) {
                 <TabsContent value="documents" className="mt-6">
                   <div className="space-y-3">
                     {['Contrat de travail.pdf', 'Pièce d\'identité.jpg', 'Certificats.pdf'].map((doc, i) => (
-                      <div key={i} className="flex items-center justify-between p-4 border rounded-xl hover:bg-gray-50 cursor-pointer transition-colors group">
+                      <div key={i} className="flex items-center justify-between p-4 border rounded-xl hover:bg-gray-50 dark:bg-background cursor-pointer transition-colors group">
                         <div className="flex items-center gap-4">
                           <div className="p-2 bg-pink-50 rounded-lg text-pink-500">
                             <FileText className="w-5 h-5" />
                           </div>
                           <div>
-                            <p className="font-medium text-gray-900">{doc}</p>
+                            <p className="font-medium text-gray-900 dark:text-gray-100">{doc}</p>
                             <p className="text-xs text-gray-500">Ajouté le 12 Jan 2023</p>
                           </div>
                         </div>
@@ -289,7 +436,7 @@ export function PayrollModal({ staffName, trigger }: PayrollModalProps) {
           <Separator />
 
           <div className="space-y-4">
-            <h4 className="font-medium text-gray-900">Détails du Calcul</h4>
+            <h4 className="font-medium text-gray-900 dark:text-gray-100">Détails du Calcul</h4>
 
             <div className="grid grid-cols-2 gap-4 items-center">
               <Label className="text-gray-600">Salaire de base</Label>
@@ -307,7 +454,7 @@ export function PayrollModal({ staffName, trigger }: PayrollModalProps) {
             <div className="grid grid-cols-2 gap-4 items-center">
               <Label className="text-gray-600">Commissions (Auto)</Label>
               <div className="relative">
-                <Input value={commission} disabled className="text-right pr-12 bg-gray-50" />
+                <Input value={commission} disabled className="text-right pr-12 bg-gray-50 dark:bg-background" />
                 <span className="absolute right-3 top-2.5 text-xs text-gray-500">CDF</span>
               </div>
             </div>

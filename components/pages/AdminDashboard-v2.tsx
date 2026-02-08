@@ -208,17 +208,6 @@ export default function AdminDashboardV2() {
                   <NotificationCenter />
                 </SheetContent>
               </Sheet>
-
-              {/* Mock toggle */}
-              {/* <div className="flex items-center space-x-2">
-                <label className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">Données simulées</label>
-                <button
-                  type="button"
-                  onClick={() => setShowMock(!showMock)}
-                  className={`px-2 py-1 rounded text-xs sm:text-sm transition-colors ${showMock ? 'bg-pink-500 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300'}`}>
-                  {showMock ? 'ON' : 'OFF'}
-                </button>
-              </div> */}
             </div>
           </div>
 

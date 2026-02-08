@@ -54,72 +54,11 @@ export default function ClientManagement({ showMock }: { showMock?: boolean }) {
     unreadCount = 0,
   } = useNotifications({ userId: selectedClient?.id, limit: 50 });
 
-  // Fallback mock data (used only if showMock=true)
-  const MOCK_CLIENTS: Client[] = [
-    {
-      id: '1',
-      name: 'Marie Kabila',
-      phone: '+243 812 345 678',
-      email: 'marie.kabila@email.com',
-      birthday: '15 Mars 1992',
-      address: 'Gombe, Kinshasa',
-      totalAppointments: 15,
-      totalSpent: '450 000 Fc',
-      loyaltyPoints: 450,
-      membershipStatus: 'VIP',
-      lastVisit: '2024-11-28',
-      preferences: 'Préfère les vernis roses, aime les designs discrets',
-      allergies: 'Aucune allergie connue',
-      favoriteServices: ['Manucure Gel', 'Extension Cils', 'Maquillage Soirée'],
-      prepaymentBalance: '50 000 Fc',
-      giftCardBalance: '25 000 Fc',
-      referrals: 3
-    },
-    {
-      id: '2',
-      name: 'Grace Lumière',
-      phone: '+243 823 456 789',
-      email: 'grace.lumiere@email.com',
-      birthday: '22 Juillet 1988',
-      address: 'Ma Campagne, Kinshasa',
-      totalAppointments: 12,
-      totalSpent: '380 000 Fc',
-      loyaltyPoints: 380,
-      membershipStatus: 'VIP',
-      lastVisit: '2024-11-25',
-      preferences: 'Adore les tresses africaines, préfère les RDV matinaux',
-      allergies: 'Sensible aux parfums forts',
-      favoriteServices: ['Tresses Box Braids', 'Pédicure Spa', 'Manucure Française'],
-      prepaymentBalance: '0 Fc',
-      giftCardBalance: '0 Fc',
-      referrals: 5
-    },
-    {
-      id: '3',
-      name: 'Sophie Makala',
-      phone: '+243 834 567 890',
-      email: 'sophie.makala@email.com',
-      birthday: '10 Janvier 1995',
-      address: 'Limete, Kinshasa',
-      totalAppointments: 10,
-      totalSpent: '320 000 Fc',
-      loyaltyPoints: 320,
-      membershipStatus: 'Premium',
-      lastVisit: '2024-11-20',
-      preferences: 'Aime les couleurs vives, très active sur réseaux sociaux',
-      allergies: 'Aucune',
-      favoriteServices: ['Extensions Cils Volume', 'Nail Art', 'Maquillage Naturel'],
-      prepaymentBalance: '100 000 Fc',
-      giftCardBalance: '50 000 Fc',
-      referrals: 2
-    }
-  ];
-
   // Use API data first, fallback to mock only when showMock is true
   const clients = (apiClients && apiClients.length > 0)
     ? apiClients.map((c) => ({
       id: c.id || c.user?.id || String(c.user?.name ?? c.user?.email ?? 'unknown'),
-      name: c.user?.name || c.user?.email || 'Eze',
+      name: c.user?.name || c.user?.email || 'Platform User',
       phone: c.user?.phone || '',
       email: c.user?.email || '',
       birthday: c.birthday ? new Date(c.birthday).toISOString().split('T')[0] : undefined,
@@ -136,21 +75,7 @@ export default function ClientManagement({ showMock }: { showMock?: boolean }) {
       giftCardBalance: c.giftCardBalance ?? '0',
       referrals: c.referrals || 0
     }))
-    : (showMock ? MOCK_CLIENTS : []);
-
-  // const appointmentHistory = [
-  //   { date: '2024-11-28', service: 'Manucure Gel', worker: 'Marie N.', amount: '30 000 Fc', status: 'Complété' },
-  //   { date: '2024-11-15', service: 'Extension Cils', worker: 'Grace L.', amount: '45 000 Fc', status: 'Complété' },
-  //   { date: '2024-11-01', service: 'Maquillage', worker: 'Élise M.', amount: '40 000 Fc', status: 'Complété' },
-  //   { date: '2024-10-20', service: 'Pédicure', worker: 'Sophie K.', amount: '25 000 Fc', status: 'Complété' }
-  // ];
-
-  const notifications = [
-    { date: '2024-11-27', type: 'Rappel', message: 'Rappel RDV envoyé - SMS', status: 'Envoyé' },
-    { date: '2024-11-20', type: 'Confirmation', message: 'Confirmation RDV - Email', status: 'Envoyé' },
-    { date: '2024-11-15', type: 'Promotion', message: 'Offre spéciale mois anniversaire', status: 'Ouvert' },
-    { date: '2024-11-01', type: 'Remerciement', message: 'Merci pour votre visite', status: 'Envoyé' }
-  ];
+    : [];
 
   const filteredClients = clients.filter(client =>
     client.name.toLowerCase().includes(searchQuery.toLowerCase()) ||

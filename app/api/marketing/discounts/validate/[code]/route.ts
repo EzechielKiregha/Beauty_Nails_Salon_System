@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
+import { errorResponse, successResponse } from '@/lib/api/helpers';
 
 export async function GET(
   request: NextRequest,
@@ -11,42 +12,29 @@ export async function GET(
     });
 
     if (!discount) {
-      return NextResponse.json(
-        { error: { message: 'Code promo invalide' } },
-        { status: 404 }
+      return errorResponse(
+        "Code promo invalide"
       );
     }
 
     if (!discount.isActive) {
-      return NextResponse.json(
-        { error: { message: 'Ce code promo n\'est plus actif' } },
-        { status: 400 }
-      );
+      return errorResponse('Ce code promo n\'est plus actif');
     }
 
     const now = new Date();
     if (now < discount.startDate) {
-      return NextResponse.json(
-        { error: { message: 'Ce code promo n\'est pas encore disponible' } },
-        { status: 400 }
-      );
+      return errorResponse('Ce code promo n\'est pas encore disponible');
     }
 
     if (now > discount.endDate) {
-      return NextResponse.json(
-        { error: { message: 'Ce code promo a expiré' } },
-        { status: 400 }
-      );
+      return errorResponse('Ce code promo a expiré');
     }
 
     if (discount.maxUses && discount.usedCount >= discount.maxUses) {
-      return NextResponse.json(
-        { error: { message: 'Ce code promo a atteint sa limite d\'utilisation' } },
-        { status: 400 }
-      );
+      return errorResponse('Ce code promo a atteint sa limite d\'utilisation');
     }
 
-    return NextResponse.json(discount);
+    return successResponse(discount, 200);
   } catch (error: any) {
     return NextResponse.json(
       { error: { message: error.message || 'Validation failed' } },

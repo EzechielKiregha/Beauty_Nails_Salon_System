@@ -70,7 +70,15 @@ export function AppointmentModal({ open, onOpenChange, appointment, trigger, cli
 
   const { services, isLoading: servicesLoading } = useServices();
   const { staff, isLoading: staffLoading } = useAvailableStaff();
-  const { data: availableSlotsData, isLoading: slotsLoading } = useAvailableSlots({ date: selectedDate?.toLocaleDateString(), workerId: selectedWorker });
+  const { data: availableSlotsData } = useAvailableSlots(
+    selectedWorker && selectedDate
+      ? {
+        workerId: selectedWorker,
+        date: selectedDate?.toLocaleDateString(),
+      }
+      : undefined
+  );
+
   const { createAppointmentAsAdmin, isLoading: appointmentLoading } = useAppointments();
   const { processPayment, isLoading: paymentProcessing } = usePayments();
 
@@ -99,6 +107,11 @@ export function AppointmentModal({ open, onOpenChange, appointment, trigger, cli
       }
     }
   }, [services]);
+
+  useEffect(() => {
+    setSelectedTime("");
+  }, [selectedWorker, selectedDate]);
+
 
   useEffect(() => {
     if (appointment) {
@@ -347,20 +360,46 @@ export function AppointmentModal({ open, onOpenChange, appointment, trigger, cli
                     />
                   </div>
                 </div> */}
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                  {timeSlots.map((time) => (
-                    <button
-                      key={time}
-                      onClick={() => setSelectedTime(time)}
-                      className={`px-1 sm:px-2 py-2 rounded-xl border transition-all text-sm sm:text-base ${selectedTime === time
-                        ? "border-pink-500 bg-pink-50 dark:bg-pink-900 text-pink-600 dark:text-pink-200"
-                        : "border-gray-200 dark:border-gray-700 hover:border-pink-300 dark:hover:border-pink-600 text-gray-700 dark:text-gray-300"
-                        }`}
-                    >
-                      {time}
-                    </button>
-                  ))}
-                </div>
+                {availableSlotsData ? (<div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                  {availableSlotsData?.slots.map((slot: any) => {
+                    const isAvailable = slot.available;
+
+                    return (
+                      <button
+                        key={slot.time}
+                        disabled={!isAvailable}
+                        onClick={() => setSelectedTime(slot.time)}
+                        className={cn(
+                          "px-2 py-2 rounded-xl border transition-all text-sm",
+                          selectedTime === slot.time
+                            ? "border-pink-500 bg-pink-50 text-pink-600"
+                            : isAvailable
+                              ? "border-gray-200 hover:border-pink-300"
+                              : "border-gray-100 bg-gray-100 text-gray-400 cursor-not-allowed"
+                        )}
+                      >
+                        {slot.time}
+                      </button>
+                    );
+                  })}
+                </div>)
+                  : (
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                      {timeSlots.map((time) => (
+                        <button
+                          key={time}
+                          onClick={() => setSelectedTime(time)}
+                          className={`px-1 sm:px-2 py-2 rounded-xl border transition-all text-sm sm:text-base ${selectedTime === time
+                            ? "border-pink-500 bg-pink-50 dark:bg-pink-900 text-pink-600 dark:text-pink-200"
+                            : "border-gray-200 dark:border-gray-700 hover:border-pink-300 dark:hover:border-pink-600 text-gray-700 dark:text-gray-300"
+                            }`}
+                        >
+                          {time}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+
               </div>
 
               <RadioGroup

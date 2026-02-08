@@ -83,6 +83,11 @@ export const clientsApi = {
     return data;
   },
 
+  updateClient: async (payload: { id: string, name: string; email: string; phone: string; tier?: string; notes?: string; password?: string; birthday?: string; address?: string; allergies?: string; favoriteServices?: string[]; prepaymentBalance?: number | string; giftCardBalance?: number | string; referrals?: number; }) => {
+    const { data } = await axiosdb.put(`/clients/${payload.id}`, payload);
+    return data;
+  },
+
   // Get client appointments
   getClientAppointments: async (id: string, params?: {
     status?: string;

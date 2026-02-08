@@ -6,12 +6,13 @@ import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Calendar as CalendarIcon, Clock, DollarSign, Star, TrendingUp, Award, CheckCircle, AlertCircle, Users } from 'lucide-react';
-import { useStaff } from '@/lib/hooks/useStaff';
+import { useAvailableStaff, useStaff } from '@/lib/hooks/useStaff';
 import CreateWorkerModal from '@/components/modals/CreateWorkerModal';
 import { EditScheduleModal, PayrollModal, StaffProfileModal } from './modals/StaffModals';
+import { Worker } from '@/lib/api/staff';
 // import CreateTaskModal from './modals/CreateTaskModal';
 
-interface StaffMember {
+export interface StaffMember {
   id: string;
   name: string;
   role: string;
@@ -29,105 +30,10 @@ interface StaffMember {
 }
 
 export default function StaffManagement({ showMock }: { showMock?: boolean }) {
-  const [selectedStaff, setSelectedStaff] = useState<StaffMember | null>(null);
+  const [selectedStaff, setSelectedStaff] = useState<Worker | null>(null);
 
   // API hook
-  const { staff: apiStaff = [] } = useStaff();
-
-  // Fallback mock staff (used only if showMock=true)
-  const MOCK_STAFF: StaffMember[] = [
-    {
-      id: '1',
-      name: 'Marie Nkumu',
-      role: 'Spécialiste Ongles',
-      phone: '+243 810 111 222',
-      email: 'marie.n@beautynails.com',
-      workingDays: ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'],
-      workingHours: '09:00 - 18:00',
-      appointments: 62,
-      rating: 4.9,
-      revenue: '930 000 Fc',
-      clientRetention: '92%',
-      upsellRate: '45%',
-      commission: '186 000 Fc',
-      status: 'active'
-    },
-    {
-      id: '2',
-      name: 'Grace Lumière',
-      role: 'Experte Cils',
-      phone: '+243 820 222 333',
-      email: 'grace.l@beautynails.com',
-      workingDays: ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven'],
-      workingHours: '10:00 - 19:00',
-      appointments: 58,
-      rating: 4.8,
-      revenue: '870 000 Fc',
-      clientRetention: '88%',
-      upsellRate: '38%',
-      commission: '174 000 Fc',
-      status: 'busy'
-    },
-    {
-      id: '3',
-      name: 'Sophie Kabila',
-      role: 'Coiffeuse',
-      phone: '+243 830 333 444',
-      email: 'sophie.k@beautynails.com',
-      workingDays: ['Mar', 'Mer', 'Jeu', 'Ven', 'Sam'],
-      workingHours: '08:00 - 17:00',
-      appointments: 48,
-      rating: 4.7,
-      revenue: '720 000 Fc',
-      clientRetention: '85%',
-      upsellRate: '42%',
-      commission: '144 000 Fc',
-      status: 'active'
-    },
-    {
-      id: '4',
-      name: 'Élise Makala',
-      role: 'Maquilleuse',
-      phone: '+243 840 444 555',
-      email: 'elise.m@beautynails.com',
-      workingDays: ['Lun', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'],
-      workingHours: '09:00 - 18:00',
-      appointments: 38,
-      rating: 4.9,
-      revenue: '570 000 Fc',
-      clientRetention: '90%',
-      upsellRate: '50%',
-      commission: '114 000 Fc',
-      status: 'off'
-    }
-  ];
-
-  // Prefer API data, fallback to mock only when showMock is true
-  const staff: StaffMember[] = (apiStaff && apiStaff.length > 0)
-    ? apiStaff.map((s: any) => ({
-      id: s.id || s._id || String(s.name),
-      name: s.name || s.fullName || 'Employée',
-      role: s.role || s.position || 'Staff',
-      phone: s.phone || '',
-      email: s.email || '',
-      workingDays: s.workingDays || [],
-      workingHours: s.workingHours || '09:00 - 18:00',
-      appointments: s.appointments || 0,
-      rating: s.rating || 0,
-      revenue: s.revenue || '0 Fc',
-      clientRetention: s.clientRetention || '0%',
-      upsellRate: s.upsellRate || '0%',
-      commission: s.commission || '0 Fc',
-      status: s.status || 'off'
-    }))
-    : (showMock ? MOCK_STAFF : []);
-
-  const tasks = [
-    { id: '1', task: 'Nettoyer et stériliser les outils', assignedTo: 'Marie Nkumu', priority: 'high', status: 'completed' },
-    { id: '2', task: 'Vérifier stock vernis gel', assignedTo: 'Grace Lumière', priority: 'medium', status: 'in-progress' },
-    { id: '3', task: 'Organiser vitrine produits', assignedTo: 'Sophie Kabila', priority: 'low', status: 'pending' },
-    { id: '4', task: 'Préparer commande produits', assignedTo: 'Élise Makala', priority: 'high', status: 'completed' }
-  ];
+  const { staff, isLoading: staffLoading } = useAvailableStaff();
 
   const scheduleData = [
     { day: 'Lundi', slots: ['09:00-12:00', '13:00-16:00', '16:00-18:00'] },
@@ -281,9 +187,10 @@ export default function StaffManagement({ showMock }: { showMock?: boolean }) {
 
                 <div className="flex gap-3">
                   <EditScheduleModal
+                    staffId={selectedStaff.id}
                     staffName={selectedStaff.name}
                     trigger={
-                      <Button className="flex-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full">
+                      <Button className="flex-1 bg-linear-to-r from-purple-500 to-pink-500 text-white rounded-full">
                         Modifier Horaires
                       </Button>
                     }
@@ -330,6 +237,7 @@ export default function StaffManagement({ showMock }: { showMock?: boolean }) {
                   ))}
                 </div>
                 <EditScheduleModal
+                  staffId={selectedStaff.id}
                   staffName={selectedStaff.name}
                   trigger={
                     <Button className="w-full mt-4 bg-purple-600 hover:bg-purple-700 text-white rounded-full">
@@ -394,7 +302,7 @@ export default function StaffManagement({ showMock }: { showMock?: boolean }) {
                   <PayrollModal
                     staffName={selectedStaff.name}
                     trigger={
-                      <Button className="w-full bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-full">
+                      <Button className="w-full bg-linear-to-r from-green-500 to-emerald-500 text-white rounded-full">
                         Générer Fiche de Paie
                       </Button>
                     }

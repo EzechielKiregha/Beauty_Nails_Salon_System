@@ -2,7 +2,6 @@
 import { NextRequest } from 'next/server';
 import prisma from '@/lib/prisma';
 import { getAuthenticatedUser, successResponse, handleApiError, errorResponse } from '@/lib/api/helpers';
-import { lte } from 'zod';
 
 export async function GET(request: NextRequest) {
   try {
@@ -115,10 +114,9 @@ export async function POST(request: NextRequest) {
       location = 'salon',
       addOns = [],
       notes,
+      decidedToPayNow,
+      paymentInfo = {},
     } = body;
-
-    // console.log('Received appointment data: ', body);
-    // console.log('Authenticated user: ', user);
 
     // If user is not a client, find clientId from their profile
     if (user.role !== 'client') {
@@ -163,7 +161,6 @@ export async function POST(request: NextRequest) {
     if (conflictingAppointment) {
       return errorResponse('Ce créneau n\'est pas disponible', 409);
     }
-
 
     // Create appointment
     const appointment = await prisma.appointment.create({
@@ -219,8 +216,6 @@ export async function POST(request: NextRequest) {
       wId = w.user.id;
     }
 
-    // console.log('Creating notification for user:', wId);
-
     // Create notification
     await prisma.notification.create({
       data: {
@@ -231,6 +226,68 @@ export async function POST(request: NextRequest) {
         link: `/dashboard/worker/appointments?id=${appointment.id}`,
       },
     });
+
+    if (decidedToPayNow === "true" && paymentInfo) {
+
+      const data = {
+        discountCode: paymentInfo.discountCode ?? "No Discount Code",
+        clientId, 
+        notes: `Payment effectué pour le rendez-vous du ${appointment.date.toLocaleDateString("fr-FR")} à ${appointment.time}} par ${user.name}. Montant approuvé : $${paymentInfo.subtotal}, Montant payé : $${paymentInfo.total}`,
+        appointmentId: appointment.id, 
+        total: paymentInfo.total,
+        subtotal: paymentInfo.subtotal,
+        discount: paymentInfo.discount ?? 0,
+        tax: paymentInfo.tax,
+        tip: paymentInfo.tip,
+        paymentMethod: paymentInfo.method,
+        paymentStatus: paymentInfo.status,
+        loyaltyPointsUsed: paymentInfo.loyaltyPointUsed,
+        receiptNumber: paymentInfo.receipt,
+      }
+
+      const sale = await prisma.sale.create({
+        data: data,
+      });
+
+      if (!sale) {
+        throw new Error("Erreur lors de la création de la vente");
+      }
+
+      const saleItemData = {
+        quantity: 1,
+        price: service.price,
+        appointmentId: appointment.id,
+        discount: 0,
+        service: { connect: { id: serviceId } },
+        sale: { connect: { id: sale.id } },
+      };
+
+      await prisma.saleItem.create({
+        data: saleItemData
+      });
+
+      await prisma.discountCode.update({
+        where: { code: paymentInfo.discountCode },
+        data: {
+          usedCount: {
+            increment: 1,
+          },
+        }
+      });
+
+      const loyaltyTransaction = await prisma.loyaltyTransaction.create({
+        data: {
+          clientId,
+          points: 5,
+          type: 'earned_appointment',
+          description: `Bonus de reservation pour avoir reserver`,
+        },
+      });
+
+      if (!loyaltyTransaction) {
+        return errorResponse('Erreur lors du traitement du parrainage', 500);
+      }
+    }
 
     return successResponse(
       {
