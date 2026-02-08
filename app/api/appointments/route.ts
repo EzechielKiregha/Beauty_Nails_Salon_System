@@ -118,6 +118,8 @@ export async function POST(request: NextRequest) {
       paymentInfo = {},
     } = body;
 
+    
+
     // If user is not a client, find clientId from their profile
     if (user.role !== 'client') {
       return errorResponse('Seuls les clients peuvent créer des rendez-vous', 403);
