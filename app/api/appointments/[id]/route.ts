@@ -33,14 +33,37 @@ export async function DELETE(
         status: 'cancelled',
         cancelReason: reason,
       },
+      include:{
+        service:{
+          select:{
+            price:true,
+            name:true,
+          }
+        },
+      }
     });
 
     const userWorker = await prisma.workerProfile.findUnique({
       where: { id: appointment.workerId },
       include: { user: true },
     });
+    const userClient = await prisma.clientProfile.update({
+      where: { id: appointment.clientId },
+      data:{
+        loyaltyPoints:{
+          decrement: updated.service.price / 1000
+        },
+        loyaltyTransactions:{
+          create:{
+            type:"earned_appointment",
+            points:-updated.service.price / 1000,
+            description:'loyalty points for canceled appointment'
+          }}
+      },
+      include: { user: true },
+    });
 
-    if (!userWorker) {
+    if (!userWorker || !userClient) {
       return errorResponse('Employé non trouvé pour la notification', 404);
     }
 
@@ -51,7 +74,18 @@ export async function DELETE(
         type: 'appointment_cancelled',
         title: 'Rendez-vous annulé',
         message: `Un rendez-vous a été annulé. Raison: ${reason}`,
-        link: `/dashboard/worker/appointments`,
+        link: `/dashboard/worker?canceledAppointment=${updated.id}`,
+      },
+    });
+
+    // Send notification to worker
+    await prisma.notification.create({
+      data: {
+        userId: userClient?.user.id,
+        type: 'appointment_cancelled',
+        title: 'Rendez-vous annulé',
+        message: `Vous avez annulé un rendez-vous. Raison: ${reason}, Si vous avez initie un payement veillez contacter le service client pour obtenir votre remboursement`,
+        link: `/dashboard/client?canceledAppointment=${updated.id}`,
       },
     });
 

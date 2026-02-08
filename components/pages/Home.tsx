@@ -154,7 +154,7 @@ export default function Home() {
                 </Button>
               </Link>
               <Link href="/catalog">
-                <Button size="lg" variant="link" className="border-2 border-white text-gray-900 dark:text-white hover:bg-white/10 rounded-full px-8 backdrop-blur-sm">
+                <Button size="lg" variant="link" className="border-2 border-white text-gray-200 dark:text-white hover:bg-white/10 rounded-full px-8 backdrop-blur-sm">
                   Découvrir Nos Services, Produits & Offres
                 </Button>
               </Link>

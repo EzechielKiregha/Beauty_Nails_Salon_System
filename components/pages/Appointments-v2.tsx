@@ -82,6 +82,7 @@ export default function AppointmentsV2() {
   const [location, setLocation] = useState<"salon" | "home">("salon");
   const [addOns, setAddOns] = useState<string[]>([]);
   const [decideToPay, setDecideToPay] = useState("false");
+  const [service, setService] = useState<Service>();
   const [addOnsTotalPrice, setAddOnsTotalPrice] = useState<number>(0);
   const [baseServicePrice, setBaseServicePrice] = useState<number>(0);
 
@@ -147,23 +148,32 @@ export default function AppointmentsV2() {
 
   const paymentStatus = useMemo(() => {
     if (!selectedMethod) return "pending";
-    return "paid";
+    return "pending";
   }, [selectedMethod]);
 
 
   // Sync service when services load from API
   useEffect(() => {
+    if (selectedServiceId) {
+      const service = services.find((s: Service) => s.id === selectedServiceId);
+
+      if (!service) return;
+
+      setService(service);
+      setBaseServicePrice(service.price);
+    } else {
+      setBaseServicePrice(0);
+
+    }
+
+    console.log("selected Service Id ", selectedServiceId)
+
     if (paramService && services.length > 0) {
       const service = services.find((s: Service) => s.id === paramService);
       if (!service) return
       setSelectedServiceId(service.id);
       setSelectedCategory(service.category);
-      setBaseServicePrice(service.price);
-    }
-    if (selectedServiceId) {
-      const service = services.find((s: Service) => s.id === selectedServiceId);
-
-      if (!service) return;
+      setService(service);
       setBaseServicePrice(service.price);
     }
   }, [services, paramService, selectedServiceId]);
@@ -574,7 +584,9 @@ export default function AppointmentsV2() {
                       <p className="text-sm sm:text-base text-gray-900 dark:text-gray-100 font-medium">
                         {service.name}
                       </p>
-                      <span className="text-xs sm:text-base text-gray-900 dark:text-gray-100 font-medium" >{service.price.toLocaleString()} Fc</span>
+                      <span className="text-xs sm:text-base text-gray-900 dark:text-gray-100 font-medium" >
+                        {service.price.toLocaleString()} Fc
+                      </span>
                     </div>
                   </div>
                 ))}
@@ -823,23 +835,72 @@ export default function AppointmentsV2() {
                           </Alert>
                         )}
                       </div>
-                      <DialogFooter className="gap-2 sm:gap-0">
-                        <Button onClick={handleSubmit} className="bg-linear-to-r from-pink-500 to-purple-500 text-white">
-                          {decideToPay === "true" ? 'Confirmer Le Payement' : 'Enregistrer Modification'}
-                        </Button>
-                      </DialogFooter>
                     </div>
+                    <DialogFooter className="gap-2 sm:gap-0">
+                      <Button onClick={handleSubmit} className="bg-linear-to-r from-pink-500 to-purple-500 text-white">
+                        {decideToPay === "true" ? appointmentLoading ? "En cours de traitement" : "Confirmer le payement" : 'Enregistrer Modification'}
+                      </Button>
+                    </DialogFooter>
                     {/* </form> */}
                   </DialogContent>
                 </Dialog>
-              ) : null}
+              ) : (
+                <div className="space-y-6">
+                  <div className="space-y-2">
+                    <Label>Code Promo</Label>
+
+                    <Select value={discountCode} onValueChange={setDiscountCode}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Choisir un code" />
+                      </SelectTrigger>
+
+                      <SelectContent>
+                        {discounts.map((d) => (
+                          <SelectItem key={d.id} value={d.code}>
+                            {d.code} ({d.type === "percentage" ? `${d.value}%` : `${d.value} Fc`})
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+
+                    <Input
+                      placeholder="Ou entrer un code manuellement"
+                      value={discountCode}
+                      onChange={(e) => setDiscountCode(e.target.value)}
+                    />
+                  </div>
+                  <Card className="p-4 space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span>Sous-total</span>
+                      <span>{subtotal.toLocaleString()} Fc</span>
+                    </div>
+
+                    <div className="flex justify-between text-green-600">
+                      <span>Remise</span>
+                      <span>- {discountAmount.toLocaleString()} Fc</span>
+                    </div>
+
+                    <div className="flex justify-between">
+                      <span>Taxe</span>
+                      <span>{taxAmount.toLocaleString()} Fc</span>
+                    </div>
+
+                    <Separator />
+
+                    <div className="flex justify-between font-semibold text-lg">
+                      <span>Total</span>
+                      <span>{total.toLocaleString()} Fc</span>
+                    </div>
+                  </Card>
+                </div>
+              )}
 
               {decideToPay === "false" && (<Button
                 onClick={handleSubmit}
                 disabled={!user}
                 className="w-full bg-linear-to-r from-pink-500 to-amber-400 hover:from-pink-600 hover:to-amber-500 text-white rounded-full py-4 sm:py-6 text-sm sm:text-base font-medium"
               >
-                Confirmer le rendez-vous
+                {appointmentLoading ? "En cours de traitement" : "Confirmer le rendez-vous"}
               </Button>)}
 
               <p className="text-xs text-gray-500 dark:text-gray-400 text-center mt-4">

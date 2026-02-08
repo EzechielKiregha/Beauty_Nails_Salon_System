@@ -4,16 +4,20 @@ import { errorResponse, successResponse } from '@/lib/api/helpers';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { code: string } }
 ) {
   try {
+    
+    const {searchParams} = new URL(request.url);
+    const code = searchParams.get("code") as string;
+
     const discount = await prisma.discountCode.findUnique({
-      where: { code: params.code },
+      where: { code: code },
     });
 
     if (!discount) {
       return errorResponse(
-        "Code promo invalide"
+        "Code promo invalide",
+        404
       );
     }
 

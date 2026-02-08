@@ -52,10 +52,8 @@ import { useNotifications } from "@/lib/hooks/useNotifications";
 import { useAuth } from "@/lib/hooks/useAuth";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import LoadingSpinner from "../LoadingSpinner";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../ui/accordion";
 import LoaderBN from "../Loader-BN";
-import { LoyaltyTransaction } from "@/lib/api/loyalty";
 
 export default function ClientDashboardV2() {
   const [notificationOpen, setNotificationOpen] = useState(false);
@@ -65,7 +63,6 @@ export default function ClientDashboardV2() {
   const [rating, setRating] = useState(0);
   const [reviewText, setReviewText] = useState("");
   const router = useRouter();
-  const { transactions: loyaltyTransactions, isLoading: loyaltyLoading } = useLoyalty();
   // Get authenticated user
   const { user, isLoading: isAuthLoading } = useAuth();
   // Get appointments
@@ -262,76 +259,83 @@ export default function ClientDashboardV2() {
               </p>
             </div>
 
-            {/* Notifications */}
-            <Sheet open={notificationOpen} onOpenChange={setNotificationOpen}>
-              <SheetTrigger asChild>
-                <Button variant="outline" size="icon" className="relative dark:border-gray-700 dark:text-gray-200">
-                  <Bell className="w-5 h-5" />
-                  {unreadCount > 0 && (
-                    <span className="absolute -top-1 -right-1 w-5 h-5 bg-pink-500 text-white text-xs rounded-full flex items-center justify-center">
-                      {unreadCount}
-                    </span>
-                  )}
-                </Button>
-              </SheetTrigger>
-              <SheetContent className="p-2 border-r-0 border-pink-100 dark:border-pink-900 shadow-xl rounded-l-2xl bg-white dark:bg-gray-950">
-                <div className="mb-6">
-                  <h2 className="text-2xl   mb-2 dark:text-gray-100">Notifications</h2>
-                  <div className="flex items-center justify-between">
-                    <p className="text-sm text-gray-900  dark:text-gray-300">
-                      {unreadCount} non lues
-                    </p>
+            <div className="space-x-4">
+              {/* Notifications */}
+              <Sheet open={notificationOpen} onOpenChange={setNotificationOpen}>
+                <SheetTrigger asChild>
+                  <Button variant="outline" size="icon" className="relative dark:border-gray-700 dark:text-gray-200">
+                    <Bell className="w-5 h-5" />
                     {unreadCount > 0 && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => markAllAsRead()}
-                        className="dark:text-gray-200 dark:hover:bg-gray-800"
-                      >
-                        Tout marquer comme lu
-                      </Button>
+                      <span className="absolute -top-1 -right-1 w-5 h-5 bg-pink-500 text-white text-xs rounded-full flex items-center justify-center">
+                        {unreadCount}
+                      </span>
                     )}
-                  </div>
-                </div>
-
-                <ScrollArea className="h-[calc(100vh-200px)]">
-                  <div className="space-y-4">
-                    {notificationList.length === 0 ? (
-                      <div className="text-center py-12 text-gray-500">
-                        <Bell className="w-12 h-12 mx-auto mb-4 opacity-20" />
-                        <p>Aucune notification</p>
-                      </div>
-                    ) : (
-                      notificationList.map((notification) => (
-                        <div
-                          key={notification.id}
-                          className={`p-4 rounded-lg border cursor-pointer transition-colors ${notification.isRead
-                            ? "bg-white"
-                            : "bg-pink-50 border-pink-200"
-                            }`}
-                          onClick={() => markAsRead(notification.id)}
+                  </Button>
+                </SheetTrigger>
+                <SheetContent className="p-2 border-r-0 border-pink-100 dark:border-pink-900 shadow-xl rounded-l-2xl bg-white dark:bg-gray-950">
+                  <div className="mb-6">
+                    <h2 className="text-2xl   mb-2 dark:text-gray-100">Notifications</h2>
+                    <div className="flex items-center justify-between">
+                      <p className="text-sm text-gray-900  dark:text-gray-300">
+                        {unreadCount} non lues
+                      </p>
+                      {unreadCount > 0 && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => markAllAsRead()}
+                          className="dark:text-gray-200 dark:hover:bg-gray-800"
                         >
-                          <div className="flex gap-3">
-                            {getNotificationIcon(notification.type)}
-                            <div className="flex-1">
-                              <h3 className="font-semibold text-sm mb-1">
-                                {notification.title}
-                              </h3>
-                              <p className="text-sm text-gray-900 dark:text-gray-100 mb-2">
-                                {notification.message}
-                              </p>
-                              <p className="text-xs text-gray-500">
-                                {formatDate(notification.createdAt)}
-                              </p>
+                          Tout marquer comme lu
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+
+                  <ScrollArea className="h-[calc(100vh-200px)]">
+                    <div className="space-y-4">
+                      {notificationList.length === 0 ? (
+                        <div className="text-center py-12 text-gray-500">
+                          <Bell className="w-12 h-12 mx-auto mb-4 opacity-20" />
+                          <p>Aucune notification</p>
+                        </div>
+                      ) : (
+                        notificationList.map((notification) => (
+                          <div
+                            key={notification.id}
+                            className={`p-4 rounded-lg border cursor-pointer transition-colors ${notification.isRead
+                              ? "bg-white"
+                              : "bg-pink-50 border-pink-200"
+                              }`}
+                            onClick={() => markAsRead(notification.id)}
+                          >
+                            <div className="flex gap-3">
+                              {getNotificationIcon(notification.type)}
+                              <div className="flex-1">
+                                <h3 className="font-semibold text-sm mb-1">
+                                  {notification.title}
+                                </h3>
+                                <p className="text-sm text-gray-900 dark:text-gray-100 mb-2">
+                                  {notification.message}
+                                </p>
+                                <p className="text-xs text-gray-500">
+                                  {formatDate(notification.createdAt)}
+                                </p>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      ))
-                    )}
-                  </div>
-                </ScrollArea>
-              </SheetContent>
-            </Sheet>
+                        ))
+                      )}
+                    </div>
+                  </ScrollArea>
+                </SheetContent>
+              </Sheet>
+              <Link href="/appointments">
+                <Button className="bg-linear-to-r from-pink-500 to-purple-500">
+                  Réserver un rendez-vous
+                </Button>
+              </Link>
+            </div>
           </div>
 
           {/* Stats Overview */}
@@ -625,30 +629,6 @@ export default function ClientDashboardV2() {
                         Explorer
                       </Button>
                     </Link>
-                  </Card>
-
-                  <Card className="bg-linear-to-br from-blue-50 to-cyan-50 dark:from-blue-900/10 dark:to-cyan-900/10 border-2 border-blue-200 dark:border-blue-900 shadow-xl rounded-3xl p-6 relative">
-                    <div className="flex items-center gap-4 mb-4">
-                      <div className="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
-                        <Calendar className="w-6 h-6 text-blue-600 dark:text-blue-400" />
-                      </div>
-                      <div>
-                        <h3 className="text-xl  text-gray-900 dark:text-gray-100">Historique Récent</h3>
-                        <p className="text-gray-600 dark:text-gray-300 text-sm">Vos dernières activités</p>
-                      </div>
-                    </div>
-                    <div className="space-y-3">
-                      {loyaltyTransactions.length > 0 ? (
-                        loyaltyTransactions.map((tx, idx) => (
-                          <div key={tx.id} className="flex justify-between items-center p-2 bg-white dark:bg-gray-800/30 rounded-lg">
-                            <span className="text-sm text-gray-700 dark:text-gray-300">{tx.type}</span>
-                            <Badge variant="outline" className="text-xs">{tx.points} pts</Badge>
-                          </div>
-                        ))
-                      ) : (
-                        <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-2">Aucune activité récente</p>
-                      )}
-                    </div>
                   </Card>
                 </div>
               </div>
