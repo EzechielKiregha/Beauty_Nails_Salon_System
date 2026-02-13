@@ -284,7 +284,7 @@ export function StaffProfileModal({ staff, trigger }: StaffProfileModalProps) {
                   <MapPin className="w-4 h-4 text-gray-400" /> {staff?.position}
                 </div>
                 <div className="flex items-center gap-3 text-gray-700 text-sm">
-                  <Calendar className="w-4 h-4 text-gray-400" /> Embauche: {staff?.hireDate.split('T')[0].split('-').reverse().join('/')}
+                  <Calendar className="w-4 h-4 text-gray-400" /> Embauche: {staff?.hireDate ? staff?.hireDate.split('T')[0].split('-').reverse().join('/') : "N/A"}
                 </div>
               </div>
             </div>

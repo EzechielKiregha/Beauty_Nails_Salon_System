@@ -887,6 +887,8 @@ export default function AppointmentsV2() {
 
                     <Separator />
 
+
+
                     <div className="flex justify-between font-semibold text-lg">
                       <span>Total</span>
                       <span>{total.toLocaleString()} Fc</span>

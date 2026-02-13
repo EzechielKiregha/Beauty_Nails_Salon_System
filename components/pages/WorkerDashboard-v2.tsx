@@ -8,12 +8,15 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
 import { Sheet, SheetContent, SheetTrigger } from '../ui/sheet';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
 import { ScrollArea } from '../ui/scroll-area';
+import { format } from 'date-fns';
+import { fr } from 'date-fns/locale';
 import { Avatar, AvatarFallback } from '../ui/avatar';
 import {
-  Calendar, Clock, CheckCircle, Star, TrendingUp, Award,
+  CalendarIcon, Clock, CheckCircle, Star, TrendingUp, Award,
   Bell, Phone, MessageSquare, MapPin,
   PlayCircle, CheckCheck, XCircle, AlertCircle,
-  DollarSign
+  DollarSign,
+  Plus
 } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { useAuth } from '@/lib/hooks/useAuth';
@@ -24,12 +27,21 @@ import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import LoadingSpinner from '../LoadingSpinner';
 import LoaderBN from '../Loader-BN';
+import { Label } from '../ui/label';
+import { Calendar } from '../ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
+import { cn } from '../ui/utils';
+import { AppointmentModal } from '../modals/AppointmentModal';
 
 export default function WorkerDashboardV2() {
   const [notificationOpen, setNotificationOpen] = useState(false);
   const [selectedAppointment, setSelectedAppointment] = useState<any>(null);
   const [detailsOpen, setDetailsOpen] = useState(false);
   const router = useRouter()
+  const [selectedDate, setSelectedDate] = useState<
+    Date | undefined
+  >(undefined);
+  const [selectedClient, setSelectedClient] = useState<any>();
 
   // Get authenticated user
   const { user, isLoading: isAuthLoading } = useAuth();
@@ -45,6 +57,12 @@ export default function WorkerDashboardV2() {
   } = useAppointments({
     workerId: user?.workerProfile?.id,
     date: today,
+  });
+
+  const {
+    appointments: AllAppointments,
+  } = useAppointments({
+    workerId: user?.workerProfile?.id,
   });
 
   // Get weekly appointments for stats
@@ -90,6 +108,16 @@ export default function WorkerDashboardV2() {
     apt => apt.status === 'pending'
   );
 
+  const missedAppointments = AllAppointments.filter(
+    apt => apt.status === 'pending' && new Date(apt.date) < new Date
+  );
+  const completedAppointments = AllAppointments.filter(
+    apt => apt.status === 'completed'
+  );
+  const ongoingAppointments = AllAppointments.filter(
+    apt => apt.status === 'in_progress'
+  );
+
   // Calculate stats
   const stats = {
     todayAppointments: todaySchedule.length,
@@ -116,6 +144,20 @@ export default function WorkerDashboardV2() {
     );
   };
 
+  const handleReschedule = (appointmentId: string, newStatus: string, date: Date) => {
+    updateStatus(
+      {
+        id: appointmentId,
+        statusData: { status: newStatus as any },
+      },
+      {
+        onSuccess: () => {
+          toast.success('Statut mis à jour');
+          setDetailsOpen(false);
+        },
+      }
+    );
+  };
   // Get status badge
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -170,7 +212,7 @@ export default function WorkerDashboardV2() {
   const getNotificationIcon = (type: string) => {
     switch (type) {
       case 'appointment_confirmed':
-        return <Calendar className="w-5 h-5 text-blue-500" />;
+        return <CalendarIcon className="w-5 h-5 text-blue-500" />;
       case 'appointment_cancelled':
         return <XCircle className="w-5 h-5 text-red-500" />;
       default:
@@ -314,7 +356,7 @@ export default function WorkerDashboardV2() {
             <Card className="p-4 sm:p-6 hover:shadow-lg transition-shadow border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950">
               <div className="flex items-center justify-between mb-4">
                 <div className="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
-                  <Calendar className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600 dark:text-purple-400" />
+                  <CalendarIcon className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600 dark:text-purple-400" />
                 </div>
               </div>
               <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300  mb-1">Aujourd'hui</p>
@@ -363,7 +405,7 @@ export default function WorkerDashboardV2() {
         <Tabs defaultValue="schedule" className="space-y-6">
           <TabsList className="grid w-full grid-cols-3 lg:w-auto">
             <TabsTrigger value="schedule">
-              <Calendar className="w-4 h-4 mr-2" />
+              <CalendarIcon className="w-4 h-4 mr-2" />
               Planning
             </TabsTrigger>
             <TabsTrigger value="performance">
@@ -386,8 +428,16 @@ export default function WorkerDashboardV2() {
 
               {todaySchedule.length === 0 ? (
                 <div className="text-center py-12 text-gray-500">
-                  <Calendar className="w-16 h-16 mx-auto mb-4 opacity-20" />
+                  <CalendarIcon className="w-16 h-16 mx-auto mb-4 opacity-20" />
                   <p>Aucun rendez-vous aujourd'hui</p>
+                  <AppointmentModal
+                    client={selectedClient}
+                    trigger={
+                      <Button size="sm" className="bg-linear-to-r from-pink-500 to-purple-500 text-white rounded-full py-5 px-6 shadow-lg shadow-pink-500/20  transition-all text-sm">
+                        <Plus className="w-5 h-5 mr-3" />
+                        Prendre RDV
+                      </Button>
+                    } />
                 </div>
               ) : (
                 <div className="space-y-4">
@@ -505,6 +555,115 @@ export default function WorkerDashboardV2() {
                           }
                         >
                           Confirmer
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </Card>
+            )}
+            {/* missed Confirmations */}
+            {missedAppointments.length > 0 && (
+              <Card className="p-6">
+                <h3 className="text-lg font-semibold mb-4 flex items-center text-yellow-800 dark:text-yellow-400">
+                  <AlertCircle className="w-5 h-5 mr-2" />
+                  confirmation manquee ({missedAppointments.length})
+                </h3>
+                <div className="space-y-3">
+                  {missedAppointments.map((appointment) => (
+                    <div
+                      key={appointment.id}
+                      className="flex items-center justify-between p-4 border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950"
+                    >
+                      <div>
+                        <p className="font-semibold">{appointment.client?.user?.name}</p>
+                        <p className="text-sm text-gray-600 dark:text-gray-300 ">
+                          {appointment.service?.name} - {appointment.time}
+                        </p>
+                        <p className="text-sm text-gray-600 dark:text-gray-300">
+                          date : {formatTime(appointment.date)}
+                        </p>
+                      </div>
+                      <div className="flex gap-2">
+                        <Label>Reschedule le rendez-vous pour une autre Date</Label>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="text-red-600"
+                          onClick={() =>
+                            handleUpdateStatus(appointment.id, 'cancelled')
+                          }
+                        >
+                          Refuser
+                        </Button>
+                        <div className="space-y-2">
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <Button
+                                variant={"outline"}
+                                className={cn(
+                                  "w-full justify-start text-left font-normal",
+                                  !selectedDate && "text-muted-foreground"
+                                )}
+                              >
+                                <CalendarIcon className="mr-2 h-4 w-4" />
+                                {selectedDate ? format(selectedDate, "PPP", { locale: fr }) : <span>Choisir date</span>}
+                              </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-auto p-0">
+                              <Calendar
+                                mode="single"
+                                selected={selectedDate}
+                                onSelect={setSelectedDate}
+                                className="dark:text-gray-100"
+                                disabled={(date) => date < new Date()}
+                              />
+                            </PopoverContent>
+                          </Popover>
+                        </div>
+                        <Button
+                          size="sm"
+                          onClick={() =>
+                            handleUpdateStatus(appointment.id, 'confirmed')
+                          }
+                        >
+                          Confirmer
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </Card>
+            )}
+            {/* missed Confirmations */}
+            {completedAppointments.length > 0 && (
+              <Card className="p-6">
+                <h3 className="text-lg font-semibold mb-4 flex items-center text-green-800 dark:text-green-400">
+                  <AlertCircle className="w-5 h-5 mr-2" />
+                  Prestation Terminer ({completedAppointments.length})
+                </h3>
+                <div className="space-y-3">
+                  {completedAppointments.map((appointment) => (
+                    <div
+                      key={appointment.id}
+                      className="flex items-center justify-between p-4 border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950"
+                    >
+                      <div>
+                        <p className="font-semibold">{appointment.client?.user?.name}</p>
+                        <p className="text-sm text-gray-600 dark:text-gray-300 ">
+                          {appointment.service?.name} - {appointment.time}
+                        </p>
+                        <p className="text-sm text-gray-600 dark:text-gray-300">
+                          date : {formatTime(appointment.date)}
+                        </p>
+                      </div>
+                      <div className="flex gap-2">
+
+                        <Button
+                          size="sm"
+                          variant="secondary"
+                        >
+                          Terminee
                         </Button>
                       </div>
                     </div>
@@ -637,7 +796,7 @@ export default function WorkerDashboardV2() {
 
                 {commissionData?.appointmentsCount === 0 && (
                   <div className="text-center py-8 text-gray-500">
-                    <Calendar className="w-12 h-12 mx-auto mb-4 opacity-20" />
+                    <CalendarIcon className="w-12 h-12 mx-auto mb-4 opacity-20" />
                     <p>Aucun rendez-vous complété cette semaine</p>
                   </div>
                 )}

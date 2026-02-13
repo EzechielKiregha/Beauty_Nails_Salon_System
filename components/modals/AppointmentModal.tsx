@@ -4,13 +4,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
 import { Calendar } from '@/components/ui/calendar';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
-import { Calendar as CalendarIcon, Clock, User, Scissors, CheckCircle, AlertCircle, CreditCard, Banknote, Sparkles, Home } from 'lucide-react';
+import { Calendar as CalendarIcon, User, CreditCard, Banknote, Sparkles, Home } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { cn } from '../ui/utils';
 import { useServices } from '@/lib/hooks/useServices';
@@ -21,6 +19,10 @@ import { toast } from 'sonner';
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
 import { usePayments } from '@/lib/hooks/usePayments';
 import { ProcessPaymentData } from '@/lib/api/payments';
+import { Card } from '../ui/card';
+import { Separator } from '../ui/separator';
+import { useDiscounts } from '@/lib/hooks/useMarketing';
+import { CreateAppointmentDataAsWorker } from '@/lib/api/appointments';
 
 interface AppointmentModalProps {
   open?: boolean;
@@ -49,10 +51,9 @@ export function AppointmentModal({ open, onOpenChange, appointment, trigger, cli
   const [clientPhone, setClientPhone] = useState(client?.phone || '');
   const [clientId, setClientId] = useState(client?.id || '');
   const [status, setStatus] = useState('scheduled');
-  const [paymentStatus, setPaymentStatus] = useState('unpaid');
   const [notes, setNotes] = useState('');
   const [price, setPrice] = useState('');
-  const [paymentMethod, setPaymentMethod] = useState<'card' | 'cash' | 'mobile'>('card');
+  const [paymentMethod, setPaymentMethod] = useState<'card' | 'cash' | 'mobile'>('cash');
   const [discountCode, setDiscountCode] = useState('');
   const [service, setService] = useState<Service>();
   // Initialize states with URL parameters
@@ -66,8 +67,15 @@ export function AppointmentModal({ open, onOpenChange, appointment, trigger, cli
   const [location, setLocation] = useState<"salon" | "home">(
     "salon",
   );
+  const [payStatus, setPayStatus] = useState<string>("unpaid");
   const [addOns, setAddOns] = useState<string[]>([]);
+  const [decideToPay, setDecideToPay] = useState("false");
+  const [addOnsTotalPrice, setAddOnsTotalPrice] = useState<number>(0);
+  const [baseServicePrice, setBaseServicePrice] = useState<number>(0);
+  const [tip, setTip] = useState(0);
 
+
+  const { discounts, isLoading: discountsLoading } = useDiscounts();
   const { services, isLoading: servicesLoading } = useServices();
   const { staff, isLoading: staffLoading } = useAvailableStaff();
   const { data: availableSlotsData } = useAvailableSlots(
@@ -81,6 +89,21 @@ export function AppointmentModal({ open, onOpenChange, appointment, trigger, cli
 
   const { createAppointmentAsAdmin, isLoading: appointmentLoading } = useAppointments();
   const { processPayment, isLoading: paymentProcessing } = usePayments();
+  const { createAppointment, isLoading: isAppointmentLoading } = useAppointments();
+
+
+  const TAX_RATE = 0.16; // 18% example
+
+  const PAYMENT_DETAILS = {
+    mobile: {
+      label: "Mobile Money",
+      instructions: "Envoyer au numéro : +250 78X XXX XXX"
+    },
+    card: {
+      label: "Virement Bancaire",
+      instructions: "Bank of Kigali - 123456789 - Salon Beauty"
+    }
+  };
 
   const timeSlots = [
     "09:00",
@@ -97,6 +120,61 @@ export function AppointmentModal({ open, onOpenChange, appointment, trigger, cli
     "16:30",
     "17:00",
   ];
+  const subtotal = useMemo(() => {
+    const servicePrice = baseServicePrice || 0;
+    return servicePrice + addOnsTotalPrice;
+  }, [baseServicePrice, addOnsTotalPrice]);
+
+  const appliedDiscount = useMemo(() => {
+    if (!discountCode) return null;
+
+    return discounts.find(
+      (d) =>
+        d.code.toLowerCase() === discountCode.toLowerCase() &&
+        d.isActive
+    );
+  }, [discountCode, discounts]);
+
+  const discountAmount = useMemo(() => {
+    if (!appliedDiscount) return 0;
+
+    if (appliedDiscount.type === "percentage") {
+      return subtotal * (appliedDiscount.value / 100);
+    }
+
+    return appliedDiscount.value;
+  }, [appliedDiscount, subtotal]);
+
+  const taxAmount = useMemo(() => {
+    return (subtotal - discountAmount) * TAX_RATE;
+  }, [subtotal, discountAmount]);
+
+  const total = useMemo(() => {
+    return subtotal - discountAmount + taxAmount + tip;
+  }, [subtotal, discountAmount, taxAmount, tip]);
+
+
+  const paymentStatus = useMemo(() => {
+    if (!paymentMethod) return "pending";
+    return "pending";
+  }, [paymentMethod]);
+
+
+  // Sync service when services load from API
+  useEffect(() => {
+    if (selectedServiceId) {
+      const service = services.find((s: Service) => s.id === selectedServiceId);
+
+      if (!service) return;
+
+      setService(service);
+      setBaseServicePrice(service.price);
+    } else {
+      setBaseServicePrice(0);
+
+    }
+
+  }, [services, selectedServiceId]);
 
   // Sync service when services load from API
   useEffect(() => {
@@ -121,7 +199,7 @@ export function AppointmentModal({ open, onOpenChange, appointment, trigger, cli
       // setStaff(appointment.staff || appointment.worker || '');
       setNotes(appointment.notes || '');
       setStatus(appointment.status || 'scheduled');
-      setPaymentStatus(appointment.paymentStatus || 'unpaid');
+      setPayStatus(appointment.paymentStatus || 'unpaid');
       // setPrice(appointment.price || '0');
       // Parse date if string
       if (typeof appointment.date === 'string') {
@@ -136,6 +214,28 @@ export function AppointmentModal({ open, onOpenChange, appointment, trigger, cli
     if (!availableSlotsData?.slots) return null;
     return new Map(availableSlotsData.slots.map((s: any) => [s.time, s.available]));
   }, [availableSlotsData]);
+
+  const paymentInfo = useMemo(() => ({
+    discountCode,
+    subtotal,
+    discount: discountAmount,
+    tax: taxAmount,
+    tip,
+    total,
+    method: paymentMethod,
+    status: paymentStatus,
+    loyaltyPointUsed: 0,
+    receipt: `RCT-${Date.now()}`
+  }), [
+    discountCode,
+    subtotal,
+    discountAmount,
+    taxAmount,
+    tip,
+    total,
+    paymentMethod,
+    paymentStatus
+  ]);
 
   const handleSubmit = () => {
     if (
@@ -153,6 +253,7 @@ export function AppointmentModal({ open, onOpenChange, appointment, trigger, cli
       );
       return;
     }
+
 
     const appointmentData: CreateAppointmentData = {
       clientId: clientId,
@@ -183,6 +284,35 @@ export function AppointmentModal({ open, onOpenChange, appointment, trigger, cli
     createAppointmentAsAdmin(appointmentData)
     processPayment(paymentData)
     onOpenChange?.(false);
+  };
+
+  const handleWorkerSubmit = () => {
+
+    if (
+      !selectedCategory ||
+      !selectedServiceId ||
+      !selectedWorker ||
+      !selectedDate ||
+      !selectedTime
+    ) {
+      toast.error(
+        "Veuillez remplir tous les champs obligatoires",
+      );
+      return;
+    }
+
+    const appointmentData: CreateAppointmentDataAsWorker = {
+      serviceId: selectedServiceId,
+      workerId: selectedWorker,
+      date: selectedDate.toISOString(),
+      time: selectedTime,
+      location: location,
+      addOns: addOns,
+      decidedToPay: decideToPay === "true" ? true : false,
+      paymentInfo,
+    };
+    createAppointment(appointmentData)
+
   };
 
   return (
@@ -450,16 +580,53 @@ export function AppointmentModal({ open, onOpenChange, appointment, trigger, cli
 
             <TabsContent value="payment" className="space-y-4">
               <div className="p-4 border border-pink-100 dark:border-pink-900 shadow-xl rounded-2xl bg-white dark:bg-gray-950 space-y-4">
-                <div className="flex justify-between items-center">
-                  <Label className="text-base">Montant à payer</Label>
-                  <div className="flex items-center gap-2">
+                <div className="space-y-6">
+                  <div className="space-y-2">
+                    <Label>Code Promo</Label>
+
+                    <Select value={discountCode} onValueChange={setDiscountCode}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Choisir un code" />
+                      </SelectTrigger>
+
+                      <SelectContent>
+                        {discounts.map((d) => (
+                          <SelectItem key={d.id} value={d.code}>
+                            {d.code} ({d.type === "percentage" ? `${d.value}%` : `${d.value} Fc`})
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+
                     <Input
-                      // value={service ? service.price.toString() : '0'}
-                      onChange={(e) => setPrice(e.target.value)}
-                      className="w-32 text-right "
+                      placeholder="Ou entrer un code manuellement"
+                      value={discountCode}
+                      onChange={(e) => setDiscountCode(e.target.value)}
                     />
-                    <span className=" text-gray-600 dark:text-gray-400">Fc</span>
                   </div>
+                  <Card className="p-4 space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span>Sous-total</span>
+                      <span>{subtotal.toLocaleString()} Fc</span>
+                    </div>
+
+                    <div className="flex justify-between text-green-600">
+                      <span>Remise</span>
+                      <span>- {discountAmount.toLocaleString()} Fc</span>
+                    </div>
+
+                    <div className="flex justify-between">
+                      <span>Taxe</span>
+                      <span>{taxAmount.toLocaleString()} Fc</span>
+                    </div>
+
+                    <Separator />
+
+                    <div className="flex justify-between font-semibold text-lg">
+                      <span>Total</span>
+                      <span>{total.toLocaleString()} Fc</span>
+                    </div>
+                  </Card>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
@@ -485,10 +652,10 @@ export function AppointmentModal({ open, onOpenChange, appointment, trigger, cli
 
                   <div className="space-y-2">
                     <Label>Statut Paiement</Label>
-                    <Select value={paymentStatus} onValueChange={setPaymentStatus}>
+                    <Select value={payStatus} onValueChange={setPayStatus}>
                       <SelectTrigger className={cn(
-                        paymentStatus === 'paid' ? 'text-green-600 border-green-200 bg-green-50' :
-                          paymentStatus === 'partial' ? 'text-orange-600 border-orange-200 bg-orange-50' :
+                        payStatus === 'paid' ? 'text-green-600 border-green-200 bg-green-50' :
+                          payStatus === 'partial' ? 'text-orange-600 border-orange-200 bg-orange-50' :
                             'text-gray-600 dark:text-gray-400'
                       )}>
                         <SelectValue />
@@ -497,27 +664,6 @@ export function AppointmentModal({ open, onOpenChange, appointment, trigger, cli
                         <SelectItem value="unpaid">Non Payé</SelectItem>
                         <SelectItem value="partial">Acompte Versé</SelectItem>
                         <SelectItem value="paid">Payé</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label>Use Promo code</Label>
-                    <Select value={status} onValueChange={setStatus}>
-                      <SelectTrigger className={cn(
-                        status === 'confirmed' ? 'text-green-600 border-green-200 bg-green-50' :
-                          status === 'cancelled' ? 'text-red-600 border-red-200 bg-red-50' :
-                            'text-blue-600 border-blue-200 bg-blue-50'
-                      )}>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="scheduled">Planifié</SelectItem>
-                        <SelectItem value="confirmed">Confirmé</SelectItem>
-                        <SelectItem value="completed">Terminé</SelectItem>
-                        <SelectItem value="cancelled">Annulé</SelectItem>
-                        <SelectItem value="noshow">Absence (No-Show)</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>

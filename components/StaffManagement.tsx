@@ -33,7 +33,7 @@ export default function StaffManagement({ showMock }: { showMock?: boolean }) {
   const [selectedStaff, setSelectedStaff] = useState<Worker | null>(null);
 
   // API hook
-  const { staff, isLoading: staffLoading } = useAvailableStaff();
+  const { staff, isLoading: staffLoading } = useStaff();
 
   const scheduleData = [
     { day: 'Lundi', slots: ['09:00-12:00', '13:00-16:00', '16:00-18:00'] },
@@ -66,7 +66,7 @@ export default function StaffManagement({ showMock }: { showMock?: boolean }) {
             >
               <div className="flex items-center justify-between mb-3">
                 <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-linear-to-br from-purple-400 to-pink-400 flex items-center justify-center text-white text-base sm:text-lg">
-                  {member.name.charAt(0)}
+                  {member.name ? member.name.charAt(0) : "E"}
                 </div>
                 <Badge className={`${member.status === 'active' ? 'bg-green-500' :
                   member.status === 'busy' ? 'bg-blue-500' : 'bg-gray-500'
@@ -302,7 +302,7 @@ export default function StaffManagement({ showMock }: { showMock?: boolean }) {
                   <PayrollModal
                     staffName={selectedStaff.name}
                     trigger={
-                      <Button className="w-full bg-linear-to-r from-green-500 to-emerald-500 text-white rounded-full">
+                      <Button size="sm" className="w-full bg-linear-to-r from-green-500 to-emerald-500 text-white rounded-full">
                         Générer Fiche de Paie
                       </Button>
                     }

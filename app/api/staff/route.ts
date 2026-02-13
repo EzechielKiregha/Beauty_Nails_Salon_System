@@ -130,6 +130,8 @@ export async function POST(request: NextRequest) {
             specialties,
             commissionRate,
             workingHours,
+            hireDate: new Date(),
+            isAvailable: false,
           },
         }
       };

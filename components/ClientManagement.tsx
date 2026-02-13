@@ -329,8 +329,8 @@ export default function ClientManagement({ showMock }: { showMock?: boolean }) {
                           <Calendar className="w-5 h-5 text-pink-500" />
                         </div>
                         <div>
-                          <p className="text-sm sm:text-base text-gray-900 dark:text-gray-100 ">{apt.service}</p>
-                          <p className="text-xs text-gray-500 dark:text-gray-400">avec {apt.worker} • {apt.date}</p>
+                          <p className="text-sm sm:text-base text-gray-900 dark:text-gray-100 ">{apt.service.name}</p>
+                          <p className="text-xs text-gray-500 dark:text-gray-400">avec {apt.worker.name} • {apt.date}</p>
                         </div>
                       </div>
                       <div className="flex items-center justify-between w-full sm:w-auto gap-4">

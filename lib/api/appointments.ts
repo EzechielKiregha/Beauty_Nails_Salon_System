@@ -48,6 +48,32 @@ export interface CreateAppointmentData {
 }
 }
 
+export interface CreateAppointmentDataAsWorker {
+  clientId?: string;
+  serviceId?: string;
+  packageId?: string;
+  price?: number;
+  workerId: string;
+  date: string;
+  time: string;
+  location?: 'salon' | 'home';
+  addOns?: string[];
+  notes?: string;
+  decidedToPay?: boolean;
+  paymentInfo?: any | {
+    discountCode : string;
+    subtotal : number;
+    discountAmount : number,
+    taxAmount : number,
+    tip : number,
+    total : number,
+    method: "card" | "momo",
+    status: string,
+    loyaltyPointUsed: 0,
+    receipt: string,
+}
+}
+
 export interface UpdateAppointmentStatusData {
   status: 'pending' | 'confirmed' | 'in_progress' | 'completed' | 'cancelled' | 'no_show';
 }
