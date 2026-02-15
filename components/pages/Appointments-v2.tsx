@@ -599,26 +599,24 @@ export default function AppointmentsV2() {
                   </div>
                 ))}
 
-                {staff?.filter((worker) => worker.id === selectedWorker).map((worker) => (
-                  <div className="pb-4 border-b border-gray-200 dark:border-gray-700">
-                    <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mb-1">
-                      Spécialiste
+                <div className="pb-4 border-b border-gray-200 dark:border-gray-700">
+                  <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mb-1">
+                    Spécialiste
+                  </p>
+                  <div className="flex flex-row justify-between">
+                    <p className="text-sm sm:text-base text-gray-900 dark:text-gray-100 font-medium">
+                      {selectedStaff?.name}
                     </p>
-                    <div className="flex flex-row justify-between">
-                      <p className="text-sm sm:text-base text-gray-900 dark:text-gray-100 font-medium">
-                        {selectedStaff?.name}
-                      </p>
-                      <StaffProfileModal
-                        staff={selectedStaff}
-                        trigger={
-                          <Button variant="outline" size="sm" className="rounded-full">
-                            Voir Profil
-                          </Button>
-                        }
-                      />
-                    </div>
+                    <StaffProfileModal
+                      staff={selectedStaff}
+                      trigger={
+                        <Button variant="outline" size="sm" className="rounded-full">
+                          Voir Profil
+                        </Button>
+                      }
+                    />
                   </div>
-                ))}
+                </div>
 
 
                 {selectedDate && selectedTime && (
