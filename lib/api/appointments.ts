@@ -80,7 +80,7 @@ export interface UpdateAppointmentStatusData {
 
 export interface RescheduleAppointmentData {
   newTime: string;
-  newDate?: string;
+  newDate?: Date;
   newStaffId?: string;
 }
 

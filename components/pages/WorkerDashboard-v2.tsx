@@ -10,7 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
 import { ScrollArea } from '../ui/scroll-area';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
-import { Avatar, AvatarFallback } from '../ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import {
   CalendarIcon, Clock, CheckCircle, Star, TrendingUp, Award,
   Bell, Phone, MessageSquare, MapPin,
@@ -21,17 +21,18 @@ import {
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { useAppointments } from '@/lib/hooks/useAppointments';
-import { useWorkerCommission, useWorkerSchedule } from '@/lib/hooks/useStaff';
+import { useStaff, useWorkerCommission } from '@/lib/hooks/useStaff';
 import { useNotifications } from '@/lib/hooks/useNotifications';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
-import LoadingSpinner from '../LoadingSpinner';
 import LoaderBN from '../Loader-BN';
 import { Label } from '../ui/label';
 import { Calendar } from '../ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { cn } from '../ui/utils';
 import { AppointmentModal } from '../modals/AppointmentModal';
+import { StaffProfileModal } from '../modals/StaffModals';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 
 export default function WorkerDashboardV2() {
   const [notificationOpen, setNotificationOpen] = useState(false);
@@ -41,10 +42,14 @@ export default function WorkerDashboardV2() {
   const [selectedDate, setSelectedDate] = useState<
     Date | undefined
   >(undefined);
+  const [selectedTime, setSelectedTime] = useState<string>('');
   const [selectedClient, setSelectedClient] = useState<any>();
+
+  const { rescheduleAppointment } = useAppointments();
 
   // Get authenticated user
   const { user, isLoading: isAuthLoading } = useAuth();
+  const { staff, isLoading: staffLoading } = useStaff();
 
   // Get today's date
   const today = new Date().toISOString().split('T')[0];
@@ -114,9 +119,11 @@ export default function WorkerDashboardV2() {
   const completedAppointments = AllAppointments.filter(
     apt => apt.status === 'completed'
   );
-  const ongoingAppointments = AllAppointments.filter(
-    apt => apt.status === 'in_progress'
+  const cancelledAppointments = AllAppointments.filter(
+    apt => apt.status === 'cancelled'
   );
+
+  const worker = staff?.find(s => s.id === user?.workerProfile?.id);
 
   // Calculate stats
   const stats = {
@@ -144,11 +151,15 @@ export default function WorkerDashboardV2() {
     );
   };
 
-  const handleReschedule = (appointmentId: string, newStatus: string, date: Date) => {
-    updateStatus(
+  const handleReschedule = (appointmentId: string, time: string, date: Date) => {
+    rescheduleAppointment(
       {
         id: appointmentId,
-        statusData: { status: newStatus as any },
+        data: {
+          newTime: time,
+          newDate: date,
+          newStaffId: user?.workerProfile?.id,
+        }
       },
       {
         onSuccess: () => {
@@ -306,49 +317,62 @@ export default function WorkerDashboardV2() {
               </p>
             </div>
 
-            {/* Notifications */}
-            <Sheet open={notificationOpen} onOpenChange={setNotificationOpen}>
-              <SheetTrigger asChild>
-                <Button variant="outline" size="icon" className="relative dark:border-gray-700 dark:text-gray-200">
-                  <Bell className="w-5 h-5" />
-                  {unreadCount > 0 && (
-                    <span className="absolute -top-1 -right-1 w-5 h-5 bg-pink-500 text-white text-xs rounded-full flex items-center justify-center">
-                      {unreadCount}
-                    </span>
-                  )}
-                </Button>
-              </SheetTrigger>
-              <SheetContent className="p-2 border-r-0 border-pink-100 dark:border-pink-900 shadow-xl rounded-l-2xl bg-white dark:bg-gray-950">
-                <h2 className="text-2xl   mb-6 dark:text-gray-100">Notifications</h2>
-                <ScrollArea className="h-[calc(100vh-150px)]">
-                  <div className="space-y-4">
-                    {notificationList.length === 0 ? (
-                      <div className="text-center py-12 text-gray-500 dark:text-gray-400">
-                        <Bell className="w-12 h-12 mx-auto mb-4 opacity-20" />
-                        <p>Aucune notification</p>
-                      </div>
-                    ) : (
-                      notificationList.map((notification) => (
-                        <div
-                          key={notification.id}
-                          className={`p-4 rounded-lg border cursor-pointer dark:border-gray-700 ${notification.isRead ? 'bg-white dark:bg-gray-800' : 'bg-purple-50 border-purple-200 dark:bg-purple-900/20 dark:border-purple-800'
-                            }`}
-                          onClick={() => markAsRead(notification.id)}
-                        >
-                          <div className="flex gap-3">
-                            {getNotificationIcon(notification.type)}
-                            <div className="flex-1">
-                              <h3 className="font-semibold text-sm mb-1">{notification.title}</h3>
-                              <p className="text-sm text-gray-600 dark:text-gray-300">{notification.message}</p>
+            <div className="space-x-2 flex items-center">
+              {/* Notifications */}
+              <Sheet open={notificationOpen} onOpenChange={setNotificationOpen}>
+                <SheetTrigger asChild>
+                  <Button variant="outline" size="icon" className="relative dark:border-gray-700 dark:text-gray-200">
+                    <Bell className="w-5 h-5" />
+                    {unreadCount > 0 && (
+                      <span className="absolute -top-1 -right-1 w-5 h-5 bg-pink-500 text-white text-xs rounded-full flex items-center justify-center">
+                        {unreadCount}
+                      </span>
+                    )}
+                  </Button>
+                </SheetTrigger>
+                <SheetContent className="p-2 border-r-0 border-pink-100 dark:border-pink-900 shadow-xl rounded-l-2xl bg-white dark:bg-gray-950">
+                  <h2 className="text-2xl   mb-6 dark:text-gray-100">Notifications</h2>
+                  <ScrollArea className="h-[calc(100vh-150px)]">
+                    <div className="space-y-4">
+                      {notificationList.length === 0 ? (
+                        <div className="text-center py-12 text-gray-500 dark:text-gray-400">
+                          <Bell className="w-12 h-12 mx-auto mb-4 opacity-20" />
+                          <p>Aucune notification</p>
+                        </div>
+                      ) : (
+                        notificationList.map((notification) => (
+                          <div
+                            key={notification.id}
+                            className={`p-4 rounded-lg border cursor-pointer dark:border-gray-700 ${notification.isRead ? 'bg-white dark:bg-gray-800' : 'bg-purple-50 border-purple-200 dark:bg-purple-900/20 dark:border-purple-800'
+                              }`}
+                            onClick={() => markAsRead(notification.id)}
+                          >
+                            <div className="flex gap-3">
+                              {getNotificationIcon(notification.type)}
+                              <div className="flex-1">
+                                <h3 className="font-semibold text-sm mb-1">{notification.title}</h3>
+                                <p className="text-sm text-gray-600 dark:text-gray-300">{notification.message}</p>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      ))
-                    )}
-                  </div>
-                </ScrollArea>
-              </SheetContent>
-            </Sheet>
+                        ))
+                      )}
+                    </div>
+                  </ScrollArea>
+                </SheetContent>
+              </Sheet>
+              <StaffProfileModal
+                staff={worker}
+                trigger={
+                  <Avatar className="w-16 h-16 border-4 border-white shadow-lg">
+                    <AvatarImage src="" />
+                    <AvatarFallback className="text-2xl font-medium bg-gray-100 text-gray-600">
+                      {worker?.name.split(" ")[0]?.charAt(0) || worker?.name.charAt(0)}
+                    </AvatarFallback>
+                  </Avatar>
+                }
+              />
+            </div>
           </div>
 
           {/* Stats Grid */}
@@ -371,8 +395,8 @@ export default function WorkerDashboardV2() {
                 </div>
               </div>
               <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300  mb-1">Complétés</p>
-              <p className="text-2xl sm:text-3xl  text-gray-900 dark:text-gray-100">{stats.completed}</p>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">aujourd'hui</p>
+              <p className="text-2xl sm:text-3xl  text-gray-900 dark:text-gray-100">{completedAppointments.length}</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">rendez-vous</p>
             </Card>
 
             <Card className="p-4 sm:p-6 hover:shadow-lg transition-shadow border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950">
@@ -383,7 +407,7 @@ export default function WorkerDashboardV2() {
               </div>
               <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300  mb-1">En attente</p>
               <p className="text-2xl sm:text-3xl  text-gray-900 dark:text-gray-100">{stats.pending}</p>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">à confirmer</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">vous avez rater  {missedAppointments.length} rendez-vous</p>
             </Card>
             <Card className="p-4 sm:p-6 bg-linear-to-br from-amber-500 to-pink-500 text-white border-0 shadow-xl">
               <div className="flex items-center justify-between mb-4">
@@ -518,7 +542,7 @@ export default function WorkerDashboardV2() {
             {/* Pending Confirmations */}
             {pendingAppointments.length > 0 && (
               <Card className="p-6">
-                <h3 className="text-lg font-semibold mb-4 flex items-center text-yellow-800 dark:text-yellow-400">
+                <h3 className="text-lg font-semibold mb-4 flex items-center text-cyan-800 dark:text-cyan-400">
                   <AlertCircle className="w-5 h-5 mr-2" />
                   En attente de confirmation ({pendingAppointments.length})
                 </h3>
@@ -578,10 +602,10 @@ export default function WorkerDashboardV2() {
                       <div>
                         <p className="font-semibold">{appointment.client?.user?.name}</p>
                         <p className="text-sm text-gray-600 dark:text-gray-300 ">
-                          {appointment.service?.name} - {appointment.time}
+                          {appointment.service?.name}
                         </p>
                         <p className="text-sm text-gray-600 dark:text-gray-300">
-                          date : {formatTime(appointment.date)}
+                          date : {format(new Date(appointment.date), "PPP", { locale: fr })} - {appointment.time}
                         </p>
                       </div>
                       <div className="flex gap-2">
@@ -621,13 +645,46 @@ export default function WorkerDashboardV2() {
                             </PopoverContent>
                           </Popover>
                         </div>
+                        <div className="flex-1 w-full">
+                          <Select value={selectedTime} onValueChange={setSelectedTime}>
+                            <SelectTrigger className="w-full">
+                              <SelectValue placeholder="Choisir une heure" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="09:00">
+                                <Clock className="inline mr-2 h-4 w-4" />
+                                09:00
+                              </SelectItem>
+                              <SelectItem value="10:00">
+                                <Clock className="inline mr-2 h-4 w-4" />
+                                10:00
+                              </SelectItem>
+                              <SelectItem value="11:00">
+                                <Clock className="inline mr-2 h-4 w-4" />
+                                11:00
+                              </SelectItem>
+                              <SelectItem value="14:00">
+                                <Clock className="inline mr-2 h-4 w-4" />
+                                14:00
+                              </SelectItem>
+                              <SelectItem value="15:00">
+                                <Clock className="inline mr-2 h-4 w-4" />
+                                15:00
+                              </SelectItem>
+                              <SelectItem value="16:00">
+                                <Clock className="inline mr-2 h-4 w-4" />
+                                16:00
+                              </SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
                         <Button
                           size="sm"
                           onClick={() =>
-                            handleUpdateStatus(appointment.id, 'confirmed')
+                            handleReschedule(appointment.id, selectedTime, selectedDate!)
                           }
                         >
-                          Confirmer
+                          Reschedule
                         </Button>
                       </div>
                     </div>
@@ -635,7 +692,7 @@ export default function WorkerDashboardV2() {
                 </div>
               </Card>
             )}
-            {/* missed Confirmations */}
+            {/* completed Confirmations */}
             {completedAppointments.length > 0 && (
               <Card className="p-6">
                 <h3 className="text-lg font-semibold mb-4 flex items-center text-green-800 dark:text-green-400">
@@ -664,6 +721,43 @@ export default function WorkerDashboardV2() {
                           variant="secondary"
                         >
                           Terminee
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </Card>
+            )}
+            {/* completed Confirmations */}
+            {cancelledAppointments.length > 0 && (
+              <Card className="p-6">
+                <h3 className="text-lg font-semibold mb-4 flex items-center text-red-800 dark:text-red-400">
+                  <AlertCircle className="w-5 h-5 mr-2" />
+                  Prestation Annulée ({cancelledAppointments.length})
+                </h3>
+                <div className="space-y-3">
+                  {cancelledAppointments.map((appointment) => (
+                    <div
+                      key={appointment.id}
+                      className="flex items-center justify-between p-4 border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950"
+                    >
+                      <div>
+                        <p className="font-semibold">{appointment.client?.user?.name}</p>
+                        <p className="text-sm text-gray-600 dark:text-gray-300 ">
+                          {appointment.service?.name} - {appointment.time}
+                        </p>
+                        <p className="text-sm text-gray-600 dark:text-gray-300">
+                          date : {formatTime(appointment.date)}
+                        </p>
+                      </div>
+                      <div className="flex gap-2">
+
+                        <Button
+                          size="sm"
+                          disabled
+                          variant="destructive"
+                        >
+                          Annulée
                         </Button>
                       </div>
                     </div>

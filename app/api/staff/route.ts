@@ -48,7 +48,7 @@ export async function GET(request: NextRequest) {
 
     const formattedStaff = staff.map((s: any) => {
       const completedApps = s.appointments || [];
-      const totalRevenue = completedApps.reduce((sum:any, app:any) => sum + (app.price || 0), 0);
+      const totalRevenue = completedApps.reduce((sum: any, app: any) => sum + (app.price || 0), 0);
       
       const uniqueClients = new Set(completedApps.map((a: any) => a.clientId)).size;
       const retention = completedApps.length > 0 
@@ -57,18 +57,36 @@ export async function GET(request: NextRequest) {
 
       return {
         id: s.id,
+        userId: s.userId,
+        position: s.position,
+        specialties: s.specialties,
+        commissionRate: s.commissionRate,
+        rating: s.rating,
+        totalReviews: s.totalReviews,
+        isAvailable: s.isAvailable,
+        workingHours: s.workingHours,
+        hireDate: s.hireDate.toISOString(),
+        createdAt: s.createdAt.toISOString(),
+        updatedAt: s.updatedAt.toISOString(),
+        totalSales: completedApps.length,
+        totalEarnings: totalRevenue * (s.commissionRate < 45 ? s.commissionRate / 100 : 45 / 100),
+        businessRevenue: totalRevenue * (45 / 100),
+        materialsReserve: totalRevenue * (5 / 100),
+        operationalCosts: totalRevenue * (5 / 100),
+        user: s.user,
+        schedules: s.schedules,
+        appointments: s.appointments,
         name: s.user.name,
         role: s.position,
         phone: s.user.phone,
         email: s.user.email,
-        workingDays: s.schedules.map((sch:any) => daysMap[sch.dayOfWeek]),
-        workingHours: typeof s.workingHours === 'string' ? s.workingHours : 'Non défini',
-        appointments: completedApps.length,
-        rating: s.rating,
-        revenue: `${totalRevenue.toLocaleString()} Fc`,
+        workingDays: s.schedules.map((sch: any) => daysMap[sch.dayOfWeek]),
+        workingHoursString: typeof s.workingHours === 'string' ? s.workingHours : 'Non défini',
+        appointmentsCount: completedApps.length,
+        revenue: totalRevenue.toString(),
         clientRetention: `${retention}%`,
-        upsellRate: '0%',
-        commission: `${s.commissionRate}%`,
+        upsellRate: `${Math.round(completedApps.filter((app: any) => app.price > 0).length / completedApps.length)}%`,
+        commission: s.commissionRate,
         status: s.isAvailable ? 'active' : 'off',
       };
     });

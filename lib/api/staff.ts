@@ -15,6 +15,9 @@ export interface Worker {
   updatedAt: string;
   totalSales: number;
   totalEarnings: number;
+  businessRevenue: number;
+  materialsReserve: number;
+  operationalCosts: number;
   user?: {
     id: string;
     name: string;
@@ -35,7 +38,7 @@ export interface Worker {
   revenue: string;
   clientRetention: string;
   upsellRate: string;
-  commission: string;
+  commission: number;
   status: 'active' | 'off' | 'busy';
 }
 

@@ -161,7 +161,7 @@ export async function POST(request: NextRequest) {
     });
 
     if (conflictingAppointment) {
-      return errorResponse('Ce créneau n\'est pas disponible', 409);
+      return errorResponse('A cette date et heure, ce rendez-vous n\'est pas disponible', 409);
     }
 
     // Create appointment

@@ -38,7 +38,7 @@ export async function PATCH(
   ) {
     try {
       const id = (await context.params).id;
-    await requireRole(['admin']);
+    await requireRole(['admin', 'worker']);
 
     const body = await request.json();
     const { dayOfWeek, startTime, endTime, isAvailable } = body;

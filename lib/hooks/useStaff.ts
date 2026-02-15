@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { staffApi, CreateWorkerData, UpdateScheduleData, CreateWorkerResponse } from '../api/staff';
 import { toast } from 'sonner';
+import { commissionApi } from '../api/commission';
 
 export function useStaff(params?: {
   role?: string;
@@ -78,7 +79,8 @@ export function useWorkerSchedule(id: string, params?: {
     schedule: data?.schedule || [],
     workingHours: data?.workingHours,
     isLoading,
-    updateSchedule: updateMutation.mutate,
+    // Change mutate to mutateAsync so it returns a Promise
+    updateSchedule: updateMutation.mutateAsync, 
     isUpdating: updateMutation.isPending,
   };
 }
@@ -106,4 +108,39 @@ export function useAvailableStaff(params?: {
     staff,
     isLoading
   }
+}
+
+export function useCommission() {
+  const queryClient = useQueryClient();
+
+  const { data: commissions = [], isLoading } = useQuery({
+    queryKey: ["commission"],
+    queryFn: () => commissionApi.getAll(),
+  });
+
+  const createMutation = useMutation({
+    mutationFn: commissionApi.create,
+    onSuccess: () => {
+      toast.success("Commission générée");
+      queryClient.invalidateQueries({ queryKey: ["staff"] });
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.error?.message || "Erreur lors de la génération de la commission");
+    },
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: ({ id, status }: { id: string; status: string }) =>
+      commissionApi.update(id, status),
+    onSuccess: () => toast.success("Statut mis à jour"),
+  });
+
+  return {
+    commissions,
+    isLoading,
+    createCommission: createMutation.mutate,
+    isCreating: createMutation.isPending,
+    updateCommission: updateMutation.mutate,
+    isUpdating: updateMutation.isPending,
+  };
 }

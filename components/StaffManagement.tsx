@@ -6,31 +6,17 @@ import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Calendar as CalendarIcon, Clock, DollarSign, Star, TrendingUp, Award, CheckCircle, AlertCircle, Users } from 'lucide-react';
-import { useAvailableStaff, useStaff } from '@/lib/hooks/useStaff';
+import { useAvailableStaff, useCommission, useStaff } from '@/lib/hooks/useStaff';
 import CreateWorkerModal from '@/components/modals/CreateWorkerModal';
 import { EditScheduleModal, PayrollModal, StaffProfileModal } from './modals/StaffModals';
 import { Worker } from '@/lib/api/staff';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 // import CreateTaskModal from './modals/CreateTaskModal';
-
-export interface StaffMember {
-  id: string;
-  name: string;
-  role: string;
-  phone: string;
-  email: string;
-  workingDays: string[];
-  workingHours: string;
-  appointments: number;
-  rating: number;
-  revenue: string;
-  clientRetention: string;
-  upsellRate: string;
-  commission: string;
-  status: 'active' | 'off' | 'busy';
-}
 
 export default function StaffManagement({ showMock }: { showMock?: boolean }) {
   const [selectedStaff, setSelectedStaff] = useState<Worker | null>(null);
+  const [selectedMonth, setSelectedMonth] = useState("2026-02");
+
 
   // API hook
   const { staff, isLoading: staffLoading } = useStaff();
@@ -43,6 +29,46 @@ export default function StaffManagement({ showMock }: { showMock?: boolean }) {
     { day: 'Vendredi', slots: ['09:00-12:00', '13:00-16:00', '16:00-19:00'] },
     { day: 'Samedi', slots: ['08:00-12:00', '13:00-17:00'] }
   ];
+
+  const allMonths = [
+    { value: "2026-01", label: "Janvier 2026" }
+    , { value: "2026-02", label: "Février 2026" }
+    , { value: "2026-03", label: "Mars 2026" }
+    , { value: "2026-04", label: "Avril 2026" }
+    , { value: "2026-05", label: "Mai 2026" }
+    , { value: "2026-06", label: "Juin 2026" }
+    , { value: "2026-07", label: "Juillet 2026" }
+    , { value: "2026-08", label: "Août 2026" }
+    , { value: "2026-09", label: "Septembre 2026" }
+    , { value: "2026-10", label: "Octobre 2026" }
+    , { value: "2026-11", label: "Novembre 2026" }
+    , { value: "2026-12", label: "Décembre 2026" },
+  ]
+
+  const { commissions, isUpdating } = useCommission();
+
+  const getCommissionForMonth = (month: string) =>
+    commissions.find(
+      (c: any) =>
+        c.workerId === selectedStaff?.id &&
+        c.period === month
+    );
+
+  const isMonthPaid = (month: string) =>
+    getCommissionForMonth(month)?.status === "paid";
+
+  const unpaidMonths = allMonths.filter(
+    (m) => !isMonthPaid(m.value)
+  );
+
+  const totalRevenue = getCommissionForMonth(selectedMonth || "")?.totalRevenue || 0;
+  const commissionRate = getCommissionForMonth(selectedMonth || "")?.commissionRate || 0;
+  const appointmentsCount = getCommissionForMonth(selectedMonth || "")?.appointmentsCount || 0;
+  const commissionAmount = getCommissionForMonth(selectedMonth || "")?.commissionAmount || 0;
+  const employerShare = totalRevenue - commissionAmount;
+  const materielShare = employerShare * 0.05; // 5% du total pour les produits de beauté.
+  const operationalCosts = employerShare * 0.05; // 5% du total pour les coûts opérationnels.
+
 
   return (
     <div className="space-y-6">
@@ -108,7 +134,7 @@ export default function StaffManagement({ showMock }: { showMock?: boolean }) {
                 </div>
                 <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">{member.role}</p>
                 <div className="flex items-center justify-between mt-2">
-                  <span className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-500">{member.appointments} RDV</span>
+                  <span className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-500">{member.appointmentsCount} RDV</span>
                   <span className="text-[10px] sm:text-xs text-gray-900 dark:text-gray-200 font-medium">{member.revenue}</span>
                 </div>
               </div>
@@ -148,7 +174,7 @@ export default function StaffManagement({ showMock }: { showMock?: boolean }) {
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
                   <Card className="bg-linear-to-br from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 border-0 p-3 sm:p-4 shadow-sm">
                     <CalendarIcon className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600 dark:text-blue-400 mb-2" />
-                    <p className="text-xl sm:text-2xl text-gray-900 dark:text-gray-100 ">{selectedStaff.appointments}</p>
+                    <p className="text-xl sm:text-2xl text-gray-900 dark:text-gray-100 ">{selectedStaff.appointmentsCount}</p>
                     <p className="text-[10px] sm:text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wider font-medium">RDV ce mois</p>
                   </Card>
                   <Card className="bg-linear-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-0 p-3 sm:p-4 shadow-sm">
@@ -195,14 +221,7 @@ export default function StaffManagement({ showMock }: { showMock?: boolean }) {
                       </Button>
                     }
                   />
-                  <StaffProfileModal
-                    staff={selectedStaff}
-                    trigger={
-                      <Button variant="outline" className="rounded-full">
-                        Voir Profil Complet
-                      </Button>
-                    }
-                  />
+
                 </div>
               </TabsContent>
 
@@ -250,68 +269,82 @@ export default function StaffManagement({ showMock }: { showMock?: boolean }) {
               {/* Commission Tab */}
               <TabsContent value="commission" className="space-y-6">
                 <h4 className="text-lg sm:text-xl text-gray-900 dark:text-gray-100 mb-4 font-medium">Calcul Commission & Paie</h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <Card className="bg-linear-to-br from-green-50 to-emerald-50 dark:from-green-900/10 dark:to-emerald-900/10 border-0 p-5 sm:p-6 shadow-sm">
-                    <h5 className="text-sm sm:text-base text-gray-900 dark:text-gray-100 mb-4  flex items-center gap-2">
-                      <span className="w-2 h-2 rounded-full bg-green-500"></span>
-                      Ce Mois (Novembre)
-                    </h5>
-                    <div className="space-y-4">
-                      <div className="flex justify-between items-center">
-                        <span className="text-xs sm:text-sm text-gray-700 dark:text-gray-400">Revenus générés</span>
-                        <span className="text-base sm:text-lg text-gray-900 dark:text-gray-100 ">{selectedStaff.revenue}</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-xs sm:text-sm text-gray-700 dark:text-gray-400">Taux commission</span>
-                        <span className="text-base sm:text-lg text-gray-900 dark:text-gray-100 ">20%</span>
-                      </div>
-                      <div className="w-full h-px bg-gray-200 dark:bg-gray-700" />
-                      <div className="flex justify-between items-center pt-2">
-                        <span className="text-sm sm:text-base text-gray-900 dark:text-gray-100 font-medium">Commission totale</span>
-                        <span className="text-xl sm:text-2xl text-green-600 dark:text-green-400 font-black">{selectedStaff.commission}</span>
-                      </div>
-                    </div>
-                  </Card>
+                <div className="grid grid-cols-1 gap-4">
+                  <Select
+                    value={selectedMonth}
+                    onValueChange={setSelectedMonth}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {allMonths.map((m) => (
+                        <SelectItem
+                          key={m.value}
+                          value={m.value}
+                          disabled={isMonthPaid(m.value)}
+                        >
+                          {m.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
 
-                  <Card className="bg-linear-to-br from-blue-50 to-cyan-50 dark:from-blue-900/10 dark:to-cyan-900/10 border-0 p-5 sm:p-6 shadow-sm">
-                    <h5 className="text-sm sm:text-base text-gray-900 dark:text-gray-100 mb-4  flex items-center gap-2">
-                      <span className="w-2 h-2 rounded-full bg-blue-500"></span>
-                      Détails de Paie
-                    </h5>
-                    <div className="space-y-4">
-                      <div className="flex justify-between items-center">
-                        <span className="text-xs sm:text-sm text-gray-700 dark:text-gray-400">Salaire de base</span>
-                        <span className="text-sm sm:text-base text-gray-900 dark:text-gray-100 font-medium">450 000 Fc</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-xs sm:text-sm text-gray-700 dark:text-gray-400">Commission</span>
-                        <span className="text-sm sm:text-base text-gray-900 dark:text-gray-100 font-medium">{selectedStaff.commission}</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-xs sm:text-sm text-gray-700 dark:text-gray-400">Bonus performance</span>
-                        <span className="text-sm sm:text-base text-gray-900 dark:text-gray-100 font-medium">50 000 Fc</span>
-                      </div>
-                      <div className="w-full h-px bg-gray-200 dark:bg-gray-700" />
-                      <div className="flex justify-between items-center pt-2">
-                        <span className="text-sm sm:text-base text-gray-900 dark:text-gray-100 font-medium">Total à payer</span>
-                        <span className="text-xl sm:text-2xl text-blue-600 dark:text-blue-400 font-black">686 000 Fc</span>
-                      </div>
-                    </div>
-                  </Card>
+                  {selectedMonth && getCommissionForMonth(selectedMonth) && (
+                    <Card className="bg-linear-to-br from-green-50 to-emerald-50 dark:from-green-900/10 dark:to-emerald-900/10 border-0 p-5 sm:p-6 shadow-sm">
+                      <h5 className="text-sm sm:text-base text-gray-900 dark:text-gray-100 mb-4  flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-green-500"></span>
+                        Ce Mois ( {allMonths.find((m) => m.value === selectedMonth)?.label} - {getCommissionForMonth(selectedMonth)?.status === "paid" ? "Payé" : "En attente"})
+                      </h5>
+                      <div className="space-y-4">
+                        <div className="flex justify-between items-center">
+                          <span className="text-xs sm:text-sm text-gray-700 dark:text-gray-400">Revenus générés</span>
+                          <span className="text-base sm:text-lg text-gray-900 dark:text-gray-100 ">{totalRevenue.toLocaleString()}</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-xs sm:text-sm text-gray-700 dark:text-gray-400">Taux commission</span>
+                          <span className="text-base sm:text-lg text-gray-900 dark:text-gray-100 ">{commissionRate}%</span>
+                        </div>
 
-                  <PayrollModal
-                    staffName={selectedStaff.name}
-                    trigger={
-                      <Button size="sm" className="w-full bg-linear-to-r from-green-500 to-emerald-500 text-white rounded-full">
-                        Générer Fiche de Paie
-                      </Button>
-                    }
-                  />
+                        <div className="flex justify-between items-center">
+                          <span className="text-xs sm:text-sm text-gray-700 dark:text-gray-400">Business revenue</span>
+                          <span className="text-sm sm:text-base text-gray-900 dark:text-gray-100 font-medium">{employerShare}</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-xs sm:text-sm text-gray-700 dark:text-gray-400">Materials reserve</span>
+                          <span className="text-sm sm:text-base text-gray-900 dark:text-gray-100 font-medium">{materielShare}</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-xs sm:text-sm text-gray-700 dark:text-gray-400">Operational costs </span>
+                          <span className="text-sm sm:text-base text-gray-900 dark:text-gray-100 font-medium">{operationalCosts}</span>
+                        </div>
+
+                        <div className="w-full h-px bg-gray-200 dark:bg-gray-700" />
+                        <div className="flex justify-between items-center pt-2">
+                          <span className="text-sm sm:text-base text-gray-900 dark:text-gray-100 font-medium">Commission totale</span>
+                          <span className="text-xl sm:text-2xl text-green-600 dark:text-green-400 font-black">{commissionAmount.toLocaleString()}</span>
+                        </div>
+                      </div>
+                    </Card>
+                  )}
+
+                  {!isMonthPaid(selectedMonth) && (
+                    <PayrollModal
+                      staffName={selectedStaff.name}
+                      staff={selectedStaff}
+                      period={selectedMonth}
+                      trigger={
+                        <Button
+                          size="sm"
+                          className="w-full bg-linear-to-r from-green-500 to-emerald-500 text-white rounded-full"
+                        >
+                          Générer Fiche de Paie
+                        </Button>
+                      }
+                    />
+                  )}
+
                 </div>
-
-                {/* <Button className="w-full bg-linear-to-r from-green-500 to-emerald-500 text-white rounded-full py-5 sm:py-6">
-                  Générer Fiche de Paie
-                </Button> */}
               </TabsContent>
             </Tabs>
           </Card>
@@ -324,44 +357,6 @@ export default function StaffManagement({ showMock }: { showMock?: boolean }) {
           </Card>
         )}
       </div>
-
-      {/* Task Assignment Board */}
-      {/* <Card className="border-0 shadow-lg rounded-2xl p-4 sm:p-8 bg-white dark:bg-gray-950 dark:border dark:border-pink-900/30">
-        <h3 className="text-xl sm:text-2xl text-gray-900 dark:text-gray-100 mb-6">Tableau des Tâches</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {tasks.map((task) => (
-            <Card key={task.id} className={`p-4 border-2 rounded-xl ${task.status === 'completed' ? 'border-green-300 bg-green-50 dark:bg-green-900/10 dark:border-green-900/50' :
-              task.status === 'in-progress' ? 'border-blue-300 bg-blue-50 dark:bg-blue-900/10 dark:border-blue-900/50' :
-                'border-gray-300 bg-gray-50 dark:bg-gray-800 dark:border-gray-700'
-              }`}>
-              <div className="flex items-start justify-between mb-3">
-                <Badge className={`${task.priority === 'high' ? 'bg-red-500' :
-                  task.priority === 'medium' ? 'bg-amber-500' : 'bg-gray-500'
-                  } text-white text-[10px]`}>
-                  {task.priority === 'high' ? 'Urgent' :
-                    task.priority === 'medium' ? 'Moyen' : 'Bas'}
-                </Badge>
-                {task.status === 'completed' ? (
-                  <CheckCircle className="w-5 h-5 text-green-600 dark:text-green-400" />
-                ) : task.status === 'in-progress' ? (
-                  <Clock className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                ) : (
-                  <AlertCircle className="w-5 h-5 text-gray-400 dark:text-gray-600" />
-                )}
-              </div>
-              <p className="text-sm text-gray-900 dark:text-gray-100 mb-2 font-medium">{task.task}</p>
-              <p className="text-xs text-gray-600 dark:text-gray-400">Assignée: {task.assignedTo}</p>
-              <Button size="sm" variant="outline" className="w-full mt-3 rounded-full border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 text-xs py-4 sm:py-5">
-                {task.status === 'completed' ? 'Complété' :
-                  task.status === 'in-progress' ? 'En cours' : 'Commencer'}
-              </Button>
-            </Card>
-          ))}
-        </div>
-        <Button className="w-full mt-6 bg-linear-to-r from-purple-500 to-pink-500 text-white rounded-full py-5 sm:py-6">
-          + Nouvelle Tâche
-        </Button>
-      </Card> */}
     </div>
   );
 }
