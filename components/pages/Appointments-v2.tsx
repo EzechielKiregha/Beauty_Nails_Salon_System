@@ -111,6 +111,7 @@ export default function AppointmentsV2() {
   const { services, isLoading: servicesLoading } = useServices();
   const { staff, isLoading: staffLoading } = useAvailableStaff();
   const { createAppointment, isLoading: appointmentLoading } = useAppointments();
+  const [selectedStaff, setSelectedStaff] = useState<Worker>();
 
   const subtotal = useMemo(() => {
     const servicePrice = baseServicePrice || 0;
@@ -177,6 +178,14 @@ export default function AppointmentsV2() {
       setBaseServicePrice(service.price);
     }
   }, [services, paramService, selectedServiceId]);
+
+  useEffect(() => {
+    if (selectedWorker) {
+      const staffMember = staff.find((s: Worker) => s.id === selectedWorker);
+      if (!staffMember) return;
+      setSelectedStaff(staffMember);
+    }
+  }, [selectedWorker, staff])
 
   const timeSlots = [
     "09:00",
@@ -407,8 +416,7 @@ export default function AppointmentsV2() {
                   </SelectItem>
                   {staff.map((worker: Worker) => (
                     <SelectItem key={worker.id} value={worker.id}>
-                      {worker?.user?.name}
-
+                      {worker.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -598,10 +606,10 @@ export default function AppointmentsV2() {
                     </p>
                     <div className="flex flex-row justify-between">
                       <p className="text-sm sm:text-base text-gray-900 dark:text-gray-100 font-medium">
-                        {worker.user?.name}
+                        {selectedStaff?.name}
                       </p>
                       <StaffProfileModal
-                        staff={worker}
+                        staff={selectedStaff}
                         trigger={
                           <Button variant="outline" size="sm" className="rounded-full">
                             Voir Profil

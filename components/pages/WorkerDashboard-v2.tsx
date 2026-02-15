@@ -608,8 +608,7 @@ export default function WorkerDashboardV2() {
                           date : {format(new Date(appointment.date), "PPP", { locale: fr })} - {appointment.time}
                         </p>
                       </div>
-                      <div className="flex gap-2">
-                        <Label>Reschedule le rendez-vous pour une autre Date</Label>
+                      <div className="flex gap-2 sm:flex-col lg:flex-row">
                         <Button
                           size="sm"
                           variant="outline"

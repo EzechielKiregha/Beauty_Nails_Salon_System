@@ -35,12 +35,7 @@ import { useClientAnalytics, useRevenueReport, useServicePerformance } from '@/l
 import { useInventory } from '@/lib/hooks/useInventory';
 import { useNotifications } from '@/lib/hooks/useNotifications';
 import { useRouter } from 'next/navigation';
-
-// Modals
-// import CreateTaskModal from '@/components/modals/CreateTaskModal';
-// import CreateClientModal from '@/components/modals/CreateClientModal';
 import TasksManagement from '@/components/TasksManagement';
-import LoadingSpinner from '../LoadingSpinner';
 import MembershipsManagement from '../MembershipsManagement';
 import LoaderBN from '../Loader-BN';
 
@@ -103,10 +98,11 @@ export default function AdminDashboardV2() {
   // Get inventory data
   const { inventory = [], isLoading: isInventoryLoading } = useInventory();
 
-  const clientsList = clients.length ? clients : (showMock ? MOCK_CLIENTS : []);
-  const staffList = staff.length ? staff : (showMock ? MOCK_STAFF : []);
-  const todayAppointmentsList = todayAppointments.length ? todayAppointments : (showMock ? MOCK_TODAY_APPOINTMENTS : []);
-  const inventoryList = inventory.length ? inventory : (showMock ? MOCK_INVENTORY : []);
+  // Apply mocks if needed
+  const clientsList = clients.length ? clients : [];
+  const staffList = staff.length ? staff : [];
+  const todayAppointmentsList = todayAppointments.length ? todayAppointments : [];
+  const inventoryList = inventory.length ? inventory : [];
 
   // Get notifications
   const {
@@ -115,12 +111,16 @@ export default function AdminDashboardV2() {
     // markAsRead,
   } = useNotifications({ limit: 50 });
 
-  // Calculate stats
+  // Calculate stats - NOW USING UPDATED DATA SOURCES
   const stats = {
     totalClients: clientsList.length,
     activeWorkers: staffList.filter((w: any) => w.isAvailable).length,
-    todayRevenue: revenueData?.totalRevenue || 0,
+    // Use the revenueData fetched for the specific period (e.g., monthly)
+    // Renamed for clarity - this reflects the revenue for the period defined by from/to in useRevenueReport call
+    currentPeriodRevenue: revenueData?.totalRevenue || 0,
     todayAppointments: todayAppointmentsList.length,
+    // monthlyRevenue can be the same as currentPeriodRevenue if fetching monthly data
+    // Otherwise, calculate differently if needed
     monthlyRevenue: revenueData?.totalRevenue || 0,
     avgRating: staffList.reduce((acc: number, w: any) => acc + (w.rating || 0), 0) / (staffList.length || 1),
     completedAppointments: todayAppointmentsList.filter((apt: any) => apt.status === 'completed').length,
@@ -129,7 +129,7 @@ export default function AdminDashboardV2() {
     newClients: clientAnalytics?.newClients || 0,
   };
 
-  // Prepare revenue chart data (last 6 months) — use report data when available, otherwise show zeros
+  // ... (Prepare chart data - adjust as needed based on revenueData.period or other logic)
   const getLastMonths = (n: number) => {
     const months: { label: string; key: string }[] = [];
     for (let i = n - 1; i >= 0; i--) {
@@ -142,14 +142,17 @@ export default function AdminDashboardV2() {
     return months;
   };
 
+  // Example: Prepare data for the revenue chart - this might need adjustment based on your API response structure
+  // Assuming revenueData.breakdown contains monthly totals keyed by YYYY-MM
   const monthlyRevenueData = getLastMonths(6).map(({ label, key }) => ({
     month: label,
-    revenue: revenueData?.breakdown?.[key] ?? 0,
-    // show this month's appointment count when it's the current month, otherwise 0
+    revenue: revenueData?.breakdown?.[key] ?? 0, // Use the breakdown from the fetched data
+    // Adjust appointments logic if needed - perhaps aggregate from appointments data for the month?
+    // This example keeps the original logic for today's appointments on the current month bar
     appointments: key === new Date().toISOString().slice(0, 7) ? todayAppointmentsList.length : 0,
   }));
 
-  // Service distribution — use performance data when available, otherwise show zeros
+  // Service distribution - use performance data when available, otherwise show defaults
   const _serviceColors = ['#ec4899', '#a855f7', '#f59e0b', '#10b981'];
   const serviceDistribution = (servicePerformance && servicePerformance.services && servicePerformance.services.length > 0)
     ? servicePerformance.services.slice(0, 4).map((service: any, index: number) => ({
@@ -180,8 +183,8 @@ export default function AdminDashboardV2() {
     <div className="min-h-screen py-8 bg-background dark:bg-gray-950">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="mb-12">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
+        <div className="sticky top-0 z-10 border-b border-gray-200 bg-white/80 px-6 py-4 backdrop-blur-sm dark:border-gray-800 dark:bg-gray-950/80">
+          <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl sm:text-4xl  bg-linear-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">
                 Tableau de Bord Admin
@@ -190,162 +193,161 @@ export default function AdminDashboardV2() {
                 Bienvenue, {user?.name} 👋
               </p>
             </div>
-
             {/* Notifications */}
-            <div className="flex items-center gap-2 flex-wrap ">
+            <div className="flex items-center gap-2 flex-wrap  ">
               <Sheet open={notificationOpen} onOpenChange={setNotificationOpen}>
                 <SheetTrigger asChild>
-                  <Button variant="outline" size="icon" className="relative dark:border-gray-700 dark:text-gray-200">
-                    <Bell className="w-5 h-5" />
+                  <Button variant="outline" size="sm" className="relative dark:border-gray-700 dark:text-gray-200 ">
+                    <Bell className="w-5 h-5 " />
                     {unreadCount > 0 && (
-                      <span className="absolute -top-1 -right-1 w-5 h-5 bg-pink-500 text-white text-xs rounded-full flex items-center justify-center">
+                      <span className="absolute -top-1 -right-1 w-5 h-5 bg-pink-500 text-white text-xs rounded-full flex items-center justify-center ">
                         {unreadCount}
                       </span>
                     )}
                   </Button>
                 </SheetTrigger>
-                <SheetContent className="border-rb border-pink-100 dark:border-pink-900 shadow-xl rounded-2xl p-4 sm:p-6 bg-white dark:bg-gray-950">
+                <SheetContent className="p-2 border-r-0 border-pink-100 dark:border-pink-900 shadow-xl rounded-l-2xl bg-white dark:bg-gray-950">
                   <NotificationCenter />
                 </SheetContent>
               </Sheet>
             </div>
           </div>
-
-          {/* Stats Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            {/* Revenue Card */}
-            <Card className="p-4 sm:p-6 bg-linear-to-br from-green-500 to-emerald-600 text-white border-0 shadow-xl">
-              <div className="flex items-center justify-between mb-4">
-                <div className="p-3 bg-white/20 rounded-lg backdrop-blur-sm">
-                  <DollarSign className="w-5 h-5 sm:w-6 sm:h-6" />
-                </div>
-                <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 opacity-80" />
-              </div>
-              <p className="text-xs sm:text-sm opacity-90 mb-1">Revenus du mois</p>
-              <p className="text-2xl sm:text-3xl  mb-2">
-                {(stats.monthlyRevenue / 1000000).toFixed(1)}M
-              </p>
-              <p className="text-xs opacity-80">
-                {stats.todayRevenue.toLocaleString()} Fc aujourd'hui
-              </p>
-            </Card>
-
-            {/* Clients Card */}
-            <Card className="p-4 sm:p-6 hover:shadow-lg transition-shadow dark:bg-gray-950 dark:border-gray-800 dark:hover:shadow-gray-800/50">
-              <div className="flex items-center justify-between mb-4">
-                <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
-                  <Users className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600 dark:text-blue-400" />
-                </div>
-              </div>
-              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mb-1">Clients</p>
-              <p className="text-2xl sm:text-3xl  text-gray-900 dark:text-gray-100">{stats.totalClients}</p>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                +{stats.newClients} ce mois
-              </p>
-            </Card>
-
-            {/* Appointments Card */}
-            <Card className="p-4 sm:p-6 hover:shadow-lg transition-shadow dark:bg-gray-950 dark:border-gray-800 dark:hover:shadow-gray-800/50">
-              <div className="flex items-center justify-between mb-4">
-                <div className="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
-                  <Calendar className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600 dark:text-purple-400" />
-                </div>
-              </div>
-              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mb-1">Rendez-vous aujourd'hui</p>
-              <p className="text-2xl sm:text-3xl  text-gray-900 dark:text-gray-100">{stats.todayAppointments}</p>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                {stats.completedAppointments} terminés
-              </p>
-            </Card>
-
-            {/* Staff Card */}
-            <Card className="p-4 sm:p-6 bg-linear-to-br from-amber-500 to-orange-500 text-white border-0 shadow-xl">
-              <div className="flex items-center justify-between mb-4">
-                <div className="p-3 bg-white/20 rounded-lg backdrop-blur-sm">
-                  <Award className="w-5 h-5 sm:w-6 sm:h-6" />
-                </div>
-                <Star className="w-4 h-4 sm:w-5 sm:h-5 opacity-80" />
-              </div>
-              <p className="text-xs sm:text-sm opacity-90 mb-1">Personnel actif</p>
-              <p className="text-2xl sm:text-3xl  mb-2">{stats.activeWorkers}</p>
-              <p className="text-xs opacity-80">
-                Note moyenne: {stats.avgRating.toFixed(1)}⭐
-              </p>
-            </Card>
-          </div>
-
-          {/* Quick Stats Bar */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
-            <Card className="p-3 sm:p-4 dark:bg-gray-950 dark:border-gray-800">
-              <div className="flex items-center gap-2 sm:gap-3">
-                <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-lg">
-                  <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-600 dark:text-green-400" />
-                </div>
-                <div>
-                  <p className="text-xs text-gray-600 dark:text-gray-300">Complétés</p>
-                  <p className="text-lg sm:text-xl  text-gray-900 dark:text-gray-100">{stats.completedAppointments}</p>
-                </div>
-              </div>
-            </Card>
-
-            <Card className="p-3 sm:p-4 dark:bg-gray-950 dark:border-gray-800">
-              <div className="flex items-center gap-2 sm:gap-3">
-                <div className="p-2 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg">
-                  <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-600 dark:text-yellow-400" />
-                </div>
-                <div>
-                  <p className="text-xs text-gray-600 dark:text-gray-300">En attente</p>
-                  <p className="text-lg sm:text-xl  text-gray-900 dark:text-gray-100">{stats.pendingAppointments}</p>
-                </div>
-              </div>
-            </Card>
-
-            <Card className="p-3 sm:p-4 dark:bg-gray-950 dark:border-gray-800">
-              <div className="flex items-center gap-2 sm:gap-3">
-                <div className={`p-2 rounded-lg ${stats.lowStockItems > 0 ? 'bg-red-100 dark:bg-red-900/30' : 'bg-gray-100 dark:bg-gray-800'
-                  }`}>
-                  <Package className={`w-4 h-4 sm:w-5 sm:h-5 ${stats.lowStockItems > 0 ? 'text-red-600 dark:text-red-400' : 'text-gray-600 dark:text-gray-400'
-                    }`} />
-                </div>
-                <div>
-                  <p className="text-xs text-gray-600 dark:text-gray-300">Stock bas</p>
-                  <p className="text-lg sm:text-xl  text-gray-900 dark:text-gray-100">{stats.lowStockItems}</p>
-                </div>
-              </div>
-            </Card>
-
-            <Card className="p-3 sm:p-4 dark:bg-gray-950 dark:border-gray-800">
-              <div className="flex items-center gap-2 sm:gap-3">
-                <div className="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
-                  <Activity className="w-4 h-4 sm:w-5 sm:h-5 text-purple-600 dark:text-purple-400" />
-                </div>
-                <div>
-                  <p className="text-xs text-gray-600 dark:text-gray-300">Taux occupation</p>
-                  <p className="text-lg sm:text-xl  text-gray-900 dark:text-gray-100">
-                    {stats.todayAppointments > 0
-                      ? Math.round((stats.completedAppointments / stats.todayAppointments) * 100)
-                      : 0}%
-                  </p>
-                </div>
-              </div>
-            </Card>
-          </div>
         </div>
 
-        {/* Charts Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        {/* Stats Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 px-6"> {/* Added px-6 for padding */}
+          {/* Revenue Card - Updated to reflect current period revenue */}
+          <Card className="p-4 sm:p-6 bg-gradient-to-br from-green-500 to-emerald-600 text-white border-0 shadow-xl rounded-2xl">
+            <div className="flex items-center justify-between mb-4">
+              <div className="p-3 bg-white/20 rounded-lg backdrop-blur-sm">
+                <DollarSign className="w-5 h-5 sm:w-6 sm:h-6 " />
+              </div>
+              <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 opacity-80 " />
+            </div>
+            <p className="text-xs sm:text-sm opacity-90 mb-1 ">Revenus (Période Courante)</p> {/* Updated label */}
+            <p className="text-2xl sm:text-3xl  mb-2 ">
+              {(stats.currentPeriodRevenue / 1000000).toFixed(1)}M {/* Used currentPeriodRevenue */}
+            </p>
+            <p className="text-xs opacity-80 ">
+              {/* Removed the "today" part as it now reflects the period defined by the hook params */}
+              {/* Optionally, you could display the period range here if revenueData.period is available */}
+              {/* {revenueData?.period ? `${revenueData.period.from} à ${revenueData.period.to}` : ''} */}
+            </p>
+          </Card>
+
+          {/* Clients Card - Updated styling and content slightly */}
+          <Card className="p-4 sm:p-6 hover:shadow-lg transition-shadow dark:bg-gray-950 dark:border-gray-800 dark:hover:shadow-gray-800/50 rounded-2xl">
+            <div className="flex items-center justify-between mb-4">
+              <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+                <Users className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600 dark:text-blue-400 " />
+              </div>
+            </div>
+            <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mb-1 ">Total Clients</p>
+            <p className="text-2xl sm:text-3xl  text-gray-900 dark:text-gray-100 ">{stats.totalClients}</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 ">
+              +{stats.newClients} ce mois
+            </p>
+          </Card>
+
+          {/* Appointments Card - Updated styling and content slightly */}
+          <Card className="p-4 sm:p-6 hover:shadow-lg transition-shadow dark:bg-gray-950 dark:border-gray-800 dark:hover:shadow-gray-800/50 rounded-2xl">
+            <div className="flex items-center justify-between mb-4">
+              <div className="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
+                <Calendar className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600 dark:text-purple-400 " />
+              </div>
+            </div>
+            <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mb-1 ">Rdv Aujourd'hui</p>
+            <p className="text-2xl sm:text-3xl  text-gray-900 dark:text-gray-100 ">{stats.todayAppointments}</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 ">
+              {stats.completedAppointments} terminés
+            </p>
+          </Card>
+
+          {/* Staff Card - Updated styling and content slightly */}
+          <Card className="p-4 sm:p-6 bg-gradient-to-br from-amber-500 to-orange-500 text-white border-0 shadow-xl rounded-2xl">
+            <div className="flex items-center justify-between mb-4">
+              <div className="p-3 bg-white/20 rounded-lg backdrop-blur-sm">
+                <Award className="w-5 h-5 sm:w-6 sm:h-6 " />
+              </div>
+              <Star className="w-4 h-4 sm:w-5 sm:h-5 opacity-80 " />
+            </div>
+            <p className="text-xs sm:text-sm opacity-90 mb-1 ">Personnel Actif</p>
+            <p className="text-2xl sm:text-3xl  mb-2 ">{stats.activeWorkers}</p>
+            <p className="text-xs opacity-80 ">
+              Note moyenne: {stats.avgRating.toFixed(1)}⭐
+            </p>
+          </Card>
+        </div>
+
+        {/* Quick Stats Bar - Updated styling slightly */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 px-6"> {/* Added px-6 for padding */}
+          <Card className="p-3 sm:p-4 dark:bg-gray-950 dark:border-gray-800 rounded-xl">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-lg">
+                <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-600 dark:text-green-400 " />
+              </div>
+              <div>
+                <p className="text-xs text-gray-600 dark:text-gray-300 ">Complétés</p>
+                <p className="text-lg sm:text-xl  text-gray-900 dark:text-gray-100 ">{stats.completedAppointments}</p>
+              </div>
+            </div>
+          </Card>
+
+          <Card className="p-3 sm:p-4 dark:bg-gray-950 dark:border-gray-800 rounded-xl">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <div className="p-2 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg">
+                <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-600 dark:text-yellow-400 " />
+              </div>
+              <div>
+                <p className="text-xs text-gray-600 dark:text-gray-300 ">En Attente</p>
+                <p className="text-lg sm:text-xl  text-gray-900 dark:text-gray-100 ">{stats.pendingAppointments}</p>
+              </div>
+            </div>
+          </Card>
+
+          <Card className="p-3 sm:p-4 dark:bg-gray-950 dark:border-gray-800 rounded-xl">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <div className={`p-2 rounded-lg ${stats.lowStockItems > 0 ? 'bg-red-100 dark:bg-red-900/30' : 'bg-gray-100 dark:bg-gray-800'}`}>
+                <Package className={`w-4 h-4 sm:w-5 sm:h-5 ${stats.lowStockItems > 0 ? 'text-red-600 dark:text-red-400' : 'text-gray-600 dark:text-gray-400'}`} />
+              </div>
+              <div>
+                <p className="text-xs text-gray-600 dark:text-gray-300 ">Stock Bas</p>
+                <p className="text-lg sm:text-xl  text-gray-900 dark:text-gray-100 ">{stats.lowStockItems}</p>
+              </div>
+            </div>
+          </Card>
+
+          <Card className="p-3 sm:p-4 dark:bg-gray-950 dark:border-gray-800 rounded-xl">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <div className="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
+                <Activity className="w-4 h-4 sm:w-5 sm:h-5 text-purple-600 dark:text-purple-400 " />
+              </div>
+              <div>
+                <p className="text-xs text-gray-600 dark:text-gray-300 ">Taux Occ.</p>
+                <p className="text-lg sm:text-xl  text-gray-900 dark:text-gray-100 ">
+                  {stats.todayAppointments > 0
+                    ? Math.round((stats.completedAppointments / stats.todayAppointments) * 100)
+                    : 0}%
+                </p>
+              </div>
+            </div>
+          </Card>
+        </div>
+
+        {/* Charts Section - Added padding */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8 px-6 mt-1.5">
           {/* Revenue Trend */}
-          <Card className="p-4 sm:p-6 dark:bg-gray-950 dark:border-gray-800">
-            <h3 className="text-base sm:text-lg font-semibold mb-4 flex items-center text-gray-900 dark:text-gray-100">
-              <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-green-500" />
+          <Card className="p-4 sm:p-6 dark:bg-gray-950 dark:border-gray-800 rounded-2xl">
+            <h3 className="text-base sm:text-lg font-semibold mb-4 flex items-center text-gray-900 dark:text-gray-100 ">
+              <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-green-500 " />
               Évolution des Revenus
             </h3>
-            <div className="h-64 sm:h-80">
+            <div className="h-64 sm:h-80 ">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={monthlyRevenueData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                  <XAxis dataKey="month" stroke="#9CA3AF" />
-                  <YAxis stroke="#9CA3AF" />
+                  <CartesianGrid strokeDasharray="3 3 " stroke="#374151" />
+                  <XAxis dataKey="month " stroke="#9CA3AF " />
+                  <YAxis stroke="#9CA3AF " />
                   <Tooltip
                     formatter={(value: number) => `${(value / 1000000).toFixed(1)}M Fc`}
                     contentStyle={{ backgroundColor: '#1F2937', border: '1px solid #374151', borderRadius: '8px' }}
@@ -365,23 +367,23 @@ export default function AdminDashboardV2() {
           </Card>
 
           {/* Service Distribution */}
-          <Card className="p-4 sm:p-6 dark:bg-gray-950 dark:border-gray-800">
-            <h3 className="text-base sm:text-lg font-semibold mb-4 flex items-center text-gray-900 dark:text-gray-100">
-              <Scissors className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-pink-500" />
+          <Card className="p-4 sm:p-6 dark:bg-gray-950 dark:border-gray-800 rounded-2xl">
+            <h3 className="text-base sm:text-lg font-semibold mb-4 flex items-center text-gray-900 dark:text-gray-100 ">
+              <Scissors className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-pink-500 " />
               Distribution des Services
             </h3>
-            <div className="h-64 sm:h-80 flex items-center justify-center">
+            <div className="h-64 sm:h-80 flex items-center justify-center ">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
                     data={serviceDistribution}
-                    cx="50%"
-                    cy="50%"
+                    cx="50% "
+                    cy="50% "
                     labelLine={false}
                     label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
                     outerRadius={80}
-                    fill="#8884d8"
-                    dataKey="value"
+                    fill="#8884d8 "
+                    dataKey="value "
                   >
                     {serviceDistribution.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />

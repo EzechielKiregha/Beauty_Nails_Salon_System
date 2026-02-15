@@ -1,5 +1,4 @@
 import axiosdb from '../axios';
-
 export interface RevenueReport {
   totalRevenue: number;
   salesCount: number;

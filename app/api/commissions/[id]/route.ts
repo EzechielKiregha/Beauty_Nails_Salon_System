@@ -3,7 +3,6 @@
 import { NextRequest } from "next/server";
 import prisma from "@/lib/prisma";
 import { requireRole, successResponse, handleApiError } from "@/lib/api/helpers";
-
 export async function PATCH(
   request: NextRequest,
   context: { params: Promise<{ id: string; }>; }
