@@ -122,8 +122,8 @@ export default function NotificationCenter() {
       )}
 
       {/* Alert Summary */}
-      <Card className="bg-linear-to-br from-red-50 to-orange-50 dark:from-red-900/10 dark:to-orange-900/10 border border-red-100 dark:border-red-900/30 p-4 mt-6 rounded-xl">
-        <div className="flex items-center gap-2 mb-3">
+      <Card className="bg-linear-to-br from-red-50 to-orange-50 dark:from-red-900/10 dark:to-orange-900/10 border border-red-100 dark:border-red-900/30 p-4 rounded-xl">
+        <div className="flex items-center gap-2 mb-2">
           <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400" />
           <p className="text-sm  text-gray-900 dark:text-gray-100">Alertes Actives</p>
         </div>

@@ -13,6 +13,7 @@ import { useAppointments } from '@/lib/hooks/useAppointments';
 import { useNotifications } from '@/lib/hooks/useNotifications';
 import { AppointmentModal } from './modals/AppointmentModal';
 import ManageClientMembership from './ManageClientMembership';
+import { useAuth } from '@/lib/hooks/useAuth';
 
 interface Client {
   id: string;
@@ -37,9 +38,10 @@ interface Client {
 export default function ClientManagement({ showMock }: { showMock?: boolean }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedClient, setSelectedClient] = useState<any>();
+  const { user } = useAuth()
 
   // API hook
-  const { clients: apiClients = [] } = useClients() // placeholder
+  const { clients: allClients = [] } = useClients()
 
   const {
     appointments = [],
@@ -47,15 +49,24 @@ export default function ClientManagement({ showMock }: { showMock?: boolean }) {
     cancelAppointment,
   } = useAppointments({
     clientId: selectedClient?.id,
+    workerId: user?.role === 'worker' ? user.workerProfile?.id : undefined,
   });
 
   const {
     notifications: notificationList = [],
     unreadCount = 0,
-  } = useNotifications({ userId: selectedClient?.id, limit: 50 });
+  } = useNotifications({ userId: selectedClient?.user?.id, limit: 50 });
+
+
+  const apiClients = allClients.filter(c => {
+
+    const clientHasAppointmentsWithCurrentWorker = appointments.some(apt => apt.clientId === c.id && apt.workerId === user?.id);
+
+    return clientHasAppointmentsWithCurrentWorker;
+  })
 
   // Use API data first, fallback to mock only when showMock is true
-  const clients = (apiClients && apiClients.length > 0)
+  const clients = (user?.role === 'worker' && apiClients.length > 0)
     ? apiClients.map((c) => ({
       id: c.id || c.user?.id || String(c.user?.name ?? c.user?.email ?? 'unknown'),
       name: c.user?.name || c.user?.email || 'Platform User',
@@ -75,7 +86,27 @@ export default function ClientManagement({ showMock }: { showMock?: boolean }) {
       giftCardBalance: c.giftCardBalance ?? '0',
       referrals: c.referrals || 0
     }))
-    : [];
+    : (allClients && allClients.length > 0)
+      ? allClients.map((c) => ({
+        id: c.id || c.user?.id || String(c.user?.name ?? c.user?.email ?? 'unknown'),
+        name: c.user?.name || c.user?.email || 'Platform User',
+        phone: c.user?.phone || '',
+        email: c.user?.email || '',
+        birthday: c.birthday ? new Date(c.birthday).toISOString().split('T')[0] : undefined,
+        address: c.address || undefined,
+        totalAppointments: c.totalAppointments || 0,
+        totalSpent: typeof c.totalSpent === 'number' ? `${c.totalSpent}` : (c.totalSpent || '0'),
+        loyaltyPoints: c.loyaltyPoints || 0,
+        membershipStatus: c.tier || 'Standard',
+        lastVisit: (c as any).lastVisit || undefined,
+        preferences: typeof c.preferences === 'string' ? c.preferences : JSON.stringify(c.preferences || ''),
+        allergies: c.allergies || undefined,
+        favoriteServices: c.favoriteServices || [],
+        prepaymentBalance: c.prepaymentBalance ?? '0',
+        giftCardBalance: c.giftCardBalance ?? '0',
+        referrals: c.referrals || 0
+      }))
+      : [];
 
   const filteredClients = clients.filter(client =>
     client.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -208,13 +239,14 @@ export default function ClientManagement({ showMock }: { showMock?: boolean }) {
                         </Button>
                       } />
 
-                    <ClientModal
-                      client={selectedClient}
-                      trigger={
-                        <Button variant="outline" className="rounded-full py-5 px-6 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300  transition-all text-sm">
-                          Modifier
-                        </Button>
-                      } />
+                    {!user?.role || user?.role !== "worker" &&
+                      <ClientModal
+                        client={selectedClient}
+                        trigger={
+                          <Button variant="outline" className="rounded-full py-5 px-6 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300  transition-all text-sm">
+                            Modifier
+                          </Button>
+                        } />}
 
                   </div>
                 </div>
@@ -353,7 +385,7 @@ export default function ClientManagement({ showMock }: { showMock?: boolean }) {
                   </h4>
                 </div>
                 <div className="space-y-3">
-                  {notificationList.map((notif, idx) => (
+                  {notificationList.slice(0, 10).map((notif, idx) => (
                     <div
                       key={idx}
                       className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 bg-gray-50 dark:bg-gray-800/50 rounded-2xl border border-gray-100 dark:border-gray-700 hover:shadow-md transition-all gap-4"

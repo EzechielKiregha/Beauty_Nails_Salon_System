@@ -5,18 +5,16 @@ import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordion';
-import { Scissors, ShoppingBag, Package, Percent, Award, Star, Clock, DollarSign, Sparkles, Users, Calendar } from 'lucide-react';
+import { Scissors, ShoppingBag, Package, Percent, Award, Star, Clock, DollarSign, Sparkles, Users, Calendar, Gift, TrendingUp, Target } from 'lucide-react';
 import { useServices } from '@/lib/hooks/useServices';
 import { usePackages } from '@/lib/hooks/usePackages';
 import { useDiscounts } from '@/lib/hooks/useMarketing';
 import { useLoyalty } from '@/lib/hooks/useLoyalty';
 import { Service } from '@/lib/api/services';
-import { ServicePackage } from '@/lib/api/packages';
-import { DiscountCode } from '@/lib/api/marketing';
-import { LoyaltyTransaction } from '@/lib/api/loyalty';
 import Link from 'next/link';
 import { useInventory } from '@/lib/hooks/useInventory';
 import LoaderBN from '../Loader-BN';
+import { useClients } from '@/lib/hooks/useClients';
 
 export default function CatalogPage() {
   const [activeTab, setActiveTab] = useState('services');
@@ -27,12 +25,20 @@ export default function CatalogPage() {
   const { packages, isLoading: packagesLoading } = usePackages();
   const { discounts, isLoading: discountsLoading } = useDiscounts();
   const { points: loyaltyPoints, tier: loyaltyTier, transactions: loyaltyTransactions, isLoading: loyaltyLoading } = useLoyalty();
+  // API hook
+  const { clients: allClients = [] } = useClients()
 
-  const isLoading = servicesLoading || productsLoading || packagesLoading || discountsLoading || loyaltyLoading;
-
-  if (isLoading) {
-    return <LoaderBN />;
-  }
+  const loyaltyRules = {
+    pointsPerSpend: 1,
+    appointmentsForReward: 5,
+    referralsForReward: 5,
+    rewards: [
+      { points: 300, reward: 'Manucure gratuite' },
+      { points: 550, reward: 'Extension cils gratuite' },
+      { points: 750, reward: '50% sur tous services' },
+      { points: 1000, reward: 'Journée beauté complète gratuite' }
+    ]
+  };
 
   // Group services by category
   const servicesByCategory: Record<string, Service[]> = {};
@@ -46,6 +52,12 @@ export default function CatalogPage() {
 
   // Prepare data for display
   const loyaltyRewards = loyaltyTransactions?.filter(t => t.type === 'earned_referral').slice(0, 3) || []; // Example filter
+
+  const isLoading = servicesLoading || productsLoading || packagesLoading || discountsLoading || loyaltyLoading;
+
+  if (isLoading) {
+    return <LoaderBN />;
+  }
 
   return (
     <div className="min-h-screen bg-background dark:bg-gray-950">
@@ -66,7 +78,7 @@ export default function CatalogPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Tabs */}
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-2 lg:grid-cols-6 bg-white dark:bg-gray-900 border border-gray-200 dark:border-pink-900/30 p-1 rounded-xl mb-16 lg:mb-12">
+            <TabsList className="grid w-full grid-cols-2 lg:grid-cols-5 bg-white dark:bg-gray-900 border border-gray-200 dark:border-pink-900/30 p-1 rounded-xl mb-16 lg:mb-12">
               <TabsTrigger value="services" className="rounded-lg data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">
                 <Scissors className="w-4 h-4 mr-2" /> Services
               </TabsTrigger>
@@ -82,9 +94,9 @@ export default function CatalogPage() {
               <TabsTrigger value="loyalty" className="rounded-lg data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">
                 <Award className="w-4 h-4 mr-2" /> Fidélité
               </TabsTrigger>
-              <TabsTrigger value="campaigns" className="rounded-lg data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">
+              {/* <TabsTrigger value="campaigns" className="rounded-lg data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">
                 <Sparkles className="w-4 h-4 mr-2" /> Campagnes
-              </TabsTrigger>
+              </TabsTrigger> */}
             </TabsList>
 
             {/* Services Tab */}
@@ -197,7 +209,7 @@ export default function CatalogPage() {
                       </div>
 
                       <Link href={`/appointments?package=${pkg.id}&price=${pkg.price}`}>
-                        <Button className="w-full bg-linear-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-full py-6  shadow-md">
+                        <Button size="sm" className="w-full bg-linear-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-full shadow-md">
                           Réserver Forfait
                         </Button>
                       </Link>
@@ -265,74 +277,101 @@ export default function CatalogPage() {
 
             {/* Loyalty Tab */}
             <TabsContent value="loyalty" className="space-y-12">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
-                {/* Loyalty Stats & Info */}
-                <div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <Card className="p-4 sm:p-8 hover:shadow-lg transition-all border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950">
                   <div className="flex items-center gap-4 mb-8">
-                    <div className="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
-                      <Award className="w-6 h-6 text-amber-600 dark:text-amber-400" />
+                    <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-linear-to-br from-amber-400 to-orange-400 flex items-center justify-center shadow-lg shadow-amber-500/20">
+                      <Award className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
                     </div>
-                    <div>
-                      <h2 className="text-2xl   text-gray-900 dark:text-gray-100">Votre Statut Fidélité</h2>
-                      <Badge className="bg-amber-500 text-white">{loyaltyTier || 'Standard'}</Badge>
-                    </div>
-                  </div>
-                  <div className="bg-white dark:bg-gray-800/50 p-6 rounded-2xl border border-amber-100 dark:border-amber-900/30 mb-8">
-                    <p className="text-center text-gray-700 dark:text-gray-300">
-                      Points actuels: <span className=" text-amber-600 dark:text-amber-400 text-2xl">{loyaltyPoints}</span>
-                    </p>
+                    <h3 className="text-xl sm:text-2xl  text-gray-900 dark:text-gray-100">Programme Actuel</h3>
                   </div>
 
-                  <Accordion type="single" collapsible className="w-full">
-                    <AccordionItem value="item-1">
-                      <AccordionTrigger>Comment accumuler des points ?</AccordionTrigger>
-                      <AccordionContent>
-                        Gagnez 1 point pour chaque 1000 Fc dépensés. Obtenez des points bonus pour les anniversaires, parrainages et participation à des événements.
-                      </AccordionContent>
-                    </AccordionItem>
-                    <AccordionItem value="item-2">
-                      <AccordionTrigger>Quels sont les paliers de récompenses ?</AccordionTrigger>
-                      <AccordionContent>
-                        <ul className="list-disc pl-5 space-y-1">
-                          <li>100 points: Manucure gratuite</li>
-                          <li>250 points: Extension cils gratuite</li>
-                          <li>500 points: 50% sur tous services</li>
-                          <li>1000 points: Journée beauté complète gratuite</li>
-                        </ul>
-                      </AccordionContent>
-                    </AccordionItem>
-                  </Accordion>
-                </div>
-
-                {/* Recent Rewards */}
-                <div>
-                  <h3 className="text-xl  text-gray-900 dark:text-gray-100 mb-6 flex items-center gap-2">
-                    <Star className="w-5 h-5 text-amber-500" />
-                    Récompenses Récentes
-                  </h3>
                   <div className="space-y-4">
-                    {loyaltyRewards.length > 0 ? (
-                      loyaltyRewards.map(tx => (
-                        <Card key={tx.id} className="p-4 bg-white dark:bg-gray-900 border-b border-amber-100 dark:border-amber-900 shadow-sm rounded-xl">
-                          <div className="flex justify-between items-center">
-                            <span className="text-gray-700 dark:text-gray-300">{tx.description || tx.type}</span>
-                            <Badge variant="outline" className="text-amber-600 dark:text-amber-400 border-amber-200 dark:border-amber-800">
-                              -{tx.points} pts
-                            </Badge>
-                          </div>
-                          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{new Date(tx.createdAt).toLocaleDateString()}</p>
-                        </Card>
-                      ))
-                    ) : (
-                      <p className="text-gray-500 dark:text-gray-400">Aucune récompense récente.</p>
-                    )}
+                    <Card className="bg-linear-to-br from-purple-50 to-pink-50 dark:from-gray-800 dark:to-gray-800/50 border border-purple-100 dark:border-purple-900/30 p-4 sm:p-5 rounded-2xl">
+                      <p className="text-[10px] sm:text-xs  text-purple-600 dark:text-purple-400 uppercase tracking-widest mb-1">Points par dépense</p>
+                      <p className="text-base sm:text-2xl font-black text-gray-900 dark:text-gray-100">
+                        {loyaltyRules.pointsPerSpend} point / 1 000 Fc dépensé
+                      </p>
+                    </Card>
+
+                    <Card className="bg-linear-to-br from-blue-50 to-cyan-50 dark:from-gray-800 dark:to-gray-800/50 border border-blue-100 dark:border-blue-900/30 p-4 sm:p-5 rounded-2xl">
+                      <p className="text-[10px] sm:text-xs  text-blue-600 dark:text-blue-400 uppercase tracking-widest mb-1">Récompense par visites</p>
+                      <p className="text-base sm:text-2xl font-black text-gray-900 dark:text-gray-100">
+                        Service gratuit après {loyaltyRules.appointmentsForReward} rendez-vous
+                      </p>
+                    </Card>
+
+                    <Card className="bg-linear-to-br from-green-50 to-emerald-50 dark:from-gray-800 dark:to-gray-800/50 border border-green-100 dark:border-green-900/30 p-4 sm:p-5 rounded-2xl">
+                      <p className="text-[10px] sm:text-xs  text-green-600 dark:text-green-400 uppercase tracking-widest mb-1">Récompense par parrainages</p>
+                      <p className="text-base sm:text-2xl font-black text-gray-900 dark:text-gray-100">
+                        Service gratuit après {loyaltyRules.referralsForReward} parrainages
+                      </p>
+                    </Card>
                   </div>
-                </div>
+                </Card>
+
+                <Card className="p-4 sm:p-8 hover:shadow-lg transition-all border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950">
+                  <div className="flex items-center gap-4 mb-8">
+                    <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-linear-to-br from-green-400 to-emerald-400 flex items-center justify-center shadow-lg shadow-green-500/20">
+                      <Gift className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
+                    </div>
+                    <h3 className="text-xl sm:text-2xl  text-gray-900 dark:text-gray-100">Paliers de Récompenses</h3>
+                  </div>
+
+                  <div className="space-y-4">
+                    {loyaltyRules.rewards.map((reward, idx) => (
+                      <Card key={idx} className="bg-linear-to-r from-amber-50 to-orange-50 dark:from-gray-800 dark:to-gray-800/50 border border-amber-100 dark:border-amber-900/30 p-4 sm:p-5 rounded-2xl hover:shadow-md transition-all">
+                        <div className="flex items-center justify-between gap-4">
+                          <div>
+                            <p className="text-base sm:text-lg  text-gray-900 dark:text-gray-100 mb-1">{reward.reward}</p>
+                            <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 flex items-center gap-1">
+                              <Target className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-amber-500" />
+                              {reward.points} points requis
+                            </p>
+                          </div>
+                          <Badge className="bg-amber-500 dark:bg-amber-600 text-white border-0 font-black px-3 sm:px-4 py-1 sm:py-1.5 rounded-full shadow-lg shadow-amber-500/20 text-[10px] sm:text-xs">
+                            {reward.points} PTS
+                          </Badge>
+                        </div>
+                      </Card>
+                    ))}
+                  </div>
+                </Card>
+
+                <Card className="p-4 sm:p-8 hover:shadow-lg transition-all border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950 lg:col-span-2">
+                  <h3 className="text-xl sm:text-2xl  text-gray-900 dark:text-gray-100 mb-8 flex items-center gap-2">
+                    <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6 text-pink-500" />
+                    Statistiques Programme Fidélité
+                  </h3>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+                    <div className="bg-linear-to-br from-blue-50 to-cyan-50 dark:from-gray-800 dark:to-gray-800/50 p-4 sm:p-6 rounded-2xl sm:rounded-3xl border border-blue-100 dark:border-blue-900/30 text-center">
+                      <Users className="w-6 h-6 sm:w-8 sm:h-8 text-blue-600 dark:text-blue-400 mx-auto mb-3" />
+                      <p className="text-2xl sm:text-4xl font-black text-gray-900 dark:text-gray-100">{allClients.length}</p> {/* Use real count */}
+                      <p className="text-[10px] text-gray-600 dark:text-gray-400 uppercase  mt-2 tracking-widest">Membres Actifs</p>
+                    </div>
+                    <div className="bg-linear-to-br from-purple-50 to-pink-50 dark:from-gray-800 dark:to-gray-800/50 p-4 sm:p-6 rounded-2xl sm:rounded-3xl border border-purple-100 dark:border-purple-900/30 text-center">
+                      <Award className="w-6 h-6 sm:w-8 sm:h-8 text-purple-600 dark:text-purple-400 mx-auto mb-3" />
+                      <p className="text-2xl sm:text-4xl font-black text-gray-900 dark:text-gray-100">{loyaltyPoints}</p>
+                      <p className="text-[10px] text-gray-600 dark:text-gray-400 uppercase  mt-2 tracking-widest">Points Totaux</p>
+                    </div>
+                    <div className="bg-linear-to-br from-green-50 to-emerald-50 dark:from-gray-800 dark:to-gray-800/50 p-4 sm:p-6 rounded-2xl sm:rounded-3xl border border-green-100 dark:border-green-900/30 text-center">
+                      <Gift className="w-6 h-6 sm:w-8 sm:h-8 text-green-600 dark:text-green-400 mx-auto mb-3" />
+                      <p className="text-2xl sm:text-4xl font-black text-gray-900 dark:text-gray-100">38 {/* Replace with real count from API */}</p>
+                      <p className="text-[10px] text-gray-600 dark:text-gray-400 uppercase  mt-2 tracking-widest">Utilisées</p>
+                    </div>
+                    <div className="bg-linear-to-br from-amber-50 to-orange-50 dark:from-gray-800 dark:to-gray-800/50 p-4 sm:p-6 rounded-2xl sm:rounded-3xl border border-amber-100 dark:border-amber-900/30 text-center">
+                      <TrendingUp className="w-6 h-6 sm:w-8 sm:h-8 text-amber-600 dark:text-amber-400 mx-auto mb-3" />
+                      <p className="text-2xl sm:text-4xl font-black text-gray-900 dark:text-gray-100">+15%</p>
+                      <p className="text-[10px] text-gray-600 dark:text-gray-400 uppercase  mt-2 tracking-widest">Rétention</p>
+                    </div>
+                  </div>
+                </Card>
               </div>
             </TabsContent>
 
             {/* Campaigns Tab - Placeholder */}
-            <TabsContent value="campaigns" className="space-y-12">
+            {/* <TabsContent value="campaigns" className="space-y-12">
               <div className="text-center py-12">
                 <Sparkles className="w-16 h-16 text-pink-500 mx-auto mb-4" />
                 <h3 className="text-xl  text-gray-900 dark:text-gray-100 mb-2">Campagnes Marketing</h3>
@@ -345,13 +384,13 @@ export default function CatalogPage() {
                   </Button>
                 </Link>
               </div>
-            </TabsContent>
+            </TabsContent> */}
           </Tabs>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 bg-linear-to-r from-pink-500 to-purple-500 dark:from-pink-700 dark:to-purple-700">
+      <section className="py-16 mb-0 bg-linear-to-r from-pink-500 to-purple-500 dark:from-pink-700 dark:to-purple-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl sm:text-4xl  text-white mb-4">
             Transformez votre routine beauté
@@ -361,12 +400,12 @@ export default function CatalogPage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/auth/signup">
-              <Button className="bg-white text-pink-600 hover:bg-gray-100 rounded-full px-8 py-6 text-base sm:text-lg  shadow-md">
+              <Button size="sm" className="bg-white text-pink-600 hover:bg-gray-100 rounded-full text-base sm:text-lg  shadow-md">
                 Devenir Membre
               </Button>
             </Link>
             <Link href="/contact">
-              <Button variant="secondary" className="bg-transparent border-2 border-white text-white hover:bg-white/10 rounded-full px-8 py-6 text-base sm:text-lg ">
+              <Button variant="secondary" size="sm" className="bg-transparent border-2 border-white text-white hover:bg-white/10 rounded-full text-base sm:text-lg ">
                 Nous Contacter
               </Button>
             </Link>

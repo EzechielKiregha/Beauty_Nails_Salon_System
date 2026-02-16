@@ -4,6 +4,8 @@ import { useMembershipPurchases, useMemberships } from "@/lib/hooks/useMembershi
 import { useState } from "react";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
+import { Label } from "./ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 
 // This component should ideally be in its own file later.
 interface ManageClientMembershipProps {
@@ -49,95 +51,174 @@ export default function ManageClientMembership({ clientId }: ManageClientMembers
 
   return (
     <div className="space-y-4">
-      {!activePurchase ? (
-        // No active membership: Show purchase options
-        <div className="space-y-3">
-          <p className="text-sm text-gray-700 dark:text-gray-300">Aucun abonnement actif.</p>
-          <div className="flex flex-wrap gap-2">
-            <select
+      {!activePurchase && (
+        <div className="rounded-2xl border border-purple-200/30 dark:border-purple-800/30 p-6 bg-white dark:bg-gray-900 shadow-lg space-y-5">
+
+          <div>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+              Aucun abonnement actif
+            </h3>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+              Sélectionnez un abonnement premium pour ce client.
+            </p>
+          </div>
+
+          <div className="flex flex-col sm:flex-row gap-3">
+
+            <div className="space-y-2">
+              <Select value={selectedMembershipId} onValueChange={setSelectedMembershipId} >
+                <SelectTrigger>
+                  <SelectValue placeholder="Choisir un abonnement" />
+                </SelectTrigger>
+
+                <SelectContent className="flex-1 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-4 py-2 text-sm">
+                  {memberships
+                    .filter(m => m.isActive)
+                    .map(m => (
+                      <SelectItem
+                        key={m.id}
+                        value={m.id}
+                      >
+                        {m?.name}
+                      </SelectItem>
+                    ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* <select
               value={selectedMembershipId}
               onChange={(e) => setSelectedMembershipId(e.target.value)}
-              className="flex-1 min-w-[150px] rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 p-2 text-sm"
+              className="flex-1 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-4 py-2 text-sm"
             >
               <option value="">Choisir un abonnement</option>
               {memberships
-                .filter(m => m.isActive) // Only show active ones for purchase
+                .filter(m => m.isActive)
                 .map(m => (
-                  <option key={m.id} value={m.id}>{m.name} - {m.price} CDF</option>
-                ))
-              }
-            </select>
-            <div className="flex items-center space-x-2">
-              <input
-                id="autoRenew"
-                type="checkbox"
-                checked={autoRenew}
-                onChange={(e) => setAutoRenew(e.target.checked)}
-                className="h-4 w-4"
-              />
-              <label htmlFor="autoRenew" className="text-xs text-gray-600 dark:text-gray-400">Auto-Renouvellement</label>
-            </div>
+                  <option key={m.id} value={m.id}>
+                    {m.name} - {m.price} CDF
+                  </option>
+                ))}
+            </select> */}
+
             <Button
               onClick={handlePurchase}
-              disabled={!selectedMembershipId || isLoading}
-              className="bg-purple-600 hover:bg-purple-700 text-white text-xs px-3 py-2"
+              disabled={!selectedMembershipId}
+              className="rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:opacity-90 text-white px-5"
             >
-              Acheter
+              Acheter maintenant
             </Button>
+
           </div>
+
+          <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+            <input
+              id="autoRenew"
+              type="checkbox"
+              checked={autoRenew}
+              onChange={(e) => setAutoRenew(e.target.checked)}
+              className="h-4 w-4"
+            />
+            <label htmlFor="autoRenew">Activer le renouvellement automatique</label>
+          </div>
+
         </div>
-      ) : (
-        // Active membership found: Show details and actions
-        <div className="space-y-3">
-          <div className="flex justify-between items-center">
-            <div>
-              <h5 className=" text-gray-900 dark:text-gray-100">{activePurchase.membership?.name || "Abonnement Inconnu"}</h5>
-              <p className="text-xs text-gray-600 dark:text-gray-400">
-                Du {new Date(activePurchase.startDate).toLocaleDateString()} au {new Date(activePurchase.endDate).toLocaleDateString()}
-              </p>
-              <p className="text-xs text-gray-600 dark:text-gray-400">
-                Auto-Renouvellement: {activePurchase.autoRenew ? "Oui" : "Non"}
-              </p>
+      )}
+      {activePurchase && (
+        <div className="relative overflow-hidden rounded-2xl p-6 bg-gradient-to-br from-purple-600 via-indigo-600 to-purple-800 text-white shadow-2xl transition-all duration-300 hover:scale-[1.02]">
+
+          {/* Glow effect */}
+          <div className="absolute inset-0 bg-white/5 backdrop-blur-sm rounded-2xl"></div>
+
+          <div className="relative z-10 space-y-5">
+
+            {/* Header */}
+            <div className="flex justify-between items-start">
+              <div>
+                <h3 className="text-xl font-semibold tracking-wide">
+                  {activePurchase.membership?.name || "Abonnement"}
+                </h3>
+                <p className="text-sm text-purple-100 mt-1">
+                  {new Date(activePurchase.startDate).toLocaleDateString()} →
+                  {" "}
+                  {new Date(activePurchase.endDate).toLocaleDateString()}
+                </p>
+              </div>
+
+              <Badge
+                className={`px-3 py-1 text-xs font-medium rounded-full ${activePurchase.status === "active"
+                  ? "bg-green-500/20 text-green-200 border border-green-300/30"
+                  : activePurchase.status === "expired"
+                    ? "bg-yellow-500/20 text-yellow-200 border border-yellow-300/30"
+                    : "bg-red-500/20 text-red-200 border border-red-300/30"
+                  }`}
+              >
+                {activePurchase.status === "active"
+                  ? "ACTIVE"
+                  : activePurchase.status === "expired"
+                    ? "EXPIRED"
+                    : "CANCELLED"}
+              </Badge>
             </div>
-            <Badge variant={activePurchase.status === 'active' ? "default" : activePurchase.status === 'expired' ? "destructive" : "secondary"}>
-              {activePurchase.status === 'active' ? 'Payé' : activePurchase.status === 'expired' ? 'Expiré' : 'Annulé'}
-            </Badge>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => handleRenew(activePurchase.id, activePurchase.membershipId)}
-              disabled={activePurchase.status !== 'expired' && activePurchase.status !== 'cancelled'}
-              className="text-xs px-3 py-1.5"
-            >
-              Renouveler
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => handleCancel(activePurchase.id)}
-              disabled={activePurchase.status === 'cancelled'}
-              className="text-xs px-3 py-1.5 text-red-600 border-red-200 dark:border-red-900/30 hover:bg-red-50 dark:hover:bg-red-900/20"
-            >
-              Annuler
-            </Button>
-            <select
-              value=""
-              onChange={(e) => handleUpgrade(activePurchase.id, e.target.value)}
-              className="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 p-1 text-xs"
-            >
-              <option value="" disabled>Changer pour...</option>
-              {memberships
-                .filter(m => m.isActive && m.id !== activePurchase.membershipId) // Exclude current
-                .map(m => (
-                  <option key={m.id} value={m.id}>{m.name} - {m.price} CDF</option>
-                ))
-              }
-            </select>
+
+            {/* Divider */}
+            <div className="h-px bg-white/20"></div>
+
+            {/* Auto Renew */}
+            <div className="flex justify-between text-sm">
+              <span className="text-purple-200">Auto-renouvellement</span>
+              <span className="font-medium">
+                {activePurchase.autoRenew ? "Activé" : "Désactivé"}
+              </span>
+            </div>
+
+            {/* Actions */}
+            <div className="flex flex-wrap gap-3 pt-2">
+
+              <Button
+                size="sm"
+                variant="secondary"
+                onClick={() => handleRenew(activePurchase.id, activePurchase.membershipId)}
+                disabled={activePurchase.status === "active"}
+                className="bg-white/20 hover:bg-white/30 text-white border-none"
+              >
+                Renouveler
+              </Button>
+
+              <Button
+                size="sm"
+                onClick={() => handleCancel(activePurchase.id)}
+                className="bg-red-500/20 hover:bg-red-500/40 text-red-200 border border-red-400/30"
+              >
+                Annuler
+              </Button>
+
+              <div className="space-y-2">
+                <Select value={selectedMembershipId} onValueChange={setSelectedMembershipId} >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Choisir un abonnement" className="text-gray-400" />
+                  </SelectTrigger>
+
+                  <SelectContent className="flex-1 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-4 py-2 text-sm">
+                    {memberships
+                      .filter(m => m.isActive)
+                      .map(m => (
+                        <SelectItem
+                          key={m.id}
+                          value={m.id}
+                        >
+                          {m?.name}
+                        </SelectItem>
+                      ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+            </div>
           </div>
         </div>
       )}
+
     </div>
   );
 }

@@ -5,7 +5,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Switch } from '@/components/ui/switch';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { useCampaigns } from '@/lib/hooks/useMarketing';
 import { MarketingCampaign } from '@/lib/api/marketing';
@@ -16,7 +15,7 @@ interface CreateCampaignModalProps {
   onSubmit?: (data: MarketingCampaign) => void; // Optional callback
 }
 
-export function CreateCampaignModal({ campaign, trigger, onSubmit }: CreateCampaignModalProps) {
+export function CreateCampaignModal({ campaign, trigger }: CreateCampaignModalProps) {
   const [formData, setFormData] = useState<Partial<MarketingCampaign>>({
     name: campaign?.name || '',
     type: campaign?.type || 'email',
@@ -137,7 +136,7 @@ export function CreateCampaignModal({ campaign, trigger, onSubmit }: CreateCampa
           <Button
             onClick={handleSubmit}
             disabled={isCreating || isUpdating} // Disable during mutation
-            className="bg-gradient-to-r from-pink-500 to-purple-500 text-white"
+            className="bg-linear-to-r from-pink-500 to-purple-500 text-white"
           >
             {isCreating || isUpdating ? 'Chargement...' : campaign ? 'Mettre à jour' : 'Créer Campagne'}
           </Button>

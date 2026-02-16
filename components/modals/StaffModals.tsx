@@ -16,6 +16,7 @@ import { Worker } from '@/lib/api/staff';
 import CreateWorkerModal from './CreateWorkerModal';
 import { useAuth } from '@/lib/hooks/useAuth';
 
+// --- Edit Schedule Modal (Mobile Optimized with Dark Mode) ---
 interface EditScheduleModalProps {
   staffId: string;
   staffName?: string;
@@ -34,10 +35,8 @@ export function EditScheduleModal({
   trigger,
 }: EditScheduleModalProps) {
   const { updateSchedule, schedule, isUpdating } = useWorkerSchedule(staffId);
-
   const [weekSchedule, setWeekSchedule] = useState<Record<number, DaySchedule>>({});
   const [savingDays, setSavingDays] = useState<Record<number, boolean>>({});
-
   const daysOfWeek = [
     { idx: 0, day: "Lundi" },
     { idx: 1, day: "Mardi" },
@@ -49,12 +48,10 @@ export function EditScheduleModal({
   ];
 
   /* ----------------------------------
-     Map API schedule → UI state
+  Map API schedule → UI state
   -----------------------------------*/
   useEffect(() => {
     if (!schedule || Object.keys(weekSchedule).length > 0) return;
-
-
     const map: Record<number, DaySchedule> = {};
 
     schedule.forEach((s: any) => {
@@ -85,7 +82,7 @@ export function EditScheduleModal({
   }, [schedule]);
 
   /* ----------------------------------
-    Local updater
+  Local updater
   -----------------------------------*/
   const updateDay = (day: number, changes: Partial<DaySchedule>) => {
     setWeekSchedule((prev) => ({
@@ -98,12 +95,11 @@ export function EditScheduleModal({
   };
 
   /* ----------------------------------
-    Save one day
+  Save one day
   -----------------------------------*/
   const saveDay = async (day: number, override?: DaySchedule) => {
     const d = override ?? weekSchedule[day];
     if (!d) return;
-
     try {
       setSavingDays((prev) => ({ ...prev, [day]: true }));
 
@@ -118,9 +114,8 @@ export function EditScheduleModal({
     }
   };
 
-
   /* ----------------------------------
-    Optional full save fallback
+  Optional full save fallback
   -----------------------------------*/
   const saveAll = async () => {
     for (const day of Object.keys(weekSchedule)) {
@@ -131,13 +126,12 @@ export function EditScheduleModal({
   return (
     <Dialog>
       {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
-
-      <DialogContent className="sm:max-w-180 max-h-[85vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-180 max-h-[85vh] overflow-y-auto dark:bg-gray-900">
         <DialogHeader>
           <DialogTitle className="flex justify-between items-center">
-            <span>Modifier Planning - {staffName || "Employée"}</span>
+            <span className="text-gray-900 dark:text-gray-100">Modifier Planning - {staffName || "Employée"}</span>
 
-            <Button variant="outline" size="sm" className="gap-2 text-xs">
+            <Button variant="outline" size="sm" className="gap-2 text-xs dark:border-pink-900 dark:text-pink-300 dark:hover:border-pink-400">
               <Copy className="w-3 h-3" /> Copier semaine précédente
             </Button>
           </DialogTitle>
@@ -146,8 +140,7 @@ export function EditScheduleModal({
         {/* ---------------- TABLE ---------------- */}
         <div className="py-4 space-y-4">
           <div className="grid grid-cols-1 gap-2">
-
-            <div className="grid grid-cols-12 gap-2 text-sm font-medium text-muted-foreground mb-2 px-3">
+            <div className="grid grid-cols-12 gap-2 text-sm font-medium text-muted-foreground mb-2 px-3 dark:text-gray-300">
               <div className="col-span-3">Jour</div>
               <div className="col-span-4">Début</div>
               <div className="col-span-4">Fin</div>
@@ -161,10 +154,10 @@ export function EditScheduleModal({
               return (
                 <div
                   key={day.idx}
-                  className="grid grid-cols-12 gap-2 items-center p-3 bg-muted/30 rounded-lg border"
+                  className="grid grid-cols-12 gap-2 items-center p-3 bg-gray-50/50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-pink-400 dark:hover:border-pink-400 transition-colors"
                 >
                   {/* Day */}
-                  <div className="col-span-3 font-medium">
+                  <div className="col-span-3 font-medium text-gray-900 dark:text-gray-100">
                     {day.day}
                   </div>
 
@@ -178,7 +171,7 @@ export function EditScheduleModal({
                         updateDay(day.idx, { startTime: e.target.value })
                       }
                       onBlur={() => saveDay(day.idx)}
-                      className="h-8 text-xs"
+                      className="h-8 text-xs bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 focus:border-pink-500 dark:focus:border-pink-400"
                     />
                   </div>
 
@@ -192,14 +185,14 @@ export function EditScheduleModal({
                         updateDay(day.idx, { endTime: e.target.value })
                       }
                       onBlur={() => saveDay(day.idx)}
-                      className="h-8 text-xs"
+                      className="h-8 text-xs bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 focus:border-pink-500 dark:focus:border-pink-400"
                     />
                   </div>
 
                   {/* Availability */}
                   <div className="col-span-1 flex justify-center">
                     {saving ? (
-                      <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />
+                      <Loader2 className="w-4 h-4 animate-spin text-muted-foreground dark:text-gray-400" />
                     ) : (
                       <Checkbox
                         id={`day-${day.idx}`}
@@ -216,6 +209,7 @@ export function EditScheduleModal({
 
                           saveDay(day.idx, updated);
                         }}
+                        className="scale-110 data-[state=checked]:bg-pink-500 data-[state=checked]:border-pink-500 dark:data-[state=checked]:bg-pink-600 dark:data-[state=checked]:border-pink-600"
                       />
                     )}
                   </div>
@@ -227,12 +221,14 @@ export function EditScheduleModal({
 
         {/* Optional fallback save */}
         <DialogFooter>
-          <Button variant="outline">Annuler</Button>
+          <Button variant="outline" className="dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800">
+            Annuler
+          </Button>
 
           <Button
             onClick={saveAll}
             disabled={isUpdating}
-            className="bg-purple-600 hover:bg-purple-700 text-white gap-2"
+            className="bg-purple-600 hover:bg-purple-700 text-white gap-2 dark:bg-purple-700 dark:hover:bg-purple-800"
           >
             {isUpdating ? (
               <Loader2 className="w-4 h-4 animate-spin" />
@@ -247,9 +243,7 @@ export function EditScheduleModal({
   );
 }
 
-
-// --- Staff Profile Modal ---
-
+// --- Staff Profile Modal (Mobile Optimized with Enhanced Dark Mode) ---
 interface StaffProfileModalProps {
   staff?: Worker;
   trigger?: React.ReactNode;
@@ -257,21 +251,21 @@ interface StaffProfileModalProps {
 
 export function StaffProfileModal({ staff, trigger }: StaffProfileModalProps) {
   const [selectedMonth, setSelectedMonth] = useState("2026-02");
-
   const allMonths = [
-    { value: "2026-01", label: "Janvier 2026" }
-    , { value: "2026-02", label: "Février 2026" }
-    , { value: "2026-03", label: "Mars 2026" }
-    , { value: "2026-04", label: "Avril 2026" }
-    , { value: "2026-05", label: "Mai 2026" }
-    , { value: "2026-06", label: "Juin 2026" }
-    , { value: "2026-07", label: "Juillet 2026" }
-    , { value: "2026-08", label: "Août 2026" }
-    , { value: "2026-09", label: "Septembre 2026" }
-    , { value: "2026-10", label: "Octobre 2026" }
-    , { value: "2026-11", label: "Novembre 2026" }
-    , { value: "2026-12", label: "Décembre 2026" },
-  ]
+    { value: "2026-01", label: "Janvier 2026" },
+    { value: "2026-02", label: "Février 2026" },
+    { value: "2026-03", label: "Mars 2026" },
+    { value: "2026-04", label: "Avril 2026" },
+    { value: "2026-05", label: "Mai 2026" },
+    { value: "2026-06", label: "Juin 2026" },
+    { value: "2026-07", label: "Juillet 2026" },
+    { value: "2026-08", label: "Août 2026" },
+    { value: "2026-09", label: "Septembre 2026" },
+    { value: "2026-10", label: "Octobre 2026" },
+    { value: "2026-11", label: "Novembre 2026" },
+    { value: "2026-12", label: "Décembre 2026" },
+  ];
+
   const scheduleData = [
     { idx: 0, day: 'Lundi', slots: ['09:00-12:00', '13:00-16:00', '16:00-18:00'] },
     { idx: 1, day: 'Mardi', slots: ['09:00-12:00', '13:00-16:00', '16:00-18:00'] },
@@ -282,7 +276,6 @@ export function StaffProfileModal({ staff, trigger }: StaffProfileModalProps) {
   ];
 
   const { commissions, isUpdating } = useCommission();
-
   const getCommissionForMonth = (month: string) =>
     commissions.find(
       (c) =>
@@ -304,46 +297,51 @@ export function StaffProfileModal({ staff, trigger }: StaffProfileModalProps) {
   return (
     <Dialog>
       {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
-      <DialogContent className="sm:max-w-200 max-h-[90vh] overflow-y-auto p-0 gap-0 overflow-hidden">
-        <div className="h-32 bg-linear-to-r from-pink-400 to-purple-500 relative">
-          <CreateWorkerModal triggerLabel="Edit" />
-        </div>
+      <DialogContent className="sm:max-w-4xl w-[95vw] max-h-[90vh] overflow-y-auto p-4 dark:bg-gray-900">
+        <DialogHeader>
+          <DialogTitle className="sr-only">Profil Employée</DialogTitle>
+        </DialogHeader>
 
-        <div className="px-8 pb-8">
-          <div className="flex flex-col md:flex-row gap-6">
-            {/* Sidebar Profile Info */}
-            <div className="w-full md:w-1/3 -mt-12 flex flex-col items-center text-center space-y-4">
-              <Avatar className="w-32 h-32 border-4 border-white shadow-lg">
-                <AvatarImage src="" />
-                <AvatarFallback className="text-4xl bg-gray-100 text-gray-600">
-                  {staff?.name.split(" ")[0]?.charAt(0) || staff?.name.charAt(0)}
-                </AvatarFallback>
-              </Avatar>
-              <div>
-                <h3 className="text-xl  text-gray-900 dark:text-gray-100">{staff?.name}</h3>
-                <p className="text-pink-600 font-medium">Employee</p>
+        <div className="px-2 pb-4">
+          <div className="flex flex-col gap-6">
+            {/* Profile Info - Mobile Optimized */}
+            <div className="w-full text-center space-y-4">
+              <div className="flex justify-center">
+                <Avatar className="w-28 h-28 border-4 border-white shadow-lg dark:border-gray-800">
+                  <AvatarImage src="" />
+                  <AvatarFallback className="text-3xl bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300">
+                    {staff?.name.split(" ")[0]?.charAt(0) || staff?.name.charAt(0)}
+                  </AvatarFallback>
+                </Avatar>
               </div>
-              <Badge className={staff?.isAvailable ? 'bg-green-500' : 'bg-gray-400'}>
+
+              <div>
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100">{staff?.name}</h3>
+                <p className="text-pink-600 dark:text-pink-400 font-medium">Employee</p>
+              </div>
+
+              <Badge className={staff?.isAvailable ? 'bg-green-500' : 'bg-gray-400 dark:bg-gray-700'}>
                 {staff?.isAvailable ? 'Employée Active' : 'Inactif'}
               </Badge>
 
-              <div className="w-full pt-4 space-y-4 text-left bg-gray-50 dark:bg-background p-4 rounded-xl">
-                <div className="flex items-center gap-3 text-gray-700 text-sm">
-                  <Phone className="w-4 h-4 text-gray-400" /> {staff?.phone}
+              <div className="w-full space-y-3 text-left bg-gray-50 dark:bg-gray-800 p-4 rounded-xl">
+                <div className="flex items-center gap-3 text-gray-700 dark:text-gray-300">
+                  <Phone className="w-4 h-4 text-gray-400 dark:text-gray-500 flex-shrink-0" />
+                  {staff?.phone}
                 </div>
-                <div className="flex items-center gap-3 text-gray-700 text-sm">
-                  <Mail className="w-4 h-4 text-gray-400" /> {staff?.email}
+                <div className="flex items-center gap-3 text-gray-700 dark:text-gray-300">
+                  <Mail className="w-4 h-4 text-gray-400 dark:text-gray-500 flex-shrink-0" />
+                  {staff?.email}
                 </div>
-                {/* <div className="flex items-center gap-3 text-gray-700 text-sm">
-                  <MapPin className="w-4 h-4 text-gray-400" /> {staff?.position}
-                </div> */}
-                <div className="flex items-center gap-3 text-gray-700 text-sm">
-                  <Calendar className="w-4 h-4 text-gray-400" /> Embauche: {staff?.hireDate ? staff?.hireDate.split('T')[0].split('-').reverse().join('/') : "N/A"}
+                <div className="flex items-center gap-3 text-gray-700 dark:text-gray-300">
+                  <Calendar className="w-4 h-4 text-gray-400 dark:text-gray-500 flex-shrink-0" />
+                  Embauche: {staff?.hireDate ? staff?.hireDate.split('T')[0].split('-').reverse().join('/') : "N/A"}
                 </div>
               </div>
+
               <div className="space-y-2">
-                <Label className="text-gray-900 dark:text-gray-100 font-semibold">Biographie</Label>
-                <p className="text-sm text-gray-600 leading-relaxed bg-white border p-3 rounded-lg">
+                <Label className="text-left block font-semibold text-gray-900 dark:text-gray-100">Biographie</Label>
+                <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-3 rounded-lg text-left">
                   Spécialiste en onglerie avec plus de 5 ans d'expérience.
                   Experte en Nail Art et soins des mains. Appréciée pour sa douceur et sa créativité.
                   Parle Français et Lingala couramment.
@@ -351,10 +349,14 @@ export function StaffProfileModal({ staff, trigger }: StaffProfileModalProps) {
               </div>
 
               <div className="space-y-2">
-                <Label className="text-gray-900 dark:text-gray-100 font-semibold">Compétences</Label>
-                <div className="flex flex-wrap gap-2">
+                <Label className="text-left block font-semibold text-gray-900 dark:text-gray-100">Compétences</Label>
+                <div className="flex flex-wrap justify-center gap-2">
                   {['Manucure', 'Pédicure', 'Nail Art', 'Gel', 'Acrylique', 'Massage des mains'].map(skill => (
-                    <Badge key={skill} variant="secondary" className="px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 font-normal">
+                    <Badge
+                      key={skill}
+                      variant="secondary"
+                      className="px-3 py-1 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300"
+                    >
                       {skill}
                     </Badge>
                   ))}
@@ -363,67 +365,81 @@ export function StaffProfileModal({ staff, trigger }: StaffProfileModalProps) {
             </div>
 
             {/* Main Content Tabs */}
-            <div className="w-full md:w-2/3 pt-6">
+            <div className="w-full pt-2">
               <Tabs defaultValue="performance" className="w-full">
-                <TabsList className="w-full dark:bg-gray-950 border border-gray-200 dark:border-pink-900/30 justify-start border-b rounded-full h-auto p-0 bg-transparent sm:justify-center">
-                  <TabsTrigger value="performance" className="rounded-lg data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">Performance</TabsTrigger>
-                  <TabsTrigger value="schedule" className="rounded-lg data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">Horaires</TabsTrigger>
-                  <TabsTrigger value="commission" className="rounded-lg data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">Commission</TabsTrigger>
-                  <TabsTrigger value="documents" className="rounded-lg data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">Documents</TabsTrigger>
+                <TabsList className="w-full justify-start border-b rounded-none h-auto p-0 bg-transparent flex-wrap dark:border-gray-700">
+                  <TabsTrigger
+                    value="performance"
+                    className="rounded-lg px-4 py-2 mb-2 sm:mb-0 sm:mr-2 text-sm data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 data-[state=active]:text-pink-700 dark:data-[state=active]:text-pink-400"
+                  >
+                    Performance
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="schedule"
+                    className="rounded-lg px-4 py-2 mb-2 sm:mb-0 sm:mr-2 text-sm data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 data-[state=active]:text-pink-700 dark:data-[state=active]:text-pink-400"
+                  >
+                    Horaires
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="commission"
+                    className="rounded-lg px-4 py-2 mb-2 sm:mb-0 sm:mr-2 text-sm data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 data-[state=active]:text-pink-700 dark:data-[state=active]:text-pink-400"
+                  >
+                    Commission
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="documents"
+                    className="rounded-lg px-4 py-2 mb-2 sm:mb-0 sm:mr-2 text-sm data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 data-[state=active]:text-pink-700 dark:data-[state=active]:text-pink-400"
+                  >
+                    Documents
+                  </TabsTrigger>
                 </TabsList>
-                {/* Performance Tab */}
-                <TabsContent value="performance" className="space-y-6">
-                  <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
-                    <div>
-                      <h3 className="text-xl sm:text-2xl text-gray-900 dark:text-gray-100 mb-2">{staff?.name}</h3>
-                      <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400 mb-4">{staff?.role}</p>
-                      <div className="space-y-1 text-xs sm:text-sm text-gray-600 dark:text-gray-400">
-                        <p className="flex items-center gap-2"><span>📞</span> {staff?.phone}</p>
-                        <p className="flex items-center gap-2"><span>📧</span> {staff?.email}</p>
-                        <p className="flex items-center gap-2"><span>🕒</span> {staff?.workingHours}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2 bg-amber-50 dark:bg-amber-900/10 p-3 sm:p-4 rounded-2xl border border-amber-100 dark:border-amber-900/30">
-                      <Star className="w-5 h-5 sm:w-6 sm:h-6 fill-amber-400 text-amber-400" />
-                      <span className="text-2xl sm:text-3xl text-gray-900 dark:text-gray-100 ">{staff?.rating}</span>
-                    </div>
 
+                {/* Performance Tab - Mobile Optimized */}
+                <TabsContent value="performance" className="space-y-4 mt-4">
+                  <div className="flex flex-col items-center gap-4 bg-gray-50 dark:bg-gray-800 p-4 rounded-xl">
+                    <div className="text-center">
+                      <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100">{staff?.name}</h3>
+                      <p className="text-gray-600 dark:text-gray-400 mt-1">{staff?.role}</p>
+                    </div>
+                    <div className="flex items-center gap-2 bg-amber-50 dark:bg-amber-900/20 p-3 rounded-2xl border border-amber-100 dark:border-amber-900/30">
+                      <Star className="w-5 h-5 fill-amber-400 text-amber-400 dark:fill-amber-500 dark:text-amber-500" />
+                      <span className="text-2xl font-bold text-gray-900 dark:text-gray-100">{staff?.rating}</span>
+                    </div>
                   </div>
 
-                  {/* Performance Metrics */}
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-                    <Card className="bg-linear-to-br from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 border-0 p-3 sm:p-4 shadow-sm">
-                      <CalendarIcon className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600 dark:text-blue-400 mb-2" />
-                      <p className="text-xl sm:text-2xl text-gray-900 dark:text-gray-100 ">{staff?.appointmentsCount}</p>
-                      <p className="text-[10px] sm:text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wider font-medium">RDV ce mois</p>
+                  {/* Performance Metrics - Stacked on mobile */}
+                  <div className="grid grid-cols-2 gap-3">
+                    <Card className="hover:shadow-lg transition-shadow border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950 p-3">
+                      <CalendarIcon className="w-5 h-5 text-blue-600 dark:text-blue-400 mb-2" />
+                      <p className="text-xl font-bold text-gray-900 dark:text-gray-100">{staff?.appointmentsCount}</p>
+                      <p className="text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wider">RDV ce mois</p>
                     </Card>
-                    <Card className="bg-linear-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-0 p-3 sm:p-4 shadow-sm">
-                      <DollarSign className="w-5 h-5 sm:w-6 sm:h-6 text-green-600 dark:text-green-400 mb-2" />
-                      <p className="text-base sm:text-lg text-gray-900 dark:text-gray-100 ">{staff?.revenue}</p>
-                      <p className="text-[10px] sm:text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wider font-medium">Revenus</p>
+                    <Card className="hover:shadow-lg transition-shadow border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950 p-3">
+                      <DollarSign className="w-5 h-5 text-green-600 dark:text-green-400 mb-2" />
+                      <p className="text-lg font-bold text-gray-900 dark:text-gray-100">{staff?.revenue}</p>
+                      <p className="text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wider">Revenus</p>
                     </Card>
-                    <Card className="bg-linear-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border-0 p-3 sm:p-4 shadow-sm">
-                      <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600 dark:text-purple-400 mb-2" />
-                      <p className="text-xl sm:text-2xl text-gray-900 dark:text-gray-100 ">{staff?.clientRetention}</p>
-                      <p className="text-[10px] sm:text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wider font-medium">Rétention</p>
+                    <Card className="hover:shadow-lg transition-shadow border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950 p-3">
+                      <TrendingUp className="w-5 h-5 text-purple-600 dark:text-purple-400 mb-2" />
+                      <p className="text-xl font-bold text-gray-900 dark:text-gray-100">{staff?.clientRetention}</p>
+                      <p className="text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wider">Rétention</p>
                     </Card>
-                    <Card className="bg-linear-to-br from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 border-0 p-3 sm:p-4 shadow-sm">
-                      <Award className="w-5 h-5 sm:w-6 sm:h-6 text-amber-600 dark:text-amber-400 mb-2" />
-                      <p className="text-xl sm:text-2xl text-gray-900 dark:text-gray-100 ">{staff?.upsellRate}</p>
-                      <p className="text-[10px] sm:text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wider font-medium">Taux Vente+</p>
+                    <Card className="hover:shadow-lg transition-shadow border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950 p-3">
+                      <Award className="w-5 h-5 text-amber-600 dark:text-amber-400 mb-2" />
+                      <p className="text-xl font-bold text-gray-900 dark:text-gray-100">{staff?.upsellRate}</p>
+                      <p className="text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wider">Taux Vente+</p>
                     </Card>
                   </div>
 
-                  {/* Working Days */}
-                  <div className="bg-purple-50 dark:bg-purple-900/10 p-4 rounded-xl border border-purple-100 dark:border-purple-900/30">
-                    <h4 className="text-sm sm:text-base text-gray-900 dark:text-gray-100 mb-3 font-medium">Jours de Travail</h4>
-                    <div className="flex flex-wrap gap-2">
+                  <div className="bg-purple-50 dark:bg-purple-900/20 p-4 rounded-xl border border-purple-100 dark:border-purple-900/30">
+                    <h4 className="font-medium mb-3 text-gray-900 dark:text-gray-100">Jours de Travail</h4>
+                    <div className="flex flex-wrap gap-2 justify-center">
                       {['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'].map((day, index) => (
                         <Badge
                           key={day}
                           className={staff?.schedules?.some((s: any) => s.dayOfWeek === index && s.isAvailable)
                             ? 'bg-purple-500 text-white'
-                            : 'bg-gray-200 text-gray-500 dark:bg-gray-800 dark:text-gray-500'}
+                            : 'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400'}
                         >
                           {day}
                         </Badge>
@@ -431,115 +447,123 @@ export function StaffProfileModal({ staff, trigger }: StaffProfileModalProps) {
                     </div>
                   </div>
 
-                  <div className="flex gap-3">
-                    <EditScheduleModal
-                      staffId={staff?.id || ""}
-                      staffName={staff?.name}
-                      trigger={
-                        <Button className="flex-1 bg-linear-to-r from-purple-500 to-pink-500 text-white rounded-full">
-                          Modifier Horaires
-                        </Button>
-                      }
-                    />
-                  </div>
+                  <EditScheduleModal
+                    staffId={staff?.id || ""}
+                    staffName={staff?.name}
+                    trigger={
+                      <Button className="w-full bg-purple-500 hover:bg-purple-600 text-white dark:bg-purple-600 dark:hover:bg-purple-700">
+                        Modifier Horaires
+                      </Button>
+                    }
+                  />
                 </TabsContent>
 
-                {/* Schedule Tab */}
-                <TabsContent value="schedule" className="space-y-6">
-                  <h4 className="text-lg sm:text-xl text-gray-900 dark:text-gray-100 mb-4 font-medium">Planning de la Semaine</h4>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                    {scheduleData.map((day, idx) => (
-                      <div key={idx} className="p-4 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700">
-                        <div className="flex items-center justify-between mb-3">
-                          <p className="text-sm sm:text-base text-gray-900 dark:text-gray-100 font-medium">{day.day}</p>
+                {/* Schedule Tab - Mobile Optimized */}
+                <TabsContent value="schedule" className="space-y-4 mt-4">
+                  <h4 className="text-lg font-medium text-gray-900 dark:text-gray-100">Planning de la Semaine</h4>
+                  <div className="space-y-3">
+                    {['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'].map((day, idx) => (
+                      <div key={idx} className="p-3 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
+                        <div className="flex items-center justify-between mb-2">
+                          <p className="font-medium text-gray-900 dark:text-gray-100">{day}</p>
                           <Badge className={
-                            staff?.workingDays.includes(day.day.substring(0, 3))
-                              ? 'bg-green-500 text-white text-[10px]'
-                              : 'bg-gray-400 text-white text-[10px]'
+                            staff?.workingDays.includes(day.substring(0, 3))
+                              ? 'bg-green-500 text-white text-xs'
+                              : 'bg-gray-400 dark:bg-gray-700 text-white text-xs'
                           }>
-                            {staff?.workingDays.includes(day.day.substring(0, 3))
+                            {staff?.workingDays.includes(day.substring(0, 3))
                               ? 'Travaille' : 'Repos'}
                           </Badge>
                         </div>
-                        {staff?.workingDays.includes(day.day.substring(0, 3)) && (
+                        {staff?.workingDays.includes(day.substring(0, 3)) && (
                           <div className="flex flex-wrap gap-2">
-                            {day.slots.map((slot, sidx) => (
-                              <Badge key={sidx} variant="outline" className="text-[10px] sm:text-xs border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400">
-                                <Clock className="w-3 h-3 mr-1" />
-                                {slot}
-                              </Badge>
-                            ))}
+                            <Badge variant="outline" className="text-xs border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400">
+                              <Clock className="w-3 h-3 mr-1" />
+                              09:00-12:00
+                            </Badge>
+                            <Badge variant="outline" className="text-xs border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400">
+                              <Clock className="w-3 h-3 mr-1" />
+                              13:00-16:00
+                            </Badge>
+                            <Badge variant="outline" className="text-xs border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400">
+                              <Clock className="w-3 h-3 mr-1" />
+                              16:00-18:00
+                            </Badge>
                           </div>
                         )}
                       </div>
                     ))}
                   </div>
+
                   <EditScheduleModal
                     staffId={staff?.id || ''}
                     staffName={staff?.name}
                     trigger={
-                      <Button className="w-full mt-4 bg-purple-600 hover:bg-purple-700 text-white rounded-full">
+                      <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white dark:bg-purple-700 dark:hover:bg-purple-800">
                         Modifier Planning
                       </Button>
                     }
                   />
                 </TabsContent>
 
-                {/* Commission Tab */}
-                <TabsContent value="commission" className="space-y-6">
-                  <h4 className="text-lg sm:text-xl text-gray-900 dark:text-gray-100 mb-4 font-medium">Calcul Commission & Paie</h4>
-                  <div className="grid grid-cols-1 gap-4">
+                {/* Commission Tab - Mobile Optimized */}
+                <TabsContent value="commission" className="space-y-4 mt-4">
+                  <h4 className="text-lg font-medium text-gray-900 dark:text-gray-100">Calcul Commission & Paie</h4>
+                  <div className="space-y-4">
                     <Select
                       value={selectedMonth}
                       onValueChange={setSelectedMonth}
                     >
-                      <SelectTrigger>
+                      <SelectTrigger className="dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300">
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="dark:bg-gray-800 dark:border-gray-700">
                         {allMonths.map((m) => (
                           <SelectItem
                             key={m.value}
                             value={m.value}
                             disabled={isMonthPaid(m.value)}
+                            className="dark:hover:bg-gray-700 dark:focus:bg-gray-700"
                           >
                             {m.label}
                           </SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
+
                     {selectedMonth && getCommissionForMonth(selectedMonth) && (
-                      <Card className="bg-linear-to-br from-green-50 to-emerald-50 dark:from-green-900/10 dark:to-emerald-900/10 border-0 p-5 sm:p-6 shadow-sm">
-                        <h5 className="text-sm sm:text-base text-gray-900 dark:text-gray-100 mb-4  flex items-center gap-2">
+                      <Card className="hover:shadow-lg transition-shadow border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950 p-4">
+                        <h5 className="text-sm mb-3 flex items-center gap-2 text-gray-900 dark:text-gray-100">
                           <span className="w-2 h-2 rounded-full bg-green-500"></span>
-                          Ce Mois ( {allMonths.find((m) => m.value === selectedMonth)?.label} - {getCommissionForMonth(selectedMonth)?.status === "paid" ? "Payé" : "En attente"})
+                          Ce Mois ({allMonths.find((m) => m.value === selectedMonth)?.label} - {getCommissionForMonth(selectedMonth)?.status === "paid" ? "Payé" : "En attente"})
                         </h5>
-                        <div className="space-y-4">
+                        <div className="space-y-3">
                           <div className="flex justify-between items-center">
-                            <span className="text-xs sm:text-sm text-gray-700 dark:text-gray-400">Revenus générés</span>
-                            <span className="text-base sm:text-lg text-gray-900 dark:text-gray-100 ">{totalRevenue.toLocaleString()}</span>
+                            <span className="text-sm text-gray-700 dark:text-gray-300">Revenus générés</span>
+                            <span className="font-medium text-gray-900 dark:text-gray-100">{totalRevenue.toLocaleString()}</span>
                           </div>
                           <div className="flex justify-between items-center">
-                            <span className="text-xs sm:text-sm text-gray-700 dark:text-gray-400">Taux commission</span>
-                            <span className="text-base sm:text-lg text-gray-900 dark:text-gray-100 ">{commissionRate.toLocaleString()}%</span>
+                            <span className="text-sm text-gray-700 dark:text-gray-300">Taux commission</span>
+                            <span className="font-medium text-gray-900 dark:text-gray-100">{commissionRate.toLocaleString()}%</span>
                           </div>
                           <div className="flex justify-between items-center">
-                            <span className="text-xs sm:text-sm text-gray-700 dark:text-gray-400">Business revenue</span>
-                            <span className="text-sm sm:text-base text-gray-900 dark:text-gray-100 font-medium">{employerShare}</span>
+                            <span className="text-sm text-gray-700 dark:text-gray-300">Business revenue</span>
+                            <span className="font-medium text-gray-900 dark:text-gray-100">{employerShare}</span>
                           </div>
                           <div className="flex justify-between items-center">
-                            <span className="text-xs sm:text-sm text-gray-700 dark:text-gray-400">Materials reserve</span>
-                            <span className="text-sm sm:text-base text-gray-900 dark:text-gray-100 font-medium">{materielShare}</span>
+                            <span className="text-sm text-gray-700 dark:text-gray-300">Materials reserve</span>
+                            <span className="font-medium text-gray-900 dark:text-gray-100">{materielShare}</span>
                           </div>
                           <div className="flex justify-between items-center">
-                            <span className="text-xs sm:text-sm text-gray-700 dark:text-gray-400">Operational costs </span>
-                            <span className="text-sm sm:text-base text-gray-900 dark:text-gray-100 font-medium">{operationalCosts}</span>
+                            <span className="text-sm text-gray-700 dark:text-gray-300">Operational costs</span>
+                            <span className="font-medium text-gray-900 dark:text-gray-100">{operationalCosts}</span>
                           </div>
 
-                          <div className="w-full h-px bg-gray-200 dark:bg-gray-700" />
+                          <Separator className="my-3 dark:bg-gray-700" />
+
                           <div className="flex justify-between items-center pt-2">
-                            <span className="text-sm sm:text-base text-gray-900 dark:text-gray-100 font-medium">Commission totale</span>
-                            <span className="text-xl sm:text-2xl text-green-600 dark:text-green-400 font-black">{commissionAmount.toLocaleString()}</span>
+                            <span className="font-medium text-gray-900 dark:text-gray-100">Commission totale</span>
+                            <span className="text-xl text-green-600 dark:text-green-400 font-bold">{commissionAmount.toLocaleString()}</span>
                           </div>
                         </div>
                       </Card>
@@ -552,37 +576,38 @@ export function StaffProfileModal({ staff, trigger }: StaffProfileModalProps) {
                         period={selectedMonth}
                         trigger={
                           <Button
-                            size="sm"
-                            className="w-full bg-linear-to-r from-green-500 to-emerald-500 text-white rounded-full"
+                            size="default"
+                            className="w-full bg-green-500 hover:bg-green-600 text-white dark:bg-green-600 dark:hover:bg-green-700"
                           >
                             Générer Fiche de Paie
                           </Button>
                         }
                       />
                     )}
-
                   </div>
                 </TabsContent>
-                <TabsContent value="documents" className="mt-6">
+
+                {/* Documents Tab - Mobile Optimized */}
+                <TabsContent value="documents" className="mt-4">
                   <div className="space-y-3">
                     {['Contrat de travail.pdf', 'Pièce d\'identité.jpg', 'Certificats.pdf'].map((doc, i) => (
-                      <div key={i} className="flex items-center justify-between p-4 border rounded-xl hover:bg-gray-50 dark:bg-background cursor-pointer transition-colors group">
-                        <div className="flex items-center gap-4">
-                          <div className="p-2 bg-pink-50 rounded-lg text-pink-500">
+                      <div key={i} className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-3 border rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 dark:border-gray-700 cursor-pointer transition-colors group">
+                        <div className="flex items-center gap-3 mb-2 sm:mb-0">
+                          <div className="p-2 bg-pink-50 dark:bg-pink-900/20 rounded-lg text-pink-500 dark:text-pink-400">
                             <FileText className="w-5 h-5" />
                           </div>
                           <div>
                             <p className="font-medium text-gray-900 dark:text-gray-100">{doc}</p>
-                            <p className="text-xs text-gray-500">Ajouté le 12 Jan 2023</p>
+                            <p className="text-xs text-gray-500 dark:text-gray-400">Ajouté le 12 Jan 2023</p>
                           </div>
                         </div>
-                        <Button variant="ghost" size="icon" className="text-gray-400 group-hover:text-pink-600">
+                        <Button variant="ghost" size="icon" className="text-gray-400 dark:text-gray-400 group-hover:text-pink-600 dark:group-hover:text-pink-400">
                           <Download className="w-4 h-4" />
                         </Button>
                       </div>
                     ))}
                   </div>
-                  <Button variant="outline" className="w-full mt-6 border-dashed border-2 py-8 text-gray-500 hover:text-pink-600 hover:border-pink-300">
+                  <Button variant="outline" className="w-full mt-4 border-dashed py-6 text-gray-500 dark:text-gray-400 hover:text-pink-600 dark:hover:text-pink-400 hover:border-pink-300 dark:hover:border-pink-400">
                     + Ajouter un document
                   </Button>
                 </TabsContent>
@@ -595,8 +620,7 @@ export function StaffProfileModal({ staff, trigger }: StaffProfileModalProps) {
   );
 }
 
-// --- Payroll Modal ---
-
+// --- Payroll Modal (Mobile Optimized with Dark Mode) ---
 interface PayrollModalProps {
   staffName?: string;
   staff?: Worker;
@@ -608,22 +632,22 @@ export function PayrollModal({ staffName, staff, period, trigger }: PayrollModal
   const { user } = useAuth(); // or however you get current user
   const isAdmin = user?.role === "admin";
   const { createCommission, isCreating } = useCommission();
-
   const { updateCommission, commissions, isUpdating } = useCommission();
+
   const allMonths = [
-    { value: "2026-01", label: "Janvier 2026" }
-    , { value: "2026-02", label: "Février 2026" }
-    , { value: "2026-03", label: "Mars 2026" }
-    , { value: "2026-04", label: "Avril 2026" }
-    , { value: "2026-05", label: "Mai 2026" }
-    , { value: "2026-06", label: "Juin 2026" }
-    , { value: "2026-07", label: "Juillet 2026" }
-    , { value: "2026-08", label: "Août 2026" }
-    , { value: "2026-09", label: "Septembre 2026" }
-    , { value: "2026-10", label: "Octobre 2026" }
-    , { value: "2026-11", label: "Novembre 2026" }
-    , { value: "2026-12", label: "Décembre 2026" },
-  ]
+    { value: "2026-01", label: "Janvier 2026" },
+    { value: "2026-02", label: "Février 2026" },
+    { value: "2026-03", label: "Mars 2026" },
+    { value: "2026-04", label: "Avril 2026" },
+    { value: "2026-05", label: "Mai 2026" },
+    { value: "2026-06", label: "Juin 2026" },
+    { value: "2026-07", label: "Juillet 2026" },
+    { value: "2026-08", label: "Août 2026" },
+    { value: "2026-09", label: "Septembre 2026" },
+    { value: "2026-10", label: "Octobre 2026" },
+    { value: "2026-11", label: "Novembre 2026" },
+    { value: "2026-12", label: "Décembre 2026" },
+  ];
 
   const getCommissionForMonth = (month: string) =>
     commissions.find(
@@ -647,7 +671,6 @@ export function PayrollModal({ staffName, staff, period, trigger }: PayrollModal
 
   const handleGenerate = () => {
     if (!staff) return;
-
     createCommission({
       workerId: staff.id,
       period,
@@ -660,31 +683,34 @@ export function PayrollModal({ staffName, staff, period, trigger }: PayrollModal
   const handleApprove = () => {
     const commission = getCommissionForMonth(period || "");
     if (!commission?.id) return;
-
     updateCommission({
       id: commission.id,
       status: "paid",
     });
   };
 
-
   return (
     <Dialog>
       {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:max-w-md w-[95vw] max-h-[90vh] overflow-y-auto p-4 dark:bg-gray-900">
         <DialogHeader>
-          <DialogTitle>Générer Fiche de Paie</DialogTitle>
+          <DialogTitle className="text-lg font-bold text-gray-900 dark:text-gray-100">Générer Fiche de Paie</DialogTitle>
         </DialogHeader>
 
-        <div className="py-4 space-y-5">
-          <div className="flex gap-4">
-            <div className="w-1/2 space-y-2">
-              <Label>Employée</Label>
-              <Input value={staffName || 'Marie Nkumu'} disabled className="bg-gray-100" />
+        <div className="py-4 space-y-4">
+          <div className="grid grid-cols-1 gap-3">
+            <div className="space-y-2">
+              <Label className="text-sm text-gray-700 dark:text-gray-300">Employée</Label>
+              <Input
+                value={staffName || 'Marie Nkumu'}
+                disabled
+                className="bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 h-11 text-base"
+              />
             </div>
-            <div className="w-1/2 space-y-2">
-              <Label>Période</Label>
-              <Select value={period} >
+
+            <div className="space-y-2">
+              <Label className="text-sm text-gray-700 dark:text-gray-300">Période</Label>
+              <Select value={period}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
@@ -699,67 +725,76 @@ export function PayrollModal({ staffName, staff, period, trigger }: PayrollModal
             </div>
           </div>
 
-          <Separator />
+          <Separator className="dark:bg-gray-700" />
 
-          <div className="space-y-4">
+          <div className="space-y-3">
             <h4 className="font-medium text-gray-900 dark:text-gray-100">Détails du Calcul</h4>
 
-            <div className="grid grid-cols-2 gap-4 items-center">
-              <Label className="text-gray-600">Totall Revenue</Label>
-              <div className="relative">
-                <Input
-                  type="number"
-                  value={totalRevenue}
-                  className="text-right pr-12"
-                />
-                <span className="absolute right-3 top-2.5 text-xs text-gray-500">Fc</span>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4 items-center">
-              <Label className="text-gray-600">Commissions (Auto)</Label>
-              <div className="relative">
-                <Input value={commissionAmount} disabled className="text-right pr-12 bg-gray-50 dark:bg-background" />
-                <span className="absolute right-3 top-2.5 text-xs text-gray-500">Fc</span>
-              </div>
-            </div>
-            {isAdmin && (
-              <div className="grid grid-cols-2 gap-4 items-center">
-                <Label className="text-blue-600">Part Administrateur</Label>
-                <div className="relative">
+            <div className="space-y-3">
+              <div className="flex justify-between items-center">
+                <Label className="text-gray-600 dark:text-gray-400 text-sm">Totall Revenue</Label>
+                <div className="flex items-center">
+                  <span className="text-sm text-gray-500 dark:text-gray-400 mr-1">Fc</span>
                   <Input
-                    value={employerShare}
-                    disabled
-                    className="text-right pr-12 bg-gray-50"
+                    type="number"
+                    value={totalRevenue}
+                    className="text-right w-32 h-10 text-base bg-white dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300"
                   />
-                  <span className="absolute right-3 top-2.5 text-xs text-gray-500">
-                    Fc
-                  </span>
                 </div>
               </div>
-            )}
-          </div>
 
-          <div className="bg-gray-900 text-white p-4 rounded-xl flex justify-between items-center shadow-lg">
-            <span className="font-medium">Net à Payer</span>
-            <span className="text-xl ">{commissionAmount.toLocaleString()} Fc</span>
-          </div>
+              <div className="flex justify-between items-center">
+                <Label className="text-gray-600 dark:text-gray-400 text-sm">Commissions (Auto)</Label>
+                <div className="flex items-center">
+                  <span className="text-sm text-gray-500 dark:text-gray-400 mr-1">Fc</span>
+                  <Input
+                    value={commissionAmount}
+                    disabled
+                    className="text-right w-32 h-10 bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300"
+                  />
+                </div>
+              </div>
 
-          <div className="flex items-center gap-2">
-            <Checkbox id="email-slip" defaultChecked className="border-gray-400" />
-            <Label htmlFor="email-slip" className="text-gray-600 cursor-pointer">Envoyer par email à l'employeur</Label>
+              {isAdmin && (
+                <div className="flex justify-between items-center">
+                  <Label className="text-blue-600 dark:text-blue-400 text-sm">Part Administrateur</Label>
+                  <div className="flex items-center">
+                    <span className="text-sm text-gray-500 dark:text-gray-400 mr-1">Fc</span>
+                    <Input
+                      value={employerShare}
+                      disabled
+                      className="text-right w-32 h-10 bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300"
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="bg-gray-900 dark:bg-gray-800 text-white p-3 rounded-xl flex justify-between items-center">
+              <span className="font-medium">Net à Payer</span>
+              <span className="text-xl font-bold">{commissionAmount.toLocaleString()} Fc</span>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <Checkbox
+                id="email-slip"
+                defaultChecked
+                className="border-gray-400 dark:border-gray-600 data-[state=checked]:bg-pink-500 data-[state=checked]:border-pink-500 dark:data-[state=checked]:bg-pink-600 dark:data-[state=checked]:border-pink-600"
+              />
+              <Label htmlFor="email-slip" className="text-gray-600 dark:text-gray-400">Envoyer par email à l'employeur</Label>
+            </div>
           </div>
         </div>
 
-        <DialogFooter className="gap-2">
-          <Button variant="outline" className="gap-2">
+        <DialogFooter className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2 mt-4">
+          <Button variant="outline" className="w-full sm:w-auto gap-2 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800">
             <Download className="w-4 h-4" /> PDF
           </Button>
           {isAdmin ? (
             <Button
               onClick={handleApprove}
               disabled={isUpdating}
-              className="bg-purple-600 hover:bg-purple-700 text-white"
+              className="w-full sm:w-auto bg-purple-600 hover:bg-purple-700 text-white dark:bg-purple-700 dark:hover:bg-purple-800"
             >
               {isUpdating ? "Paiement..." : "Approuver & Payer"}
             </Button>
@@ -767,12 +802,11 @@ export function PayrollModal({ staffName, staff, period, trigger }: PayrollModal
             <Button
               onClick={handleGenerate}
               disabled={isCreating || !isMonthPaid(period || "")}
-              className="bg-green-600 hover:bg-green-700 text-white"
+              className="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white dark:bg-green-600 dark:hover:bg-green-700"
             >
               {isCreating ? "Envoi..." : !isMonthPaid(period || "") ? "Payement en attente" : "Demander Paiement"}
             </Button>
           )}
-
         </DialogFooter>
       </DialogContent>
     </Dialog>

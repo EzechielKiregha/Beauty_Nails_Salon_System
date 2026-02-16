@@ -16,7 +16,9 @@ import {
   Bell, Phone, MessageSquare, MapPin,
   PlayCircle, CheckCheck, XCircle, AlertCircle,
   DollarSign,
-  Plus
+  Plus,
+  Users,
+  ShoppingCart
 } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { useAuth } from '@/lib/hooks/useAuth';
@@ -33,6 +35,9 @@ import { cn } from '../ui/utils';
 import { AppointmentModal } from '../modals/AppointmentModal';
 import { StaffProfileModal } from '../modals/StaffModals';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import ClientManagement from '../ClientManagement';
+import POSCheckout from '../POSCheckout';
+import BookingCalendar from '../BookingCalendar';
 
 export default function WorkerDashboardV2() {
   const [notificationOpen, setNotificationOpen] = useState(false);
@@ -102,7 +107,7 @@ export default function WorkerDashboardV2() {
 
   // Filter appointments by status
   const todaySchedule = appointments.filter(
-    apt => apt.status === 'confirmed' || apt.status === 'in_progress'
+    apt => apt.status === 'confirmed' || apt.status === 'in_progress' || apt.status === 'pending'
   );
 
   const completedToday = appointments.filter(
@@ -114,7 +119,7 @@ export default function WorkerDashboardV2() {
   );
 
   const missedAppointments = AllAppointments.filter(
-    apt => apt.status === 'pending' && new Date(apt.date) < new Date
+    apt => (apt.status === 'pending' && new Date(apt.date) < new Date())
   );
   const completedAppointments = AllAppointments.filter(
     apt => apt.status === 'completed'
@@ -307,9 +312,9 @@ export default function WorkerDashboardV2() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-12">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-6 gap-4">
             <div>
-              <h1 className="text-3xl sm:text-4xl  bg-linear-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">
+              <h1 className="text-3xl font-semibold sm:text-4xl  bg-linear-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">
                 Espace Employé
               </h1>
               <p className="text-gray-600 dark:text-gray-300 text-base sm:text-lg">
@@ -317,7 +322,7 @@ export default function WorkerDashboardV2() {
               </p>
             </div>
 
-            <div className="space-x-2 flex items-center">
+            <div className="space-x-4 flex items-center w-full justify-between md:justify-end">
               {/* Notifications */}
               <Sheet open={notificationOpen} onOpenChange={setNotificationOpen}>
                 <SheetTrigger asChild>
@@ -364,7 +369,7 @@ export default function WorkerDashboardV2() {
               <StaffProfileModal
                 staff={worker}
                 trigger={
-                  <Avatar className="w-16 h-16 border-4 border-white shadow-lg">
+                  <Avatar className="w-12 h-12 border-4 border-white shadow-lg">
                     <AvatarImage src="" />
                     <AvatarFallback className="text-2xl font-medium bg-gray-100 text-gray-600">
                       {worker?.name.split(" ")[0]?.charAt(0) || worker?.name.charAt(0)}
@@ -384,7 +389,7 @@ export default function WorkerDashboardV2() {
                 </div>
               </div>
               <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300  mb-1">Aujourd'hui</p>
-              <p className="text-2xl sm:text-3xl  text-gray-900 dark:text-gray-100">{stats.todayAppointments}</p>
+              <p className="text-2xl sm:text-3xl font-semibold  text-gray-900 dark:text-gray-100">{stats.todayAppointments}</p>
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">{stats.completed} terminés</p>
             </Card>
 
@@ -395,7 +400,7 @@ export default function WorkerDashboardV2() {
                 </div>
               </div>
               <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300  mb-1">Complétés</p>
-              <p className="text-2xl sm:text-3xl  text-gray-900 dark:text-gray-100">{completedAppointments.length}</p>
+              <p className="text-2xl sm:text-3xl font-semibold  text-gray-900 dark:text-gray-100">{completedAppointments.length}</p>
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">rendez-vous</p>
             </Card>
 
@@ -406,7 +411,7 @@ export default function WorkerDashboardV2() {
                 </div>
               </div>
               <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300  mb-1">En attente</p>
-              <p className="text-2xl sm:text-3xl  text-gray-900 dark:text-gray-100">{stats.pending}</p>
+              <p className="text-2xl sm:text-3xl font-semibold  text-gray-900 dark:text-gray-100">{stats.pending}</p>
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">vous avez rater  {missedAppointments.length} rendez-vous</p>
             </Card>
             <Card className="p-4 sm:p-6 bg-linear-to-br from-amber-500 to-pink-500 text-white border-0 shadow-xl">
@@ -417,7 +422,7 @@ export default function WorkerDashboardV2() {
                 <Star className="w-4 h-4 sm:w-5 sm:h-5" />
               </div>
               <p className="text-xs sm:text-sm opacity-90 mb-1">Note moyenne</p>
-              <p className="text-2xl sm:text-3xl ">{stats.rating.toFixed(1)}</p>
+              <p className="text-2xl sm:text-3xl font-semibold ">{stats.rating.toFixed(1)}</p>
               <p className="text-xs opacity-80 mt-2">
                 {user?.workerProfile?.totalReviews || 0} avis
               </p>
@@ -427,16 +432,28 @@ export default function WorkerDashboardV2() {
 
         {/* Main Content */}
         <Tabs defaultValue="schedule" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3 lg:w-auto">
-            <TabsTrigger value="schedule">
+          <TabsList className="grid w-full grid-cols-2 lg:grid-cols-6 mt-3 lg:mt-6 bg-white dark:bg-gray-950 border border-gray-200 dark:border-pink-900/30 p-1 rounded-xl justify-start sm:justify-center ">
+            <TabsTrigger value="schedule" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">
               <CalendarIcon className="w-4 h-4 mr-2" />
               Planning
             </TabsTrigger>
-            <TabsTrigger value="performance">
+            <TabsTrigger value="calendar" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">
+              <CalendarIcon className="w-4 h-4 mr-2" />
+              Mon Calendrier
+            </TabsTrigger>
+            <TabsTrigger value="clients" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">
+              <Users className="w-4 h-4 mr-2" />
+              Clients
+            </TabsTrigger>
+            <TabsTrigger value="pos" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">
+              <ShoppingCart className="w-4 h-4 mr-2" />
+              Caisse
+            </TabsTrigger>
+            <TabsTrigger value="performance" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">
               <TrendingUp className="w-4 h-4 mr-2" />
               Performance
             </TabsTrigger>
-            <TabsTrigger value="earnings">
+            <TabsTrigger value="earnings" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">
               <DollarSign className="w-4 h-4 mr-2" />
               Commissions
             </TabsTrigger>
@@ -597,7 +614,7 @@ export default function WorkerDashboardV2() {
                   {missedAppointments.map((appointment) => (
                     <div
                       key={appointment.id}
-                      className="flex items-center justify-between p-4 border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950"
+                      className="flex flex-col md:flex-row items-center justify-start md:justify-between p-4 border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950"
                     >
                       <div>
                         <p className="font-semibold">{appointment.client?.user?.name}</p>
@@ -608,17 +625,8 @@ export default function WorkerDashboardV2() {
                           date : {format(new Date(appointment.date), "PPP", { locale: fr })} - {appointment.time}
                         </p>
                       </div>
-                      <div className="flex gap-2 sm:flex-col lg:flex-row">
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className="text-red-600"
-                          onClick={() =>
-                            handleUpdateStatus(appointment.id, 'cancelled')
-                          }
-                        >
-                          Refuser
-                        </Button>
+                      <div className="flex gap-2 flex-col md:flex-row lg:flex-row">
+
                         <div className="space-y-2">
                           <Popover>
                             <PopoverTrigger asChild>
@@ -677,14 +685,26 @@ export default function WorkerDashboardV2() {
                             </SelectContent>
                           </Select>
                         </div>
-                        <Button
-                          size="sm"
-                          onClick={() =>
-                            handleReschedule(appointment.id, selectedTime, selectedDate!)
-                          }
-                        >
-                          Reschedule
-                        </Button>
+                        <div className="flex flex-row w-full md:w-auto gap-2">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="text-red-600"
+                            onClick={() =>
+                              handleUpdateStatus(appointment.id, 'cancelled')
+                            }
+                          >
+                            Refuser
+                          </Button>
+                          <Button
+                            size="sm"
+                            onClick={() =>
+                              handleReschedule(appointment.id, selectedTime, selectedDate!)
+                            }
+                          >
+                            Reschedule
+                          </Button>
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -735,7 +755,7 @@ export default function WorkerDashboardV2() {
                   Prestation Annulée ({cancelledAppointments.length})
                 </h3>
                 <div className="space-y-3">
-                  {cancelledAppointments.map((appointment) => (
+                  {cancelledAppointments.slice(0, 5).map((appointment) => (
                     <div
                       key={appointment.id}
                       className="flex items-center justify-between p-4 border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950"
@@ -764,6 +784,20 @@ export default function WorkerDashboardV2() {
                 </div>
               </Card>
             )}
+          </TabsContent>
+
+          {/* Calendar Tab */}
+          <TabsContent value="calendar" className="mt-14 lg:mt-2">
+            <BookingCalendar showMock={false} />
+          </TabsContent>
+
+          {/* Clients Tab */}
+          <TabsContent value="clients" className="mt-14 lg:mt-2">
+            <ClientManagement showMock={false} />
+          </TabsContent>
+
+          <TabsContent value="pos" className="mt-14 lg:mt-6">
+            <POSCheckout showMock={false} />
           </TabsContent>
 
           {/* Performance Tab */}
@@ -837,32 +871,32 @@ export default function WorkerDashboardV2() {
           {/* Earnings Tab */}
           <TabsContent value="earnings" className="space-y-6">
             <Card className="p-6">
-              <h2 className="text-2xl   mb-6">Commissions</h2>
+              <h2 className="text-2xl mb-6">Commissions</h2>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <div className="p-6 bg-linear-to-br from-green-100 to-emerald-100  rounded-xl">
-                  <p className="text-sm text-gray-600 mb-2">Cette semaine</p>
-                  <p className="text-3xl  text-gray-900">
+                <div className="p-6 border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950">
+                  <p className="text-sm text-gray-600  dark:text-gray-300 mb-2">Cette semaine</p>
+                  <p className="text-3xl font-semibold  text-gray-900 dark:text-gray-100">
                     {stats.commission.toLocaleString()} Fc
                   </p>
-                  <p className="text-sm text-gray-600 mt-2">
+                  <p className="text-sm text-gray-600  dark:text-gray-300 mt-2">
                     Taux: {user?.workerProfile?.commissionRate || 0}%
                   </p>
                 </div>
 
-                <div className="p-6 bg-linear-to-br from-blue-100 to-purple-100 rounded-xl">
-                  <p className="text-sm text-gray-600 mb-2">Revenus générés</p>
-                  <p className="text-3xl  text-gray-900">
+                <div className="p-6 border border-blue-100 hover:border-blue-400  dark:border-blue-900 dark:hover:border-blue-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950">
+                  <p className="text-sm text-gray-600  dark:text-gray-300 mb-2">Revenus générés</p>
+                  <p className="text-3xl font-semibold  text-gray-900 dark:text-gray-100">
                     {stats.revenue.toLocaleString()} Fc
                   </p>
-                  <p className="text-sm text-gray-600 mt-2">
+                  <p className="text-sm text-gray-600  dark:text-gray-300 mt-2">
                     {commissionData?.appointmentsCount || 0} rendez-vous
                   </p>
                 </div>
 
-                <div className="p-6 bg-linear-to-br from-amber-100 to-orange-100 rounded-xl">
-                  <p className="text-sm text-gray-600  mb-2">Moyenne par service</p>
-                  <p className="text-3xl  text-gray-900">
+                <div className="p-6 border border-amber-100 hover:border-amber-400  dark:border-amber-900 dark:hover:border-amber-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950">
+                  <p className="text-sm text-gray-600  dark:text-gray-300  mb-2">Moyenne par service</p>
+                  <p className="text-3xl font-semibold  text-gray-900 dark:text-gray-100">
                     {commissionData?.appointmentsCount
                       ? Math.round(stats.revenue / commissionData.appointmentsCount).toLocaleString()
                       : 0}{' '}
@@ -873,15 +907,15 @@ export default function WorkerDashboardV2() {
 
               <h3 className="text-lg font-semibold mb-4">Commission actuelle</h3>
               <div className="space-y-3">
-                <div className="flex items-center justify-between p-4 border rounded-lg bg-linear-to-r from-green-50 to-emerald-50">
+                <div className="flex items-center justify-between p-4 border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950">
                   <div>
-                    <p className="font-semibold text-gray-600">Période actuelle (Semaine)</p>
-                    <p className="text-sm text-gray-600 ">
+                    <p className="font-semibold text-gray-400">Période actuelle (Semaine)</p>
+                    <p className="text-sm text-gray-600  dark:text-gray-300 ">
                       {commissionData?.appointmentsCount || 0} rendez-vous
                     </p>
                   </div>
                   <div className="text-right">
-                    <p className="text-xl  text-green-600">
+                    <p className="text-xl  text-green-500">
                       {stats.commission.toLocaleString()} Fc
                     </p>
                   </div>
@@ -910,7 +944,7 @@ export default function WorkerDashboardV2() {
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="text-sm text-gray-600 dark:text-gray-300">Client</label>
+                  <label className="text-sm text-gray-600  dark:text-gray-300 ">Client</label>
                   <p className="font-semibold">{selectedAppointment.client?.user?.name}</p>
                 </div>
                 <div>

@@ -217,7 +217,7 @@ export default function AdminDashboardV2() {
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 px-6"> {/* Added px-6 for padding */}
           {/* Revenue Card - Updated to reflect current period revenue */}
-          <Card className="p-4 sm:p-6 bg-gradient-to-br from-green-500 to-emerald-600 text-white border-0 shadow-xl rounded-2xl">
+          <Card className="p-4 sm:p-6 bg-linear-to-br from-green-500 to-emerald-600 text-white border-0 shadow-xl rounded-2xl">
             <div className="flex items-center justify-between mb-4">
               <div className="p-3 bg-white/20 rounded-lg backdrop-blur-sm">
                 <DollarSign className="w-5 h-5 sm:w-6 sm:h-6 " />
@@ -264,7 +264,7 @@ export default function AdminDashboardV2() {
           </Card>
 
           {/* Staff Card - Updated styling and content slightly */}
-          <Card className="p-4 sm:p-6 bg-gradient-to-br from-amber-500 to-orange-500 text-white border-0 shadow-xl rounded-2xl">
+          <Card className="p-4 sm:p-6 bg-linear-to-br from-amber-500 to-orange-500 text-white border-0 shadow-xl rounded-2xl">
             <div className="flex items-center justify-between mb-4">
               <div className="p-3 bg-white/20 rounded-lg backdrop-blur-sm">
                 <Award className="w-5 h-5 sm:w-6 sm:h-6 " />

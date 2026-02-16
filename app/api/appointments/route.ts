@@ -13,17 +13,6 @@ export async function GET(request: NextRequest) {
     const workerId = searchParams.get('workerId');
     const clientId = searchParams.get('clientId');
 
-    // console.log('GET /appointments called with params:', { date, status, workerId, clientId, userId: user.id });
-
-    // Validation
-    if ( !clientId && user.role === 'client' ) {
-      return errorResponse('Données manquantes', 400);
-    }
-
-    if (user.role === 'worker' && !workerId) {
-      return errorResponse('Données manquantes pour les employés', 400);
-    }
-
     const where: any = {};
     let wId = workerId;
 
@@ -42,30 +31,67 @@ export async function GET(request: NextRequest) {
     // Role-based filtering
     if (user.role === 'client') {
       where.clientId = clientId || user.clientProfile?.id;
-    } else if (user.role === 'worker' && !clientId) {
+      if (date) {
+        where.date = { gte: new Date(date) };
+      }
+
+      if (status) {
+        where.status = status;
+      }
+
+      if (clientId) {
+        where.clientId = clientId;
+      }
+    } else if (user.role === 'worker' && !clientId && wId) {
       where.workerId = wId;
+      if (date) {
+        where.date = { gte: new Date(date) };
+      }
+
+      if (status) {
+        where.status = status;
+      }
+    } else if (user.role === 'worker' && clientId && wId) {
+      where.workerId = wId;
+      if (date) {
+        where.date = { gte: new Date(date) };
+      }
+
+      if (status) {
+        where.status = status;
+      }
+      
+      if (clientId) {
+        where.clientId = clientId;
+      }
+    } 
+    
+    if ( (!date && !workerId && !clientId && !status) || user.role === 'admin') {
+      // For admins, allow filtering by workerId or clientId if provided
+      if (workerId) {
+        where.workerId = workerId;
+      }
+      if (clientId) {
+        where.clientId = clientId;
+      }
+
+      if (date) {
+        where.date = { gte: new Date(date) };
+      } else {
+        where.date = { lte: new Date() }; // Default to future appointments if no date filter
+      }
+
+      if (status) {
+        where.status = status;
+      }
     }
 
-    if (date) {
-      where.date = { gte: new Date(date) };
-    }
-
-    if (status) {
-      where.status = status;
-    }
-
-    if (workerId) {
-      where.workerId = workerId;
-    }
-
-    if (clientId) {
-      where.clientId = clientId;
-    }
-
-    console.log('Final where clause for appointments query:', where);
+    console.log('Constructed where clause for appointments query:', where);
 
     const appointments = await prisma.appointment.findMany({
-      where,
+      where: {
+        ...where,
+      },
       include: {
         client: {
           include: {
@@ -222,6 +248,9 @@ export async function POST(request: NextRequest) {
       data: {
         loyaltyPoints: {
           increment: service.price / 1000,
+        },
+        totalSpent: {
+          increment: service.price,
         },
         loyaltyTransactions: {
           create: {

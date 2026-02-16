@@ -33,12 +33,10 @@ export default function MarketingLoyalty() {
   const { clients: allClients = [], isLoading: clientsLoading, error: clientsError } = useClients(); // Fetch all clients
   const { createNotification, isCreatingNotification } = useNotifications(); // Hook to create notifications
 
-  // --- Simulate Loyalty Rules (as there's no direct API endpoint for rules yet) ---
-  // This is a placeholder. In a real app, these rules would come from an API endpoint like `/loyalty/rules`.
   const loyaltyRules = {
-    pointsPerSpend: 1, // 1 point per 1000 Fc spent (this is often a configuration stored server-side)
-    appointmentsForReward: 5, // e.g., 5 appointments for a free service
-    referralsForReward: 5, // e.g., 5 successful referrals for a reward
+    pointsPerSpend: 1,
+    appointmentsForReward: 5,
+    referralsForReward: 5,
     rewards: [
       { points: 100, reward: 'Manucure gratuite' },
       { points: 250, reward: 'Extension cils gratuite' },
@@ -46,12 +44,6 @@ export default function MarketingLoyalty() {
       { points: 1000, reward: 'Journée beauté complète gratuite' }
     ]
   };
-  // --- End Simulated Rules ---
-
-
-  // --- Process Real Data for Tabs ---
-  // Birthday clients: Filter clients whose birthday is upcoming (e.g., within next 7 days)
-  // This logic assumes `client.birthday` is in MM-DD format (like "12-15")
   const today = new Date();
   const nextWeek = new Date(today);
   nextWeek.setDate(today.getDate() + 7);
@@ -61,8 +53,6 @@ export default function MarketingLoyalty() {
     const birthdate = client.birthday.split('T')[0]; // Get date part if it's a full datetime
     const [year, month, day] = birthdate.split('-').map(Number);
     if (isNaN(month) || isNaN(day)) return false; // Invalid date format
-
-    // console.log(`Checking birthday for ${client.user?.name || 'Unknown'}: ${month}-${day}`);
 
     const birthdayThisYear = new Date(today.getFullYear(), month - 1, day); // month is 0-indexed
     const birthdayNextYear = new Date(today.getFullYear() + 1, month - 1, day);
@@ -88,13 +78,13 @@ export default function MarketingLoyalty() {
     }
   })
 
+  const totalUsers = allClients.length
+  const vipUsers = allClients.filter(c => c.tier === 'VIP').length
+  const inactiveUsers = allClients.filter(c => c.user?.isActive !== true).length;
+
   const clientsCount = allClients.length;
   const rewardedClientsCount = allClients.reduce((count, client) => count + (client.referralsRel.some(r => r.status === 'rewarded') ? 1 : 0), 0);
 
-  // --- End Processed Data ---
-
-
-  // --- Handler for sending birthday notifications ---
   const handleSendBirthdayNotification = (client: typeof birthdayClients[0], channel: 'email' | 'sms') => {
     if (!client.userId) {
       console.error("Client userId is missing for notification.");
@@ -558,9 +548,9 @@ export default function MarketingLoyalty() {
                 <div>
                   <label className="block text-xs sm:text-sm  text-gray-700 dark:text-gray-300 mb-3 uppercase tracking-widest">Destinataires</label>
                   <div className="flex flex-wrap gap-2">
-                    <Badge className="bg-blue-500 dark:bg-blue-600 text-white border-0 py-1.5 px-3 text-[10px] sm:text-xs">Toutes les clientes (247)</Badge>
-                    <Badge variant="outline" className="border-purple-200 dark:border-purple-900 text-purple-600 dark:text-pink-400 py-1.5 px-3 text-[10px] sm:text-xs">Membres VIP (45)</Badge>
-                    <Badge variant="outline" className="border-green-200 dark:border-green-900 text-green-600 dark:text-green-400 py-1.5 px-3 text-[10px] sm:text-xs">Inactives (32)</Badge>
+                    <Badge className="bg-blue-500 dark:bg-blue-600 text-white border-0 py-1.5 px-3 text-[10px] sm:text-xs">Toutes les clientes ({totalUsers})</Badge>
+                    <Badge variant="outline" className="border-purple-200 dark:border-purple-900 text-purple-600 dark:text-pink-400 py-1.5 px-3 text-[10px] sm:text-xs">Membres VIP ({vipUsers})</Badge>
+                    <Badge variant="outline" className="border-green-200 dark:border-green-900 text-green-600 dark:text-green-400 py-1.5 px-3 text-[10px] sm:text-xs">Inactives ({inactiveUsers})</Badge>
                   </div>
                 </div>
 
@@ -586,11 +576,11 @@ export default function MarketingLoyalty() {
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-4">
-                  <Button className="flex-1 bg-linear-to-r from-blue-500 to-cyan-500 text-white rounded-full py-5 sm:py-7  shadow-lg shadow-blue-500/20 transition-all text-sm sm:text-base">
+                  <Button size="sm" className="flex-1 bg-linear-to-r from-blue-500 to-cyan-500 text-white rounded-full  shadow-lg shadow-blue-500/20 transition-all text-sm sm:text-base">
                     <Send className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
                     Envoyer Maintenant
                   </Button>
-                  <Button variant="outline" className="flex-1 sm:flex-none rounded-full py-5 sm:py-7 px-8  dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800 transition-all text-sm sm:text-base">
+                  <Button variant="outline" className="flex-1 sm:flex-none rounded-full px-8  dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800 transition-all text-sm sm:text-base">
                     Programmer
                   </Button>
                 </div>
@@ -610,7 +600,7 @@ export default function MarketingLoyalty() {
                 <div>
                   <label className="block text-xs sm:text-sm  text-gray-700 dark:text-gray-300 mb-3 uppercase tracking-widest">Destinataires</label>
                   <div className="flex flex-wrap gap-2">
-                    <Badge className="bg-purple-500 dark:bg-purple-600 text-white border-0 py-1.5 px-3 text-[10px] sm:text-xs">Toutes les clientes (247)</Badge>
+                    <Badge className="bg-purple-500 dark:bg-purple-600 text-white border-0 py-1.5 px-3 text-[10px] sm:text-xs">Toutes les clientes ({totalUsers})</Badge>
                     <Badge variant="outline" className="border-pink-200 dark:border-pink-900 text-pink-600 dark:text-pink-400 py-1.5 px-3 text-[10px] sm:text-xs">RDV demain (12)</Badge>
                   </div>
                 </div>
@@ -636,11 +626,11 @@ export default function MarketingLoyalty() {
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-4">
-                  <Button className="flex-1 bg-linear-to-r from-purple-500 to-pink-500 text-white rounded-full py-5 sm:py-7  shadow-lg shadow-pink-500/20 transition-all text-sm sm:text-base">
+                  <Button className="flex-1 bg-linear-to-r from-purple-500 to-pink-500 text-white rounded-full  shadow-lg shadow-pink-500/20 transition-all text-sm sm:text-base">
                     <Send className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
                     Envoyer SMS
                   </Button>
-                  <Button variant="outline" className="flex-1 sm:flex-none rounded-full py-5 sm:py-7 px-8  dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800 transition-all text-sm sm:text-base">
+                  <Button variant="outline" className="flex-1 sm:flex-none rounded-full px-8  dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800 transition-all text-sm sm:text-base">
                     Prévisualiser
                   </Button>
                 </div>

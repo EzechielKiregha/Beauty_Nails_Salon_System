@@ -8,13 +8,9 @@ import { Badge } from "./ui/badge";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogTrigger } from "./ui/dialog";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./ui/table";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import { useMemberships, useMembershipPurchases } from "@/lib/hooks/useMemberships";
 import { Membership, MembershipPurchase } from "@/lib/api/memberships";
-import { Client } from "@/lib/api/clients";
-import { useClients } from "@/lib/hooks/useClients";
-import { Plus, Edit, Trash2, Users, Calendar, DollarSign, Percent } from "lucide-react";
+import { Plus, Edit, Trash2, Users } from "lucide-react";
 import ViewClientsMembershipModal from "./modals/ViewClientsMembershipModal";
 
 // Function to load benefits from localStorage

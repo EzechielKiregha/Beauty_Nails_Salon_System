@@ -36,16 +36,16 @@ export async function PUT(
           data: {
             totalAppointments: { increment: 1 },
             totalSpent: { increment: appointment.price },
-            loyaltyPoints: { increment: 10 },
+            loyaltyPoints: { increment: 5 },
           },
         }),
         // Create loyalty transaction
         prisma.loyaltyTransaction.create({
           data: {
             clientId: appointment.clientId,
-            points: 10,
+            points: 5,
             type: 'earned_appointment',
-            description: `Points gagnés pour ${appointment.service.name}`,
+            description: `Points gagnés pour terminer le service ${appointment.service.name}`,
             relatedId: appointment.id,
           },
         }),
@@ -55,7 +55,7 @@ export async function PUT(
             userId: appointment.client.userId,
             type: 'loyalty_reward',
             title: 'Points de fidélité',
-            message: 'Vous avez gagné 10 points de fidélité !',
+            message: 'Vous avez gagné 5 points de fidélité !',
           },
         }),
       ]);

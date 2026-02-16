@@ -7,7 +7,7 @@ import { nanoid } from 'nanoid';
 
 export async function GET(request: NextRequest) {
   try {
-    await requireRole(['admin', 'worker']);
+    await requireRole(['admin', 'worker', 'client']);
 
     const { searchParams } = new URL(request.url);
     const search = searchParams.get('search') || '';

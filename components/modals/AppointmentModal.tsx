@@ -23,6 +23,7 @@ import { Card } from '../ui/card';
 import { Separator } from '../ui/separator';
 import { useDiscounts } from '@/lib/hooks/useMarketing';
 import { CreateAppointmentDataAsWorker } from '@/lib/api/appointments';
+import { useClients } from '@/lib/hooks/useClients';
 
 interface AppointmentModalProps {
   open?: boolean;
@@ -62,6 +63,7 @@ export function AppointmentModal({ open, onOpenChange, appointment, trigger, cli
   >();
   const [selectedServiceId, setSelectedServiceId] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [clientIdFromSelect, setClientIdFromSelect] = useState("");
   const [selectedWorker, setSelectedWorker] = useState("");
   const [selectedTime, setSelectedTime] = useState("");
   const [location, setLocation] = useState<"salon" | "home">(
@@ -90,6 +92,7 @@ export function AppointmentModal({ open, onOpenChange, appointment, trigger, cli
   const { createAppointmentAsAdmin, isLoading: appointmentLoading } = useAppointments();
   const { processPayment, isLoading: paymentProcessing } = usePayments();
   const { createAppointment, isLoading: isAppointmentLoading } = useAppointments();
+  const { clients: allClients = [] } = useClients()
 
 
   const TAX_RATE = 0.16; // 18% example
@@ -189,6 +192,15 @@ export function AppointmentModal({ open, onOpenChange, appointment, trigger, cli
   useEffect(() => {
     setSelectedTime("");
   }, [selectedWorker, selectedDate]);
+
+  useEffect(() => {
+    const selectedClient = allClients.find((client) => client.id === clientIdFromSelect);
+    if (!selectedClient) return
+    setClientId(selectedClient.id);
+    setClientName(selectedClient?.user?.name || '');
+    setClientPhone(selectedClient?.user?.phone || '');
+
+  }, [clientIdFromSelect, allClients]);
 
 
   useEffect(() => {
@@ -340,13 +352,34 @@ export function AppointmentModal({ open, onOpenChange, appointment, trigger, cli
 
             <TabsContent value="details" className="space-y-4">
               {/* Client Info */}
+              <div className="space-y-2">
+                <Label>Choisir le client</Label>
+                <Select value={clientIdFromSelect} onValueChange={setClientIdFromSelect}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Choisir le client" />
+                  </SelectTrigger>
+
+                  <SelectContent>
+                    {allClients.map((client) => (
+                      <SelectItem
+                        key={client.id}
+                        value={client.id}
+                        disabled={clientName && clientName !== client?.user?.name}
+                      >
+                        {client?.user?.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
               <div className="grid grid-cols-2 gap-4">
+
                 <div className="space-y-2">
                   <Label>Nom de la Cliente</Label>
                   <div className="relative">
                     <User className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                     <Input
-                      placeholder="Nom complet"
+                      placeholder={`Ex: ${client?.user?.name || 'Jane Doe'}`}
                       className="pl-9"
                       value={clientName}
                       // onChange={(e) => setClientName(e.target.value)}
@@ -708,6 +741,6 @@ export function AppointmentModal({ open, onOpenChange, appointment, trigger, cli
         </div>
         {/* </form> */}
       </DialogContent>
-    </Dialog>
+    </Dialog >
   );
 }

@@ -1,7 +1,6 @@
 "use client"
 import { useState, useMemo } from 'react';
 import { useInventory } from '@/lib/hooks/useInventory';
-import CreateInventoryModal from '@/components/modals/CreateInventoryModal';
 import { Card } from './ui/card';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
@@ -17,7 +16,7 @@ interface InventoryItem {
   stock: number;
   minStock: number;
   unit: string;
-  price: string;
+  cost: string;
   supplier: string;
   lastRestock: string;
   usageRate: string;
@@ -48,7 +47,7 @@ export default function InventoryManagement({ showMock }: { showMock?: boolean }
       stock: 45,
       minStock: 30,
       unit: 'unités',
-      price: '15 000 Fc',
+      cost: '15 000 Fc',
       supplier: 'Beauty Supplies DRC',
       lastRestock: '2024-11-15',
       usageRate: '8 unités/semaine',
@@ -240,7 +239,7 @@ export default function InventoryManagement({ showMock }: { showMock?: boolean }
                   </div>
                   <div className="flex justify-between items-center text-sm">
                     <span className="text-gray-600 dark:text-gray-400">Prix unitaire:</span>
-                    <span className=" text-gray-900 dark:text-gray-100">{item.price}</span>
+                    <span className=" text-gray-900 dark:text-gray-100">{item.cost}</span>
                   </div>
                   <div className="flex justify-between items-center text-sm">
                     <span className="text-gray-600 dark:text-gray-400">Utilisation:</span>
