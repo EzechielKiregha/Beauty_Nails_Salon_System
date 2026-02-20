@@ -2,13 +2,10 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { authApi } from '../api/auth';
 import { toast } from 'sonner';
-import { useRouter } from "next/navigation";
 
 
 export function useAuth() {
   const queryClient = useQueryClient();
-
-  const navigate = useRouter();
 
   // Get current user
   const {
@@ -28,7 +25,7 @@ export function useAuth() {
     onSuccess: (data) => {
       queryClient.setQueryData(['auth', 'me'], data.user);
       toast.success(`Bienvenue, ${data.user.name} !`);
-      navigate.push(`/dashboard/${data.user.role}`);
+      window.location.href = `/dashboard/${data.user.role}`;
     },
     onError: (error: any) => {
       toast.error(error.response?.data?.error?.message || 'Erreur de connexion');
@@ -41,7 +38,7 @@ export function useAuth() {
     onSuccess: (data) => {
       queryClient.setQueryData(['auth', 'me'], data.user);
       toast.success(data.message || 'Compte créé avec succès !');
-      navigate.push('/dashboard/client');
+      window.location.href = '/dashboard/client';
     },
     onError: (error: any) => {
       toast.error(error.response?.data?.error?.message || 'Erreur lors de l\'inscription');
@@ -66,7 +63,7 @@ export function useAuth() {
     onSuccess: () => {
       queryClient.clear();
       toast.success('Déconnexion réussie');
-      navigate.push('/auth/login');
+      window.location.href = '/auth/login';
     },
   });
 

@@ -90,7 +90,10 @@ export default function Header() {
                   </Button>
                 </Link>
                 <Button
-                  onClick={() => logout()}
+                  onClick={() => {
+                    logout()
+                    router.refresh();
+                  }}
                   variant="ghost"
                   className="text-gray-600 dark:text-gray-400 hover:text-pink-600"
                 >
@@ -196,6 +199,7 @@ export default function Header() {
                     onClick={() => {
                       logout()
                       setMobileMenuOpen(false);
+                      router.refresh();
                     }}
                     className="px-4 py-2 text-left text-gray-700 dark:text-gray-300 hover:bg-pink-50 dark:hover:bg-gray-800 rounded-lg"
                   >
