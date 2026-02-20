@@ -57,32 +57,12 @@ export default function AdminDashboardV2() {
   const today = new Date().toISOString().split('T')[0];
   const { appointments: todayAppointments = [] } = useAppointments({ date: today });
 
-  // Mock data (used when no data is returned and user toggles showMock)
-  const MOCK_CLIENTS = [
-    { id: 'mock-1', name: 'Aline Mukoko' },
-    { id: 'mock-2', name: 'Jean Kabila' },
-  ];
-
-  const MOCK_STAFF = [
-    { id: 's-1', name: 'Marie Nkumu', isAvailable: true, rating: 4.8 },
-    { id: 's-2', name: 'Grace Lumière', isAvailable: false, rating: 4.6 },
-  ];
-
-  const MOCK_TODAY_APPOINTMENTS = [
-    { id: 'a-1', status: 'confirmed', date: today },
-    { id: 'a-2', status: 'pending', date: today },
-  ];
-
-  const MOCK_INVENTORY = [
-    { id: 'i-1', name: 'Vernis #1', status: 'good' },
-    { id: 'i-2', name: 'Dissolvant', status: 'low' },
-  ];
-
-
 
   // Get revenue report (current month)
-  const firstDayOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().split('T')[0];
-  const lastDayOfMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).toISOString().split('T')[0];
+  const firstDayOfMonth = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+  const lastDayOfMonth = new Date().toISOString().slice(0, 10);
+
+  console.log('Fetching revenue report for period: ', { from: firstDayOfMonth, to: lastDayOfMonth });
 
   const { data: revenueData, isLoading: isRevenueLoading } = useRevenueReport({
     from: firstDayOfMonth,
@@ -226,12 +206,16 @@ export default function AdminDashboardV2() {
             </div>
             <p className="text-xs sm:text-sm opacity-90 mb-1 ">Revenus (Période Courante)</p> {/* Updated label */}
             <p className="text-2xl sm:text-3xl  mb-2 ">
-              {(stats.currentPeriodRevenue / 1000000).toFixed(1)}M {/* Used currentPeriodRevenue */}
+              {revenueData?.totalRevenue && revenueData?.totalRevenue > 100000
+                ?
+                (revenueData.totalRevenue / 1000000).toFixed(1) + 'M'
+                :
+                revenueData?.totalRevenue} Fc
             </p>
             <p className="text-xs opacity-80 ">
               {/* Removed the "today" part as it now reflects the period defined by the hook params */}
               {/* Optionally, you could display the period range here if revenueData.period is available */}
-              {/* {revenueData?.period ? `${revenueData.period.from} à ${revenueData.period.to}` : ''} */}
+              {revenueData?.period ? `${revenueData.period.from} à ${revenueData.period.to}` : ''}
             </p>
           </Card>
 

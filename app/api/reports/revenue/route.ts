@@ -17,8 +17,12 @@ export async function GET(request: NextRequest) {
       return errorResponse('Dates requises', 400);
     }
 
-    const from = new Date(fromParam);
-    const to = new Date(toParam);
+    console.log('Generating revenue report with params: ', { fromParam, toParam, pdfTrigger });
+
+    const from = Date.parse(fromParam) ? new Date(fromParam): new Date(Date.now() - 30 * 24 * 60 * 60 * 1000); // Default to last 30 days if parsing fails
+    const to = Date.parse(toParam) ? new Date(toParam) : new Date();
+
+    console.log('Generating revenue report for period: ', { from, to });
 
     // Optimized query with proper joins
     const sales = await prisma.sale.findMany({
@@ -27,7 +31,9 @@ export async function GET(request: NextRequest) {
           gte: from,
           lte: to,
         },
-        paymentStatus: 'completed',
+        paymentStatus: {
+          in: ['completed', 'pending']
+        },
       },
       include: {
         items: {
@@ -150,6 +156,16 @@ export async function GET(request: NextRequest) {
         },
       });
     }
+
+    console.log('Revenue report generated successfully: ', {
+      totalRevenue,
+      salesCount: sales.length,
+      breakdown,
+      serviceCount,
+      topSellingServices,
+      paymentMethods,
+      period: { from: fromParam, to: toParam },
+    });
 
     return successResponse({
       totalRevenue,
