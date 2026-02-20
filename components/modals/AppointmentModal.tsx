@@ -24,6 +24,7 @@ import { Separator } from '../ui/separator';
 import { useDiscounts } from '@/lib/hooks/useMarketing';
 import { CreateAppointmentDataAsWorker } from '@/lib/api/appointments';
 import { useClients } from '@/lib/hooks/useClients';
+import { useAuth } from '@/lib/hooks/useAuth';
 
 interface AppointmentModalProps {
   open?: boolean;
@@ -47,20 +48,16 @@ export interface CreateAppointmentData {
 }
 
 export function AppointmentModal({ open, onOpenChange, appointment, trigger, client }: AppointmentModalProps) {
+  const { user } = useAuth();
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [clientName, setClientName] = useState(client?.name || '');
   const [clientPhone, setClientPhone] = useState(client?.phone || '');
   const [clientId, setClientId] = useState(client?.id || '');
   const [status, setStatus] = useState('scheduled');
   const [notes, setNotes] = useState('');
-  const [price, setPrice] = useState('');
   const [paymentMethod, setPaymentMethod] = useState<'card' | 'cash' | 'mobile'>('cash');
   const [discountCode, setDiscountCode] = useState('');
   const [service, setService] = useState<Service>();
-  // Initialize states with URL parameters
-  const [selectedDate, setSelectedDate] = useState<
-    Date | undefined
-  >();
   const [selectedServiceId, setSelectedServiceId] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [clientIdFromSelect, setClientIdFromSelect] = useState("");
@@ -81,10 +78,10 @@ export function AppointmentModal({ open, onOpenChange, appointment, trigger, cli
   const { services, isLoading: servicesLoading } = useServices();
   const { staff, isLoading: staffLoading } = useAvailableStaff();
   const { data: availableSlotsData } = useAvailableSlots(
-    selectedWorker && selectedDate
+    selectedWorker && date
       ? {
         workerId: selectedWorker,
-        date: selectedDate?.toLocaleDateString(),
+        date: date?.toLocaleDateString(),
       }
       : undefined
   );
@@ -191,7 +188,7 @@ export function AppointmentModal({ open, onOpenChange, appointment, trigger, cli
 
   useEffect(() => {
     setSelectedTime("");
-  }, [selectedWorker, selectedDate]);
+  }, [selectedWorker, date]);
 
   useEffect(() => {
     const selectedClient = allClients.find((client) => client.id === clientIdFromSelect);
@@ -254,7 +251,7 @@ export function AppointmentModal({ open, onOpenChange, appointment, trigger, cli
       !selectedCategory ||
       !selectedServiceId ||
       !selectedWorker ||
-      !selectedDate ||
+      !date ||
       !selectedTime ||
       !clientId ||
       !clientName ||
@@ -271,7 +268,7 @@ export function AppointmentModal({ open, onOpenChange, appointment, trigger, cli
       clientId: clientId,
       serviceId: selectedServiceId,
       workerId: selectedWorker,
-      date: selectedDate.toISOString(),
+      date: date.toISOString(),
       time: selectedTime,
       location: location,
       addOns: addOns,
@@ -283,12 +280,12 @@ export function AppointmentModal({ open, onOpenChange, appointment, trigger, cli
         {
           serviceId: selectedServiceId,
           quantity: 1,
-          price: parseFloat(price),
+          price: baseServicePrice,
         },
       ],
       paymentMethod: paymentStatus === 'completed' ? paymentMethod : 'mixed',
       appointmentId: appointment ? appointment.id : undefined,
-      discountCode: "",
+      discountCode: discountCode ?? '',
       loyaltyPointsUsed: 0,
       tip: 0,
     }
@@ -304,19 +301,37 @@ export function AppointmentModal({ open, onOpenChange, appointment, trigger, cli
       !selectedCategory ||
       !selectedServiceId ||
       !selectedWorker ||
-      !selectedDate ||
+      !date ||
+      !clientId ||
       !selectedTime
     ) {
       toast.error(
-        "Veuillez remplir tous les champs obligatoires",
+        "Remplissez tous les champs obligatoires",
       );
       return;
     }
 
+    const paymentData: ProcessPaymentData = {
+      clientId: clientId,
+      items: [
+        {
+          serviceId: selectedServiceId,
+          quantity: 1,
+          price: baseServicePrice,
+        },
+      ],
+      paymentMethod: paymentStatus === 'completed' ? paymentMethod : 'mixed',
+      appointmentId: appointment ? appointment.id : undefined,
+      discountCode: discountCode ?? '',
+      loyaltyPointsUsed: 0,
+      tip: 0,
+    }
+
     const appointmentData: CreateAppointmentDataAsWorker = {
+      clientId: clientId,
       serviceId: selectedServiceId,
       workerId: selectedWorker,
-      date: selectedDate.toISOString(),
+      date: date.toISOString(),
       time: selectedTime,
       location: location,
       addOns: addOns,
@@ -324,6 +339,8 @@ export function AppointmentModal({ open, onOpenChange, appointment, trigger, cli
       paymentInfo,
     };
     createAppointment(appointmentData)
+    processPayment(paymentData)
+    onOpenChange?.(false);
 
   };
 
@@ -499,6 +516,7 @@ export function AppointmentModal({ open, onOpenChange, appointment, trigger, cli
                           selected={date}
                           onSelect={setDate}
                           initialFocus
+                          disabled={(date) => date < new Date()}
                         />
                       </PopoverContent>
                     </Popover>
@@ -523,10 +541,10 @@ export function AppointmentModal({ open, onOpenChange, appointment, trigger, cli
                     />
                   </div>
                 </div> */}
-                {availableSlotsData ? (<div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                {availableSlotsData && availableSlotsData.slots.filter((slot: any) => slot.available).length > 0 ? (<div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                   {availableSlotsData?.slots.map((slot: any) => {
                     const isAvailable = slot.available;
-
+                    console.log(`Time slot ${slot.time} is ${isAvailable ? 'available' : 'unavailable'}`);
                     return (
                       <button
                         key={slot.time}
@@ -734,9 +752,17 @@ export function AppointmentModal({ open, onOpenChange, appointment, trigger, cli
             <Button type="button" variant="outline" onClick={() => onOpenChange?.(false)}>
               Fermer
             </Button>
-            <Button onClick={handleSubmit} className="bg-linear-to-r from-pink-500 to-purple-500 text-white">
-              {appointment ? 'Enregistrer Modifications' : 'Confirmer Rendez-vous'}
-            </Button>
+            {user?.role === 'worker' ? (
+              <Button onClick={handleWorkerSubmit} className="bg-linear-to-r from-pink-500 to-purple-500 text-white">
+                {appointment ? 'Enregistrer Modifications' : 'Prendre Rendez-vous'}
+              </Button>
+            )
+              : (
+                <Button onClick={handleSubmit} className="bg-linear-to-r from-pink-500 to-purple-500 text-white">
+                  {appointment ? 'Enregistrer Modifications' : 'Confirmer Rendez-vous'}
+                </Button>
+              )
+            }
           </DialogFooter>
         </div>
         {/* </form> */}

@@ -462,10 +462,20 @@ export default function WorkerDashboardV2() {
           {/* Schedule Tab */}
           <TabsContent value="schedule" className="space-y-6">
             <Card className="p-6">
-              <h2 className="text-2xl   mb-6 flex items-center">
-                <Clock className="w-6 h-6 mr-2 text-purple-500" />
-                Planning d'aujourd'hui
-              </h2>
+              <div className="flex flex-col md:flex-row items-center justify-start md:justify-between mb-6 gap-4">
+                <h2 className="text-2xl   mb-6 flex items-center">
+                  <Clock className="w-6 h-6 mr-2 text-purple-500" />
+                  Planning d'aujourd'hui
+                </h2>
+                <AppointmentModal
+                  client={selectedClient}
+                  trigger={
+                    <Button size="sm" className="bg-linear-to-r from-pink-500 to-purple-500 text-white rounded-full py-5 px-6 shadow-lg shadow-pink-500/20  transition-all text-sm">
+                      <Plus className="w-5 h-5 mr-3" />
+                      Nouveau rendez-vous
+                    </Button>
+                  } />
+              </div>
 
               {todaySchedule.length === 0 ? (
                 <div className="text-center py-12 text-gray-500">
@@ -474,9 +484,9 @@ export default function WorkerDashboardV2() {
                   <AppointmentModal
                     client={selectedClient}
                     trigger={
-                      <Button size="sm" className="bg-linear-to-r from-pink-500 to-purple-500 text-white rounded-full py-5 px-6 shadow-lg shadow-pink-500/20  transition-all text-sm">
+                      <Button size="sm" className="bg-linear-to-r mt-1.5 from-pink-500 to-purple-500 text-white rounded-full py-5 px-6 shadow-lg shadow-pink-500/20  transition-all text-sm">
                         <Plus className="w-5 h-5 mr-3" />
-                        Prendre RDV
+                        Nouveau rendez-vous
                       </Button>
                     } />
                 </div>
@@ -525,6 +535,10 @@ export default function WorkerDashboardV2() {
                                 <MapPin className="w-4 h-4" />
                                 {appointment.location === 'salon' ? 'Salon' : 'Domicile'}
                               </div>
+                              <div className="flex items-center gap-1">
+                                <CalendarIcon className="w-4 h-4" />
+                                {appointment.date ? format(new Date(appointment.date), "PPP", { locale: fr }) : 'Date non définie'}
+                              </div>
                             </div>
 
                             {appointment.notes && (
@@ -553,6 +567,7 @@ export default function WorkerDashboardV2() {
                     </div>
                   ))}
                 </div>
+
               )}
             </Card>
 
@@ -575,7 +590,7 @@ export default function WorkerDashboardV2() {
                           {appointment.service?.name} - {appointment.time}
                         </p>
                         <p className="text-sm text-gray-600 dark:text-gray-300">
-                          date : {formatTime(appointment.date)}
+                          date : {appointment.date ? format(new Date(appointment.date), "PPP", { locale: fr }) : 'Date non définie'}
                         </p>
                       </div>
                       <div className="flex gap-2">
@@ -730,7 +745,7 @@ export default function WorkerDashboardV2() {
                           {appointment.service?.name} - {appointment.time}
                         </p>
                         <p className="text-sm text-gray-600 dark:text-gray-300">
-                          date : {formatTime(appointment.date)}
+                          date : {appointment.date ? format(new Date(appointment.date), "PPP", { locale: fr }) : 'Date non définie'}
                         </p>
                       </div>
                       <div className="flex gap-2">
@@ -766,7 +781,7 @@ export default function WorkerDashboardV2() {
                           {appointment.service?.name} - {appointment.time}
                         </p>
                         <p className="text-sm text-gray-600 dark:text-gray-300">
-                          date : {formatTime(appointment.date)}
+                          date : {appointment.date ? format(new Date(appointment.date), "PPP", { locale: fr }) : 'Date non définie'}
                         </p>
                       </div>
                       <div className="flex gap-2">

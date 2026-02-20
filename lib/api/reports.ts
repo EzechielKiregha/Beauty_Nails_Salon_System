@@ -23,9 +23,9 @@ export interface ServicePerformance {
 
 export const reportsApi = {
   // Revenue report
-  getRevenueReport: async (params: {
-    from: string;
-    to: string;
+  getRevenueReport: async (params?: {
+    from?: string;
+    to?: string;
   }): Promise<RevenueReport> => {
     const { data } = await axiosdb.get('/reports/revenue', { params });
     return data;

@@ -101,13 +101,13 @@ export async function GET(request: NextRequest) {
         acc[clientId] = {
           clientId,
           clientName: appointment.client?.user?.name || 'Unknown',
-          appointmentCount: 0,
-          totalRevenue: 0
+          appointmentCount: appointment.client?.totalAppointments || 0,
+          totalRevenue: appointment.client?.totalSpent ? Number(appointment.client.totalSpent) : 0
         };
       }
       
-      acc[clientId].appointmentCount += 1;
-      acc[clientId].totalRevenue += appointment.sale ? Number(appointment.sale.total) : 0;
+      // acc[clientId].appointmentCount += 1;
+      // acc[clientId].totalRevenue += appointment.sale ? Number(appointment.sale.total) : 0;
       
       return acc;
     }, {});
@@ -135,6 +135,8 @@ export async function GET(request: NextRequest) {
         totalRevenue: client.totalRevenue
       }))
     };
+
+    console.log('Client Analytics Response:', responseData);
 
     if (pdfTrigger) {
       // Format data for PDF

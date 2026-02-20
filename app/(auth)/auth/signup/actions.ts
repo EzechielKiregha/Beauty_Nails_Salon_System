@@ -48,7 +48,7 @@ export async function handleSignup(formData: FormData, refCodeParam: string | nu
       return { error: "Email ou mot de passe incorrect" };
     }
   }catch(e) {
-    return { error: "Une erreur est survenue, ", e };
+    return { error: "Incorrect Email or Password, verifier votre role et essayez encore une fois..." };
   }
 
   return {

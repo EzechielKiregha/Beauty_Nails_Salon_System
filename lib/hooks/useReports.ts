@@ -4,14 +4,14 @@ import { reportsApi } from '../api/reports';
 import { toast } from 'sonner';
 import { RevenueReport, ClientAnalytics, ServicePerformance } from '../api/reports';
 
-export function useRevenueReport(params: {
-  from: string;
-  to: string;
+export function useRevenueReport(params?: {
+  from?: string;
+  to?: string;
 }) {
   return useQuery<RevenueReport>({
-    queryKey: ['reports', 'revenue', params.from, params.to],
+    queryKey: ['reports', 'revenue', params?.from, params?.to],
     queryFn: () => reportsApi.getRevenueReport(params),
-    enabled: !!params.from && !!params.to,
+    enabled: !!params?.from && !!params?.to,
     staleTime: 5 * 60 * 1000, // 5 minutes
     gcTime: 1000 * 60 * 10, // 10 minutes
     structuralSharing: true, // Share data structure between renders
@@ -117,6 +117,12 @@ export function useDownloadPdf() {
           break;
         case 'marketing':
           url = `/api/reports/marketing`;
+          break;
+        case 'clients':
+          url = `/api/reports/clients`;
+          break;
+        case 'services':
+          url = `/api/reports/services`;
           break;
         default:
           throw new Error('Invalid report type');

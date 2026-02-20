@@ -62,8 +62,6 @@ export default function AdminDashboardV2() {
   const firstDayOfMonth = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
   const lastDayOfMonth = new Date().toISOString().slice(0, 10);
 
-  console.log('Fetching revenue report for period: ', { from: firstDayOfMonth, to: lastDayOfMonth });
-
   const { data: revenueData, isLoading: isRevenueLoading } = useRevenueReport({
     from: firstDayOfMonth,
     to: lastDayOfMonth,
@@ -208,7 +206,7 @@ export default function AdminDashboardV2() {
             <p className="text-2xl sm:text-3xl  mb-2 ">
               {revenueData?.totalRevenue && revenueData?.totalRevenue > 100000
                 ?
-                (revenueData.totalRevenue / 1000000).toFixed(1) + 'M'
+                (revenueData.totalRevenue / 1000000).toFixed(1) + 'M Fc'
                 :
                 revenueData?.totalRevenue} Fc
             </p>

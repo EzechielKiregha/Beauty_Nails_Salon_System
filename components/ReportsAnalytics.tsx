@@ -8,8 +8,9 @@ import { Badge } from './ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
-import { TrendingUp, Download, Calendar, DollarSign, Users, Award, Clock, Target, Loader2 } from 'lucide-react';
+import { TrendingUp, Download, Calendar, DollarSign, Users, Award, Clock, Target, Loader2, Sparkles, BarChart2 } from 'lucide-react';
 import { useRevenueReport, useClientAnalytics, useServicePerformance, useStaffReport, usePeakHours, useMembershipAnalytics, useMarketingCampaigns, useDownloadPdf } from '../lib/hooks/useReports';
+import { useAppointments } from '@/lib/hooks/useAppointments';
 
 export default function ReportsAnalytics() {
   const [period, setPeriod] = useState('month');
@@ -162,7 +163,13 @@ export default function ReportsAnalytics() {
           <DollarSign className="w-8 h-8 text-green-600 dark:text-green-400 mb-2" />
           <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Revenus Mensuels</p>
           <p className="text-2xl sm:text-3xl  text-gray-900 dark:text-gray-100">
-            {revenueReport ? `${(revenueReport.totalRevenue / 1000000).toFixed(1)}M Fc` : <Loader2 className="w-5 h-5 animate-spin text-purple-500 dark:text-purple-400 mx-auto mb-4" />}
+            {revenueReport ?
+              revenueReport?.totalRevenue && revenueReport?.totalRevenue > 100000
+                ?
+                (revenueReport.totalRevenue / 1000000).toFixed(1) + 'M Fc'
+                :
+                revenueReport?.totalRevenue + ' Fc'
+              : <Loader2 className="w-5 h-5 animate-spin text-purple-500 dark:text-purple-400 mx-auto mb-4" />}
           </p>
           <div className="flex items-center gap-1 mt-2">
             <TrendingUp className="w-4 h-4 text-green-600 dark:text-green-400" />
@@ -541,18 +548,58 @@ export default function ReportsAnalytics() {
           </div>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <Button variant="outline" className="rounded-full py-7  border-indigo-100 dark:border-indigo-900 dark:text-gray-300 dark:hover:bg-indigo-900/20 bg-white dark:bg-gray-900/50">
-            📊 Financier
+          <Button variant="outline"
+            onClick={() => {
+              handlePdfDownload("services")
+            }}
+            className="rounded-full py-7  border-indigo-100 dark:border-indigo-900 dark:text-gray-300 dark:hover:bg-indigo-900/20 bg-white dark:bg-gray-900/50">
+            <BarChart2 className="w-5 h-5 inline-block mr-2 text-blue-500" /> Services
           </Button>
-          <Button variant="outline" className="rounded-full py-7  border-indigo-100 dark:border-indigo-900 dark:text-gray-300 dark:hover:bg-indigo-900/20 bg-white dark:bg-gray-900/50">
-            👥 Clientes
+          <Button variant="outline"
+            onClick={() => {
+              handlePdfDownload("clients")
+            }}
+            className="rounded-full py-7  border-indigo-100 dark:border-indigo-900 dark:text-gray-300 dark:hover:bg-indigo-900/20 bg-white dark:bg-gray-900/50">
+            <Users className="w-5 h-5 inline-block mr-2 text-purple-500" /> Clientes
           </Button>
-          <Button variant="outline" className="rounded-full py-7  border-indigo-100 dark:border-indigo-900 dark:text-gray-300 dark:hover:bg-indigo-900/20 bg-white dark:bg-gray-900/50">
-            ⭐ Personnel
+          <Button variant="outline"
+            onClick={() => {
+              handlePdfDownload("staff")
+            }}
+            className="rounded-full py-7  border-indigo-100 dark:border-indigo-900 dark:text-gray-300 dark:hover:bg-indigo-900/20 bg-white dark:bg-gray-900/50">
+            <Sparkles className="w-5 h-5 inline-block mr-2 text-pink-500" /> Personnel
           </Button>
-          <Button className="bg-linear-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-full py-7 font-black shadow-lg shadow-indigo-500/20 transition-all active:scale-95">
-            + Nouveau Rapport
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <Button variant="outline"
+            onClick={() => {
+              handlePdfDownload("revenue")
+            }}
+            className="rounded-full py-7  border-indigo-100 dark:border-indigo-900 dark:text-gray-300 dark:hover:bg-indigo-900/20 bg-white dark:bg-gray-900/50">
+            <BarChart2 className="w-5 h-5 inline-block mr-2 text-blue-500" /> Financier
           </Button>
+          <Button variant="outline"
+            onClick={() => {
+              handlePdfDownload("marketing")
+            }}
+            className="rounded-full py-7  border-indigo-100 dark:border-indigo-900 dark:text-gray-300 dark:hover:bg-indigo-900/20 bg-white dark:bg-gray-900/50">
+            <Sparkles className="w-5 h-5 inline-block mr-2 text-pink-500" /> Marketing
+          </Button>
+          <Button variant="outline"
+            onClick={() => {
+              handlePdfDownload("membership")
+            }}
+            className="rounded-full py-7  border-indigo-100 dark:border-indigo-900 dark:text-gray-300 dark:hover:bg-indigo-900/20 bg-white dark:bg-gray-900/50">
+            <Award className="w-5 h-5 inline-block mr-2 text-yellow-500" /> Membres
+          </Button>
+          <Button variant="outline"
+            onClick={() => {
+              handlePdfDownload("peak-hours")
+            }}
+            className="rounded-full py-7  border-indigo-100 dark:border-indigo-900 dark:text-gray-300 dark:hover:bg-indigo-900/20 bg-white dark:bg-gray-900/50">
+            <Clock className="w-5 h-5 inline-block mr-2 text-green-500" /> Heures de Pointe
+          </Button>
+
         </div>
       </Card>
     </div>

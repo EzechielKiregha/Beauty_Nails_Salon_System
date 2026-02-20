@@ -56,10 +56,99 @@ export async function POST(request: NextRequest) {
     });
 
     const discount = loyaltyPointsUsed; // Example: 1 point = 1 unit
-    const tax = 0; // Fixed tax or calculated
+    const tax = 1.6; // Fixed tax or calculated
     const total = subtotal - discount + tax + tip;
 
-    const result = await prisma.$transaction(async (tx) => {
+    let result;
+    const existingSale = await prisma.sale.findFirst({
+      where: {
+        appointmentId: appointmentId || undefined,
+        clientId: effectiveClientId || undefined,
+      },
+      include: {
+        items: true,
+        payments: true,
+      },
+    });
+
+    if (existingSale && existingSale.paymentStatus === 'pending') {
+      // Update existing sale
+      result = await prisma.$transaction(async (tx) => {
+      // 1. Create Sale
+      const sale = await tx.sale.update({
+        where: { id: existingSale.id },
+        data: {
+          appointmentId,
+          clientId: effectiveClientId,
+          paymentMethod: paymentMethod as PaymentMethod,
+          paymentStatus: 'completed',
+          receiptNumber,
+          payments: {
+            update: {
+              where: { id: existingSale.payments[0].id },
+              data: {
+                amount: existingSale.payments[0].amount, // Keep original amount for recording purposes
+                method: paymentMethod as PaymentMethod,
+                status: 'completed',
+              },
+            },
+          },
+        },
+        include: {
+          items: true,
+          payments: true,
+        },
+      });
+
+      // 2. Update Appointment status
+      if (appointmentId) {
+        await tx.appointment.update({
+          where: { id: appointmentId },
+          data: { status: 'completed' },
+        });
+      }
+
+      // 3. Update ClientProfile
+      const pointsEarned = Math.floor(total / 10); // Example: 1 point for every 10 units spent
+      await tx.clientProfile.update({
+        where: { id: effectiveClientId },
+        data: {
+          totalSpent: { increment: total },
+          totalAppointments: appointmentId ? { increment: 1 } : undefined,
+          loyaltyPoints: { 
+            decrement: loyaltyPointsUsed,
+            increment: pointsEarned 
+          },
+        },
+      });
+
+      // 4. Create Loyalty Transactions
+      if (loyaltyPointsUsed > 0) {
+        await tx.loyaltyTransaction.create({
+          data: {
+            clientId: effectiveClientId,
+            points: -loyaltyPointsUsed,
+            type: 'redeemed_service',
+            description: `Utilisation de points pour la vente ${receiptNumber}`,
+            relatedId: sale.id,
+          },
+        });
+      }
+
+      await tx.loyaltyTransaction.create({
+        data: {
+          clientId: effectiveClientId,
+          points: pointsEarned,
+          type: 'earned_appointment',
+          description: `Points gagnés sur la vente ${receiptNumber}`,
+          relatedId: sale.id,
+        },
+      });
+
+      return sale;
+    });
+    } else {
+      result = await prisma.$transaction(async (tx) => {
       // 1. Create Sale
       const sale = await tx.sale.create({
         data: {
@@ -143,6 +232,7 @@ export async function POST(request: NextRequest) {
 
       return sale;
     });
+    }
 
     return NextResponse.json({
       sale: result,

@@ -130,7 +130,7 @@ export async function POST(request: NextRequest) {
   try {
     const user = await getAuthenticatedUser();
     const body = await request.json();
-    let clientId = user.clientProfile?.id;
+    let clientId = user.role === 'client' ? user.clientProfile?.id : body.clientId;
 
     const {
       serviceId,
@@ -146,10 +146,10 @@ export async function POST(request: NextRequest) {
 
     
 
-    // If user is not a client, find clientId from their profile
-    if (user.role !== 'client') {
-      return errorResponse('Seuls les clients peuvent créer des rendez-vous', 403);
-    }
+    // // If user is not a client, find clientId from their profile
+    // if (user.role !== 'client') {
+    //   return errorResponse('Seuls les clients peuvent créer des rendez-vous', 403);
+    // }
 
     const client = await prisma.clientProfile.findUnique({
       where: { userId: user.id },
@@ -199,7 +199,7 @@ export async function POST(request: NextRequest) {
         date: new Date(date),
         time,
         duration: service.duration,
-        price: service.price,
+        price: paymentInfo.total ? paymentInfo.total : service.price,
         location,
         addOns,
         notes,
@@ -250,7 +250,7 @@ export async function POST(request: NextRequest) {
           increment: service.price / 1000,
         },
         totalSpent: {
-          increment: service.price,
+          increment: paymentInfo.total,
         },
         loyaltyTransactions: {
           create: {
@@ -303,7 +303,7 @@ export async function POST(request: NextRequest) {
 
       const saleItemData = {
         quantity: 1,
-        price: service.price,
+        price: paymentInfo.total ? paymentInfo.total : service.price,
         discount: sale.discount,
         service: { connect: { id: serviceId } },
         sale: { connect: { id: sale.id } },
@@ -325,7 +325,7 @@ export async function POST(request: NextRequest) {
       // Create payment
       const payment = await prisma.payment.create({
         data: {
-          amount: service.price,
+          amount: paymentInfo.total ? paymentInfo.total : service.price,
           method: paymentInfo.method,
           status: 'pending',
           sale: { connect: { id: sale.id } }
