@@ -49,7 +49,7 @@ export default function ForgotPasswordForm() {
         </form>
 
         <div className="mt-6 text-center">
-          <Link href="/login" className="text-sm text-purple-600 hover:underline">
+          <Link href="/auth/login" className="text-sm text-purple-600 hover:underline">
             Retour à la connexion
           </Link>
         </div>
