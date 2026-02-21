@@ -80,4 +80,34 @@ export const authApi = {
   logout: async (): Promise<void> => {
     await axiosdb.post('/auth/logout');
   },
+
+  // Forgot password
+  forgotPassword: async (email: string): Promise<{ message: string }> => {
+    const response = await axiosdb.post('/api/mail/forgot-password', { email });
+    return response.data;
+  },
+
+  // Reset password
+  resetPassword: async (token: string, newPassword: string): Promise<{ message: string }> => {
+    const response = await axiosdb.post('/api/auth/reset-password', { token, newPassword });
+    return response.data;
+  },
+
+  // Send OTP
+  sendOtp: async (email: string): Promise<{ message: string }> => {
+    const response = await axiosdb.post('/api/mail/otp', { email });
+    return response.data;
+  },
+
+  // Verify OTP
+  verifyOtp: async (email: string, otp: string): Promise<{ message: string }> => {
+    const response = await axiosdb.get(`/api/mail/verify-otp?email=${encodeURIComponent(email)}&otp=${encodeURIComponent(otp)}`);
+    return response.data;
+  },
+
+  // Send welcome email
+  sendWelcomeEmail: async (email: string): Promise<{ message: string }> => {
+    const response = await axiosdb.post('/api/mail/welcome', { email });
+    return response.data;
+  },
 };

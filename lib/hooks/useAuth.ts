@@ -80,3 +80,65 @@ export function useAuth() {
     isRegisterLoading: registerMutation.isPending,
   };
 }
+
+export function useForgotPassword() {
+  return useMutation({
+    mutationFn: (email: string) => authApi.forgotPassword(email),
+    onSuccess: (data) => {
+      toast.success(data.message);
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.error || 'Erreur lors de la demande de réinitialisation');
+    }
+  });
+}
+
+export function useResetPassword() {
+  return useMutation({
+    mutationFn: ({ token, newPassword }: { token: string; newPassword: string }) => 
+      authApi.resetPassword(token, newPassword),
+    onSuccess: (data) => {
+      toast.success(data.message);
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.error || 'Erreur lors de la réinitialisation du mot de passe');
+    }
+  });
+}
+
+export function useSendOtp() {
+  return useMutation({
+    mutationFn: (email: string) => authApi.sendOtp(email),
+    onSuccess: (data) => {
+      toast.success(data.message);
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.error || 'Erreur lors de l\'envoi du code OTP');
+    }
+  });
+}
+
+export function useVerifyOtp() {
+  return useMutation({
+    mutationFn: ({ email, otp }: { email: string; otp: string }) => 
+      authApi.verifyOtp(email, otp),
+    onSuccess: (data) => {
+      toast.success(data.message);
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.error || 'Code OTP invalide');
+    }
+  });
+}
+
+export function useSendWelcomeEmail() {
+  return useMutation({
+    mutationFn: (email: string) => authApi.sendWelcomeEmail(email),
+    onSuccess: (data) => {
+      toast.success(data.message);
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.error || 'Erreur lors de l\'envoi de l\'email de bienvenue');
+    }
+  });
+}

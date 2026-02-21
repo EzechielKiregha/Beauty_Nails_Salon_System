@@ -30,6 +30,10 @@ model User {
   avatar        String?
   role          UserRole  @default(client)
   isActive      Boolean   @default(true)
+  resetToken           String?           // Added for password reset
+  resetTokenExpires    DateTime?         // Added for token expiration
+  otpSecret            String?           // Added for OTP
+  otpSecretExpires     DateTime?         // Added for OTP expiration
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 

@@ -206,6 +206,15 @@ export default function Login() {
         </Card>
 
         <p className="text-center mt-4 sm:mt-6 text-sm sm:text-base text-gray-600 dark:text-gray-300">
+          Vous avez oubliez votre mot de passe ?{" "}
+          <Link
+            href="/auth/forgot-password"
+            className="text-pink-600 dark:text-pink-400 hover:text-pink-700 dark:hover:text-pink-300 font-medium"
+          >
+            Réinitialiser votre mot de passe
+          </Link>
+        </p>
+        <p className="text-center mt-4 sm:mt-6 text-sm sm:text-base text-gray-600 dark:text-gray-300">
           Vous n'avez pas de compte ?{" "}
           <Link
             href="/auth/signup"

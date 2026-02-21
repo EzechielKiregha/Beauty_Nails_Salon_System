@@ -21,38 +21,52 @@ export const ForgotPasswordEmail = ({
   return (
     <Html>
       <Head />
-      <Body style={{ fontFamily: 'Arial, sans-serif', backgroundColor: '#f6f9fc', padding: '10px' }}>
-        <Preview>Reset your password</Preview>
-        <Container style={{ backgroundColor: '#ffffff', border: '1px solid #f0f0f0', padding: '45px', borderRadius: '10px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)' }}>
-          <Section>
-            <Text style={{ fontSize: '18px', fontWeight: '300', color: '#404040', marginBottom: '20px' }}>Hi {userFirstname},</Text>
-            <Text style={{ fontSize: '16px', fontWeight: '300', color: '#404040', marginBottom: '20px' }}>
-              Someone recently requested a password change for your Intelligent ERP account. If this was you, you can set a new password here:
+      <Preview>Réinitialisez votre mot de passe Beauty Nails</Preview>
+      <Body style={{ fontFamily: 'Arial, sans-serif', backgroundColor: '#f4f4f5', padding: '20px' }}>
+        <Container style={{ backgroundColor: '#ffffff', padding: '24px', borderRadius: '8px', maxWidth: '600px' }}>
+          <Section style={{ textAlign: 'center', marginBottom: '20px' }}>
+            <h1 style={{ color: '#ec4899', fontSize: '24px', fontWeight: 'bold' }}>Beauty Nails</h1>
+          </Section>
+
+          <Section style={{ marginBottom: '20px' }}>
+            <Text style={{ fontSize: '16px', fontWeight: 'bold', color: '#212121' }}>
+              Bonjour {userFirstname},
             </Text>
+
+            <Text style={{ fontSize: '16px', fontWeight: '300', color: '#404040' }}>
+              Vous avez demandé la réinitialisation de votre mot de passe. Cliquez sur le bouton ci-dessous pour créer un nouveau mot de passe.
+            </Text>
+          </Section>
+
+          <Section style={{ textAlign: 'center', marginBottom: '20px' }}>
             <Button
-              style={{
-                backgroundColor: '#80410e',
-                color: '#fff',
-                borderRadius: '4px',
-                padding: '14px 7px',
-                textDecoration: 'none',
-                fontSize: '15px',
-                textAlign: 'center',
-                display: 'block',
-                width: '210px',
-                margin: '0 auto',
-              }}
               href={resetPasswordLink}
+              style={{
+                backgroundColor: '#ec4899',
+                color: '#ffffff',
+                padding: '12px 24px',
+                textDecoration: 'none',
+                borderRadius: '6px',
+                display: 'inline-block',
+                fontWeight: 'bold'
+              }}
             >
-              Reset password
+              Réinitialiser le mot de passe
             </Button>
-            <Text style={{ fontSize: '16px', fontWeight: '300', color: '#404040', marginTop: '20px' }}>
-              If you don&apos;t want to change your password or didn&apos;t request this, just ignore and delete this message.
+          </Section>
+
+          <Section>
+            <Text style={{ fontSize: '14px', color: '#6b7280', lineHeight: '1.5' }}>
+              Si vous n'avez pas demandé à changer votre mot de passe ou si vous n'avez pas fait cette demande, ignorez et supprimez ce message.
             </Text>
-            <Text style={{ fontSize: '16px', fontWeight: '300', color: '#404040', marginTop: '20px' }}>
-              To keep your account secure, please don&apos;t forward this email to anyone.
+
+            <Text style={{ fontSize: '14px', color: '#6b7280', lineHeight: '1.5', marginTop: '10px' }}>
+              Pour protéger votre compte, veuillez ne transmettre cet email à personne.
             </Text>
-            <Text style={{ fontSize: '16px', fontWeight: '300', color: '#404040', marginTop: '20px' }}>Thank you for using Intelligent ERP!</Text>
+
+            <Text style={{ fontSize: '14px', color: '#6b7280', lineHeight: '1.5', marginTop: '20px' }}>
+              Merci d'utiliser Beauty Nails!
+            </Text>
           </Section>
         </Container>
       </Body>
