@@ -103,7 +103,7 @@ export async function POST(request: NextRequest) {
       throw new Error('Name, email and phone are required');
     }
 
-    const pwd = await hash(password, 10);
+    // const pwd = await hash(password, 10);
     const referralCode = nanoid(8).toUpperCase();
 
     const user = await prisma.user.create({
@@ -111,7 +111,7 @@ export async function POST(request: NextRequest) {
         name,
         email,
         phone,
-        password: pwd,
+        password,
         role: 'client',
         emailVerified: new Date(),
         clientProfile: {

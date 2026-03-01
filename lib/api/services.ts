@@ -37,6 +37,14 @@ export interface CreateServiceData {
   isPopular?: boolean;
 }
 
+export interface CreateAddOnData {
+  serviceId: string;
+  name: string;
+  price: number;
+  duration: number;
+  description?: string;
+}
+
 export const servicesApi = {
   // Get all services
   getServices: async (params?: {
@@ -68,6 +76,30 @@ export const servicesApi = {
   // Delete service
   deleteService: async (id: string): Promise<{ success: boolean }> => {
     const { data } = await axiosdb.delete(`/services/${id}`);
+    return data;
+  },
+
+  // Create add-on for a service
+  createAddOn: async (addOnData: CreateAddOnData): Promise<{ addOn: ServiceAddOn; message: string }> => {
+    const { data } = await axiosdb.post('/services/add-ons', addOnData);
+    return data;
+  },
+
+  // Get add-ons for a service
+  getAddOns: async (serviceId: string): Promise<ServiceAddOn[]> => {
+    const { data } = await axiosdb.get(`/services/${serviceId}/add-ons`);
+    return data;
+  },
+
+  // Update add-on
+  updateAddOn: async (id: string, updates: Partial<ServiceAddOn>): Promise<ServiceAddOn> => {
+    const { data } = await axiosdb.patch(`/services/add-ons/${id}`, updates);
+    return data;
+  },
+
+  // Delete add-on
+  deleteAddOn: async (id: string): Promise<{ success: boolean }> => {
+    const { data } = await axiosdb.delete(`/services/add-ons/${id}`);
     return data;
   },
 };

@@ -43,6 +43,8 @@ export type ServiceAddOnMinAggregateOutputType = {
   price: number | null
   duration: number | null
   description: string | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type ServiceAddOnMaxAggregateOutputType = {
@@ -52,6 +54,8 @@ export type ServiceAddOnMaxAggregateOutputType = {
   price: number | null
   duration: number | null
   description: string | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type ServiceAddOnCountAggregateOutputType = {
@@ -61,6 +65,8 @@ export type ServiceAddOnCountAggregateOutputType = {
   price: number
   duration: number
   description: number
+  createdAt: number
+  updatedAt: number
   _all: number
 }
 
@@ -82,6 +88,8 @@ export type ServiceAddOnMinAggregateInputType = {
   price?: true
   duration?: true
   description?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type ServiceAddOnMaxAggregateInputType = {
@@ -91,6 +99,8 @@ export type ServiceAddOnMaxAggregateInputType = {
   price?: true
   duration?: true
   description?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type ServiceAddOnCountAggregateInputType = {
@@ -100,6 +110,8 @@ export type ServiceAddOnCountAggregateInputType = {
   price?: true
   duration?: true
   description?: true
+  createdAt?: true
+  updatedAt?: true
   _all?: true
 }
 
@@ -196,6 +208,8 @@ export type ServiceAddOnGroupByOutputType = {
   price: number
   duration: number
   description: string | null
+  createdAt: Date
+  updatedAt: Date
   _count: ServiceAddOnCountAggregateOutputType | null
   _avg: ServiceAddOnAvgAggregateOutputType | null
   _sum: ServiceAddOnSumAggregateOutputType | null
@@ -228,6 +242,8 @@ export type ServiceAddOnWhereInput = {
   price?: Prisma.FloatFilter<"ServiceAddOn"> | number
   duration?: Prisma.IntFilter<"ServiceAddOn"> | number
   description?: Prisma.StringNullableFilter<"ServiceAddOn"> | string | null
+  createdAt?: Prisma.DateTimeFilter<"ServiceAddOn"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"ServiceAddOn"> | Date | string
   service?: Prisma.XOR<Prisma.ServiceScalarRelationFilter, Prisma.ServiceWhereInput>
 }
 
@@ -238,6 +254,8 @@ export type ServiceAddOnOrderByWithRelationInput = {
   price?: Prisma.SortOrder
   duration?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   service?: Prisma.ServiceOrderByWithRelationInput
 }
 
@@ -251,6 +269,8 @@ export type ServiceAddOnWhereUniqueInput = Prisma.AtLeast<{
   price?: Prisma.FloatFilter<"ServiceAddOn"> | number
   duration?: Prisma.IntFilter<"ServiceAddOn"> | number
   description?: Prisma.StringNullableFilter<"ServiceAddOn"> | string | null
+  createdAt?: Prisma.DateTimeFilter<"ServiceAddOn"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"ServiceAddOn"> | Date | string
   service?: Prisma.XOR<Prisma.ServiceScalarRelationFilter, Prisma.ServiceWhereInput>
 }, "id">
 
@@ -261,6 +281,8 @@ export type ServiceAddOnOrderByWithAggregationInput = {
   price?: Prisma.SortOrder
   duration?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   _count?: Prisma.ServiceAddOnCountOrderByAggregateInput
   _avg?: Prisma.ServiceAddOnAvgOrderByAggregateInput
   _max?: Prisma.ServiceAddOnMaxOrderByAggregateInput
@@ -278,6 +300,8 @@ export type ServiceAddOnScalarWhereWithAggregatesInput = {
   price?: Prisma.FloatWithAggregatesFilter<"ServiceAddOn"> | number
   duration?: Prisma.IntWithAggregatesFilter<"ServiceAddOn"> | number
   description?: Prisma.StringNullableWithAggregatesFilter<"ServiceAddOn"> | string | null
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"ServiceAddOn"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"ServiceAddOn"> | Date | string
 }
 
 export type ServiceAddOnCreateInput = {
@@ -286,6 +310,8 @@ export type ServiceAddOnCreateInput = {
   price: number
   duration: number
   description?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
   service: Prisma.ServiceCreateNestedOneWithoutAddOnsInput
 }
 
@@ -296,6 +322,8 @@ export type ServiceAddOnUncheckedCreateInput = {
   price: number
   duration: number
   description?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type ServiceAddOnUpdateInput = {
@@ -304,6 +332,8 @@ export type ServiceAddOnUpdateInput = {
   price?: Prisma.FloatFieldUpdateOperationsInput | number
   duration?: Prisma.IntFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   service?: Prisma.ServiceUpdateOneRequiredWithoutAddOnsNestedInput
 }
 
@@ -314,6 +344,8 @@ export type ServiceAddOnUncheckedUpdateInput = {
   price?: Prisma.FloatFieldUpdateOperationsInput | number
   duration?: Prisma.IntFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ServiceAddOnCreateManyInput = {
@@ -323,6 +355,8 @@ export type ServiceAddOnCreateManyInput = {
   price: number
   duration: number
   description?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type ServiceAddOnUpdateManyMutationInput = {
@@ -331,6 +365,8 @@ export type ServiceAddOnUpdateManyMutationInput = {
   price?: Prisma.FloatFieldUpdateOperationsInput | number
   duration?: Prisma.IntFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ServiceAddOnUncheckedUpdateManyInput = {
@@ -340,6 +376,8 @@ export type ServiceAddOnUncheckedUpdateManyInput = {
   price?: Prisma.FloatFieldUpdateOperationsInput | number
   duration?: Prisma.IntFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ServiceAddOnListRelationFilter = {
@@ -359,6 +397,8 @@ export type ServiceAddOnCountOrderByAggregateInput = {
   price?: Prisma.SortOrder
   duration?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type ServiceAddOnAvgOrderByAggregateInput = {
@@ -373,6 +413,8 @@ export type ServiceAddOnMaxOrderByAggregateInput = {
   price?: Prisma.SortOrder
   duration?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type ServiceAddOnMinOrderByAggregateInput = {
@@ -382,6 +424,8 @@ export type ServiceAddOnMinOrderByAggregateInput = {
   price?: Prisma.SortOrder
   duration?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type ServiceAddOnSumOrderByAggregateInput = {
@@ -437,6 +481,8 @@ export type ServiceAddOnCreateWithoutServiceInput = {
   price: number
   duration: number
   description?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type ServiceAddOnUncheckedCreateWithoutServiceInput = {
@@ -445,6 +491,8 @@ export type ServiceAddOnUncheckedCreateWithoutServiceInput = {
   price: number
   duration: number
   description?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type ServiceAddOnCreateOrConnectWithoutServiceInput = {
@@ -483,6 +531,8 @@ export type ServiceAddOnScalarWhereInput = {
   price?: Prisma.FloatFilter<"ServiceAddOn"> | number
   duration?: Prisma.IntFilter<"ServiceAddOn"> | number
   description?: Prisma.StringNullableFilter<"ServiceAddOn"> | string | null
+  createdAt?: Prisma.DateTimeFilter<"ServiceAddOn"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"ServiceAddOn"> | Date | string
 }
 
 export type ServiceAddOnCreateManyServiceInput = {
@@ -491,6 +541,8 @@ export type ServiceAddOnCreateManyServiceInput = {
   price: number
   duration: number
   description?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type ServiceAddOnUpdateWithoutServiceInput = {
@@ -499,6 +551,8 @@ export type ServiceAddOnUpdateWithoutServiceInput = {
   price?: Prisma.FloatFieldUpdateOperationsInput | number
   duration?: Prisma.IntFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ServiceAddOnUncheckedUpdateWithoutServiceInput = {
@@ -507,6 +561,8 @@ export type ServiceAddOnUncheckedUpdateWithoutServiceInput = {
   price?: Prisma.FloatFieldUpdateOperationsInput | number
   duration?: Prisma.IntFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ServiceAddOnUncheckedUpdateManyWithoutServiceInput = {
@@ -515,6 +571,8 @@ export type ServiceAddOnUncheckedUpdateManyWithoutServiceInput = {
   price?: Prisma.FloatFieldUpdateOperationsInput | number
   duration?: Prisma.IntFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -526,6 +584,8 @@ export type ServiceAddOnSelect<ExtArgs extends runtime.Types.Extensions.Internal
   price?: boolean
   duration?: boolean
   description?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   service?: boolean | Prisma.ServiceDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["serviceAddOn"]>
 
@@ -536,6 +596,8 @@ export type ServiceAddOnSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   price?: boolean
   duration?: boolean
   description?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   service?: boolean | Prisma.ServiceDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["serviceAddOn"]>
 
@@ -546,6 +608,8 @@ export type ServiceAddOnSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   price?: boolean
   duration?: boolean
   description?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   service?: boolean | Prisma.ServiceDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["serviceAddOn"]>
 
@@ -556,9 +620,11 @@ export type ServiceAddOnSelectScalar = {
   price?: boolean
   duration?: boolean
   description?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
 }
 
-export type ServiceAddOnOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "serviceId" | "name" | "price" | "duration" | "description", ExtArgs["result"]["serviceAddOn"]>
+export type ServiceAddOnOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "serviceId" | "name" | "price" | "duration" | "description" | "createdAt" | "updatedAt", ExtArgs["result"]["serviceAddOn"]>
 export type ServiceAddOnInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   service?: boolean | Prisma.ServiceDefaultArgs<ExtArgs>
 }
@@ -581,6 +647,8 @@ export type $ServiceAddOnPayload<ExtArgs extends runtime.Types.Extensions.Intern
     price: number
     duration: number
     description: string | null
+    createdAt: Date
+    updatedAt: Date
   }, ExtArgs["result"]["serviceAddOn"]>
   composites: {}
 }
@@ -1011,6 +1079,8 @@ export interface ServiceAddOnFieldRefs {
   readonly price: Prisma.FieldRef<"ServiceAddOn", 'Float'>
   readonly duration: Prisma.FieldRef<"ServiceAddOn", 'Int'>
   readonly description: Prisma.FieldRef<"ServiceAddOn", 'String'>
+  readonly createdAt: Prisma.FieldRef<"ServiceAddOn", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"ServiceAddOn", 'DateTime'>
 }
     
 

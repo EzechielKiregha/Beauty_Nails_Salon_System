@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { servicesApi, CreateServiceData, Service } from '../api/services';
+import { servicesApi, CreateServiceData, Service, ServiceAddOn, CreateAddOnData } from '../api/services';
 import { toast } from 'sonner';
 
 export function useServices(params?: {
@@ -18,7 +18,11 @@ export function useServices(params?: {
   });
 
   // Create service
-  const createMutation = useMutation({
+  const {
+    mutate: createService,
+    data: createdService,
+    isPending: isCreating,
+  } = useMutation({
     mutationFn: servicesApi.createService,
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['services'] });
@@ -58,10 +62,11 @@ export function useServices(params?: {
     services,
     isLoading,
     error,
-    createService: createMutation.mutate,
+    createService: createService,
+    createdService: createdService,
     updateService: updateMutation.mutate,
     deleteService: deleteMutation.mutate,
-    isCreating: createMutation.isPending,
+    isCreating: isCreating,
     isUpdating: updateMutation.isPending,
     isDeleting: deleteMutation.isPending,
   };
@@ -73,4 +78,64 @@ export function useService(id: string) {
     queryFn: () => servicesApi.getService(id),
     enabled: !!id,
   });
+}
+
+export function useAddOns(serviceId: string) {
+  return useQuery({
+    queryKey: ['services', serviceId, 'add-ons'],
+    queryFn: () => servicesApi.getAddOns(serviceId),
+    enabled: !!serviceId,
+  });
+}
+
+export function useAddOnMutations() {
+  const queryClient = useQueryClient();
+
+  const createMutation = useMutation({
+    mutationFn: servicesApi.createAddOn,
+    onSuccess: (data) => {
+      // Invalidate the service query to update the service with new add-ons
+      if (data.addOn.serviceId) {
+        queryClient.invalidateQueries({ queryKey: ['services', data.addOn.serviceId] });
+        queryClient.invalidateQueries({ queryKey: ['services'] });
+      }
+      toast.success(data.message);
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.error?.message || 'Erreur de création');
+    },
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: ({ id, updates }: { id: string; updates: Partial<ServiceAddOn> }) =>
+      servicesApi.updateAddOn(id, updates),
+    onSuccess: () => {
+      // Invalidate the service query to update the service with updated add-ons
+      queryClient.invalidateQueries({ queryKey: ['services'] });
+      toast.success('Add-on mis à jour');
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.error?.message || 'Erreur de mise à jour');
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: servicesApi.deleteAddOn,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['services'] });
+      toast.success('Add-on supprimé');
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.error?.message || 'Erreur de suppression');
+    },
+  });
+
+  return {
+    createAddOn: createMutation.mutate,
+    updateAddOn: updateMutation.mutate,
+    deleteAddOn: deleteMutation.mutate,
+    isCreatingAddOn: createMutation.isPending,
+    isUpdatingAddOn: updateMutation.isPending,
+    isDeletingAddOn: deleteMutation.isPending,
+  };
 }

@@ -4,8 +4,7 @@ import { Card } from '../ui/card';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordion';
-import { Scissors, ShoppingBag, Package, Percent, Award, Star, Clock, DollarSign, Sparkles, Users, Calendar, Gift, TrendingUp, Target } from 'lucide-react';
+import { Scissors, ShoppingBag, Package, Percent, Award, Star, Clock, DollarSign, Sparkles, Users, Calendar, Gift, TrendingUp, Target, Plus, X } from 'lucide-react';
 import { useServices } from '@/lib/hooks/useServices';
 import { usePackages } from '@/lib/hooks/usePackages';
 import { useDiscounts } from '@/lib/hooks/useMarketing';
@@ -15,10 +14,117 @@ import Link from 'next/link';
 import { useInventory } from '@/lib/hooks/useInventory';
 import LoaderBN from '../Loader-BN';
 import { useClients } from '@/lib/hooks/useClients';
+import { useAddOns } from '@/lib/hooks/useServices';
+import { Avatar } from '../ui/avatar';
+import Image from 'next/image';
+import { AvatarFallback, AvatarImage } from '@radix-ui/react-avatar';
+
+// Add-on Modal Component
+const AddOnModal = ({
+  service,
+  isOpen,
+  onClose
+}: {
+  service: Service;
+  isOpen: boolean;
+  onClose: () => void
+}) => {
+  const { data: addOns = [], isLoading } = useAddOns(service.id);
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50 backdrop-blur-sm">
+      <div className="relative w-full max-w-md max-h-[80vh] overflow-y-auto bg-white dark:bg-gray-900 rounded-2xl shadow-xl">
+        {/* Modal Header */}
+        <div className="sticky top-0 z-10 flex items-center justify-between p-6 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
+          <div>
+            <h3 className="text-xl  text-gray-900 dark:text-gray-100">{service.name}</h3>
+            <p className="text-sm text-gray-600 dark:text-gray-400">{service.description}</p>
+          </div>
+          <button
+            onClick={onClose}
+            className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
+          >
+            <X className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+          </button>
+        </div>
+
+        {/* Service Info */}
+        <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+          <div className="flex justify-between items-center mb-4">
+            <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
+              <span className="flex items-center gap-1">
+                <Clock className="w-4 h-4 text-blue-500" />
+                {service.duration} min
+              </span>
+            </div>
+            <Badge className="bg-green-500 dark:bg-green-600 text-white">
+              {service.price.toLocaleString()} CDF
+            </Badge>
+          </div>
+
+          {service.imageUrl && (
+            <div className="mt-4 rounded-xl overflow-hidden">
+              <img
+                src={service.imageUrl}
+                alt={service.name}
+                className="w-full h-48 object-cover"
+              />
+            </div>
+          )}
+        </div>
+
+        {/* Add-ons Section */}
+        <div className="p-6">
+          <h4 className="text-lg  text-gray-900 dark:text-gray-100 mb-4 flex items-center gap-2">
+            <Plus className="w-5 h-5 text-pink-500" />
+            Add-ons disponibles
+          </h4>
+
+          {isLoading ? (
+            <p className="text-gray-500 dark:text-gray-400">Chargement des add-ons...</p>
+          ) : addOns.length === 0 ? (
+            <p className="text-gray-500 dark:text-gray-400">Aucun add-on disponible pour ce service</p>
+          ) : (
+            <div className="space-y-3">
+              {addOns.map((addOn) => (
+                <div
+                  key={addOn.id}
+                  className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700"
+                >
+                  <div className="flex-1">
+                    <div className="font-medium text-gray-900 dark:text-gray-100">{addOn.name}</div>
+                    <div className="text-sm text-gray-600 dark:text-gray-400">
+                      +{addOn.price.toLocaleString()} CDF • +{addOn.duration} min
+                    </div>
+                  </div>
+                  <Badge className="bg-pink-500 dark:bg-pink-600 text-white">
+                    {addOn.price.toLocaleString()} CDF
+                  </Badge>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Action Buttons */}
+        <div className="p-6 border-t border-gray-200 dark:border-gray-700">
+          <Link href={`/appointments?service=${service.id}`}>
+            <Button className="w-full bg-linear-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white rounded-full py-6  shadow-md">
+              Réserver
+            </Button>
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 
 export default function CatalogPage() {
   const [activeTab, setActiveTab] = useState('services');
-
+  const [selectedService, setSelectedService] = useState<any>(null);
   // Fetch data using hooks
   const { services, isLoading: servicesLoading } = useServices();
   const { inventory: products, isLoading: productsLoading } = useInventory(); // Placeholder hook
@@ -94,9 +200,6 @@ export default function CatalogPage() {
               <TabsTrigger value="loyalty" className="rounded-lg data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">
                 <Award className="w-4 h-4 mr-2" /> Fidélité
               </TabsTrigger>
-              {/* <TabsTrigger value="campaigns" className="rounded-lg data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">
-                <Sparkles className="w-4 h-4 mr-2" /> Campagnes
-              </TabsTrigger> */}
             </TabsList>
 
             {/* Services Tab */}
@@ -109,33 +212,58 @@ export default function CatalogPage() {
                       {category.charAt(0).toUpperCase() + category.slice(1)}
                     </h3>
                     {categoryServices.map(service => (
-                      <Card key={service.id} className="p-6 bg-white dark:bg-gray-900 border-b border-pink-100 dark:border-pink-900 shadow-xl rounded-3xl overflow-hidden relative transform hover:scale-[1.02] transition-transform">
+                      <Card
+                        key={service.id}
+                        className="p-6 bg-white dark:bg-gray-900 border-b border-pink-100 dark:border-pink-900 shadow-xl rounded-3xl overflow-hidden relative transform hover:scale-[1.02] transition-transform cursor-pointer"
+                        onClick={() => setSelectedService(service)}
+                      >
+                        {service.imageUrl && (
+                          <div className="rounded-xl overflow-hidden mb-4 relative h-48 border-b border-pink-100 dark:border-pink-900">
+                            <img src={service.imageUrl || 'https://placehold.co/400x400'} alt={service.name} className="w-full h-full object-cover transition-transform group-hover:scale-110" />
+                          </div>
+                        )}
+
                         <div className="flex justify-between items-start mb-4">
                           <div>
                             <h4 className="text-xl  text-gray-900 dark:text-gray-100">{service.name}</h4>
-                            <p className="text-gray-600 dark:text-gray-300 text-sm">{service.description}</p>
+                            <p className="text-gray-600 dark:text-gray-400 text-sm line-clamp-2">{service.description}</p>
                           </div>
                           <Badge className="bg-green-500 dark:bg-green-600 text-white">
                             {service.price.toLocaleString()} CDF
                           </Badge>
                         </div>
+
                         <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400 mb-4">
                           <span className="flex items-center gap-1">
                             <Clock className="w-4 h-4 text-blue-500" />
                             {service.duration} min
                           </span>
                         </div>
-                        <Link href={`/appointments?service=${service.id}`}>
-                          <Button className="w-full bg-linear-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white rounded-full py-6  shadow-md">
-                            Réserver
-                          </Button>
-                        </Link>
+
+                        <Button
+                          className="w-full bg-linear-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white rounded-full py-4  shadow-md"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedService(service);
+                          }}
+                        >
+                          Voir détails
+                        </Button>
                       </Card>
                     ))}
                   </div>
                 ))}
               </div>
             </TabsContent>
+
+            {/* Add-on Modal */}
+            {selectedService && (
+              <AddOnModal
+                service={selectedService}
+                isOpen={!!selectedService}
+                onClose={() => setSelectedService(null)}
+              />
+            )}
 
             {/* Products Tab */}
             <TabsContent value="products" className="space-y-12">
@@ -369,22 +497,6 @@ export default function CatalogPage() {
                 </Card>
               </div>
             </TabsContent>
-
-            {/* Campaigns Tab - Placeholder */}
-            {/* <TabsContent value="campaigns" className="space-y-12">
-              <div className="text-center py-12">
-                <Sparkles className="w-16 h-16 text-pink-500 mx-auto mb-4" />
-                <h3 className="text-xl  text-gray-900 dark:text-gray-100 mb-2">Campagnes Marketing</h3>
-                <p className="text-gray-600 dark:text-gray-300 max-w-md mx-auto">
-                  Consultez ici les campagnes en cours et les offres spéciales envoyées par email ou SMS.
-                </p>
-                <Link href="/marketing">
-                  <Button className="mt-6 bg-linear-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white rounded-full py-6 px-8  shadow-md">
-                    Voir Campagnes
-                  </Button>
-                </Link>
-              </div>
-            </TabsContent> */}
           </Tabs>
         </div>
       </section>

@@ -1,5 +1,5 @@
 "use client"
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Card } from './ui/card';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
@@ -7,8 +7,8 @@ import { Textarea } from './ui/textarea';
 import { Badge } from './ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Switch } from './ui/switch';
-import { Scissors, Clock, DollarSign, Sparkles, Package, Percent, Globe, Search, ShoppingBag, Filter } from 'lucide-react';
-import { useServices } from '@/lib/hooks/useServices';
+import { Scissors, Clock, DollarSign, Sparkles, Package, Percent, Globe, Search, ShoppingBag, Filter, Trash2, Plus } from 'lucide-react';
+import { useAddOnMutations, useAddOns, useService, useServices } from '@/lib/hooks/useServices';
 import { usePackages } from '@/lib/hooks/usePackages';
 import { useCampaigns, useDiscounts } from '@/lib/hooks/useMarketing';
 import { ServiceModal, PackageModal, PromoModal } from './modals/ServicePackagePromoModal';
@@ -17,6 +17,7 @@ import { ServicePackage, CreatePackageData } from '@/lib/api/packages';
 import { DiscountCode } from '@/lib/api/marketing';
 import { AddProductModal } from './modals/InventoryModals';
 import CreateServiceModal from './modals/CreateServiceModal';
+import { toast } from 'sonner';
 
 // Define interfaces matching the API
 interface ServiceCategoryMap {
@@ -74,7 +75,49 @@ export default function ServiceManagement({ showMock }: { showMock?: boolean }) 
     return services.find(s => s.id === selectedServiceId) || null;
   }, [services, selectedServiceId]);
 
-  // --- Mock Data Removed ---
+  const [newAddOn, setNewAddOn] = useState({ name: '', price: '', duration: '' });
+
+  // Fetch add-ons for selected service
+  const { data: addOns = [], isLoading: addOnsLoading, refetch } = useAddOns(selectedServiceId || '');
+
+  // Add-on mutations
+  const { createAddOn, deleteAddOn, isCreatingAddOn, isDeletingAddOn } = useAddOnMutations();
+
+  useEffect(() => {
+    if (selectedServiceId) {
+      refetch();
+    }
+  }, [selectedServiceId, refetch]);
+
+  const handleAddAddOn = () => {
+    if (!selectedServiceId) return;
+
+    if (!newAddOn.name.trim() || !newAddOn.price || !newAddOn.duration) {
+      toast.error('Veuillez remplir tous les champs');
+      return;
+    }
+
+    createAddOn({
+      serviceId: selectedServiceId,
+      name: newAddOn.name.trim(),
+      price: Number(newAddOn.price),
+      duration: Number(newAddOn.duration),
+      description: ''
+    }, {
+      onSuccess: () => {
+        setNewAddOn({ name: '', price: '', duration: '' });
+        refetch(); // Refresh add-ons list
+      }
+    });
+  };
+
+  const handleDeleteAddOn = (addOnId: string) => {
+    deleteAddOn(addOnId, {
+      onSuccess: () => {
+        refetch(); // Refresh add-ons list
+      }
+    });
+  };
 
   if (servicesLoading || packagesLoading || discountsLoading) {
     return <div>Loading...</div>; // Implement a proper loading UI
@@ -98,15 +141,15 @@ export default function ServiceManagement({ showMock }: { showMock?: boolean }) 
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <h2 className="text-2xl  sm:text-3xl  text-gray-900 dark:text-gray-100">Gestion des Services</h2>
-        <CreateServiceModal triggerLabel="+ Nouveau Service" />
+
       </div>
 
       <Tabs defaultValue="services" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-2 lg:grid-cols-6  bg-white dark:bg-gray-950 border border-gray-200 dark:border-pink-900/30 p-1 rounded-xl justify-start sm:justify-center ">
+        <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4  bg-white dark:bg-gray-950 border border-gray-200 dark:border-pink-900/30 p-1 rounded-xl justify-start sm:justify-center ">
           <TabsTrigger value="services" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">Services</TabsTrigger>
-          <TabsTrigger value="products" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">
+          {/* <TabsTrigger value="products" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">
             Produits Retail
-          </TabsTrigger>
+          </TabsTrigger> */}
           <TabsTrigger value="packages" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">Forfaits</TabsTrigger>
           <TabsTrigger value="promotions" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">Promotions</TabsTrigger>
           <TabsTrigger value="online" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">Réservation en Ligne</TabsTrigger>
@@ -119,14 +162,9 @@ export default function ServiceManagement({ showMock }: { showMock?: boolean }) 
               <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
               <Input placeholder="Rechercher un service..." className="pl-9 rounded-full bg-white" />
             </div>
-            <ServiceModal
-              trigger={
-                <Button className="bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-full shadow-md hover:shadow-lg transition-all">
-                  + Nouveau Service
-                </Button>
-              }
-            />
+            <CreateServiceModal triggerLabel="+ Nouveau Service" />
           </div>
+
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Services List by Category */}
             <div className="lg:col-span-2 space-y-6">
@@ -216,11 +254,82 @@ export default function ServiceManagement({ showMock }: { showMock?: boolean }) 
                     <div className="space-y-3 pt-2">
                       <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700">
                         <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Réservable en ligne</span>
-                        <Switch checked={selectedService.onlineBookable} disabled className="data-[state=checked]:bg-pink-500" /> {/* Disabled for display only */}
+                        <Switch checked={selectedService.onlineBookable} disabled className="data-[state=checked]:bg-pink-500" />
                       </div>
                       <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700">
                         <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Service populaire</span>
-                        <Switch checked={selectedService.isPopular} disabled className="data-[state=checked]:bg-amber-500" /> {/* Disabled for display only */}
+                        <Switch checked={selectedService.isPopular} disabled className="data-[state=checked]:bg-amber-500" />
+                      </div>
+                    </div>
+
+                    {/* Add-Ons Section */}
+                    <div className="pt-6">
+                      <h4 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Add-ons</h4>
+
+                      {/* Add-Ons List */}
+                      <div className="space-y-3">
+                        {addOnsLoading ? (
+                          <p className="text-sm text-gray-500 dark:text-gray-400">Chargement des add-ons...</p>
+                        ) : addOns.length === 0 ? (
+                          <p className="text-sm text-gray-500 dark:text-gray-400">Aucun add-on pour ce service</p>
+                        ) : (
+                          addOns.map((addOn) => (
+                            <div
+                              key={addOn.id}
+                              className="flex items-center justify-between p-3 bg-gray-100 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700"
+                            >
+                              <div className="flex-1">
+                                <div className="font-medium text-gray-900 dark:text-gray-100">{addOn.name}</div>
+                                <div className="text-sm text-gray-600 dark:text-gray-400">
+                                  {addOn.price.toLocaleString()} CDF • {addOn.duration} min
+                                </div>
+                              </div>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => handleDeleteAddOn(addOn.id)}
+                                disabled={isDeletingAddOn}
+                                className="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </Button>
+                            </div>
+                          ))
+                        )}
+                      </div>
+                      {/* Add New Add-On Form */}
+                      <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700">
+                        <h5 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Ajouter un nouvel add-on</h5>
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                          <Input
+                            placeholder="Nom"
+                            value={newAddOn.name}
+                            onChange={(e) => setNewAddOn({ ...newAddOn, name: e.target.value })}
+                            className="rounded-xl dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
+                          />
+                          <Input
+                            type="number"
+                            placeholder="Prix (CDF)"
+                            value={newAddOn.price}
+                            onChange={(e) => setNewAddOn({ ...newAddOn, price: e.target.value })}
+                            className="rounded-xl dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
+                          />
+                          <Input
+                            type="number"
+                            placeholder="Durée (min)"
+                            value={newAddOn.duration}
+                            onChange={(e) => setNewAddOn({ ...newAddOn, duration: e.target.value })}
+                            className="rounded-xl dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
+                          />
+                        </div>
+                        <Button
+                          onClick={handleAddAddOn}
+                          disabled={isCreatingAddOn}
+                          className="mt-3 w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-full py-2"
+                        >
+                          <Plus className="w-4 h-4 mr-2" />
+                          {isCreatingAddOn ? 'Ajout...' : 'Ajouter'}
+                        </Button>
                       </div>
                     </div>
 
@@ -233,10 +342,9 @@ export default function ServiceManagement({ showMock }: { showMock?: boolean }) 
                           </Button>
                         }
                       />
-                      {/* Example Delete Button - needs hook */}
-                      {/* <Button variant="outline" className="rounded-full py-6 text-red-600 border-red-200 dark:border-red-900/50 hover:bg-red-50 dark:hover:bg-red-900/20">
+                      <Button variant="outline" className="rounded-full py-6 text-red-600 border-red-200 dark:border-red-900/50 hover:bg-red-50 dark:hover:bg-red-900/20">
                         Supprimer
-                      </Button> */}
+                      </Button>
                     </div>
                   </div>
                 </Card>
@@ -255,7 +363,7 @@ export default function ServiceManagement({ showMock }: { showMock?: boolean }) 
         </TabsContent>
 
         {/* Products Retail Tab (New) */}
-        <TabsContent value="products" className="mt-14 lg:mt-2">
+        {/* <TabsContent value="products" className="mt-14 lg:mt-2">
           <div className="flex justify-between items-center mb-6">
             <div className="relative w-72">
               <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
@@ -271,21 +379,21 @@ export default function ServiceManagement({ showMock }: { showMock?: boolean }) 
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {/* Placeholder for product cards using actual inventory data */}
-            <Card className="border-2 border-dashed border-gray-200 shadow-none rounded-2xl flex flex-col items-center justify-center cursor-pointer hover:border-amber-300 hover:bg-amber-50/50 transition-colors min-h-[250px]">
-              <AddProductModal
-                trigger={
-                  <div className="text-center p-6 w-full h-full flex flex-col items-center justify-center">
-                    <div className="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center mb-3 text-amber-600">
-                      <ShoppingBag className="w-6 h-6" />
-                    </div>
-                    <p className=" text-gray-900">Ajouter Produit</p>
-                  </div>
-                }
-              />
-            </Card>
-          </div>
-        </TabsContent>
+        <Card className="border-2 border-dashed border-gray-200 shadow-none rounded-2xl flex flex-col items-center justify-center cursor-pointer hover:border-amber-300 hover:bg-amber-50/50 transition-colors min-h-[250px]">
+          <AddProductModal
+            trigger={
+              <div className="text-center p-6 w-full h-full flex flex-col items-center justify-center">
+                <div className="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center mb-3 text-amber-600">
+                  <ShoppingBag className="w-6 h-6" />
+                </div>
+                <p className=" text-gray-900">Ajouter Produit</p>
+              </div>
+            }
+          />
+        </Card>
+    </div>
+        </TabsContent > */
+        }
 
         {/* Packages Tab */}
         <TabsContent value="packages" className="mt-14 lg:mt-2">
@@ -507,7 +615,7 @@ export default function ServiceManagement({ showMock }: { showMock?: boolean }) 
             </Button>
           </Card>
         </TabsContent>
-      </Tabs>
-    </div>
+      </Tabs >
+    </div >
   );
 }

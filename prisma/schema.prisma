@@ -320,6 +320,8 @@ model ServiceAddOn {
   price       Float 
   duration    Int // in minutes
   description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   // Relations
   service Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
