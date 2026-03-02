@@ -10,7 +10,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'sonner';
 import { ArrowLeft } from 'lucide-react';
 
-export default function ResetPasswordPage() {
+export default function ResetPasswordComponent() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const { mutate, isPending } = useResetPassword();
