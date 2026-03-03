@@ -7,6 +7,10 @@ const prismaClientSingleton = () => {
 
   return new PrismaClient({
     accelerateUrl:`${process.env.DATABASE_URL}`,
+    transactionOptions:{
+      timeout:14000,
+      maxWait:15000,
+    }
   }).$extends(withAccelerate())
 }
 

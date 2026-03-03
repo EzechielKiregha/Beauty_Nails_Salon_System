@@ -31,18 +31,6 @@ export async function POST(request: NextRequest) {
         description: data.description
       }
     });
-
-    await prisma.service.update({
-      where: { id: data.serviceId },
-      data: {
-        price: {
-          increment: data.price
-        },
-        duration: {
-          increment: data.duration
-        }
-      }
-    });
     
     return successResponse({ addOn, message: 'Add-on créé avec succès' });
   } catch (error) {

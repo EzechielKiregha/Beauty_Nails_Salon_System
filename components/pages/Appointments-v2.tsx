@@ -45,14 +45,6 @@ import { Alert, AlertDescription } from "../ui/alert";
 import { Input } from "../ui/input";
 import { Separator } from "../ui/separator";
 
-interface PaymentCalculation {
-  subtotal: number;
-  discount: number;
-  tax: number;
-  tip: number;
-  total: number;
-}
-
 
 export default function AppointmentsV2() {
   const router = useRouter();
@@ -97,7 +89,7 @@ export default function AppointmentsV2() {
   const PAYMENT_DETAILS = {
     mobile: {
       label: "Mobile Money",
-      instructions: "Envoyer au numéro : +250 78X XXX XXX"
+      instructions: "Envoyer au numéro : +243 097 887 148 ou MoMoPay: 66666"
     },
     card: {
       label: "Virement Bancaire",

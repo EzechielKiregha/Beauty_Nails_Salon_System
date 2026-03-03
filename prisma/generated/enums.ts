@@ -188,6 +188,8 @@ export type ReorderStatus = (typeof ReorderStatus)[keyof typeof ReorderStatus]
 
 
 export const NotificationType = {
+  appointment_created: 'appointment_created',
+  appointment_assigned: 'appointment_assigned',
   appointment_reminder: 'appointment_reminder',
   appointment_confirmed: 'appointment_confirmed',
   appointment_cancelled: 'appointment_cancelled',

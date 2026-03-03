@@ -1,7 +1,6 @@
 import { Suspense } from 'react';
-import AppointmentsV2 from '@/components/pages/Appointments-v2';
-import LoadingSpinner from '@/components/LoadingSpinner'; // Optional: if you have a loader
 import LoaderBN from '@/components/Loader-BN';
+import AppointmentsV3 from '@/components/pages/Apointment-v3';
 
 export const metadata = {
   title: 'Reservation - Beauty Nails',
@@ -10,7 +9,7 @@ export const metadata = {
 export default async function AppointmentsPage() {
   return (
     <Suspense fallback={<LoaderBN />}>
-      <AppointmentsV2 />
+      <AppointmentsV3 />
     </Suspense>
   );
 }

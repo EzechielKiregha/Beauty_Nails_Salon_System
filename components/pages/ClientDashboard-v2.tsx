@@ -135,7 +135,7 @@ export default function ClientDashboardV2() {
 
   // Filter appointments
   const upcomingAppointments = appointments.filter(
-    (apt) => apt.status === "confirmed" || apt.status === "pending"
+    (apt) => (apt.status === "confirmed" || apt.status === "pending") && new Date(apt.date).getTime() >= new Date().getTime(),
   );
 
   const appointmentHistory = appointments.filter(

@@ -1,105 +1,76 @@
-"use server"
 import { NextRequest } from 'next/server';
 import prisma from '@/lib/prisma';
-import { getAuthenticatedUser, successResponse, handleApiError, errorResponse } from '@/lib/api/helpers';
+import {successResponse, handleApiError, errorResponse, getAuthenticatedUser } from '@/lib/api/helpers';
 
 export async function GET(request: NextRequest) {
   try {
     const user = await getAuthenticatedUser();
     const { searchParams } = new URL(request.url);
-
+    
     const date = searchParams.get('date');
     const status = searchParams.get('status');
     const workerId = searchParams.get('workerId');
     const clientId = searchParams.get('clientId');
-
+    
     const where: any = {};
     let wId = workerId;
-
+    
     if (workerId && user.role === 'worker') {
-    const w = await prisma.workerProfile.findUnique({
-      where: { userId: user.id },
+      const w = await prisma.workerProfile.findUnique({
+        where: { userId: user.id },
       });
-
       if (!w) {
         return errorResponse('Employé non trouvé pour la notification', 404);
       }
-
       wId = w.id;
     }
-
+    
     // Role-based filtering
     if (user.role === 'client') {
       where.clientId = clientId || user.clientProfile?.id;
       if (date) {
-        where.date = { gte: new Date(date) };
+        where.date = new Date(date);
       }
-
       if (status) {
         where.status = status;
       }
-
-      if (clientId) {
-        where.clientId = clientId;
+      if (wId) {
+        where.workerId = wId;
       }
-    } else if (user.role === 'worker' && !clientId && wId) {
-      where.workerId = wId;
+    } else if (user.role === 'worker') {
+      where.workerId = wId || user.workerProfile?.id;
       if (date) {
-        where.date = { gte: new Date(date) };
+        where.date = new Date(date);
       }
-
       if (status) {
         where.status = status;
-      }
-    } else if (user.role === 'worker' && clientId && wId) {
-      where.workerId = wId;
-      if (date) {
-        where.date = { gte: new Date(date) };
-      }
-
-      if (status) {
-        where.status = status;
-      }
-      
-      if (clientId) {
-        where.clientId = clientId;
-      }
-    } 
-    
-    if ( (!date && !workerId && !clientId && !status) || user.role === 'admin') {
-      // For admins, allow filtering by workerId or clientId if provided
-      if (workerId) {
-        where.workerId = workerId;
       }
       if (clientId) {
         where.clientId = clientId;
       }
-
+    } else if (user.role === 'admin') {
       if (date) {
-        where.date = { gte: new Date(date) };
-      } else {
-        where.date = { lte: new Date() }; // Default to future appointments if no date filter
+        where.date = new Date(date);
       }
-
       if (status) {
         where.status = status;
+      }
+      if (wId) {
+        where.workerId = wId;
+      }
+      if (clientId) {
+        where.clientId = clientId;
       }
     }
-
-    console.log('Constructed where clause for appointments query:', where);
-
+    
     const appointments = await prisma.appointment.findMany({
-      where: {
-        ...where,
-      },
+      where,
       include: {
         client: {
           include: {
             user: {
               select: {
                 name: true,
-                email: true,
-                phone: true,
                 avatar: true,
               },
             },
@@ -117,9 +88,9 @@ export async function GET(request: NextRequest) {
           },
         },
       },
-      orderBy: [{ date: 'asc' }, { time: 'asc' }],
+      orderBy: [{ date: 'asc' }],
     });
-
+    
     return successResponse(appointments);
   } catch (error) {
     return handleApiError(error);
@@ -130,8 +101,9 @@ export async function POST(request: NextRequest) {
   try {
     const user = await getAuthenticatedUser();
     const body = await request.json();
+    
     let clientId = user.role === 'client' ? user.clientProfile?.id : body.clientId;
-
+    
     const {
       serviceId,
       workerId,
@@ -140,40 +112,46 @@ export async function POST(request: NextRequest) {
       location = 'salon',
       addOns = [],
       notes,
-      decidedToPay,
-      paymentInfo = {},
+      paymentInfo = {}, // Removed decidedToPay since it's no longer used
     } = body;
-
     
-
-    // // If user is not a client, find clientId from their profile
-    // if (user.role !== 'client') {
-    //   return errorResponse('Seuls les clients peuvent créer des rendez-vous', 403);
-    // }
-
-    const client = await prisma.clientProfile.findUnique({
-      where: { userId: user.id },
-    });
-
-    if (!client) {
-      return errorResponse('Client non trouvé', 404);
+    // Only clients and admins can create appointments
+    if (!['client', 'admin'].includes(user.role)) {
+      return errorResponse('Seuls les clients et administrateurs peuvent créer des rendez-vous', 403);
     }
-    clientId = client.id;
-
+    
+    // If admin is creating appointment for another client
+    if (user.role === 'admin' && body.clientId) {
+      const clientExists = await prisma.clientProfile.findUnique({
+        where: { id: body.clientId },
+      });
+      if (!clientExists) {
+        return errorResponse('Client non trouvé', 404);
+      }
+      clientId = body.clientId;
+    } else if (user.role === 'client') {
+      // If client is creating appointment for themselves
+      const client = await prisma.clientProfile.findUnique({
+        where: { userId: user.id },
+      });
+      if (!client) {
+        return errorResponse('Client non trouvé', 404);
+      }
+      clientId = client.id;
+    }
+    
     // Validation
     if (!serviceId || !workerId || !date || !time || !clientId) {
       return errorResponse('Données manquantes', 400);
     }
-
-    // Get service details
+ // Get service details
     const service = await prisma.service.findUnique({
       where: { id: serviceId },
     });
-
     if (!service) {
       return errorResponse('Service non trouvé', 404);
     }
-
+    
     // Check for conflicts
     const conflictingAppointment = await prisma.appointment.findFirst({
       where: {
@@ -185,186 +163,237 @@ export async function POST(request: NextRequest) {
         },
       },
     });
-
     if (conflictingAppointment) {
-      return errorResponse('A cette date et heure, ce rendez-vous n\'est pas disponible', 409);
+      return errorResponse(
+        'Ce créneau horaire est déjà réservé pour un autre rendez-vous',
+        409
+      );
     }
-
-    // Create appointment
-    const appointment = await prisma.appointment.create({
-      data: {
-        clientId,
-        serviceId,
-        workerId: workerId,
-        date: new Date(date),
-        time,
-        duration: service.duration,
-        price: paymentInfo.total ? paymentInfo.total : service.price,
-        location,
-        addOns,
-        notes,
-        status: 'pending',
-      },
-      include: {
-        client: {
-          include: {
-            user: true,
-          },
-        },
-        worker: {
-          include: {
-            user: true,
-          },
-        },
-      },
-    });
-
-    let wId = workerId;
-
-    const workerUser = await prisma.user.findUnique({
-      where: { id: workerId },
-      select: {
-        workerProfile: { select: { id: true } }
-      }
-    });
-
-    if (!workerUser?.workerProfile) {
-      const w = await prisma.workerProfile.findUnique({
-      where: { id: workerId },
-        include: {
-          user: true,
+    
+    // Calculate total price including 
+    let totalPrice = service.price;
+    
+    if (addOns.length > 0) {
+      const addOnsData = await prisma.serviceAddOn.findMany({
+        where: {
+          id: { in: addOns },
+          serviceId: serviceId,
         },
       });
-
-      if (!w) {
-        return errorResponse('Employé non trouvé pour la notification', 404);
-      }
-
-      wId = w.user.id;
+      
+      const addOnsTotal = addOnsData.reduce((sum, addOn) => sum + addOn.price, 0);
+      totalPrice += addOnsTotal;
     }
-
-    const updateClient = await prisma.clientProfile.update({
-      where: { id: clientId },
-      data: {
-        loyaltyPoints: {
-          increment: service.price / 1000,
-        },
-        totalSpent: {
-          increment: paymentInfo.total,
-        },
-        loyaltyTransactions: {
-          create: {
-            points: service.price / 1000,
-            type: 'earned_appointment',
-            description: `Point Bonus pour avoir reserver`,
-          },
-        },
-      },
-      select : {
-        userId: true
-      }
-    });
-
-    // Create notification
-    await prisma.notification.create({
-      data: {
-        userId: wId,
-        type: 'appointment_confirmed',
-        title: 'Nouveau rendez-vous',
-        message: `Nouveau rendez-vous pour ${service.name} le ${date} à ${time}`,
-        link: `/dashboard/worker/appointments?id=${appointment.id}`,
-      },
-    });
-    if (decidedToPay) {
-
-      const data = {
-        discountCode: paymentInfo.discountCode ?? "No Discount Code",
-        clientId, 
-        notes: `Payment effectué pour le rendez-vous du ${appointment.date.toLocaleDateString("fr-FR")} à ${appointment.time}} par ${user.name}. Montant approuvé : $${paymentInfo.subtotal}, Montant payé : $${paymentInfo.total}`,
-        appointmentId: appointment.id, 
-        total: paymentInfo.total,
-        subtotal: paymentInfo.subtotal,
-        discount: paymentInfo.discount ?? 0,
-        tax: paymentInfo.tax,
-        tip: paymentInfo.tip,
-        paymentMethod: paymentInfo.method,
-        paymentStatus: paymentInfo.status,
-        loyaltyPointsUsed: paymentInfo.loyaltyPointUsed,
-        receiptNumber: `RCT-${Date.now()}`,
-      }
-
-      const sale = await prisma.sale.create({
-        data: data,
-      });
-
-      if (!sale) {
-        throw new Error("Erreur lors de la création de la vente");
-      }
-
-      const saleItemData = {
-        quantity: 1,
-        price: paymentInfo.total ? paymentInfo.total : service.price,
-        discount: sale.discount,
-        service: { connect: { id: serviceId } },
-        sale: { connect: { id: sale.id } },
-      };
-
-      await prisma.saleItem.create({
-        data: saleItemData
-      });
-
-      await prisma.discountCode.update({
+    
+    // Validate discount code if provided
+    let discountAmount = 0;
+    let discountCodeUsed = null;
+    if (paymentInfo.discountCode) {
+      const discount = await prisma.discountCode.findUnique({
         where: { code: paymentInfo.discountCode },
+      });
+      
+      if (!discount || !discount.isActive || discount.endDate < new Date()) {
+        return errorResponse('Code de réduction invalide ou expiré', 400);
+      }
+      
+      if (discount.usedCount && discount.usedCount >= (discount.maxUses || 1000)) {
+        return errorResponse('Limite d\'utilisation du code atteinte', 400);
+      }
+      
+      if (discount.value && totalPrice < discount.value) {
+        return errorResponse('Montant minimum requis pour utiliser ce code', 400);
+      }
+      
+      discountCodeUsed = discount;
+      if (discount.type === 'percentage') {
+        discountAmount = totalPrice * (discount.value / 100);
+      } else {
+        discountAmount = Math.min(discount.value, totalPrice);
+      }
+    }
+    
+    // Calculate final total
+    const taxAmount = (totalPrice - discountAmount) * 0.16; // 16% tax
+    const finalTotal = totalPrice - discountAmount + taxAmount + (paymentInfo.tip || 0);
+    
+    // Create appointment in a single transaction
+    const result =await prisma.$transaction(async (tx) => {
+      // Create appointment
+      const appointment = await tx.appointment.create({
         data: {
-          usedCount: {
-            increment: 1,
+          date: new Date(date),
+          time,
+          location,
+          price: finalTotal,
+          duration: service.duration,
+          client: {connect: { id: clientId }} ,
+          worker: { connect: { id: workerId } },
+          service: { connect: { id: serviceId }},
+          notes,
+          status: 'pending',
+          addOns,
+        },
+        include: {
+          service: true,
+          client: {
+            include: {
+              user: true
+            }
           },
+          worker: {
+            include: {
+              user: true
+            }
+          }
         }
       });
-
-      // Create payment
-      const payment = await prisma.payment.create({
+      
+      // Create sale record
+      const sale = await tx.sale.create({
         data: {
-          amount: paymentInfo.total ? paymentInfo.total : service.price,
-          method: paymentInfo.method,
-          status: 'pending',
-          sale: { connect: { id: sale.id } }
+          appointmentId: appointment.id,
+          clientId,
+          total: finalTotal,
+          subtotal: totalPrice,
+          discount: discountAmount,
+          tax: taxAmount,
+          tip: paymentInfo.tip || 0,
+          paymentMethod: paymentInfo.method || 'cash',
+          paymentStatus: paymentInfo.status || 'pending', // Will be updated based on payment processing
+          discountCode: paymentInfo.discountCode || null,
+          receiptNumber: `RCT-${Date.now()}`,
+          notes: paymentInfo.notes || '',
         },
       });
-
-      if(payment){
-        // Create notification
-        await prisma.notification.create({
+      const addOnsData = await prisma.serviceAddOn.findMany({
+        where: {
+          id: { in: addOns },
+          serviceId: serviceId,
+        },
+      });
+      // Create sale items
+      const saleItemData = [
+        {
+          saleId: sale.id,
+          serviceId: serviceId,
+          quantity: 1,
+          price: service.price,
+          discount: 0,
+        },
+        ...addOns.map((addOnId: any) => {
+          const addOn = addOnsData.find(a => a.id === addOnId);
+          return {
+            saleId: sale.id,
+            serviceId: serviceId,
+            quantity: 1,
+            price: addOn?.price || 0,
+            discount: 0,
+          };
+        })
+      ];
+      
+      await tx.saleItem.createMany({
+        data: saleItemData
+      });
+      
+      // Update discount code usage count
+      if (discountCodeUsed) {
+        await tx.discountCode.update({
+          where: { code: paymentInfo.discountCode },
           data: {
-            userId: updateClient.userId,
-            type: 'payment_received',
-            title: 'Payement en attente d\'approbation',
-            message: `Votre Payement est en attente  pour votre rendez-vous de ${service.name} le ${date} à ${time}`,
-            link: `/dashboard/client?appointment=confirm&id=${appointment.id}`,
+            usedCount: {
+              increment: 1,
+            },
           },
         });
       }
-    } else {
-
-      // Create notification
-      await prisma.notification.create({
+      
+      // Create payment record
+      const payment = await tx.payment.create({
+        data: {
+          amount: finalTotal,
+          method: paymentInfo.method || 'cash',
+          status: paymentInfo.status || 'pending',
+          saleId: sale.id,
+          transactionId: paymentInfo.transactionId || null,
+        },
+      });
+      
+      // Update client loyalty points
+      const loyaltyPointsEarned = Math.floor(finalTotal / 1000); // 1 point per 1000 CDF
+      const updateClient = await tx.clientProfile.update({
+        where: { id: clientId },
+        data: {
+          loyaltyPoints: {
+            increment: loyaltyPointsEarned,
+          },
+          totalSpent: {
+            increment: finalTotal,
+          },
+          loyaltyTransactions: {
+            create: {
+              points: loyaltyPointsEarned,
+              type: 'earned_appointment',
+              description: `Bonus pour avoir réservé ${service.name}`,
+            },
+          },
+        },
+        select: {
+          userId: true
+        }
+      });
+      
+      // Create notification for client
+      await tx.notification.create({
         data: {
           userId: updateClient.userId,
-          type: 'payment_received',
-          title: 'Rappel au Payement',
-          message: `Votre Payement pour votre rendez-vous de ${service.name} se reglera sur place le ${appointment.date.toLocaleDateString("fr-FR")} à ${time}`,
+          type: "appointment_created",
+          title: 'Rendez-vous créé',
+          message: `Votre rendez-vous pour ${service.name} le ${date.split('T')[0]} à ${time} a été créé avec succès.`,
           link: `/dashboard/client?appointment=confirm&id=${appointment.id}`,
         },
       });
-    }
-
-    return successResponse(
-      {
+      
+      // Create notification for worker
+      await tx.notification.create({
+        data: {
+          userId: appointment.worker.user.id,
+          type: "appointment_assigned",
+          title: 'Nouveau rendez-vous assigné',
+          message: `Un nouveau rendez-vous pour ${service.name} a été assigné à vous le ${date.split('T')[0]} à ${time}.`,
+          link: `/dashboard/worker?appointment=${appointment.id}`,
+        },
+      });
+      
+      // Create notification for admin (if applicable)
+      const adminUser = await tx.user.findFirst({
+        where: { role: 'admin' }
+      });
+      
+      if (adminUser) {
+        await tx.notification.create({
+          data: {
+            userId: adminUser.id,
+            type: "appointment_created",
+            title: 'Nouveau rendez-vous créé',
+            message: `Un nouveau rendez-vous pour ${service.name} a été créé le ${date.split('T')[0]} à ${time}.`,
+            link: `/dashboard/admin/appointments?appointment=${appointment.id}`,
+          },
+        });
+      }
+      
+      return {
         appointment,
-        message: 'Rendez-vous créé avec succès',
-      },
-      201
-    );
+        sale,
+        payment
+      };
+    });
+    
+    return successResponse({
+      ...result,
+      message: 'Rendez-vous créé avec succès',
+    });
   } catch (error) {
     return handleApiError(error);
   }

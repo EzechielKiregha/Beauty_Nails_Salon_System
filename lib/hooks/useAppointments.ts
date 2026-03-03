@@ -30,7 +30,7 @@ export function useAppointments(params?: {
     mutationFn: appointmentsApi.createAppointment,
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['appointments'] });
-      toast.success("Rendez-vous confirmé !", {
+      toast.success("Rendez-vous créé avec succès!", {
           description: `Votre rendez-vous est prévu le ${data.appointment.date} à ${data.appointment.time}`,
         });
 

@@ -110,11 +110,6 @@ export const appointmentsApi = {
   // Create appointment
   createAppointment: async (appointmentData: CreateAppointmentData): Promise<{ appointment: Appointment; message: string }> => {
 
-    if (appointmentData.paymentInfo.discountCode && appointmentData.decidedToPay){
-      const discount = await axiosdb.get(`/marketing/discounts/validate?code=${appointmentData.paymentInfo.discountCode}`)
-      console.log(discount.data)
-    }
-
     const { data } = await axiosdb.post('/appointments', appointmentData);
     return data;
   },

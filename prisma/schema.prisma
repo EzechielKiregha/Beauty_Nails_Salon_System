@@ -797,6 +797,8 @@ model Notification {
 }
 
 enum NotificationType {
+  appointment_created
+  appointment_assigned
   appointment_reminder
   appointment_confirmed
   appointment_cancelled
