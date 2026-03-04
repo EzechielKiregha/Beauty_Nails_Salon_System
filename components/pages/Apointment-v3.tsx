@@ -7,7 +7,7 @@ import { Badge } from '../ui/badge';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { useServices } from '@/lib/hooks/useServices';
-import { useAppointments } from '@/lib/hooks/useAppointments';
+import { useAppointments, useAvailableSlots } from '@/lib/hooks/useAppointments';
 import { useAddOns } from '@/lib/hooks/useServices';
 import { useDiscounts } from '@/lib/hooks/useMarketing';
 import { Service } from '@/lib/api/services';
@@ -29,6 +29,7 @@ import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { Calendar } from '../ui/calendar';
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
+import LoaderBN from '../Loader-BN';
 
 export default function AppointmentsV3() {
   const router = useRouter();
@@ -52,6 +53,7 @@ export default function AppointmentsV3() {
   const [selectedServiceId, setSelectedServiceId] = useState(paramService || "");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedWorker, setSelectedWorker] = useState<string | null>(null);
+  const [selectedWorkerName, setSelectedWorkerName] = useState<string | null>(null);
   const [selectedTime, setSelectedTime] = useState(paramTime || "");
   const [location, setLocation] = useState<"salon" | "home">("salon");
   const [activeAddOns, setActiveAddOns] = useState<string[]>([]);
@@ -60,8 +62,6 @@ export default function AppointmentsV3() {
   const [baseServicePrice, setBaseServicePrice] = useState<number>(0);
   const [isPaid, setIsPaid] = useState(false);
   const [payerPhone, setPayerPhone] = useState("");
-  const { discounts, isLoading: discountsLoading } = useDiscounts();
-
   const [discountCode, setDiscountCode] = useState("");
   const [tip, setTip] = useState(0);
   const [selectedMethod, setSelectedMethod] = useState<"mobile" | "card" | "cash">("mobile");
@@ -70,9 +70,14 @@ export default function AppointmentsV3() {
 
   const { user } = useAuth();
 
+  const { discounts, isLoading: discountsLoading } = useDiscounts();
   const { services, isLoading: servicesLoading } = useServices();
   const { staff, isLoading: staffLoading } = useAvailableStaff();
   const { createAppointment, isCreating, isLoading: appointmentLoading } = useAppointments();
+  const { data: slots, isLoading: slotsLoading } = useAvailableSlots({
+    date: selectedDate ? selectedDate.toString() : undefined,
+    workerId: selectedWorker ? selectedWorker : "",
+  })
 
   // Fetch add-ons for selected service
   const { data: addOns = [], isLoading: addOnsLoading } = useAddOns(selectedServiceId);
@@ -149,20 +154,14 @@ export default function AppointmentsV3() {
     }
   }, [services, paramService, selectedServiceId]);
 
-  const timeSlots = [
-    "09:00",
-    "09:30",
-    "10:00",
-    "10:30",
-    "11:00",
-    "11:30",
-    "14:00",
-    "14:30",
-    "15:00",
-    "15:30",
-    "16:00",
-    "16:30",
-    "17:00",
+  const weekDay = [
+    "Dimanche",
+    "Lundi",
+    "Mardi",
+    "Mercredi",
+    "Jeudi",
+    "Vendredi",
+    "Samedi"
   ];
 
   const categoryIcons: Record<string, React.ReactElement> = {
@@ -195,10 +194,8 @@ export default function AppointmentsV3() {
 
   if (servicesLoading || staffLoading || appointmentLoading || discountsLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-gray-500">Chargement...</div>
-      </div>
-    );
+      <LoaderBN />
+    )
   }
 
   const handleSubmit = () => {
@@ -343,7 +340,7 @@ export default function AppointmentsV3() {
                       <img
                         src={service.imageUrl}
                         alt={service.name}
-                        className="w-full h-24 rounded-lg object-cover border border-gray-200 dark:border00"
+                        className="w-full h-36 rounded-lg object-cover border border-gray-200 dark:border00"
                       />
                     ) : (
                       <div className="w-16 h-16 rounded-lg bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
@@ -373,7 +370,7 @@ export default function AppointmentsV3() {
             {addOnsLoading ? (
               <p className="text-gray-500 dark:text-gray-400">Chargement des add-ons...</p>
             ) : addOns.length === 0 ? (
-              <p className="text-gray-500 dark:text-gray-400">Aucun add-on disponible pour ce service</p>
+              <p className="text-gray-500 dark:text-gray-400">Malheureusement aucun add-on est disponible pour ce service</p>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {addOns.map((addOn) => {
@@ -440,7 +437,10 @@ export default function AppointmentsV3() {
                     ? 'border-2 border-pink-500 bg-pink-50 dark:bg-pink-900/20'
                     : 'border border-gray-200 dark:border-gray-700 hover:border-pink-300 dark:hover:border-pink-700'
                     }`}
-                  onClick={() => setSelectedWorker(worker.id)}
+                  onClick={() => {
+                    setSelectedWorker(worker.id)
+                    setSelectedWorkerName(worker.user.name)
+                  }}
                 >
                   <div className="flex items-center gap-3">
                     <div className="w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
@@ -473,13 +473,6 @@ export default function AppointmentsV3() {
             {/* Date Selection */}
             <div>
               <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Date</h3>
-              {/* <input
-              type="date"
-              value={selectedDate?.toISOString().split('T')[0]}
-              onChange={(e) => setSelectedDate(new Date(e.target.value))}
-              min={new Date().toISOString().split('T')[0]}
-              className="w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 p-3"
-            /> */}
               <Popover>
                 <PopoverTrigger asChild>
                   <Button
@@ -499,7 +492,7 @@ export default function AppointmentsV3() {
                     selected={selectedDate}
                     onSelect={setSelectedDate}
                     initialFocus
-                    disabled={(date) => date < new Date()}
+                    disabled={(date) => date.getDate() < new Date().getDate()}
                   />
                 </PopoverContent>
               </Popover>
@@ -507,21 +500,32 @@ export default function AppointmentsV3() {
 
             {/* Time Selection */}
             <div>
-              <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Heure</h3>
-              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2">
-                {timeSlots.map(time => (
-                  <button
-                    key={time}
-                    type="button"
-                    onClick={() => setSelectedTime(time)}
-                    className={`p-2 rounded-lg border ${selectedTime === time
-                      ? 'bg-pink-500 text-white border-pink-500'
-                      : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-700'
-                      }`}
-                  >
-                    {time}
-                  </button>
-                ))}
+              {slots?.slots.length != 0
+                ? <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Les Heures <span className="text-md font-bold text-pink-600">{selectedWorkerName}</span> sera disponible le <span className="text-md font-bold text-pink-600">{selectedDate ? format(selectedDate, "PPP", { locale: fr }) : ''}</span></h3>
+                : <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Malheureusement <span className="text-md font-bold text-pink-600">{selectedWorkerName}</span> ne travaille pas <span className="text-md font-bold text-pink-600">le {selectedDate ? weekDay[selectedDate.getDay()] : ''}</span></h3>
+              }
+              <div className={`grid ${slots?.slots.length != 0 ? 'grid-cols-3 sm:grid-cols-4 md:grid-cols-6' : ''} gap-2`}>
+                {slots?.slots.length === 0 ? (
+                  <p className='p-12 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-400 border-gray-300 dark:border-gray-700'>
+                    Malheureusement aucune heure n'est disponible pour cette date {'. '}
+                    Choisi un autre specialiste ou une autre date.
+                  </p>
+                )
+                  :
+                  slots?.slots.map(time => (
+                    <button
+                      key={time}
+                      type="button"
+                      onClick={() => setSelectedTime(time)}
+                      className={`p-2 rounded-lg border ${selectedTime === time
+                        ? 'bg-pink-500 text-white border-pink-500'
+                        : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-700'
+                        }`}
+                    >
+                      {time}
+                    </button>
+                  ))
+                }
               </div>
             </div>
           </div>

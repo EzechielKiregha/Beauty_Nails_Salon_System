@@ -135,10 +135,7 @@ export const appointmentsApi = {
   },
 
   // Get available slots
-  getAvailableSlots: async (params?: AvailableSlotsParams): Promise<{ slots: {
-    time: string,
-    available: boolean
-  }[] }> => {
+  getAvailableSlots: async (params?: AvailableSlotsParams): Promise<{ slots: string[] }> => {
     const { data } = await axiosdb.get('/appointments/available-slots', { params });
     return data;
   },

@@ -7,7 +7,7 @@ import { Card } from '../ui/card';
 import { Badge } from '../ui/badge';
 import { Calendar, Star, Gift, Award, Users, Heart, CalendarIcon, Clock, Sparkles } from 'lucide-react';
 import { ImageWithFallback } from '../figma/ImageWithFallback';
-import HeroSection, { CarouselService } from '../HeroSection';
+import { CarouselService } from '../HeroSection';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { Calendar as CalendarComponent } from '../ui/calendar';
@@ -17,10 +17,12 @@ import { useLoyalty } from '@/lib/hooks/useLoyalty';
 import LoaderBN from '../Loader-BN';
 import { LoyaltyTransaction } from '@/lib/api/loyalty';
 import { Membership } from '@/lib/api/memberships';
+import { cn } from '../ui/utils';
+import { fr } from 'date-fns/locale';
 
 export default function Home() {
 
-  const [selectedDate, setSelectedDate] = React.useState<string>('');
+  const [selectedDate, setSelectedDate] = React.useState<Date | undefined>(new Date());
   const [selectedTime, setSelectedTime] = React.useState<string>('');
   const [loading, setLoading] = useState(true);
   const { points: loyaltyPoints, tier: loyaltyTier, transactions: loyaltyTransactions, isLoading: loyaltyLoading } = useLoyalty();
@@ -82,7 +84,7 @@ export default function Home() {
     setSelectedService(service);
   };
 
-  const reserveHref = `/appointments?service=${encodeURIComponent(selectedService?.id ?? '')}&date=${encodeURIComponent(selectedDate)}&time=${encodeURIComponent(selectedTime)}`;
+  const reserveHref = `/appointments?service=${encodeURIComponent(selectedService?.id ?? '')}&date=${encodeURIComponent(selectedDate ? selectedDate?.toISOString().split('T')[0] : new Date().getDate())}&time=${encodeURIComponent(selectedTime)}`;
 
   const testimonials = [
     {
@@ -193,20 +195,23 @@ export default function Home() {
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Date</label>
               <Popover>
                 <PopoverTrigger asChild>
-                  <Button variant="outline" className="w-full justify-start text-left font-normal">
+                  <Button
+                    variant={"outline"}
+                    className={cn(
+                      "w-full justify-start text-left font-normal",
+                      !selectedDate && "text-muted-foreground"
+                    )}
+                  >
                     <CalendarIcon className="mr-2 h-4 w-4" />
-                    {selectedDate ? format(new Date(selectedDate), 'PPP') : 'Sélectionner une date'}
+                    {selectedDate ? format(selectedDate, "PPP", { locale: fr }) : <span>Choisir date</span>}
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
+                <PopoverContent className="w-auto p-0" align='start'>
                   <CalendarComponent
                     mode="single"
-                    selected={selectedDate ? new Date(selectedDate) : undefined}
-                    onSelect={(date) => {
-                      if (date) {
-                        setSelectedDate(date.toISOString().split('T')[0]);
-                      }
-                    }}
+                    selected={selectedDate}
+                    onSelect={setSelectedDate}
+                    initialFocus
                     disabled={(date) => date < new Date()}
                   />
                 </PopoverContent>

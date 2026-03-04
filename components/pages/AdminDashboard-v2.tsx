@@ -57,6 +57,8 @@ export default function AdminDashboardV2() {
   const today = new Date().toISOString().split('T')[0];
   const { appointments: todayAppointments = [] } = useAppointments({ date: today });
 
+  const { appointments: allAppointments = [] } = useAppointments({})
+
 
   // Get revenue report (current month)
   const firstDayOfMonth = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
@@ -79,7 +81,7 @@ export default function AdminDashboardV2() {
   // Apply mocks if needed
   const clientsList = clients.length ? clients : [];
   const staffList = staff.length ? staff : [];
-  const todayAppointmentsList = todayAppointments.length ? todayAppointments : [];
+  const todayAppointmentsList = todayAppointments.length ? todayAppointments : allAppointments;
   const inventoryList = inventory.length ? inventory : [];
 
   // Get notifications
@@ -102,7 +104,7 @@ export default function AdminDashboardV2() {
     monthlyRevenue: revenueData?.totalRevenue || 0,
     avgRating: staffList.reduce((acc: number, w: any) => acc + (w.rating || 0), 0) / (staffList.length || 1),
     completedAppointments: todayAppointmentsList.filter((apt: any) => apt.status === 'completed').length,
-    pendingAppointments: todayAppointmentsList.filter((apt: any) => apt.status === 'pending').length,
+    pendingAppointments: todayAppointmentsList.filter((apt: any) => apt.status === 'pending' || apt.status === 'confirmed').length,
     lowStockItems: inventoryList.filter((item: any) => item.status === 'low' || item.status === 'critical').length,
     newClients: clientAnalytics?.newClients || 0,
   };
@@ -120,30 +122,30 @@ export default function AdminDashboardV2() {
     return months;
   };
 
-  // Example: Prepare data for the revenue chart - this might need adjustment based on your API response structure
-  // Assuming revenueData.breakdown contains monthly totals keyed by YYYY-MM
+
   const monthlyRevenueData = getLastMonths(6).map(({ label, key }) => ({
     month: label,
-    revenue: revenueData?.breakdown?.[key] ?? 0, // Use the breakdown from the fetched data
-    // Adjust appointments logic if needed - perhaps aggregate from appointments data for the month?
-    // This example keeps the original logic for today's appointments on the current month bar
+    revenue: revenueData?.monthlyBreakdown?.[key] ?? 0,
     appointments: key === new Date().toISOString().slice(0, 7) ? todayAppointmentsList.length : 0,
   }));
 
   // Service distribution - use performance data when available, otherwise show defaults
   const _serviceColors = ['#ec4899', '#a855f7', '#f59e0b', '#10b981'];
-  const serviceDistribution = (servicePerformance && servicePerformance.services && servicePerformance.services.length > 0)
-    ? servicePerformance.services.slice(0, 4).map((service: any, index: number) => ({
-      name: service.name,
-      value: service.count || 0,
+
+  const categories = ['Onglerie', 'Cils', 'Tresses', 'Maquillage'];
+
+  const serviceDistribution = categories.map((category, index) => {
+    const totalCount =
+      servicePerformance?.services
+        ?.filter((service: any) => service.category === category.toLocaleLowerCase())
+        .reduce((sum: number, service: any) => sum + (service.count || 0), 0) || 0;
+
+    return {
+      name: category,
+      value: totalCount,
       color: _serviceColors[index],
-    }))
-    : [
-      { name: 'Onglerie', value: 0, color: _serviceColors[0] },
-      { name: 'Cils', value: 0, color: _serviceColors[1] },
-      { name: 'Tresses', value: 0, color: _serviceColors[2] },
-      { name: 'Maquillage', value: 0, color: _serviceColors[3] },
-    ];
+    };
+  });
 
   // Loading state
   if (isAuthLoading || isClientsLoading || isStaffLoading || isAnalyticsLoading || isRevenueLoading || isServicePerformanceLoading || isInventoryLoading) {
@@ -204,9 +206,9 @@ export default function AdminDashboardV2() {
             </div>
             <p className="text-xs sm:text-sm opacity-90 mb-1 ">Revenus (Période Courante)</p> {/* Updated label */}
             <p className="text-2xl sm:text-3xl  mb-2 ">
-              {revenueData?.totalRevenue && revenueData?.totalRevenue > 100000
+              {revenueData?.totalRevenue && revenueData?.totalRevenue > 5000000
                 ?
-                (revenueData.totalRevenue / 1000000).toFixed(1) + 'M Fc'
+                (revenueData.totalRevenue / 1000000).toFixed(1)
                 :
                 revenueData?.totalRevenue} Fc
             </p>
@@ -238,10 +240,10 @@ export default function AdminDashboardV2() {
                 <Calendar className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600 dark:text-purple-400 " />
               </div>
             </div>
-            <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mb-1 ">Rdv Aujourd'hui</p>
+            <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mb-1 ">Rendez-vous</p>
             <p className="text-2xl sm:text-3xl  text-gray-900 dark:text-gray-100 ">{stats.todayAppointments}</p>
             <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 ">
-              {stats.completedAppointments} terminés
+              {stats.completedAppointments} terminés | {todayAppointments.length} RDV aujourd’hui
             </p>
           </Card>
 
@@ -359,13 +361,13 @@ export default function AdminDashboardV2() {
                 <PieChart>
                   <Pie
                     data={serviceDistribution}
-                    cx="50% "
-                    cy="50% "
+                    cx="50%"
+                    cy="50%"
                     labelLine={false}
                     label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
                     outerRadius={80}
-                    fill="#8884d8 "
-                    dataKey="value "
+                    fill="#8884d8"
+                    dataKey="value"
                   >
                     {serviceDistribution.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />

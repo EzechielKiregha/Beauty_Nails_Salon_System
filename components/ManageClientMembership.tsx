@@ -4,10 +4,8 @@ import { useMembershipPurchases, useMemberships } from "@/lib/hooks/useMembershi
 import { useState } from "react";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
-import { Label } from "./ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 
-// This component should ideally be in its own file later.
 interface ManageClientMembershipProps {
   clientId: string;
 }
@@ -222,6 +220,3 @@ export default function ManageClientMembership({ clientId }: ManageClientMembers
     </div>
   );
 }
-// --- END NEW COMPONENT ---
-
-// ... rest of the original ClientManagement component code ...

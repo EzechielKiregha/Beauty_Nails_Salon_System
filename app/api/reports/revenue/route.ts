@@ -24,7 +24,6 @@ export async function GET(request: NextRequest) {
       return errorResponse('Dates invalides', 400);
     }
 
-    // Optimized query with proper joins
     const sales = await prisma.sale.findMany({
       where: {
         createdAt: {
@@ -32,7 +31,7 @@ export async function GET(request: NextRequest) {
           lte: to,
         },
         paymentStatus: {
-          in: ['completed', 'pending']
+          in: ['completed', 'pending'],
         },
       },
       include: {
@@ -47,63 +46,92 @@ export async function GET(request: NextRequest) {
               select: {
                 name: true,
                 email: true,
-              }
-            }
-          }
+              },
+            },
+          },
         },
         payments: {
           select: {
             method: true,
-            amount: true
-          }
-        }
+            amount: true,
+          },
+        },
       },
     });
 
     const totalRevenue = sales.reduce((sum, sale) => sum + Number(sale.total), 0);
 
-    // Group by service category using Prisma
+    // 🔹 Monthly Breakdown for LineChart (YYYY-MM)
+    const monthlyBreakdown: Record<string, number> = {};
+    sales.forEach((sale) => {
+      const monthKey = sale.createdAt.toISOString().slice(0, 7);
+      monthlyBreakdown[monthKey] =
+        (monthlyBreakdown[monthKey] || 0) + Number(sale.total);
+    });
+
+    // 🔹 Revenue by Service Category
     const breakdown: Record<string, number> = {};
     const serviceCount: Record<string, number> = {};
-    
+
     sales.forEach((sale: any) => {
       for (const item of sale.items) {
         const category = item.service.category;
         const price = Number(item.price);
         const quantity = item.quantity;
-        
-        breakdown[category] = (breakdown[category] || 0) + (price * quantity);
-        serviceCount[item.service.name] = (serviceCount[item.service.name] || 0) + quantity;
+
+        breakdown[category] =
+          (breakdown[category] || 0) + price * quantity;
+
+        serviceCount[item.service.name] =
+          (serviceCount[item.service.name] || 0) + quantity;
       }
     });
 
-    // Get top selling services
     const topSellingServices = Object.entries(serviceCount)
-      .sort(([, a], [, b]) => b - a)
+      .sort(([, a], [, b]) => Number(b) - Number(a))
       .slice(0, 10);
 
-    // Get payment method breakdown
     const paymentMethods: Record<string, number> = {};
     sales.forEach((sale: any) => {
       if (sale.payments && sale.payments.length > 0) {
         sale.payments.forEach((payment: any) => {
-          paymentMethods[payment.method] = (paymentMethods[payment.method] || 0) + Number(payment.amount);
+          paymentMethods[payment.method] =
+            (paymentMethods[payment.method] || 0) + Number(payment.amount);
         });
       }
     });
 
     if (pdfTrigger) {
-      // Format data for PDF
       const sections: ContentSection[] = [
         {
           title: 'Revenue Report',
           type: 'keyValue',
           data: {
             'Period:': `${format(from, 'MMM dd, yyyy')} - ${format(to, 'MMM dd, yyyy')}`,
-            'Total Revenue:': `CDF ${totalRevenue.toLocaleString('fr-CD', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+            'Total Revenue:': `CDF ${totalRevenue.toLocaleString('fr-CD', {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}`,
             'Total Sales:': sales.length.toString(),
-            'Average Sale Value:': `CDF ${(totalRevenue / Math.max(sales.length, 1)).toLocaleString('fr-CD', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
-          }
+            'Average Sale Value:': `CDF ${(totalRevenue / Math.max(sales.length, 1)).toLocaleString(
+              'fr-CD',
+              { minimumFractionDigits: 2, maximumFractionDigits: 2 }
+            )}`,
+          },
+        },
+        {
+          title: 'Monthly Revenue Breakdown',
+          type: 'table',
+          data: {
+            headers: ['Month (YYYY-MM)', 'Revenue'],
+            rows: Object.entries(monthlyBreakdown).map(([month, revenue]) => [
+              month,
+              `CDF ${revenue.toLocaleString('fr-CD', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}`,
+            ]),
+          },
         },
         {
           title: 'Revenue by Service Category',
@@ -112,9 +140,12 @@ export async function GET(request: NextRequest) {
             headers: ['Category', 'Revenue'],
             rows: Object.entries(breakdown).map(([category, revenue]) => [
               category,
-              `CDF ${revenue.toLocaleString('fr-CD', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
-            ])
-          }
+              `CDF ${revenue.toLocaleString('fr-CD', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}`,
+            ]),
+          },
         },
         {
           title: 'Top Selling Services',
@@ -123,9 +154,9 @@ export async function GET(request: NextRequest) {
             headers: ['Service', 'Quantity Sold'],
             rows: topSellingServices.map(([service, quantity]) => [
               service,
-              quantity.toString()
-            ])
-          }
+              quantity.toString(),
+            ]),
+          },
         },
         {
           title: 'Payment Methods',
@@ -134,43 +165,38 @@ export async function GET(request: NextRequest) {
             headers: ['Method', 'Amount'],
             rows: Object.entries(paymentMethods).map(([method, amount]) => [
               method,
-              `CDF ${amount.toLocaleString('fr-CD', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
-            ])
-          }
-        }
+              `CDF ${amount.toLocaleString('fr-CD', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}`,
+            ]),
+          },
+        },
       ];
 
-      // Generate PDF
       const pdfBuffer = await generateReportPdf(
         sections,
         'Beauty Nails - Revenue Report',
         `${format(from, 'MMM dd')} to ${format(to, 'MMM dd')}`
       );
 
-      // Return PDF response
       return new NextResponse(pdfBuffer.toString('binary'), {
         status: 200,
         headers: {
           'Content-Type': 'application/pdf',
-          'Content-Disposition': `attachment; filename="revenue-report-${format(new Date(), 'yyyy-MM-dd')}.pdf"`,
+          'Content-Disposition': `attachment; filename="revenue-report-${format(
+            new Date(),
+            'yyyy-MM-dd'
+          )}.pdf"`,
         },
       });
     }
-
-    // console.log('Revenue report generated successfully: ', {
-    //   totalRevenue,
-    //   salesCount: sales.length,
-    //   breakdown,
-    //   serviceCount,
-    //   topSellingServices,
-    //   paymentMethods,
-    //   period: { from: fromParam, to: toParam },
-    // });
 
     return successResponse({
       totalRevenue,
       salesCount: sales.length,
       breakdown,
+      monthlyBreakdown, // ✅ Added for LineChart
       serviceCount,
       topSellingServices,
       paymentMethods,

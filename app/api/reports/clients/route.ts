@@ -136,7 +136,7 @@ export async function GET(request: NextRequest) {
       }))
     };
 
-    console.log('Client Analytics Response:', responseData);
+    // console.log('Client Analytics Response:', responseData);
 
     if (pdfTrigger) {
       // Format data for PDF

@@ -60,7 +60,7 @@ export default function ReportsAnalytics() {
     if (!revenueReport) return [];
     // For demonstration, we'll create a simple series from the breakdown
     // In real implementation, you'd transform the data appropriately
-    const breakdown = revenueReport.breakdown;
+    const breakdown = revenueReport.monthlyBreakdown;
     return Object.entries(breakdown).map(([k, v]) => ({
       month: k,
       revenue: v,

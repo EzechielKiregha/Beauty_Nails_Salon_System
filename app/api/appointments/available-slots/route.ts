@@ -61,6 +61,8 @@ export async function GET(request: NextRequest) {
       }
     }
 
+    console.log(slots);
+
     return successResponse({ slots });
   } catch (error) {
     return handleApiError(error);

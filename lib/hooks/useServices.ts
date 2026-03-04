@@ -88,6 +88,14 @@ export function useAddOns(serviceId: string) {
   });
 }
 
+export function useClientReferrals(clientId: string) {
+  return useQuery({
+    queryKey: ['clients', clientId, 'referrals'],
+    queryFn: () => servicesApi.getClientReferrals(clientId),
+    enabled: !!clientId,
+  });
+}
+
 export function useAddOnMutations() {
   const queryClient = useQueryClient();
 

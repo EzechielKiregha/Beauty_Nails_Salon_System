@@ -231,7 +231,7 @@ export async function POST(request: NextRequest) {
           worker: { connect: { id: workerId } },
           service: { connect: { id: serviceId }},
           notes,
-          status: 'pending',
+          status: 'confirmed',
           addOns,
         },
         include: {

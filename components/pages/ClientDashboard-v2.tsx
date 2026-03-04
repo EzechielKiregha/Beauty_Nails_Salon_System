@@ -61,6 +61,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "..
 import LoaderBN from "../Loader-BN";
 import { useClient, useClients } from "@/lib/hooks/useClients";
 import ManageClientMembership from "../ManageClientMembership";
+import { useClientReferrals } from "@/lib/hooks/useServices";
 
 export default function ClientDashboardV2() {
   const [notificationOpen, setNotificationOpen] = useState(false);
@@ -72,6 +73,7 @@ export default function ClientDashboardV2() {
   const router = useRouter();
   // Get authenticated user
   const { user, isLoading: isAuthLoading } = useAuth();
+  const { data, isLoading } = useClientReferrals(user ? user.id : '');
 
   // API hook
   const { clients: allClients = [] } = useClients()
@@ -125,6 +127,10 @@ export default function ClientDashboardV2() {
     isLoading: isReferralLoading,
   } = useReferral();
 
+  const referralList = data?.referralsRel || [];
+  const successfulReferrals = referralList.filter(r => r.status === "completed").length;
+  const canClaimBonus = successfulReferrals >= 5;
+
   // Get notifications
   const {
     notifications: notificationList = [],
@@ -135,7 +141,7 @@ export default function ClientDashboardV2() {
 
   // Filter appointments
   const upcomingAppointments = appointments.filter(
-    (apt) => (apt.status === "confirmed" || apt.status === "pending") && new Date(apt.date).getTime() >= new Date().getTime(),
+    (apt) => (apt.status === "confirmed") && new Date(apt.date).getDate() >= new Date().getDate(),
   );
 
   const appointmentHistory = appointments.filter(
@@ -340,8 +346,8 @@ export default function ClientDashboardV2() {
                           <div
                             key={notification.id}
                             className={`p-4 rounded-lg border cursor-pointer transition-colors ${notification.isRead
-                              ? "bg-white"
-                              : "bg-pink-50 border-pink-200"
+                              ? "mb-8 p-6 border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950"
+                              : "mb-8 p-6 border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-pink-200 dark:bg-pink-950"
                               }`}
                             onClick={() => markAsRead(notification.id)}
                           >
@@ -445,13 +451,13 @@ export default function ClientDashboardV2() {
               <Calendar className="w-4 h-4 mr-2" />
               Rendez-vous
             </TabsTrigger>
-            <TabsTrigger value="loyalty">
-              <Gift className="w-4 h-4 mr-2" />
-              Fidélité
-            </TabsTrigger>
             <TabsTrigger value="referrals">
               <Users className="w-4 h-4 mr-2" />
               Parrainage
+            </TabsTrigger>
+            <TabsTrigger value="loyalty">
+              <Gift className="w-4 h-4 mr-2" />
+              Fidélité
             </TabsTrigger>
             <TabsTrigger value="profile">
               <User className="w-4 h-4 mr-2" />
@@ -600,7 +606,7 @@ export default function ClientDashboardV2() {
                       </div>
 
                       <div className="flex items-center gap-4">
-                        <p className=" text-gray-900">
+                        <p className=" text-gray-900 dark:text-gray-200">
                           {appointment.price?.toLocaleString()} Fc
                         </p>
                         {appointment.status === "completed" &&
@@ -622,6 +628,189 @@ export default function ClientDashboardV2() {
                   ))}
                 </div>
               )}
+            </Card>
+          </TabsContent>
+
+          {/* Referrals Tab */}
+          <TabsContent value="referrals" className="space-y-6">
+            <Card className="p-6">
+              <h2 className="text-2xl   mb-6 flex items-center">
+                <Share2 className="w-6 h-6 mr-2 text-pink-500" />
+                Programme de Parrainage
+              </h2>
+
+              {/* Referral Code */}
+              <div className="mb-8 p-6 border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950">
+                <h3 className="text-lg font-semibold mb-4">
+                  Votre code de parrainage
+                </h3>
+                <div className="flex items-center gap-3 mb-4 flex-col">
+                  <div className="flex-1 p-4 bg-background rounded-lg border-2 border-dashed border-pink-300">
+                    <p className="text-sm lg:text-3xl text-center text-pink-600 tracking-wider">
+                      {referralCode ? "https://beauty-nails.vercel.app/auth/signup?ref=" + referralCode.toLocaleLowerCase() : "Chargement..."}
+                    </p>
+                  </div>
+                  <Button
+                    size="lg"
+                    onClick={handleCopyReferralCode}
+                    className="bg-linear-to-r from-pink-500 to-purple-500"
+                  >
+                    <Share2 className="w-5 h-5 mr-2" />
+                    Copier
+                  </Button>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4 text-center">
+                  <div className="p-4 bg-white dark:bg-gray-800 rounded-lg">
+                    <p className="text-2xl  text-pink-600">
+                      {referrals}
+                    </p>
+                    <p className="text-sm text-gray-900 dark:text-gray-100">Parrainages réussis</p>
+                  </div>
+                  <div className="p-4 bg-white dark:bg-gray-800 rounded-lg">
+                    <p className="text-2xl  text-purple-600">
+                      {nextFreeReferral}
+                    </p>
+                    <p className="text-sm text-gray-900 dark:text-gray-100">
+                      Restants pour service gratuit
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <Card className="mb-8 p-6 border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-lg font-semibold">
+                    Historique des Parrainages
+                  </h3>
+
+                  {canClaimBonus && (
+                    <Button
+                      onClick={() => console.log("Claim bonus")}
+                      className="bg-gradient-to-r from-amber-500 to-yellow-500 hover:opacity-90"
+                    >
+                      🎁 Réclamer Bonus
+                    </Button>
+                  )}
+                </div>
+
+                {isLoading ? (
+                  <p className="text-sm text-muted-foreground">Chargement...</p>
+                ) : referralList.length === 0 ? (
+                  <p className="text-sm text-muted-foreground">
+                    Aucun parrainage pour le moment.
+                  </p>
+                ) : (
+                  <div className="rounded-xl border overflow-hidden">
+                    <div className="max-h-[400px] overflow-y-auto">
+
+                      <table className="w-full text-sm">
+                        <thead className="bg-muted sticky top-0 z-10">
+                          <tr>
+                            <th className="text-left p-3">Nom</th>
+                            <th className="text-left p-3">Email</th>
+                            <th className="text-left p-3">Téléphone</th>
+                            <th className="text-left p-3">Dépenses</th>
+                            <th className="text-left p-3">Statut</th>
+                            <th className="text-left p-3">Récompense</th>
+                          </tr>
+                        </thead>
+
+                        <tbody>
+                          {referralList.map((ref) => (
+                            <tr
+                              key={ref.id}
+                              className="border-t hover:bg-muted/40 transition"
+                            >
+                              <td className="p-3 font-medium">
+                                {ref.referred.user.name}
+                              </td>
+
+                              <td className="p-3">
+                                {ref.referred.user.email}
+                              </td>
+
+                              <td className="p-3">
+                                {ref.referred.user.phone}
+                              </td>
+
+                              <td className="p-3">
+                                {ref.referred.totalSpent.toLocaleString()} CDF
+                              </td>
+
+                              <td className="p-3">
+                                <span
+                                  className={`px-3 py-1 text-xs rounded-full ${ref.status === "completed"
+                                    ? "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400"
+                                    : ref.status === "pending"
+                                      ? "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-400"
+                                      : "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400"
+                                    }`}
+                                >
+                                  {ref.status}
+                                </span>
+                              </td>
+
+                              <td className="p-3">
+                                {ref.rewardGranted ? (
+                                  <span className="text-green-600 dark:text-green-400 text-xs font-medium">
+                                    ✔ Accordée
+                                  </span>
+                                ) : (
+                                  <span className="text-muted-foreground text-xs">
+                                    —
+                                  </span>
+                                )}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+
+                    </div>
+                  </div>
+                )}
+              </Card>
+
+              {/* How it works */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold">Comment ça marche ?</h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="p-4 border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950">
+                    <div className="w-12 h-12 bg-pink-100 rounded-full flex items-center justify-center mb-3">
+                      <span className="text-2xl  text-pink-600">
+                        1
+                      </span>
+                    </div>
+                    <h4 className="font-semibold mb-2">Partagez</h4>
+                    <p className="text-sm text-gray-900 dark:text-gray-100">
+                      Partagez votre code avec vos amis
+                    </p>
+                  </div>
+                  <div className="p-4 border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950">
+                    <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mb-3">
+                      <span className="text-2xl  text-purple-600">
+                        2
+                      </span>
+                    </div>
+                    <h4 className="font-semibold mb-2">Ils s'inscrivent</h4>
+                    <p className="text-sm text-gray-900 dark:text-gray-100">
+                      Vos amis utilisent votre code à l'inscription
+                    </p>
+                  </div>
+                  <div className="p-4 border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950">
+                    <div className="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center mb-3">
+                      <span className="text-2xl  text-amber-600">
+                        3
+                      </span>
+                    </div>
+                    <h4 className="font-semibold mb-2">Gagnez des points</h4>
+                    <p className="text-sm text-gray-900 dark:text-gray-100">
+                      Recevez des points à chaque parrainage réussi
+                    </p>
+                  </div>
+                </div>
+              </div>
             </Card>
           </TabsContent>
 
@@ -654,22 +843,6 @@ export default function ClientDashboardV2() {
                     </div>
                   </Card>
 
-                  <Card className="bg-linear-to-br from-green-50 to-emerald-50 dark:from-green-900/10 dark:to-emerald-900/10 border-2 border-green-200 dark:border-green-900 shadow-xl rounded-3xl p-6 relative">
-                    <div className="flex items-center gap-4 mb-4">
-                      <div className="w-12 h-12 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
-                        <Gift className="w-6 h-6 text-green-600 dark:text-green-400" />
-                      </div>
-                      <div>
-                        <h3 className="text-xl  text-gray-900 dark:text-gray-100">Récompenses Disponibles</h3>
-                        <p className="text-gray-600 dark:text-gray-300 text-sm">Consultez le catalogue</p>
-                      </div>
-                    </div>
-                    <Link href="/catalog#loyalty">
-                      <Button variant="secondary" className="w-full border-2 border-green-200 dark:border-green-800 text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-full py-3 ">
-                        Explorer
-                      </Button>
-                    </Link>
-                  </Card>
                 </div>
               </div>
               {/* Loyalty Stats & Info */}
@@ -748,94 +921,7 @@ export default function ClientDashboardV2() {
             </Card>
           </TabsContent>
 
-          {/* Referrals Tab */}
-          <TabsContent value="referrals" className="space-y-6">
-            <Card className="p-6">
-              <h2 className="text-2xl   mb-6 flex items-center">
-                <Share2 className="w-6 h-6 mr-2 text-pink-500" />
-                Programme de Parrainage
-              </h2>
 
-              {/* Referral Code */}
-              <div className="mb-8 p-6 border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950">
-                <h3 className="text-lg font-semibold mb-4">
-                  Votre code de parrainage
-                </h3>
-                <div className="flex items-center gap-3 mb-4 flex-col">
-                  <div className="flex-1 p-4 bg-background rounded-lg border-2 border-dashed border-pink-300">
-                    <p className="text-sm lg:text-3xl text-center text-pink-600 tracking-wider">
-                      {referralCode ? "https://beauty-nails.vercel.app/auth/signup?ref=" + referralCode.toLocaleLowerCase() : "Chargement..."}
-                    </p>
-                  </div>
-                  <Button
-                    size="lg"
-                    onClick={handleCopyReferralCode}
-                    className="bg-linear-to-r from-pink-500 to-purple-500"
-                  >
-                    <Share2 className="w-5 h-5 mr-2" />
-                    Copier
-                  </Button>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4 text-center">
-                  <div className="p-4 bg-white dark:bg-gray-800 rounded-lg">
-                    <p className="text-2xl  text-pink-600">
-                      {referrals}
-                    </p>
-                    <p className="text-sm text-gray-900 dark:text-gray-100">Parrainages réussis</p>
-                  </div>
-                  <div className="p-4 bg-white dark:bg-gray-800 rounded-lg">
-                    <p className="text-2xl  text-purple-600">
-                      {nextFreeReferral}
-                    </p>
-                    <p className="text-sm text-gray-900 dark:text-gray-100">
-                      Restants pour service gratuit
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* How it works */}
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold">Comment ça marche ?</h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="p-4 border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950">
-                    <div className="w-12 h-12 bg-pink-100 rounded-full flex items-center justify-center mb-3">
-                      <span className="text-2xl  text-pink-600">
-                        1
-                      </span>
-                    </div>
-                    <h4 className="font-semibold mb-2">Partagez</h4>
-                    <p className="text-sm text-gray-900 dark:text-gray-100">
-                      Partagez votre code avec vos amis
-                    </p>
-                  </div>
-                  <div className="p-4 border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950">
-                    <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mb-3">
-                      <span className="text-2xl  text-purple-600">
-                        2
-                      </span>
-                    </div>
-                    <h4 className="font-semibold mb-2">Ils s'inscrivent</h4>
-                    <p className="text-sm text-gray-900 dark:text-gray-100">
-                      Vos amis utilisent votre code à l'inscription
-                    </p>
-                  </div>
-                  <div className="p-4 border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950">
-                    <div className="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center mb-3">
-                      <span className="text-2xl  text-amber-600">
-                        3
-                      </span>
-                    </div>
-                    <h4 className="font-semibold mb-2">Gagnez des points</h4>
-                    <p className="text-sm text-gray-900 dark:text-gray-100">
-                      Recevez des points à chaque parrainage réussi
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </Card>
-          </TabsContent>
           <TabsContent value="profile" className="space-y-6">
             {/* Client Profile */}
             <Card className="p-4 sm:p-8 hover:shadow-lg transition-all border border-pink-100 dark:border-pink-900 shadow-xl rounded-2xl bg-white dark:bg-gray-950 lg:col-span-2">
@@ -1102,7 +1188,7 @@ export default function ClientDashboardV2() {
 
           {selectedAppointment && (
             <div className="py-4">
-              <div className="p-4 bg-gray-50 rounded-lg space-y-2">
+              <div className="p-4 bg-white dark:bg-gray-800 rounded-lg space-y-2">
                 <p className="font-semibold">{selectedAppointment.service?.name}</p>
                 <p className="text-sm text-gray-900 dark:text-gray-100">
                   {formatDate(selectedAppointment.date)} à {selectedAppointment.time}
