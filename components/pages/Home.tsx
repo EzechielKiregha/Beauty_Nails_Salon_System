@@ -123,14 +123,14 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background dark:bg-gray-950">
       {/* Hero Section */}
-      <section className="relative h-150 flex items-center overflow-hidden">
+      <section className="relative min-h-[80vh] flex items-center overflow-hidden">
         <div className="absolute inset-0">
           <ImageWithFallback
-            src="https://images.unsplash.com/photo-1632643746039-de953cb0f260?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxiZWF1dHklMjBzYWxvbiUyMGVsZWdhbnR8ZW58MXx8fHwxNzYyMjYzMDgyfDA&ixlib=rb-4.1.0&q=80&w=1080"
+            src="https://images.unsplash.com/photo-1632643746039-de953cb0f260?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080"
             alt="Beauty Nails Salon"
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-linear-to-r from-pink-900/80 via-purple-900/70 to-amber-900/60" />
+          <div className="absolute inset-0 bg-gradient-to-r from-pink-900/80 via-purple-900/70 to-amber-900/60" />
         </div>
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
@@ -139,24 +139,31 @@ export default function Home() {
               <Sparkles className="w-4 h-4 mr-2" />
               Votre Destination Beauté Premium
             </Badge>
-            <h1 className="text-5xl lg:text-6xl text-white mb-6 leading-tight">
-              Sublimez votre beauté,<br />
-              <span className="text-transparent bg-clip-text bg-linear-to-r from-pink-200 to-amber-200">
-                un soin à la fois
+
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight text-white mb-6 leading-tight">
+              La délicatesse <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-200 to-amber-200">
+                au service de votre beauté.
               </span>
             </h1>
-            <p className="text-xl text-pink-100 mb-8">
+
+            <p className="text-lg sm:text-xl text-pink-100 mb-8 leading-relaxed max-w-xl">
               Spécialistes en ongles, cils, tresses et maquillage. Découvrez l'excellence de nos services dans une ambiance luxueuse et relaxante.
             </p>
+
             <div className="flex flex-col sm:flex-row gap-4">
               <Link href="/appointments">
-                <Button size="lg" className="bg-linear-to-r from-pink-500 to-amber-400 hover:from-pink-600 hover:to-amber-500 text-white rounded-full px-8">
+                <Button className="bg-gradient-to-r from-pink-500 to-amber-400 hover:from-pink-600 hover:to-amber-500 text-white rounded-full px-8 py-6 text-base font-medium transition-all duration-300 ease-out shadow-xl">
                   <Calendar className="w-5 h-5 mr-2" />
                   Prendre rendez-vous maintenant
                 </Button>
               </Link>
+
               <Link href="/catalog">
-                <Button size="lg" variant="link" className="border-2 border-white text-gray-200 dark:text-white hover:bg-white/10 rounded-full px-8 backdrop-blur-sm">
+                <Button
+                  variant="outline"
+                  className="border-2 border-white text-white bg-white/10 rounded-full px-8 py-6 backdrop-blur-sm transition-all duration-300 ease-out"
+                >
                   Découvrir Nos Services, Produits & Offres
                 </Button>
               </Link>
@@ -166,17 +173,21 @@ export default function Home() {
       </section>
 
       {/* Quick Appointment Bar */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 sm:-mt-16 relative z-20 text-gray-200">
-        <Card className="bg-white dark:bg-gray-950 border-b border-pink-100 dark:border-pink-900 shadow-2xl rounded-2xl p-6 ">
-          <div className="flex flex-col lg:flex-row items-end gap-4">
-            {/* Service Select */}
-            <div className="flex-1 w-full">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Service</label>
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-12 sm:-mt-16 relative z-20">
+        <Card className="bg-white/90 dark:bg-gray-950/90 backdrop-blur-xl border border-pink-100/40 dark:border-pink-900/40 shadow-[0_20px_60px_rgba(0,0,0,0.15)] rounded-3xl p-6 sm:p-8">
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-end">
+
+            {/* Service */}
+            <div className="w-full">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+                Service
+              </label>
               <Select value={selectedService?.id ?? ''} onValueChange={(value) => {
                 const s = services.find((svc) => svc.id === value)
                 if (s) setSelectedService(s)
               }}>
-                <SelectTrigger className="w-full">
+                <SelectTrigger className="w-full rounded-xl">
                   <SelectValue placeholder="Sélectionner un service" />
                 </SelectTrigger>
                 <SelectContent>
@@ -190,23 +201,22 @@ export default function Home() {
               </Select>
             </div>
 
-            {/* Date Picker */}
-            <div className="flex-1 w-full">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Date</label>
+            {/* Date */}
+            <div className="w-full">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+                Date
+              </label>
               <Popover>
                 <PopoverTrigger asChild>
                   <Button
-                    variant={"outline"}
-                    className={cn(
-                      "w-full justify-start text-left font-normal",
-                      !selectedDate && "text-muted-foreground"
-                    )}
+                    variant="outline"
+                    className="w-full justify-start rounded-xl"
                   >
                     <CalendarIcon className="mr-2 h-4 w-4" />
-                    {selectedDate ? format(selectedDate, "PPP", { locale: fr }) : <span>Choisir date</span>}
+                    {selectedDate ? format(selectedDate, "PPP", { locale: fr }) : "Choisir date"}
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align='start'>
+                <PopoverContent className="w-auto p-0" align="start">
                   <CalendarComponent
                     mode="single"
                     selected={selectedDate}
@@ -218,50 +228,35 @@ export default function Home() {
               </Popover>
             </div>
 
-            {/* Time Select */}
-            <div className="flex-1 w-full">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Heure</label>
+            {/* Heure */}
+            <div className="w-full">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+                Heure
+              </label>
               <Select value={selectedTime} onValueChange={setSelectedTime}>
-                <SelectTrigger className="w-full">
+                <SelectTrigger className="w-full rounded-xl">
                   <SelectValue placeholder="Choisir une heure" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="09:00">
-                    <Clock className="inline mr-2 h-4 w-4" />
-                    09:00
-                  </SelectItem>
-                  <SelectItem value="10:00">
-                    <Clock className="inline mr-2 h-4 w-4" />
-                    10:00
-                  </SelectItem>
-                  <SelectItem value="11:00">
-                    <Clock className="inline mr-2 h-4 w-4" />
-                    11:00
-                  </SelectItem>
-                  <SelectItem value="14:00">
-                    <Clock className="inline mr-2 h-4 w-4" />
-                    14:00
-                  </SelectItem>
-                  <SelectItem value="15:00">
-                    <Clock className="inline mr-2 h-4 w-4" />
-                    15:00
-                  </SelectItem>
-                  <SelectItem value="16:00">
-                    <Clock className="inline mr-2 h-4 w-4" />
-                    16:00
-                  </SelectItem>
+                  {["09:00", "10:00", "11:00", "14:00", "15:00", "16:00"].map((time) => (
+                    <SelectItem key={time} value={time}>
+                      <Clock className="inline mr-2 h-4 w-4" />
+                      {time}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
 
-            {/* Reserve Button */}
-            <div className="w-full lg:w-auto">
+            {/* Bouton */}
+            <div className="w-full">
               <Link href={reserveHref}>
-                <Button className="w-full lg:w-auto bg-linear-to-br from-gray-900 via-pink-800 to-pink-600 hover:from-pink-600 hover:via-pink-800 hover:to-gray-900 text-white rounded-xl px-8 py-6">
+                <Button className="w-full bg-gradient-to-r from-gray-900 via-pink-700 to-pink-500 hover:scale-[1.02] transition-all duration-300 ease-out text-white rounded-2xl py-6 text-base font-medium shadow-xl">
                   Réserver
                 </Button>
               </Link>
             </div>
+
           </div>
         </Card>
       </section>
@@ -270,7 +265,7 @@ export default function Home() {
       <section className=" bg-background pt-16 dark:bg-gray-950">
         <div className="text-center mb-16">
           <Badge className="mb-4 bg-pink-100 dark:bg-pink-900 text-pink-600 dark:text-pink-200">Nos Services</Badge>
-          <h2 className="  text-4xl text-gray-900 dark:text-gray-100 mb-4">
+          <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight text-gray-900 dark:text-gray-100 mb-4">
             Des services d'excellence pour votre beauté
           </h2>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
@@ -281,7 +276,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {services.map((service) => (
             <Link key={service.id} href={`/services/${service.id}`}>
-              <Card className="group cursor-pointer overflow-hidden bg-white dark:bg-gray-950 border-b border-pink-100 dark:border-pink-900 shadow-lg hover:shadow-2xl transition-all duration-300 h-full">
+              <Card className="group cursor-pointer overflow-hidden bg-white dark:bg-gray-950 border border-pink-100/40 dark:border-pink-900/40 shadow-md hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 rounded-2xl h-full">
                 <div className="relative h-48 overflow-hidden">
                   <ImageWithFallback
                     src={service.image}
@@ -310,7 +305,7 @@ export default function Home() {
       <section className="py-16 bg-background dark:bg-gray-950">
         <div className="text-center mb-16">
           <Badge className="mb-4 bg-pink-100 dark:bg-pink-900 text-pink-600 dark:text-pink-200">Nos Abonnements</Badge>
-          <h2 className="  text-4xl text-gray-900 dark:text-gray-100 mb-4">
+          <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight text-gray-900 dark:text-gray-100 mb-4">
             Rejoignez notre cercle de clientes privilégiées
           </h2>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
@@ -399,7 +394,7 @@ export default function Home() {
               <Heart className="w-4 h-4 mr-2" />
               Témoignages
             </Badge>
-            <h2 className="  text-4xl text-gray-900 dark:text-gray-100 mb-4">
+            <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight text-gray-900 dark:text-gray-100 mb-4">
               Ce que nos clientes disent de nous
             </h2>
             <div className="flex items-center justify-center gap-2 mb-4">
@@ -462,7 +457,7 @@ export default function Home() {
 
           <div>
             <Badge className="mb-4 bg-pink-100 text-pink-600">Notre Histoire</Badge>
-            <h2 className="  text-4xl text-gray-900 dark:text-gray-200 mb-6">
+            <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight text-gray-900 dark:text-gray-100 mb-4">
               La beauté au service du bien-être
             </h2>
             <p className="text-lg text-gray-600 dark:text-gray-200 mb-6">
@@ -493,28 +488,21 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 bg-linear-to-r from-pink-500 to-purple-500 dark:from-pink-700 dark:to-purple-700">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl sm:text-4xl  text-white mb-4">
-            Prête à sublimer votre beauté ?
-          </h2>
-          <p className="text-lg text-pink-100 max-w-2xl mx-auto mb-8">
-            Réservez dès maintenant votre prochain rendez-vous et profitez d'une expérience beauté exceptionnelle.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/appointments">
-              <Button className="bg-white text-pink-600 hover:bg-gray-100 rounded-full px-8 py-6 text-base sm:text-lg  shadow-md">
-                Réserver maintenant
-              </Button>
-            </Link>
-            <Link href="/contact">
-              <Button variant="secondary" className="bg-transparent border-2 border-white text-white hover:bg-white/10 rounded-full px-8 py-6 text-base sm:text-lg ">
-                Nous Contacter
-              </Button>
-            </Link>
-          </div>
+      <div className="mt-24 text-center">
+        <h2 className="text-3xl text-gray-900 dark:text-gray-100 mb-6">Prête à réserver votre moment beauté ?</h2>
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <Link href="/appointments">
+            <Button size="lg" className="bg-linear-to-r from-pink-500 to-amber-400 hover:from-pink-600 hover:to-amber-500 text-white rounded-full px-8">
+              Prendre rendez-vous
+            </Button>
+          </Link>
+          <Link href="/memberships">
+            <Button size="lg" variant="outline" className="border-pink-200 dark:border-pink-800 text-pink-600 dark:text-pink-400 hover:bg-pink-50 dark:hover:bg-pink-900/20 rounded-full px-8">
+              Voir les abonnements
+            </Button>
+          </Link>
         </div>
-      </section>
+      </div>
     </div>
   );
 }

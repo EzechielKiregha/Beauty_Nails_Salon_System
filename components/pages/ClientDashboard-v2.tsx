@@ -1026,7 +1026,7 @@ export default function ClientDashboardV2() {
                       </div>
                     </div>
 
-                    {selectedClient && (
+                    {/* {selectedClient && (
                       <Card className="p-6 bg-linear-to-br from-purple-50 to-pink-50 dark:from-purple-900/10 dark:to-pink-900/10 border border-purple-100 dark:border-purple-900/30 rounded-3xl">
                         <h4 className="text-sm font-black text-gray-900 dark:text-gray-100 mb-4 uppercase tracking-widest flex items-center gap-2">
                           <DollarSign className="w-4 h-4 text-purple-500" />
@@ -1034,7 +1034,7 @@ export default function ClientDashboardV2() {
                         </h4>
                         <ManageClientMembership clientId={selectedClient.id} />
                       </Card>
-                    )}
+                    )} */}
 
                     <div className="p-6 bg-pink-50 dark:bg-pink-900/10 rounded-3xl border border-pink-100 dark:border-pink-900/30">
                       <h4 className="text-xs font-black text-pink-600 dark:text-pink-400 uppercase tracking-[0.2em] mb-4">Services Favoris</h4>

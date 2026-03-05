@@ -295,9 +295,12 @@ export default function Contact() {
             </div>
             <div className="aspect-video bg-gray-200 dark:bg-gray-800 flex items-center justify-center">
               <div className="text-center text-gray-500 dark:text-gray-400 px-4">
-                <MapPin className="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-3 sm:mb-4 text-gray-400 dark:text-gray-600" />
-                <p className="text-sm sm:text-base mb-1">Avenue de la Paix, Gombe</p>
-                <p className="text-sm sm:text-base mb-4">Kinshasa, D.R. Congo</p>
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d7976.265327690709!2d29.19361407041877!3d-1.6655623737073957!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x19dd0f314211f117%3A0x853637f77640d4c0!2sHimbi!5e0!3m2!1sen!2srw!4v1772725988080!5m2!1sen!2srw"
+                  width="1210" height="720"
+                  style={{ border: "1", borderRadius: "1rem", boxShadow: "rgba(0, 0, 0, 0.1) 0px 4px 12px" }}
+                  loading="lazy" ></iframe>
+                {/* <MapPin className="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-3 sm:mb-4 text-gray-400 dark:text-gray-600" />
+                <p className="text-sm sm:text-base mb-1">Q. Birere, Comune de Goma, Goma – RDC</p>
                 <a
                   href="https://maps.google.com"
                   target="_blank"
@@ -305,7 +308,7 @@ export default function Contact() {
                   className="text-pink-600 dark:text-pink-400 hover:text-pink-700 dark:hover:text-pink-300 text-xs sm:text-sm inline-block transition-colors"
                 >
                   Voir sur Google Maps →
-                </a>
+                </a> */}
               </div>
             </div>
           </Card>

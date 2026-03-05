@@ -208,14 +208,14 @@ export default function ServiceDetail() {
         </div>
 
         {/* CTA */}
-        <div className="mt-16 text-center">
+        {/* <div className="mt-16 text-center">
           <h2 className="text-3xl text-gray-900 dark:text-gray-100 mb-6">Prête à réserver votre prestation ?</h2>
           <Link href="/appointments">
             <Button size="lg" className="bg-linear-to-r from-pink-500 to-amber-400 hover:from-pink-600 hover:to-amber-500 text-white rounded-full px-12">
               Prendre rendez-vous
             </Button>
           </Link>
-        </div>
+        </div> */}
       </div>
     </div>
   );

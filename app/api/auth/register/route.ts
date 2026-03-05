@@ -4,6 +4,7 @@ import prisma from '@/lib/prisma';
 import { errorResponse, successResponse, handleApiError } from '@/lib/api/helpers';
 import { nanoid } from 'nanoid';
 import { toUserDTO } from '@/lib/dto/user.dto';
+import { ref } from 'node:process';
 
 export async function POST(request: NextRequest) {
   try {
@@ -66,10 +67,10 @@ export async function POST(request: NextRequest) {
     if (user && referrerID) {
       const referral = await prisma.referral.create({
         data: {
-          referrerId: referrerID!,
-          referredId: user.clientProfile!.id,
           status: 'pending',
           rewardGranted: false,
+          referred: { connect: { id: user.clientProfile?.id } },
+          referrer: { connect: { id: referrerID } }
         },
       });
 
@@ -79,6 +80,7 @@ export async function POST(request: NextRequest) {
         data: {
           loyaltyPoints: { increment: 5 },
           referrals: { increment: 1 },
+          referralsRel: { connect: { id: referral.id} }
         },
       });
 
