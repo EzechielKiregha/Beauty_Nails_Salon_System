@@ -84,7 +84,7 @@ export default function Home() {
     setSelectedService(service);
   };
 
-  const reserveHref = `/appointments?service=${encodeURIComponent(selectedService?.id ?? '')}&date=${encodeURIComponent(selectedDate ? selectedDate?.toISOString().split('T')[0] : new Date().getDate())}&time=${encodeURIComponent(selectedTime)}`;
+  const reserveHref = `/appointments?category=${encodeURIComponent(selectedService?.id ?? '')}&date=${encodeURIComponent(selectedDate ? selectedDate?.toISOString().split('T')[0] : new Date().getDate())}&time=${encodeURIComponent(selectedTime)}`;
 
   const testimonials = [
     {

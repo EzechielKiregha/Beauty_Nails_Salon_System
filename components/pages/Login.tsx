@@ -15,7 +15,7 @@ import {
 import Link from "next/link";
 import { Logo } from "../Logo";
 import { handleLogin } from "@/app/(auth)/auth/login/actions";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 
 export default function Login() {
@@ -23,11 +23,13 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get("redirect");
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>, role: string) {
     e.preventDefault();
     startTransition(async () => {
-      const result = await handleLogin(new FormData(e.currentTarget), role);
+      const result = await handleLogin(new FormData(e.currentTarget), role, redirect);
       if (result?.success) {
         toast.success('Connecté avec succès');
         router.push(result.redirectUrl);
@@ -207,7 +209,7 @@ export default function Login() {
         <p className="text-center mt-4 sm:mt-6 text-sm sm:text-base text-gray-600 dark:text-gray-300">
           Vous n'avez pas de compte ?{" "}
           <Link
-            href="/auth/signup"
+            href={`/auth/signup${redirect ? "?redirect=appointments" : ""}`}
             className="text-pink-600 dark:text-pink-400 hover:text-pink-700 dark:hover:text-pink-300 font-medium"
           >
             Créer un compte

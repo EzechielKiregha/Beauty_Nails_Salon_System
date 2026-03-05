@@ -26,7 +26,7 @@ import {
 import { ScrollArea } from "../ui/scroll-area";
 import { Textarea } from "../ui/textarea";
 import {
-  Calendar,
+  CalendarIcon,
   Users,
   Clock,
   Star,
@@ -60,8 +60,13 @@ import { useRouter } from "next/navigation";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../ui/accordion";
 import LoaderBN from "../Loader-BN";
 import { useClient, useClients } from "@/lib/hooks/useClients";
-import ManageClientMembership from "../ManageClientMembership";
 import { useClientReferrals } from "@/lib/hooks/useServices";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { cn } from "../ui/utils";
+import { format } from "date-fns";
+import { fr } from "date-fns/locale";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { Calendar } from "../ui/calendar";
 
 export default function ClientDashboardV2() {
   const [notificationOpen, setNotificationOpen] = useState(false);
@@ -70,6 +75,10 @@ export default function ClientDashboardV2() {
   const [selectedAppointment, setSelectedAppointment] = useState<any>(null);
   const [rating, setRating] = useState(0);
   const [reviewText, setReviewText] = useState("");
+  const [selectedDate, setSelectedDate] = useState<
+    Date | undefined
+  >(undefined);
+  const [selectedTime, setSelectedTime] = useState<string>('');
   const router = useRouter();
   // Get authenticated user
   const { user, isLoading: isAuthLoading } = useAuth();
@@ -108,9 +117,22 @@ export default function ClientDashboardV2() {
     appointments = [],
     isLoading: isAppointmentsLoading,
     cancelAppointment,
+    updateStatus,
+    rescheduleAppointment
   } = useAppointments({
     clientId: user?.clientProfile?.id,
   });
+
+  const isAppointmentMissed = (date: string | Date, time: string) => {
+    const appointmentDateTime = new Date(date);
+    const [hours, minutes] = time.split(":").map(Number);
+
+    appointmentDateTime.setHours(hours);
+    appointmentDateTime.setMinutes(minutes);
+    appointmentDateTime.setSeconds(0);
+
+    return appointmentDateTime < new Date();
+  };
 
   // Get loyalty data
   const {
@@ -209,7 +231,7 @@ export default function ClientDashboardV2() {
       case "appointment_reminder":
       case "appointment_confirmed":
       case "appointment_cancelled":
-        return <Calendar className="w-5 h-5 text-purple-500" />;
+        return <CalendarIcon className="w-5 h-5 text-purple-500" />;
       case "marketing":
         return <PartyPopper className="w-5 h-5 text-pink-500" />;
       case "loyalty_reward":
@@ -266,12 +288,37 @@ export default function ClientDashboardV2() {
     });
   };
 
-  // Format time
-  const formatTime = (dateString: string) => {
-    return new Date(dateString).toLocaleTimeString("fr-FR", {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
+  // Handle update status
+  const handleUpdateStatus = (appointmentId: string, newStatus: string) => {
+    updateStatus(
+      {
+        id: appointmentId,
+        statusData: { status: newStatus as any },
+      },
+      {
+        onSuccess: () => {
+          toast.success('Statut mis à jour');
+        },
+      }
+    );
+  };
+
+  const handleReschedule = (appointmentId: string, time: string, date: Date) => {
+    rescheduleAppointment(
+      {
+        id: appointmentId,
+        data: {
+          newTime: time,
+          newDate: date,
+          newStaffId: user?.workerProfile?.id,
+        }
+      },
+      {
+        onSuccess: () => {
+          toast.success('Statut mis à jour');
+        },
+      }
+    );
   };
 
   // Loading state
@@ -402,7 +449,7 @@ export default function ClientDashboardV2() {
             <Card className="p-4 sm:p-6 hover:shadow-lg transition-shadow border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950">
               <div className="flex items-center justify-between mb-4">
                 <div className="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
-                  <Calendar className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600 dark:text-purple-400" />
+                  <CalendarIcon className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600 dark:text-purple-400" />
                 </div>
               </div>
               <p className="text-xs sm:text-sm text-gray-900 dark:text-gray-300 mb-1">Rendez-vous</p>
@@ -448,7 +495,7 @@ export default function ClientDashboardV2() {
         <Tabs defaultValue="appointments" className="space-y-6">
           <TabsList className="grid w-full grid-cols-4 lg:w-auto">
             <TabsTrigger value="appointments" >
-              <Calendar className="w-4 h-4 mr-2" />
+              <CalendarIcon className="w-4 h-4 mr-2" />
               Rendez-vous
             </TabsTrigger>
             <TabsTrigger value="referrals">
@@ -476,7 +523,7 @@ export default function ClientDashboardV2() {
 
               {upcomingAppointments.length === 0 ? (
                 <div className="text-center py-12">
-                  <Calendar className="w-16 h-16 mx-auto mb-4 text-gray-300" />
+                  <CalendarIcon className="w-16 h-16 mx-auto mb-4 text-gray-300" />
                   <p className="text-gray-900 dark:text-gray-100 mb-4">
                     Aucun rendez-vous prévu
                   </p>
@@ -488,86 +535,178 @@ export default function ClientDashboardV2() {
                 </div>
               ) : (
                 <div className="space-y-4">
-                  {upcomingAppointments.map((appointment) => (
-                    <div
-                      key={appointment.id}
-                      className="p-6 hover:shadow-lg border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950"
-                    >
-                      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-3 mb-3">
-                            <h3 className="text-xl ">
-                              {appointment.service?.name || "Service"}
-                            </h3>
-                            {getStatusBadge(appointment.status)}
+                  {upcomingAppointments.map((appointment) => {
+
+                    const missed = isAppointmentMissed(appointment.date, appointment.time);
+                    return (
+                      <div
+                        key={appointment.id}
+                        className="p-6 hover:shadow-lg border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950"
+                      >
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-3 mb-3">
+                              <h3 className="text-xl ">
+                                {appointment.service?.name || "Service"}
+                              </h3>
+                              {getStatusBadge(appointment.status)}
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm text-gray-900 dark:text-gray-100">
+                              <div className="flex items-center gap-2">
+                                <CalendarIcon className="w-4 h-4 text-pink-500" />
+                                <span>{formatDate(appointment.date)}</span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <Clock className="w-4 h-4 text-purple-500" />
+                                <span>{appointment.time}</span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <Users className="w-4 h-4 text-amber-500" />
+                                <span>
+                                  {appointment.worker?.user?.name || "Non assigné"}
+                                </span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <MapPin className="w-4 h-4 text-green-500" />
+                                <span>
+                                  {appointment.location === "salon"
+                                    ? "Salon"
+                                    : "Domicile"}
+                                </span>
+                              </div>
+                            </div>
+
+                            {appointment.notes && (
+                              <div className="mt-3 p-3 bg-purple-50 rounded-lg">
+                                <p className="text-sm text-gray-700">
+                                  <MessageSquare className="w-4 h-4 inline mr-2" />
+                                  {appointment.notes}
+                                </p>
+                              </div>
+                            )}
                           </div>
 
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm text-gray-900 dark:text-gray-100">
-                            <div className="flex items-center gap-2">
-                              <Calendar className="w-4 h-4 text-pink-500" />
-                              <span>{formatDate(appointment.date)}</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <Clock className="w-4 h-4 text-purple-500" />
-                              <span>{appointment.time}</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <Users className="w-4 h-4 text-amber-500" />
-                              <span>
-                                {appointment.worker?.user?.name || "Non assigné"}
-                              </span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <MapPin className="w-4 h-4 text-green-500" />
-                              <span>
-                                {appointment.location === "salon"
-                                  ? "Salon"
-                                  : "Domicile"}
-                              </span>
-                            </div>
-                          </div>
-
-                          {appointment.notes && (
-                            <div className="mt-3 p-3 bg-purple-50 rounded-lg">
-                              <p className="text-sm text-gray-700">
-                                <MessageSquare className="w-4 h-4 inline mr-2" />
-                                {appointment.notes}
+                          <div className="flex flex-col gap-2">
+                            <div className="text-right mb-2">
+                              <p className="text-2xl  text-pink-600">
+                                {appointment.price?.toLocaleString()} Fc
                               </p>
                             </div>
-                          )}
-                        </div>
 
-                        <div className="flex flex-col gap-2">
-                          <div className="text-right mb-2">
-                            <p className="text-2xl  text-pink-600">
-                              {appointment.price?.toLocaleString()} Fc
-                            </p>
+                            {appointment.status !== "cancelled" && !missed && (
+                              <div className="flex gap-2">
+                                <Button variant="outline" size="sm">
+                                  <Phone className="w-4 h-4 mr-2" />
+                                  Contacter
+                                </Button>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  className="text-red-600 hover:text-red-700"
+                                  onClick={() => {
+                                    setSelectedAppointment(appointment);
+                                    setCancelDialogOpen(true);
+                                  }}
+                                >
+                                  <XCircle className="w-4 h-4 mr-2" />
+                                  Annuler
+                                </Button>
+                              </div>
+                            )}
+                            {missed && appointment.status !== "cancelled" && (
+                              <Popover>
+                                <PopoverTrigger asChild>
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    className="text-amber-600 border-amber-400 hover:bg-amber-50"
+                                  >
+                                    RDV Manqué
+                                  </Button>
+                                </PopoverTrigger>
+
+                                <PopoverContent className="w-[320px] space-y-4">
+
+                                  <p className="text-sm text-gray-600 dark:text-gray-300">
+                                    Ce rendez-vous a été manqué. Reprogrammez une nouvelle date.
+                                  </p>
+
+                                  {/* Date */}
+                                  <Popover>
+                                    <PopoverTrigger asChild>
+                                      <Button
+                                        variant="outline"
+                                        className={cn(
+                                          "w-full justify-start text-left font-normal",
+                                          !selectedDate && "text-muted-foreground"
+                                        )}
+                                      >
+                                        <CalendarIcon className="mr-2 h-4 w-4" />
+                                        {selectedDate
+                                          ? format(selectedDate, "PPP", { locale: fr })
+                                          : <span>Choisir date</span>}
+                                      </Button>
+                                    </PopoverTrigger>
+
+                                    <PopoverContent className="w-auto p-0">
+                                      <Calendar
+                                        mode="single"
+                                        selected={selectedDate}
+                                        onSelect={setSelectedDate}
+                                        disabled={(date) => date < new Date()}
+                                      />
+                                    </PopoverContent>
+                                  </Popover>
+
+                                  {/* Time */}
+                                  <Select value={selectedTime} onValueChange={setSelectedTime}>
+                                    <SelectTrigger>
+                                      <SelectValue placeholder="Choisir une heure" />
+                                    </SelectTrigger>
+
+                                    <SelectContent>
+                                      <SelectItem value="09:00">09:00</SelectItem>
+                                      <SelectItem value="10:00">10:00</SelectItem>
+                                      <SelectItem value="11:00">11:00</SelectItem>
+                                      <SelectItem value="14:00">14:00</SelectItem>
+                                      <SelectItem value="15:00">15:00</SelectItem>
+                                      <SelectItem value="16:00">16:00</SelectItem>
+                                    </SelectContent>
+                                  </Select>
+
+                                  <div className="flex gap-2">
+                                    <Button
+                                      variant="outline"
+                                      className="text-red-600"
+                                      onClick={() =>
+                                        handleUpdateStatus(appointment.id, "cancelled")
+                                      }
+                                    >
+                                      Refuser
+                                    </Button>
+
+                                    <Button
+                                      onClick={() =>
+                                        handleReschedule(
+                                          appointment.id,
+                                          selectedTime,
+                                          selectedDate!
+                                        )
+                                      }
+                                    >
+                                      Reprogrammer
+                                    </Button>
+                                  </div>
+
+                                </PopoverContent>
+                              </Popover>
+                            )}
                           </div>
-
-                          {appointment.status !== "cancelled" && (
-                            <div className="flex gap-2">
-                              <Button variant="outline" size="sm">
-                                <Phone className="w-4 h-4 mr-2" />
-                                Contacter
-                              </Button>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                className="text-red-600 hover:text-red-700"
-                                onClick={() => {
-                                  setSelectedAppointment(appointment);
-                                  setCancelDialogOpen(true);
-                                }}
-                              >
-                                <XCircle className="w-4 h-4 mr-2" />
-                                Annuler
-                              </Button>
-                            </div>
-                          )}
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    )
+                  })}
                 </div>
               )}
             </Card>
@@ -1005,7 +1144,7 @@ export default function ClientDashboardV2() {
                     {/* Quick Stats */}
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                       <div className="bg-linear-to-br from-blue-50 to-cyan-50 dark:from-gray-800 dark:to-gray-800/50 p-5 rounded-3xl border border-blue-100 dark:border-blue-900/30 text-center shadow-sm">
-                        <Calendar className="w-6 h-6 text-blue-600 dark:text-blue-400 mx-auto mb-2" />
+                        <CalendarIcon className="w-6 h-6 text-blue-600 dark:text-blue-400 mx-auto mb-2" />
                         <p className="text-2xl font-black text-gray-900 dark:text-gray-100">{selectedClient.totalAppointments}</p>
                         <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase  tracking-tight">Visites</p>
                       </div>
@@ -1054,7 +1193,7 @@ export default function ClientDashboardV2() {
                 <TabsContent value="history" className="space-y-6">
                   <div className="flex items-center justify-between">
                     <h4 className="text-lg sm:text-xl text-gray-900 dark:text-gray-100  flex items-center gap-2">
-                      <Calendar className="w-5 h-5 text-pink-500" />
+                      <CalendarIcon className="w-5 h-5 text-pink-500" />
                       Historique des Visites
                     </h4>
                     <Button variant="outline" size="sm" className="rounded-full text-xs  dark:border-gray-700">Exporter PDF</Button>
@@ -1064,7 +1203,7 @@ export default function ClientDashboardV2() {
                       <div key={idx} className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 bg-gray-50 dark:bg-gray-800/50 rounded-2xl border border-gray-100 dark:border-gray-700 hover:shadow-md transition-all gap-4">
                         <div className="flex items-center gap-4">
                           <div className="w-10 h-10 rounded-xl bg-white dark:bg-gray-800 flex items-center justify-center shadow-sm">
-                            <Calendar className="w-5 h-5 text-pink-500" />
+                            <CalendarIcon className="w-5 h-5 text-pink-500" />
                           </div>
                           <div>
                             <p className="text-sm sm:text-base text-gray-900 dark:text-gray-100 ">{apt.service.name}</p>

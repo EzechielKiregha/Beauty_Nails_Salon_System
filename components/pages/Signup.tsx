@@ -11,7 +11,7 @@ import Link from 'next/link';
 import { Logo } from '../Logo';
 import { useTransition } from "react";
 import { handleSignup } from '@/app/(auth)/auth/signup/actions';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 
 export default function Signup() {
@@ -24,6 +24,8 @@ export default function Signup() {
     acceptTerms: false,
     refCode: typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('ref') : 'new_account',
   });
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get("redirect");
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
@@ -33,7 +35,7 @@ export default function Signup() {
     e.preventDefault();
 
     startTransition(async () => {
-      const result = await handleSignup(new FormData(e.currentTarget), refCode);
+      const result = await handleSignup(new FormData(e.currentTarget), refCode, redirect);
       if (result?.success) {
         toast.success('Connecté avec succès');
         router.push(result?.redirectUrl);
@@ -234,7 +236,7 @@ export default function Signup() {
 
         <p className="text-center mt-4 sm:mt-6 text-sm sm:text-base text-gray-600 dark:text-gray-300">
           Vous avez déjà un compte ?{' '}
-          <Link href="/auth/login" className="text-pink-600 dark:text-pink-400 hover:text-pink-700 dark:hover:text-pink-300 font-medium">
+          <Link href={`/auth/login${redirect ? "?redirect=appointments" : ""}`} className="text-pink-600 dark:text-pink-400 hover:text-pink-700 dark:hover:text-pink-300 font-medium">
             Se connecter
           </Link>
         </p>

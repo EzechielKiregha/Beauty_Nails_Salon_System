@@ -8,7 +8,7 @@ export async function GET(
   ) {
     try {
       const id = (await context.params).id;
-    await requireRole(['admin', 'worker', 'client']);
+    // await requireRole(['admin', 'worker', 'client']);
     
     const addOns = await prisma.serviceAddOn.findMany({
       where: { serviceId: id },

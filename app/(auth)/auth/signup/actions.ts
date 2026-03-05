@@ -3,7 +3,7 @@
 import { signIn } from "@/lib/auth/auth";
 import axiosdb from "@/lib/axios";
 
-export async function handleSignup(formData: FormData, refCodeParam: string | null) {
+export async function handleSignup(formData: FormData, refCodeParam: string | null, redirect?: string | null) {
   const name = formData.get("name") as string;
   const email = formData.get("email") as string;
   const phone = formData.get("phone") as string;
@@ -51,8 +51,15 @@ export async function handleSignup(formData: FormData, refCodeParam: string | nu
     return { error: "Incorrect Email or Password, verifier votre role et essayez encore une fois..." };
   }
 
-  return {
+  if(!redirect){
+    return {
     success: true,
     redirectUrl: `/dashboard/${role}`,
+  }
+  } else {
+    return {
+      success: true,
+      redirectUrl: `/${redirect}`,
+    };
   }
 }

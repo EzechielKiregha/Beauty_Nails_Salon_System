@@ -50,7 +50,6 @@ export default function WorkerDashboardV2() {
   const [selectedTime, setSelectedTime] = useState<string>('');
   const [selectedClient, setSelectedClient] = useState<any>();
 
-  const { rescheduleAppointment } = useAppointments();
 
   // Get authenticated user
   const { user, isLoading: isAuthLoading } = useAuth();
@@ -64,6 +63,7 @@ export default function WorkerDashboardV2() {
     appointments = [],
     isLoading: isAppointmentsLoading,
     updateStatus,
+    rescheduleAppointment
   } = useAppointments({
     workerId: user?.workerProfile?.id,
     date: today,

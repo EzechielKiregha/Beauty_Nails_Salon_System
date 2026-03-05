@@ -26,10 +26,11 @@ import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { Button } from '../ui/button';
 import { cn } from '../ui/utils';
 import { format } from 'date-fns';
-import { fr } from 'date-fns/locale';
+import { fr, se } from 'date-fns/locale';
 import { Calendar } from '../ui/calendar';
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
 import LoaderBN from '../Loader-BN';
+import { clearBookingProgress, loadBookingProgress, saveBookingProgress } from '@/lib/local/booking-storage';
 
 export default function AppointmentsV3() {
   const router = useRouter();
@@ -37,6 +38,7 @@ export default function AppointmentsV3() {
 
   // Get parameters from quick appointment form
   const paramService = searchParams.get("service");
+  const paramCategory = searchParams.get("category");
   const paramDate = searchParams.get("date");
   const paramTime = searchParams.get("time");
   const servicePackage = searchParams.get('package');
@@ -51,7 +53,7 @@ export default function AppointmentsV3() {
     return new Date();
   });
   const [selectedServiceId, setSelectedServiceId] = useState(paramService || "");
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(paramCategory || null);
   const [selectedWorker, setSelectedWorker] = useState<string | null>(null);
   const [selectedWorkerName, setSelectedWorkerName] = useState<string | null>(null);
   const [selectedTime, setSelectedTime] = useState(paramTime || "");
@@ -94,6 +96,25 @@ export default function AppointmentsV3() {
     }
   }, [addOns, activeAddOns]);
 
+  useEffect(() => {
+    if (!paramCategory && (!paramTime && !paramDate) && !paramService) {
+      const savedBooking = loadBookingProgress();
+
+      if (savedBooking) {
+        setSelectedCategory(savedBooking.category);
+        setSelectedServiceId(savedBooking.serviceId);
+        setSelectedWorker(savedBooking.workerId);
+        setSelectedDate(new Date(savedBooking.date));
+        setSelectedTime(savedBooking.time);
+        setLocation(savedBooking.location);
+        setActiveAddOns(savedBooking.addOns);
+        toast("Booking restored", {
+          description: "Your previous booking progress has been restored."
+        });
+      }
+    }
+  }, []);
+
   const subtotal = useMemo(() => {
     const servicePrice = baseServicePrice || 0;
     return servicePrice + addOnsTotalPrice;
@@ -135,6 +156,7 @@ export default function AppointmentsV3() {
       if (!service) return;
 
       setService(service);
+      setSelectedServiceId(service.id)
       setBaseServicePrice(service.price);
 
       // Reset active add-ons when service changes
@@ -150,6 +172,7 @@ export default function AppointmentsV3() {
       (service.id);
       setSelectedCategory(service.category);
       setService(service);
+      setSelectedServiceId(service.id)
       setBaseServicePrice(service.price);
     }
   }, [services, paramService, selectedServiceId]);
@@ -170,6 +193,7 @@ export default function AppointmentsV3() {
     "tresses": <HardHatIcon className="w-6 h-6" />,
     "maquillage": <Sparkles className="w-6 h-6" />,
   };
+
 
   const paymentInfo = useMemo(() => ({
     discountCode,
@@ -228,6 +252,8 @@ export default function AppointmentsV3() {
       };
 
       createAppointment(appointmentData);
+
+      clearBookingProgress();
     } else {
       if (
         !selectedWorker ||
@@ -259,6 +285,25 @@ export default function AppointmentsV3() {
         }
       });
     }
+  };
+
+  const handleRequireAuth = () => {
+    const appointmentData = {
+      serviceId: selectedServiceId,
+      workerId: selectedWorker,
+      date: selectedDate && selectedDate.toISOString(),
+      time: selectedTime,
+      location: location,
+      addOns: activeAddOns,
+      paymentInfo
+    };
+
+    saveBookingProgress({
+      ...appointmentData,
+      category: selectedCategory
+    });
+
+    router.push("/auth/login?redirect=appointments");
   };
 
   // Filter services by category
@@ -520,7 +565,8 @@ export default function AppointmentsV3() {
                       className={`p-2 rounded-lg border ${selectedTime === time
                         ? 'bg-pink-500 text-white border-pink-500'
                         : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-700'
-                        }`}
+                        } ${(selectedDate && selectedDate < new Date() && Number(time.split(":")[0]) < new Date().getHours()) ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}`}
+                      disabled={(selectedDate && selectedDate < new Date() && Number(time.split(":")[0]) < new Date().getHours()) ? true : false}
                     >
                       {time}
                     </button>
@@ -580,8 +626,24 @@ export default function AppointmentsV3() {
           </div>
         )}
 
+        {!user && (
+          <div className="mb-6 p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl">
+            <p className="text-xs sm:text-sm text-amber-800 dark:text-amber-200">
+              Vous devez être connecté(e) pour réserver un
+              rendez-vous
+            </p>
+            <Button
+              variant="link"
+              onClick={handleRequireAuth}
+              className="text-xs sm:text-sm text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 underline mt-2 inline-block"
+            >
+              Se connecter
+            </Button>
+          </div>
+        )}
+
         {/* Payment Info */}
-        {location && (
+        {user && location && (
           <div className="bg-white dark:bg-gray-900 rounded-xl shadow-lg p-6">
             <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Informations de Paiement</h3>
 
@@ -633,7 +695,7 @@ export default function AppointmentsV3() {
         )}
 
         {/* Premium Payment Details */}
-        {selectedMethod && selectedMethod !== "cash" && (
+        {user && selectedMethod && selectedMethod !== "cash" && (
           <div className="mt-6 space-y-6">
 
             {/* Mobile Money Card */}
@@ -762,7 +824,7 @@ export default function AppointmentsV3() {
         )}
 
         {/* Premium Summary */}
-        {selectedMethod && (
+        {user && selectedMethod && (
           <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-900 via-indigo-900 to-slate-900 p-6 shadow-2xl text-white">
 
             {/* Soft glow overlay */}
@@ -842,7 +904,7 @@ export default function AppointmentsV3() {
         )}
 
         {/* Submit Button */}
-        {total > 0 && selectedDate && selectedTime && (
+        {total > 0 && selectedDate && selectedTime && user && (
           <button
             onClick={handleSubmit}
             disabled={isCreating}
