@@ -30,12 +30,16 @@ export type WorkerProfileAvgAggregateOutputType = {
   commissionRate: number | null
   rating: number | null
   totalReviews: number | null
+  commissionDay: number | null
+  minimumPayout: number | null
 }
 
 export type WorkerProfileSumAggregateOutputType = {
   commissionRate: number | null
   rating: number | null
   totalReviews: number | null
+  commissionDay: number | null
+  minimumPayout: number | null
 }
 
 export type WorkerProfileMinAggregateOutputType = {
@@ -47,6 +51,13 @@ export type WorkerProfileMinAggregateOutputType = {
   totalReviews: number | null
   isAvailable: boolean | null
   hireDate: Date | null
+  bio: string | null
+  commissionType: string | null
+  commissionFrequency: string | null
+  commissionDay: number | null
+  minimumPayout: number | null
+  lastCommissionPaidAt: Date | null
+  payoutThresholdMetAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -60,6 +71,13 @@ export type WorkerProfileMaxAggregateOutputType = {
   totalReviews: number | null
   isAvailable: boolean | null
   hireDate: Date | null
+  bio: string | null
+  commissionType: string | null
+  commissionFrequency: string | null
+  commissionDay: number | null
+  minimumPayout: number | null
+  lastCommissionPaidAt: Date | null
+  payoutThresholdMetAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -75,6 +93,13 @@ export type WorkerProfileCountAggregateOutputType = {
   isAvailable: number
   workingHours: number
   hireDate: number
+  bio: number
+  commissionType: number
+  commissionFrequency: number
+  commissionDay: number
+  minimumPayout: number
+  lastCommissionPaidAt: number
+  payoutThresholdMetAt: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -85,12 +110,16 @@ export type WorkerProfileAvgAggregateInputType = {
   commissionRate?: true
   rating?: true
   totalReviews?: true
+  commissionDay?: true
+  minimumPayout?: true
 }
 
 export type WorkerProfileSumAggregateInputType = {
   commissionRate?: true
   rating?: true
   totalReviews?: true
+  commissionDay?: true
+  minimumPayout?: true
 }
 
 export type WorkerProfileMinAggregateInputType = {
@@ -102,6 +131,13 @@ export type WorkerProfileMinAggregateInputType = {
   totalReviews?: true
   isAvailable?: true
   hireDate?: true
+  bio?: true
+  commissionType?: true
+  commissionFrequency?: true
+  commissionDay?: true
+  minimumPayout?: true
+  lastCommissionPaidAt?: true
+  payoutThresholdMetAt?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -115,6 +151,13 @@ export type WorkerProfileMaxAggregateInputType = {
   totalReviews?: true
   isAvailable?: true
   hireDate?: true
+  bio?: true
+  commissionType?: true
+  commissionFrequency?: true
+  commissionDay?: true
+  minimumPayout?: true
+  lastCommissionPaidAt?: true
+  payoutThresholdMetAt?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -130,6 +173,13 @@ export type WorkerProfileCountAggregateInputType = {
   isAvailable?: true
   workingHours?: true
   hireDate?: true
+  bio?: true
+  commissionType?: true
+  commissionFrequency?: true
+  commissionDay?: true
+  minimumPayout?: true
+  lastCommissionPaidAt?: true
+  payoutThresholdMetAt?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -232,6 +282,13 @@ export type WorkerProfileGroupByOutputType = {
   isAvailable: boolean
   workingHours: runtime.JsonValue | null
   hireDate: Date
+  bio: string | null
+  commissionType: string | null
+  commissionFrequency: string | null
+  commissionDay: number | null
+  minimumPayout: number | null
+  lastCommissionPaidAt: Date | null
+  payoutThresholdMetAt: Date | null
   createdAt: Date
   updatedAt: Date
   _count: WorkerProfileCountAggregateOutputType | null
@@ -270,6 +327,13 @@ export type WorkerProfileWhereInput = {
   isAvailable?: Prisma.BoolFilter<"WorkerProfile"> | boolean
   workingHours?: Prisma.JsonNullableFilter<"WorkerProfile">
   hireDate?: Prisma.DateTimeFilter<"WorkerProfile"> | Date | string
+  bio?: Prisma.StringNullableFilter<"WorkerProfile"> | string | null
+  commissionType?: Prisma.StringNullableFilter<"WorkerProfile"> | string | null
+  commissionFrequency?: Prisma.StringNullableFilter<"WorkerProfile"> | string | null
+  commissionDay?: Prisma.IntNullableFilter<"WorkerProfile"> | number | null
+  minimumPayout?: Prisma.FloatNullableFilter<"WorkerProfile"> | number | null
+  lastCommissionPaidAt?: Prisma.DateTimeNullableFilter<"WorkerProfile"> | Date | string | null
+  payoutThresholdMetAt?: Prisma.DateTimeNullableFilter<"WorkerProfile"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"WorkerProfile"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"WorkerProfile"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -292,6 +356,13 @@ export type WorkerProfileOrderByWithRelationInput = {
   isAvailable?: Prisma.SortOrder
   workingHours?: Prisma.SortOrderInput | Prisma.SortOrder
   hireDate?: Prisma.SortOrder
+  bio?: Prisma.SortOrderInput | Prisma.SortOrder
+  commissionType?: Prisma.SortOrderInput | Prisma.SortOrder
+  commissionFrequency?: Prisma.SortOrderInput | Prisma.SortOrder
+  commissionDay?: Prisma.SortOrderInput | Prisma.SortOrder
+  minimumPayout?: Prisma.SortOrderInput | Prisma.SortOrder
+  lastCommissionPaidAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  payoutThresholdMetAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
@@ -317,6 +388,13 @@ export type WorkerProfileWhereUniqueInput = Prisma.AtLeast<{
   isAvailable?: Prisma.BoolFilter<"WorkerProfile"> | boolean
   workingHours?: Prisma.JsonNullableFilter<"WorkerProfile">
   hireDate?: Prisma.DateTimeFilter<"WorkerProfile"> | Date | string
+  bio?: Prisma.StringNullableFilter<"WorkerProfile"> | string | null
+  commissionType?: Prisma.StringNullableFilter<"WorkerProfile"> | string | null
+  commissionFrequency?: Prisma.StringNullableFilter<"WorkerProfile"> | string | null
+  commissionDay?: Prisma.IntNullableFilter<"WorkerProfile"> | number | null
+  minimumPayout?: Prisma.FloatNullableFilter<"WorkerProfile"> | number | null
+  lastCommissionPaidAt?: Prisma.DateTimeNullableFilter<"WorkerProfile"> | Date | string | null
+  payoutThresholdMetAt?: Prisma.DateTimeNullableFilter<"WorkerProfile"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"WorkerProfile"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"WorkerProfile"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -339,6 +417,13 @@ export type WorkerProfileOrderByWithAggregationInput = {
   isAvailable?: Prisma.SortOrder
   workingHours?: Prisma.SortOrderInput | Prisma.SortOrder
   hireDate?: Prisma.SortOrder
+  bio?: Prisma.SortOrderInput | Prisma.SortOrder
+  commissionType?: Prisma.SortOrderInput | Prisma.SortOrder
+  commissionFrequency?: Prisma.SortOrderInput | Prisma.SortOrder
+  commissionDay?: Prisma.SortOrderInput | Prisma.SortOrder
+  minimumPayout?: Prisma.SortOrderInput | Prisma.SortOrder
+  lastCommissionPaidAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  payoutThresholdMetAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.WorkerProfileCountOrderByAggregateInput
@@ -362,6 +447,13 @@ export type WorkerProfileScalarWhereWithAggregatesInput = {
   isAvailable?: Prisma.BoolWithAggregatesFilter<"WorkerProfile"> | boolean
   workingHours?: Prisma.JsonNullableWithAggregatesFilter<"WorkerProfile">
   hireDate?: Prisma.DateTimeWithAggregatesFilter<"WorkerProfile"> | Date | string
+  bio?: Prisma.StringNullableWithAggregatesFilter<"WorkerProfile"> | string | null
+  commissionType?: Prisma.StringNullableWithAggregatesFilter<"WorkerProfile"> | string | null
+  commissionFrequency?: Prisma.StringNullableWithAggregatesFilter<"WorkerProfile"> | string | null
+  commissionDay?: Prisma.IntNullableWithAggregatesFilter<"WorkerProfile"> | number | null
+  minimumPayout?: Prisma.FloatNullableWithAggregatesFilter<"WorkerProfile"> | number | null
+  lastCommissionPaidAt?: Prisma.DateTimeNullableWithAggregatesFilter<"WorkerProfile"> | Date | string | null
+  payoutThresholdMetAt?: Prisma.DateTimeNullableWithAggregatesFilter<"WorkerProfile"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"WorkerProfile"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"WorkerProfile"> | Date | string
 }
@@ -376,6 +468,13 @@ export type WorkerProfileCreateInput = {
   isAvailable?: boolean
   workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   hireDate?: Date | string
+  bio?: string | null
+  commissionType?: string | null
+  commissionFrequency?: string | null
+  commissionDay?: number | null
+  minimumPayout?: number | null
+  lastCommissionPaidAt?: Date | string | null
+  payoutThresholdMetAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutWorkerProfileInput
@@ -398,6 +497,13 @@ export type WorkerProfileUncheckedCreateInput = {
   isAvailable?: boolean
   workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   hireDate?: Date | string
+  bio?: string | null
+  commissionType?: string | null
+  commissionFrequency?: string | null
+  commissionDay?: number | null
+  minimumPayout?: number | null
+  lastCommissionPaidAt?: Date | string | null
+  payoutThresholdMetAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutWorkerInput
@@ -418,6 +524,13 @@ export type WorkerProfileUpdateInput = {
   isAvailable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   hireDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionFrequency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionDay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  minimumPayout?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  lastCommissionPaidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  payoutThresholdMetAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutWorkerProfileNestedInput
@@ -440,6 +553,13 @@ export type WorkerProfileUncheckedUpdateInput = {
   isAvailable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   hireDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionFrequency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionDay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  minimumPayout?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  lastCommissionPaidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  payoutThresholdMetAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutWorkerNestedInput
@@ -461,6 +581,13 @@ export type WorkerProfileCreateManyInput = {
   isAvailable?: boolean
   workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   hireDate?: Date | string
+  bio?: string | null
+  commissionType?: string | null
+  commissionFrequency?: string | null
+  commissionDay?: number | null
+  minimumPayout?: number | null
+  lastCommissionPaidAt?: Date | string | null
+  payoutThresholdMetAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -475,6 +602,13 @@ export type WorkerProfileUpdateManyMutationInput = {
   isAvailable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   hireDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionFrequency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionDay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  minimumPayout?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  lastCommissionPaidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  payoutThresholdMetAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -490,6 +624,13 @@ export type WorkerProfileUncheckedUpdateManyInput = {
   isAvailable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   hireDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionFrequency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionDay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  minimumPayout?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  lastCommissionPaidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  payoutThresholdMetAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -510,6 +651,13 @@ export type WorkerProfileCountOrderByAggregateInput = {
   isAvailable?: Prisma.SortOrder
   workingHours?: Prisma.SortOrder
   hireDate?: Prisma.SortOrder
+  bio?: Prisma.SortOrder
+  commissionType?: Prisma.SortOrder
+  commissionFrequency?: Prisma.SortOrder
+  commissionDay?: Prisma.SortOrder
+  minimumPayout?: Prisma.SortOrder
+  lastCommissionPaidAt?: Prisma.SortOrder
+  payoutThresholdMetAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -518,6 +666,8 @@ export type WorkerProfileAvgOrderByAggregateInput = {
   commissionRate?: Prisma.SortOrder
   rating?: Prisma.SortOrder
   totalReviews?: Prisma.SortOrder
+  commissionDay?: Prisma.SortOrder
+  minimumPayout?: Prisma.SortOrder
 }
 
 export type WorkerProfileMaxOrderByAggregateInput = {
@@ -529,6 +679,13 @@ export type WorkerProfileMaxOrderByAggregateInput = {
   totalReviews?: Prisma.SortOrder
   isAvailable?: Prisma.SortOrder
   hireDate?: Prisma.SortOrder
+  bio?: Prisma.SortOrder
+  commissionType?: Prisma.SortOrder
+  commissionFrequency?: Prisma.SortOrder
+  commissionDay?: Prisma.SortOrder
+  minimumPayout?: Prisma.SortOrder
+  lastCommissionPaidAt?: Prisma.SortOrder
+  payoutThresholdMetAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -542,6 +699,13 @@ export type WorkerProfileMinOrderByAggregateInput = {
   totalReviews?: Prisma.SortOrder
   isAvailable?: Prisma.SortOrder
   hireDate?: Prisma.SortOrder
+  bio?: Prisma.SortOrder
+  commissionType?: Prisma.SortOrder
+  commissionFrequency?: Prisma.SortOrder
+  commissionDay?: Prisma.SortOrder
+  minimumPayout?: Prisma.SortOrder
+  lastCommissionPaidAt?: Prisma.SortOrder
+  payoutThresholdMetAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -550,6 +714,8 @@ export type WorkerProfileSumOrderByAggregateInput = {
   commissionRate?: Prisma.SortOrder
   rating?: Prisma.SortOrder
   totalReviews?: Prisma.SortOrder
+  commissionDay?: Prisma.SortOrder
+  minimumPayout?: Prisma.SortOrder
 }
 
 export type WorkerProfileScalarRelationFilter = {
@@ -596,6 +762,14 @@ export type WorkerProfileCreatespecialtiesInput = {
 export type WorkerProfileUpdatespecialtiesInput = {
   set?: string[]
   push?: string | string[]
+}
+
+export type NullableFloatFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
 }
 
 export type WorkerProfileCreateNestedOneWithoutSchedulesInput = {
@@ -694,6 +868,13 @@ export type WorkerProfileCreateWithoutUserInput = {
   isAvailable?: boolean
   workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   hireDate?: Date | string
+  bio?: string | null
+  commissionType?: string | null
+  commissionFrequency?: string | null
+  commissionDay?: number | null
+  minimumPayout?: number | null
+  lastCommissionPaidAt?: Date | string | null
+  payoutThresholdMetAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   appointments?: Prisma.AppointmentCreateNestedManyWithoutWorkerInput
@@ -714,6 +895,13 @@ export type WorkerProfileUncheckedCreateWithoutUserInput = {
   isAvailable?: boolean
   workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   hireDate?: Date | string
+  bio?: string | null
+  commissionType?: string | null
+  commissionFrequency?: string | null
+  commissionDay?: number | null
+  minimumPayout?: number | null
+  lastCommissionPaidAt?: Date | string | null
+  payoutThresholdMetAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutWorkerInput
@@ -750,6 +938,13 @@ export type WorkerProfileUpdateWithoutUserInput = {
   isAvailable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   hireDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionFrequency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionDay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  minimumPayout?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  lastCommissionPaidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  payoutThresholdMetAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   appointments?: Prisma.AppointmentUpdateManyWithoutWorkerNestedInput
@@ -770,6 +965,13 @@ export type WorkerProfileUncheckedUpdateWithoutUserInput = {
   isAvailable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   hireDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionFrequency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionDay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  minimumPayout?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  lastCommissionPaidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  payoutThresholdMetAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutWorkerNestedInput
@@ -790,6 +992,13 @@ export type WorkerProfileCreateWithoutSchedulesInput = {
   isAvailable?: boolean
   workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   hireDate?: Date | string
+  bio?: string | null
+  commissionType?: string | null
+  commissionFrequency?: string | null
+  commissionDay?: number | null
+  minimumPayout?: number | null
+  lastCommissionPaidAt?: Date | string | null
+  payoutThresholdMetAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutWorkerProfileInput
@@ -811,6 +1020,13 @@ export type WorkerProfileUncheckedCreateWithoutSchedulesInput = {
   isAvailable?: boolean
   workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   hireDate?: Date | string
+  bio?: string | null
+  commissionType?: string | null
+  commissionFrequency?: string | null
+  commissionDay?: number | null
+  minimumPayout?: number | null
+  lastCommissionPaidAt?: Date | string | null
+  payoutThresholdMetAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutWorkerInput
@@ -846,6 +1062,13 @@ export type WorkerProfileUpdateWithoutSchedulesInput = {
   isAvailable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   hireDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionFrequency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionDay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  minimumPayout?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  lastCommissionPaidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  payoutThresholdMetAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutWorkerProfileNestedInput
@@ -867,6 +1090,13 @@ export type WorkerProfileUncheckedUpdateWithoutSchedulesInput = {
   isAvailable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   hireDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionFrequency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionDay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  minimumPayout?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  lastCommissionPaidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  payoutThresholdMetAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutWorkerNestedInput
@@ -886,6 +1116,13 @@ export type WorkerProfileCreateWithoutLeavesInput = {
   isAvailable?: boolean
   workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   hireDate?: Date | string
+  bio?: string | null
+  commissionType?: string | null
+  commissionFrequency?: string | null
+  commissionDay?: number | null
+  minimumPayout?: number | null
+  lastCommissionPaidAt?: Date | string | null
+  payoutThresholdMetAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutWorkerProfileInput
@@ -907,6 +1144,13 @@ export type WorkerProfileUncheckedCreateWithoutLeavesInput = {
   isAvailable?: boolean
   workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   hireDate?: Date | string
+  bio?: string | null
+  commissionType?: string | null
+  commissionFrequency?: string | null
+  commissionDay?: number | null
+  minimumPayout?: number | null
+  lastCommissionPaidAt?: Date | string | null
+  payoutThresholdMetAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutWorkerInput
@@ -942,6 +1186,13 @@ export type WorkerProfileUpdateWithoutLeavesInput = {
   isAvailable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   hireDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionFrequency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionDay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  minimumPayout?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  lastCommissionPaidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  payoutThresholdMetAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutWorkerProfileNestedInput
@@ -963,6 +1214,13 @@ export type WorkerProfileUncheckedUpdateWithoutLeavesInput = {
   isAvailable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   hireDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionFrequency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionDay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  minimumPayout?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  lastCommissionPaidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  payoutThresholdMetAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutWorkerNestedInput
@@ -982,6 +1240,13 @@ export type WorkerProfileCreateWithoutTasksInput = {
   isAvailable?: boolean
   workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   hireDate?: Date | string
+  bio?: string | null
+  commissionType?: string | null
+  commissionFrequency?: string | null
+  commissionDay?: number | null
+  minimumPayout?: number | null
+  lastCommissionPaidAt?: Date | string | null
+  payoutThresholdMetAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutWorkerProfileInput
@@ -1003,6 +1268,13 @@ export type WorkerProfileUncheckedCreateWithoutTasksInput = {
   isAvailable?: boolean
   workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   hireDate?: Date | string
+  bio?: string | null
+  commissionType?: string | null
+  commissionFrequency?: string | null
+  commissionDay?: number | null
+  minimumPayout?: number | null
+  lastCommissionPaidAt?: Date | string | null
+  payoutThresholdMetAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutWorkerInput
@@ -1038,6 +1310,13 @@ export type WorkerProfileUpdateWithoutTasksInput = {
   isAvailable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   hireDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionFrequency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionDay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  minimumPayout?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  lastCommissionPaidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  payoutThresholdMetAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutWorkerProfileNestedInput
@@ -1059,6 +1338,13 @@ export type WorkerProfileUncheckedUpdateWithoutTasksInput = {
   isAvailable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   hireDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionFrequency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionDay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  minimumPayout?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  lastCommissionPaidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  payoutThresholdMetAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutWorkerNestedInput
@@ -1078,6 +1364,13 @@ export type WorkerProfileCreateWithoutAppointmentsInput = {
   isAvailable?: boolean
   workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   hireDate?: Date | string
+  bio?: string | null
+  commissionType?: string | null
+  commissionFrequency?: string | null
+  commissionDay?: number | null
+  minimumPayout?: number | null
+  lastCommissionPaidAt?: Date | string | null
+  payoutThresholdMetAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutWorkerProfileInput
@@ -1099,6 +1392,13 @@ export type WorkerProfileUncheckedCreateWithoutAppointmentsInput = {
   isAvailable?: boolean
   workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   hireDate?: Date | string
+  bio?: string | null
+  commissionType?: string | null
+  commissionFrequency?: string | null
+  commissionDay?: number | null
+  minimumPayout?: number | null
+  lastCommissionPaidAt?: Date | string | null
+  payoutThresholdMetAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   schedules?: Prisma.WorkerScheduleUncheckedCreateNestedManyWithoutWorkerInput
@@ -1134,6 +1434,13 @@ export type WorkerProfileUpdateWithoutAppointmentsInput = {
   isAvailable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   hireDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionFrequency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionDay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  minimumPayout?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  lastCommissionPaidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  payoutThresholdMetAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutWorkerProfileNestedInput
@@ -1155,6 +1462,13 @@ export type WorkerProfileUncheckedUpdateWithoutAppointmentsInput = {
   isAvailable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   hireDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionFrequency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionDay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  minimumPayout?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  lastCommissionPaidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  payoutThresholdMetAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   schedules?: Prisma.WorkerScheduleUncheckedUpdateManyWithoutWorkerNestedInput
@@ -1174,6 +1488,13 @@ export type WorkerProfileCreateWithoutReviewsInput = {
   isAvailable?: boolean
   workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   hireDate?: Date | string
+  bio?: string | null
+  commissionType?: string | null
+  commissionFrequency?: string | null
+  commissionDay?: number | null
+  minimumPayout?: number | null
+  lastCommissionPaidAt?: Date | string | null
+  payoutThresholdMetAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutWorkerProfileInput
@@ -1195,6 +1516,13 @@ export type WorkerProfileUncheckedCreateWithoutReviewsInput = {
   isAvailable?: boolean
   workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   hireDate?: Date | string
+  bio?: string | null
+  commissionType?: string | null
+  commissionFrequency?: string | null
+  commissionDay?: number | null
+  minimumPayout?: number | null
+  lastCommissionPaidAt?: Date | string | null
+  payoutThresholdMetAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutWorkerInput
@@ -1230,6 +1558,13 @@ export type WorkerProfileUpdateWithoutReviewsInput = {
   isAvailable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   hireDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionFrequency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionDay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  minimumPayout?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  lastCommissionPaidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  payoutThresholdMetAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutWorkerProfileNestedInput
@@ -1251,6 +1586,13 @@ export type WorkerProfileUncheckedUpdateWithoutReviewsInput = {
   isAvailable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   hireDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionFrequency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionDay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  minimumPayout?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  lastCommissionPaidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  payoutThresholdMetAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutWorkerNestedInput
@@ -1270,6 +1612,13 @@ export type WorkerProfileCreateWithoutCommissionsInput = {
   isAvailable?: boolean
   workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   hireDate?: Date | string
+  bio?: string | null
+  commissionType?: string | null
+  commissionFrequency?: string | null
+  commissionDay?: number | null
+  minimumPayout?: number | null
+  lastCommissionPaidAt?: Date | string | null
+  payoutThresholdMetAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutWorkerProfileInput
@@ -1291,6 +1640,13 @@ export type WorkerProfileUncheckedCreateWithoutCommissionsInput = {
   isAvailable?: boolean
   workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   hireDate?: Date | string
+  bio?: string | null
+  commissionType?: string | null
+  commissionFrequency?: string | null
+  commissionDay?: number | null
+  minimumPayout?: number | null
+  lastCommissionPaidAt?: Date | string | null
+  payoutThresholdMetAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutWorkerInput
@@ -1326,6 +1682,13 @@ export type WorkerProfileUpdateWithoutCommissionsInput = {
   isAvailable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   hireDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionFrequency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionDay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  minimumPayout?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  lastCommissionPaidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  payoutThresholdMetAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutWorkerProfileNestedInput
@@ -1347,6 +1710,13 @@ export type WorkerProfileUncheckedUpdateWithoutCommissionsInput = {
   isAvailable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   hireDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionFrequency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionDay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  minimumPayout?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  lastCommissionPaidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  payoutThresholdMetAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutWorkerNestedInput
@@ -1443,6 +1813,13 @@ export type WorkerProfileSelect<ExtArgs extends runtime.Types.Extensions.Interna
   isAvailable?: boolean
   workingHours?: boolean
   hireDate?: boolean
+  bio?: boolean
+  commissionType?: boolean
+  commissionFrequency?: boolean
+  commissionDay?: boolean
+  minimumPayout?: boolean
+  lastCommissionPaidAt?: boolean
+  payoutThresholdMetAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1466,6 +1843,13 @@ export type WorkerProfileSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   isAvailable?: boolean
   workingHours?: boolean
   hireDate?: boolean
+  bio?: boolean
+  commissionType?: boolean
+  commissionFrequency?: boolean
+  commissionDay?: boolean
+  minimumPayout?: boolean
+  lastCommissionPaidAt?: boolean
+  payoutThresholdMetAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1482,6 +1866,13 @@ export type WorkerProfileSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   isAvailable?: boolean
   workingHours?: boolean
   hireDate?: boolean
+  bio?: boolean
+  commissionType?: boolean
+  commissionFrequency?: boolean
+  commissionDay?: boolean
+  minimumPayout?: boolean
+  lastCommissionPaidAt?: boolean
+  payoutThresholdMetAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1498,11 +1889,18 @@ export type WorkerProfileSelectScalar = {
   isAvailable?: boolean
   workingHours?: boolean
   hireDate?: boolean
+  bio?: boolean
+  commissionType?: boolean
+  commissionFrequency?: boolean
+  commissionDay?: boolean
+  minimumPayout?: boolean
+  lastCommissionPaidAt?: boolean
+  payoutThresholdMetAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type WorkerProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "position" | "specialties" | "commissionRate" | "rating" | "totalReviews" | "isAvailable" | "workingHours" | "hireDate" | "createdAt" | "updatedAt", ExtArgs["result"]["workerProfile"]>
+export type WorkerProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "position" | "specialties" | "commissionRate" | "rating" | "totalReviews" | "isAvailable" | "workingHours" | "hireDate" | "bio" | "commissionType" | "commissionFrequency" | "commissionDay" | "minimumPayout" | "lastCommissionPaidAt" | "payoutThresholdMetAt" | "createdAt" | "updatedAt", ExtArgs["result"]["workerProfile"]>
 export type WorkerProfileInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   appointments?: boolean | Prisma.WorkerProfile$appointmentsArgs<ExtArgs>
@@ -1542,6 +1940,13 @@ export type $WorkerProfilePayload<ExtArgs extends runtime.Types.Extensions.Inter
     isAvailable: boolean
     workingHours: runtime.JsonValue | null
     hireDate: Date
+    bio: string | null
+    commissionType: string | null
+    commissionFrequency: string | null
+    commissionDay: number | null
+    minimumPayout: number | null
+    lastCommissionPaidAt: Date | null
+    payoutThresholdMetAt: Date | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["workerProfile"]>
@@ -1984,6 +2389,13 @@ export interface WorkerProfileFieldRefs {
   readonly isAvailable: Prisma.FieldRef<"WorkerProfile", 'Boolean'>
   readonly workingHours: Prisma.FieldRef<"WorkerProfile", 'Json'>
   readonly hireDate: Prisma.FieldRef<"WorkerProfile", 'DateTime'>
+  readonly bio: Prisma.FieldRef<"WorkerProfile", 'String'>
+  readonly commissionType: Prisma.FieldRef<"WorkerProfile", 'String'>
+  readonly commissionFrequency: Prisma.FieldRef<"WorkerProfile", 'String'>
+  readonly commissionDay: Prisma.FieldRef<"WorkerProfile", 'Int'>
+  readonly minimumPayout: Prisma.FieldRef<"WorkerProfile", 'Float'>
+  readonly lastCommissionPaidAt: Prisma.FieldRef<"WorkerProfile", 'DateTime'>
+  readonly payoutThresholdMetAt: Prisma.FieldRef<"WorkerProfile", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"WorkerProfile", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"WorkerProfile", 'DateTime'>
 }

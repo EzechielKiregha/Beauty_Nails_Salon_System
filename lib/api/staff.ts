@@ -11,6 +11,7 @@ export interface Worker {
   isAvailable: boolean;
   workingHours?: any;
   hireDate: string;
+  bio: string;
   createdAt: string;
   updatedAt: string;
   totalSales: number;
@@ -18,6 +19,11 @@ export interface Worker {
   businessRevenue: number;
   materialsReserve: number;
   operationalCosts: number;
+  commissionType?: string;
+  commissionFrequency?: string;
+  commissionDay?: number;
+  minimumPayout?: number;
+  lastCommissionPaidAt?: Date | null;
   user?: {
     id: string;
     name: string;

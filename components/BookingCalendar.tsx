@@ -1,15 +1,15 @@
-"use client"
-import { useState } from 'react';
+"use client";
+import { useState, useEffect, useMemo } from 'react';
 import { Card } from './ui/card';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
+import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Clock, User, Phone, Mail } from 'lucide-react';
 import { useAppointments } from '@/lib/hooks/useAppointments';
 import { useStaff } from '@/lib/hooks/useStaff';
 import { AppointmentModal } from './modals/AppointmentModal';
 import { useAuth } from '@/lib/hooks/useAuth';
-import { all } from 'axios';
 
 interface Appointment {
   id?: string;
@@ -23,55 +23,57 @@ interface Appointment {
   status?: 'confirmed' | 'pending' | 'completed' | 'cancelled' | 'in_progress' | 'no_show';
   reminderSent?: boolean;
   notes?: string;
+  date?: string; // ISO date string
 }
 
 export default function BookingCalendar({ showMock }: { showMock?: boolean }) {
-  const [currentDate, setCurrentDate] = useState(new Date());
-  const [view, setView] = useState<'day' | 'week'>('day');
-  const [selectedStaff, setSelectedStaff] = useState<string>('all');
+  const [currentWeekStart, setCurrentWeekStart] = useState<Date>(() => {
+    const today = new Date();
+    const day = today.getDay(); // Sunday = 0, Monday = 1, etc.
+    const diff = today.getDate() - day + (day === 0 ? -6 : 1); // Adjust to get Monday
+    const monday = new Date(today.setDate(diff));
+    return monday;
+  });
+
+  const [selectedStaffFilter, setSelectedStaffFilter] = useState<string>('all');
   const [isEditAppointmentOpen, setIsEditAppointmentOpen] = useState(false);
   const [isNewAppointmentOpen, setIsNewAppointmentOpen] = useState(false);
   const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
+  const [popoverOpen, setPopoverOpen] = useState<{ open: boolean, day: string, staffId: string }>({ open: false, day: '', staffId: '' });
+
   const { user } = useAuth();
 
-  const dateStr = currentDate.toISOString().split('T')[0];
-
-  // Hooks (prefer API data)
+  // Get staff and appointments
   const { staff: allStaff } = useStaff();
-  const { appointments: allAppointments } = useAppointments({ date: dateStr, workerId: user?.role === 'worker' ? user.id : undefined });
+  const { appointments: allAppointments } = useAppointments({
+    date: currentWeekStart.toISOString().split('T')[0],
+    workerId: user?.role === 'worker' ? user.id : undefined
+  });
 
-  const apiStaff = allStaff?.filter((s) => s.user?.id === user?.id);
-  const apiAppointments = allAppointments?.filter((apt) => apt.date === dateStr && apt.workerId === user?.id);
+  // Filter staff based on user role and selection
+  const filteredStaff = useMemo(() => {
+    let staffList = allStaff || [];
 
-  console.log('API Appointments:', allAppointments);
+    if (user?.role === 'worker') {
+      staffList = staffList.filter(s => s.user?.id === user?.id);
+    }
 
-  // Use API lists if available, otherwise fallback to mocks only when showMock is true
-  const staff = (user?.role === "worker" && apiStaff && apiStaff.length > 0)
-    ? apiStaff.map((s: any) => ({ id: s.id, name: s.user?.name || s.name || s.fullName || 'Staff', color: '#a855f7' }))
-    : (allStaff && allStaff.length > 0)
-      ? allStaff.map((s: any) => ({ id: s.id, name: s.user?.name || s.name || s.fullName || 'Staff', color: '#a855f7' }))
-      : [];
+    if (selectedStaffFilter !== 'all') {
+      staffList = staffList.filter(s => s.id === selectedStaffFilter);
+    }
 
-  // const appointment: {
-  //   id: string;
-  //   createdAt: Date;
-  //   updatedAt: Date;
-  //   clientId: string;
-  //   workerId: string;
-  //   date: Date;
-  //   status: "confirmed" | "pending" | "completed" | "cancelled";
-  //   time: string;
-  //   serviceId: string;
-  //   duration: number;
-  //   location: Location;
-  //   price: number;
-  //   addOns: string[];
-  //   notes: string | null;
-  //   cancelReason: string | null;
-  // }[]
+    return staffList.map((s: any) => ({
+      id: s.id,
+      name: s.user?.name || s.name || s.fullName || 'Staff',
+      color: '#a855f7'
+    }));
+  }, [allStaff, user?.role, user?.id, selectedStaffFilter]);
 
-  const appointments: Appointment[] = (user?.role === "worker" && apiAppointments && apiAppointments.length > 0)
-    ? apiAppointments.map((apt) => ({
+  // Process appointments
+  const processedAppointments = useMemo(() => {
+    if (!allAppointments || allAppointments.length === 0) return [];
+
+    return allAppointments.map((apt: any) => ({
       id: apt.id || `${apt.date}_${apt.time}`,
       time: apt.time || new Date(apt.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       duration: apt.duration || 60,
@@ -80,199 +82,237 @@ export default function BookingCalendar({ showMock }: { showMock?: boolean }) {
       clientEmail: apt.client?.user?.email || apt.client?.email || '',
       service: apt.service?.name || apt.service || 'Service',
       staff: apt.worker?.user?.name || 'Staff',
+      staffId: apt.workerId,
       status: apt.status || 'confirmed',
       reminderSent: !!apt.time,
-      notes: apt.notes || ''
-    }))
-    : (allAppointments && allAppointments.length > 0)
-      ? allAppointments.map((apt) => ({
-        id: apt.id || `${apt.date}_${apt.time}`,
-        time: apt.time || new Date(apt.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        duration: apt.duration || 60,
-        clientName: apt.client?.user?.name || apt.client?.name || apt.client || 'Client',
-        clientPhone: apt.client?.user?.phone || apt.client?.phone || '',
-        clientEmail: apt.client?.user?.email || apt.client?.email || '',
-        service: apt.service?.name || apt.service || 'Service',
-        staff: apt.worker?.user?.name || 'Staff',
-        status: apt.status || 'confirmed',
-        reminderSent: !!apt.time,
-        notes: apt.notes || ''
-      }))
-      : [];
+      notes: apt.notes || '',
+      date: apt.date
+    }));
+  }, [allAppointments]);
 
-
-  console.log('Using staff:', staff);
-  console.log('Using appointments:', appointments);
-
-  const timeSlots = [
-    '08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
-    '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30',
-    '16:00', '16:30', '17:00', '17:30', '18:00', '18:30'
-  ];
-
-  const filteredStaff = selectedStaff === 'all' ? staff : staff.filter(s => s.id === selectedStaff);
-
-  const goToPreviousDay = () => {
-    const newDate = new Date(currentDate);
-    newDate.setDate(newDate.getDate() - 1);
-    setCurrentDate(newDate);
-  };
-
-  const goToNextDay = () => {
-    const newDate = new Date(currentDate);
-    newDate.setDate(newDate.getDate() + 1);
-    setCurrentDate(newDate);
-  };
-
-  const goToToday = () => {
-    setCurrentDate(new Date());
-  };
-
-  const formatDate = (date: Date) => {
-    return date.toLocaleDateString('fr-FR', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
+  // Generate days of the week (excluding Sunday)
+  const daysOfWeek = useMemo(() => {
+    const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    return days.map((day, index) => {
+      const date = new Date(currentWeekStart);
+      date.setDate(date.getDate() + index);
+      return {
+        name: day,
+        date: date,
+        formattedDate: date.toLocaleDateString('fr-FR'),
+        isoDate: date.toISOString().split('T')[0]
+      };
     });
+  }, [currentWeekStart]);
+
+  // Group appointments by day and staff
+  const appointmentsByDayAndStaff = useMemo(() => {
+    const grouped: Record<string, Record<string, Appointment[]>> = {};
+
+    daysOfWeek.forEach(day => {
+      grouped[day.isoDate] = {};
+      filteredStaff.forEach(staff => {
+        grouped[day.isoDate][staff.id] = processedAppointments.filter(apt =>
+          apt.date === day.isoDate && apt.staffId === staff.id
+        );
+      });
+    });
+
+    return grouped;
+  }, [daysOfWeek, filteredStaff, processedAppointments]);
+
+  // Navigation functions
+  const goToPreviousWeek = () => {
+    const newDate = new Date(currentWeekStart);
+    newDate.setDate(newDate.getDate() - 7);
+    setCurrentWeekStart(newDate);
+  };
+
+  const goToNextWeek = () => {
+    const newDate = new Date(currentWeekStart);
+    newDate.setDate(newDate.getDate() + 7);
+    setCurrentWeekStart(newDate);
+  };
+
+  const goToCurrentWeek = () => {
+    const today = new Date();
+    const day = today.getDay();
+    const diff = today.getDate() - day + (day === 0 ? -6 : 1);
+    const monday = new Date(today.setDate(diff));
+    setCurrentWeekStart(monday);
+  };
+
+  // Format date for header
+  const formatWeekRange = (startDate: Date) => {
+    const endDate = new Date(startDate);
+    endDate.setDate(endDate.getDate() + 5); // Exclude Sunday
+    return `${startDate.toLocaleDateString('fr-FR')} - ${endDate.toLocaleDateString('fr-FR')}`;
   };
 
   return (
-    <div className="space-y-6">
+    <div className="w-full overflow-hidden">
       {/* Header Controls */}
-      <Card className="border-0 shadow-lg rounded-2xl p-6">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+      <Card className="border-0 shadow-lg rounded-2xl p-6 mb-6">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div className="flex items-center gap-4">
-            <Button onClick={goToPreviousDay} variant="outline" size="icon" className="rounded-full">
-              <ChevronLeft className="w-5 h-5" />
-            </Button>
-            <div className="text-center">
-              <h2 className="text-2xl text-gray-900 dark:text-white">{formatDate(currentDate)}</h2>
+            <div className="flex items-center gap-2">
+              <Button onClick={goToPreviousWeek} variant="outline" size="icon" className="rounded-full">
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+              <div className="text-lg font-semibold text-gray-900 dark:text-white">
+                {formatWeekRange(currentWeekStart)}
+              </div>
+              <Button onClick={goToNextWeek} variant="outline" size="icon" className="rounded-full">
+                <ChevronRight className="h-4 w-4" />
+              </Button>
             </div>
-            <Button onClick={goToNextDay} variant="outline" size="icon" className="rounded-full">
-              <ChevronRight className="w-5 h-5" />
-            </Button>
-            <Button onClick={goToToday} variant="outline" className="rounded-full">
-              Aujourd'hui
+            <Button onClick={goToCurrentWeek} variant="outline" className="rounded-full">
+              Cette semaine
             </Button>
           </div>
 
-          <div className="grid w-full grid-cols-2 items-center gap-3">
-            {!user?.role || user?.role === "worker" ? null : <Select value={selectedStaff} onValueChange={setSelectedStaff}>
-              <SelectTrigger className="lg:w-48 rounded-full">
-                <SelectValue placeholder="Toutes les employées" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Employées</SelectItem>
-                {staff.map((s) => (
-                  <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>}
+          <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+            {!user?.role || user?.role === "worker" ? null : (
+              <Select value={selectedStaffFilter} onValueChange={setSelectedStaffFilter}>
+                <SelectTrigger className="lg:w-48 rounded-full">
+                  <SelectValue placeholder="Tous les employés" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Tous les employés</SelectItem>
+                  {filteredStaff.map((s) => (
+                    <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
 
-            <div className="flex gap-2">
+            {!user?.role || user?.role !== "admin" ? null : (
               <Button
-                variant={view === 'day' ? 'default' : 'outline'}
-                onClick={() => setView('day')}
-                className="rounded-full"
+                className="bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-full"
+                onClick={() => setIsNewAppointmentOpen(true)}
               >
-                Jour
+                + Nouveau RDV
               </Button>
-              <Button
-                variant={view === 'week' ? 'default' : 'outline'}
-                onClick={() => setView('week')}
-                className="rounded-full"
-              >
-                Semaine
-              </Button>
-            </div>
-
-            {!user?.role || user?.role !== "worker" ? null : <Button
-              className="bg-linear-to-r from-pink-500 to-purple-500 text-white rounded-full"
-              onClick={() => setIsNewAppointmentOpen(true)}
-            >
-              + Nouveau RDV
-            </Button>}
-            <AppointmentModal
-              open={isNewAppointmentOpen}
-              onOpenChange={setIsNewAppointmentOpen}
-            />
+            )}
           </div>
         </div>
       </Card>
 
-      {/* Calendar View */}
+      {/* Calendar Grid */}
       <Card className="border-0 shadow-lg rounded-2xl p-6">
         <div className="overflow-x-auto">
-          <div className="min-w-22 lg:min-w-225">
-            {/* Header Row - Staff Names */}
-            <div className="grid gap-2 mb-4" style={{ gridTemplateColumns: `100px repeat(${filteredStaff.length}, 1fr)` }}>
-              <div className="p-3 text-center">
-                <Clock className="w-5 h-5 mx-auto text-gray-400 dark:text-gray-500" />
+          <div className="min-w-max">
+            {/* Grid Header */}
+            <div className="grid gap-2 mb-4" style={{ gridTemplateColumns: `120px repeat(${filteredStaff.length}, minmax(200px, 1fr))` }}>
+              {/* Sticky Day Names Column */}
+              <div className="p-3 text-center sticky left-0 border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950">
+                <CalendarIcon className="w-5 h-5 mx-auto text-gray-400 dark:text-gray-500" />
               </div>
-              {filteredStaff.map((s) => (
+
+              {/* Staff Headers */}
+              {filteredStaff.map((staff) => (
                 <div
-                  key={s.id}
+                  key={staff.id}
                   className="p-3 rounded-xl text-center text-white"
-                  style={{ backgroundColor: s.color }}
+                  style={{ backgroundColor: staff.color }}
                 >
-                  <p className="font-medium">{s.name}</p>
+                  <p className="font-medium">{staff.name}</p>
                 </div>
               ))}
             </div>
 
-            {/* Time Slots Grid */}
+            {/* Calendar Body */}
             <div className="space-y-1">
-              {timeSlots.map((time) => (
+              {daysOfWeek.map((day) => (
                 <div
-                  key={time}
+                  key={day.isoDate}
                   className="grid gap-2"
-                  style={{ gridTemplateColumns: `100px repeat(${filteredStaff.length}, 1fr)` }}
+                  style={{ gridTemplateColumns: `120px repeat(${filteredStaff.length}, minmax(200px, 1fr))` }}
                 >
-                  {/* Time Label */}
-                  <div className="p-2 text-center text-sm text-gray-600 dark:text-gray-400 flex items-center justify-center">
-                    {time}
+                  {/* Sticky Day Name */}
+                  <div className="p-2 text-center text-sm border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950">
+                    <div className="font-medium">{day.name}</div>
+                    <div className="text-xs">{day.formattedDate}</div>
                   </div>
 
-                  {/* Staff Columns */}
-                  {filteredStaff.map((s) => {
-                    const appointment = appointments.find(
-                      apt => apt.time === time && apt.staff === s.name
-                    );
+                  {/* Staff Cells */}
+                  {filteredStaff.map((staff) => {
+                    const appointments = appointmentsByDayAndStaff[day.isoDate]?.[staff.id] || [];
 
                     return (
-                      <div
-                        key={s.id}
-                        className={`min-h-15 rounded-lg border-2 border-dashed p-2 ${appointment
-                          ? 'bg-linear-to-br from-pink-50 to-purple-50 dark:from-pink-950 dark:to-purple-950 border-pink-300 dark:border-pink-700'
-                          : 'border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800'
-                          } cursor-pointer transition-all`}
+                      <Popover
+                        key={`${day.isoDate}-${staff.id}`}
+                        open={popoverOpen.open && popoverOpen.day === day.isoDate && popoverOpen.staffId === staff.id}
+                        onOpenChange={(open) => {
+                          if (open) {
+                            setPopoverOpen({ open: true, day: day.isoDate, staffId: staff.id });
+                          } else {
+                            setPopoverOpen({ open: false, day: '', staffId: '' });
+                          }
+                        }}
                       >
-                        {appointment && (
-                          <div className="space-y-1">
+                        <PopoverTrigger asChild>
+                          <div
+                            className={`
+                              min-h-20 rounded-lg border p-3 cursor-pointer transition-all
+                              ${appointments.length > 0
+                                ? 'bg-gradient-to-br from-pink-50 to-purple-50 dark:from-pink-950 dark:to-purple-950 border hover:border-pink-400   dark:hover:border-pink-400 border-pink-300 dark:border-pink-700'
+                                : 'p-6 border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950'
+                              }
+                              relative
+                            `}
+                          >
                             <div className="flex items-center justify-between">
-                              <p className="text-sm text-gray-900 dark:text-white">{appointment.clientName}</p>
-                              <Badge className={`text-xs ${appointment.status === 'confirmed' ? 'bg-green-500' :
-                                appointment.status === 'pending' ? 'bg-amber-500' :
-                                  appointment.status === 'completed' ? 'bg-blue-500' :
-                                    'bg-red-500'
-                                } text-white`}>
-                                {appointment.status === 'confirmed' ? 'Confirmé' :
-                                  appointment.status === 'pending' ? 'En attente' :
-                                    appointment.status === 'completed' ? 'Complété' : 'Annulé'}
-                              </Badge>
+                              <span className="text-sm font-medium text-gray-900 dark:text-white">
+                                {appointments.length} RDV
+                              </span>
+                              {appointments.length > 0 && (
+                                <Badge className="text-xs bg-pink-500 text-white">
+                                  {appointments.length}
+                                </Badge>
+                              )}
                             </div>
-                            <p className="text-xs text-gray-600 dark:text-gray-400">{appointment.service}</p>
-                            <p className="text-xs text-gray-500 dark:text-gray-500">{appointment.duration} min</p>
-                            {appointment.reminderSent && (
-                              <Badge variant="outline" className="text-xs">
-                                <Mail className="w-3 h-3 mr-1" />
-                                Rappel envoyé
-                              </Badge>
-                            )}
                           </div>
-                        )}
-                      </div>
+                        </PopoverTrigger>
+
+                        <PopoverContent className="w-80 p-0 border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950" align="start">
+                          <div className="p-4">
+                            <h3 className="font-semibold text-lg mb-2">
+                              {staff.name} - {day.formattedDate}
+                            </h3>
+                            <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                              {appointments.length} rendez-vous
+                            </p>
+
+                            <div className="space-y-3 max-h-60 overflow-y-auto">
+                              {appointments.length > 0 ? (
+                                appointments.map((apt) => (
+                                  <div key={apt.id} className="border-b border-gray-200 dark:border-gray-700 pb-3 last:border-0 last:pb-0">
+                                    <div className="flex items-center justify-between mb-1">
+                                      <span className="font-medium text-gray-900 dark:text-white">{apt.time}</span>
+                                      <Badge className={`text-xs ${apt.status === 'confirmed' ? 'bg-green-500' :
+                                        apt.status === 'pending' ? 'bg-amber-500' :
+                                          apt.status === 'completed' ? 'bg-blue-500' :
+                                            'bg-red-500'
+                                        } text-white`}>
+                                        {apt.status === 'confirmed' ? 'Confirmé' :
+                                          apt.status === 'pending' ? 'En attente' :
+                                            apt.status === 'completed' ? 'Complété' : 'Annulé'}
+                                      </Badge>
+                                    </div>
+                                    <p className="text-sm text-gray-900 dark:text-white">{apt.clientName}</p>
+                                    <p className="text-xs text-gray-600 dark:text-gray-400">{apt.service}</p>
+                                  </div>
+                                ))
+                              ) : (
+                                <p className="text-gray-500 dark:text-gray-400 text-center py-4">
+                                  Aucun rendez-vous
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                        </PopoverContent>
+                      </Popover>
                     );
                   })}
                 </div>
@@ -282,110 +322,12 @@ export default function BookingCalendar({ showMock }: { showMock?: boolean }) {
         </div>
       </Card>
 
-      {/* Appointments List */}
-      {!user?.role || user?.role === "worker" ? null : <>
-        <Card className="border-0 shadow-lg rounded-2xl p-6">
-          <h3 className="text-xl text-gray-900 dark:text-white mb-4">Liste des Rendez-vous du Jour</h3>
-          <div className="space-y-3">
-            {appointments.map((apt) => (
-              <Card key={apt.id} className="bg-gray-50 dark:bg-gray-800 border-0 p-4 rounded-xl">
-                <div className="flex items-start gap-4">
-                  <div className="text-center min-w-15">
-                    <Clock className="w-5 h-5 text-pink-500 mx-auto mb-1" />
-                    <p className="text-sm text-gray-900">{apt.time}</p>
-                    <p className="text-xs text-gray-500">{apt.duration}min</p>
-                  </div>
+      {/* Appointment Modal */}
+      <AppointmentModal
+        open={isNewAppointmentOpen}
+        onOpenChange={setIsNewAppointmentOpen}
+      />
 
-                  <div className="flex-1 space-y-2">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-gray-900 dark:text-white">{apt.clientName}</p>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">{apt.service}</p>
-                      </div>
-                      <Badge className={`${apt.status === 'confirmed' ? 'bg-green-500' :
-                        apt.status === 'pending' ? 'bg-amber-500' :
-                          apt.status === 'completed' ? 'bg-blue-500' : 'bg-red-500'
-                        } text-white`}>
-                        {apt.status === 'confirmed' ? 'Confirmé' :
-                          apt.status === 'pending' ? 'En attente' :
-                            apt.status === 'completed' ? 'Complété' : 'Annulé'}
-                      </Badge>
-                    </div>
-
-                    <div className="flex flex-wrap items-center gap-4 text-xs text-gray-600">
-                      <span className="flex items-center gap-1 dark:text-gray-400">
-                        <User className="w-3 h-3" />
-                        avec {apt.staff}
-                      </span>
-                      <span className="flex items-center gap-1 dark:text-gray-400">
-                        <Phone className="w-3 h-3" />
-                        {apt.clientPhone}
-                      </span>
-                      <span className="flex items-center gap-1 dark:text-gray-400">
-                        <Mail className="w-3 h-3" />
-                        {apt.clientEmail}
-                      </span>
-                    </div>
-
-                    {apt.notes && (
-                      <p className="text-sm text-gray-600 dark:text-gray-400 bg-yellow-50 dark:bg-yellow-900/20 p-2 rounded">
-                        📝 {apt.notes}
-                      </p>
-                    )}
-
-                    <div className="flex items-center gap-2 pt-2">
-                      <Button size="sm" variant="outline" className="rounded-full">
-                        Modifier
-                      </Button>
-                      <Button size="sm" variant="outline" className="rounded-full">
-                        Reprogrammer
-                      </Button>
-                      {!apt.reminderSent && (
-                        <Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-white rounded-full">
-                          Envoyer Rappel
-                        </Button>
-                      )}
-                      {apt.status === 'pending' && (
-                        <Button size="sm" className="bg-green-600 hover:bg-green-700 text-white rounded-full">
-                          Confirmer
-                        </Button>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </Card>
-            ))}
-          </div>
-        </Card>
-
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <Card className="bg-linear-to-br from-blue-50 to-cyan-50 dark:from-blue-950 dark:to-cyan-950 border-0 p-6">
-            <CalendarIcon className="w-8 h-8 text-blue-600 dark:text-blue-400 mb-2" />
-            <p className="text-3xl text-gray-900 dark:text-white">{appointments.length}</p>
-            <p className="text-sm text-gray-600 dark:text-gray-400">RDV Aujourd'hui</p>
-          </Card>
-          <Card className="bg-linear-to-br from-green-50 to-emerald-50 dark:from-green-950 dark:to-emerald-950 border-0 p-6">
-            <Clock className="w-8 h-8 text-green-600 dark:text-green-400 mb-2" />
-            <p className="text-3xl text-gray-900 dark:text-white">
-              {appointments.filter(a => a.status === 'confirmed').length}
-            </p>
-            <p className="text-sm text-gray-600 dark:text-gray-400">Confirmés</p>
-          </Card>
-          <Card className="bg-linear-to-br from-amber-50 to-orange-50 dark:from-amber-950 dark:to-orange-950 border-0 p-6">
-            <Mail className="w-8 h-8 text-amber-600 dark:text-amber-400 mb-2" />
-            <p className="text-3xl text-gray-900 dark:text-white">
-              {appointments.filter(a => a.reminderSent).length}
-            </p>
-            <p className="text-sm text-gray-600 dark:text-gray-400">Rappels Envoyés</p>
-          </Card>
-          <Card className="bg-linear-to-br from-purple-50 to-pink-50 dark:from-purple-950 dark:to-pink-950 border-0 p-6">
-            <User className="w-8 h-8 text-purple-600 dark:text-purple-400 mb-2" />
-            <p className="text-3xl text-gray-900 dark:text-white">{staff.length}</p>
-            <p className="text-sm text-gray-600 dark:text-gray-400">Personnel Disponible</p>
-          </Card>
-        </div>
-      </>
-      }
       {selectedAppointment && (
         <AppointmentModal
           open={isEditAppointmentOpen}

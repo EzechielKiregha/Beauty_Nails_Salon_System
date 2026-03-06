@@ -13,7 +13,6 @@ import { useState, useEffect } from 'react';
 import { Separator } from '@/components/ui/separator';
 import { useCommission, useWorkerSchedule } from '@/lib/hooks/useStaff';
 import { Worker } from '@/lib/api/staff';
-import CreateWorkerModal from './CreateWorkerModal';
 import { useAuth } from '@/lib/hooks/useAuth';
 
 // --- Edit Schedule Modal (Mobile Optimized with Dark Mode) ---
@@ -266,15 +265,6 @@ export function StaffProfileModal({ staff, trigger }: StaffProfileModalProps) {
     { value: "2026-12", label: "Décembre 2026" },
   ];
 
-  const scheduleData = [
-    { idx: 0, day: 'Lundi', slots: ['09:00-12:00', '13:00-16:00', '16:00-18:00'] },
-    { idx: 1, day: 'Mardi', slots: ['09:00-12:00', '13:00-16:00', '16:00-18:00'] },
-    { idx: 2, day: 'Mercredi', slots: ['09:00-12:00', '13:00-16:00', '16:00-18:00'] },
-    { idx: 3, day: 'Jeudi', slots: ['09:00-12:00', '13:00-16:00', '16:00-18:00'] },
-    { idx: 4, day: 'Vendredi', slots: ['09:00-12:00', '13:00-16:00', '16:00-19:00'] },
-    { idx: 5, day: 'Samedi', slots: ['Ouvert toute la journée'] }
-  ];
-
   const { commissions, isUpdating } = useCommission();
   const getCommissionForMonth = (month: string) =>
     commissions.find(
@@ -375,12 +365,6 @@ export function StaffProfileModal({ staff, trigger }: StaffProfileModalProps) {
                     Performance
                   </TabsTrigger>
                   <TabsTrigger
-                    value="schedule"
-                    className="rounded-lg px-4 py-2 mb-2 sm:mb-0 sm:mr-2 text-sm data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 data-[state=active]:text-pink-700 dark:data-[state=active]:text-pink-400"
-                  >
-                    Horaires
-                  </TabsTrigger>
-                  <TabsTrigger
                     value="commission"
                     className="rounded-lg px-4 py-2 mb-2 sm:mb-0 sm:mr-2 text-sm data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 data-[state=active]:text-pink-700 dark:data-[state=active]:text-pink-400"
                   >
@@ -453,54 +437,6 @@ export function StaffProfileModal({ staff, trigger }: StaffProfileModalProps) {
                     trigger={
                       <Button className="w-full bg-purple-500 hover:bg-purple-600 text-white dark:bg-purple-600 dark:hover:bg-purple-700">
                         Modifier Horaires
-                      </Button>
-                    }
-                  />
-                </TabsContent>
-
-                {/* Schedule Tab - Mobile Optimized */}
-                <TabsContent value="schedule" className="space-y-4 mt-4">
-                  <h4 className="text-lg font-medium text-gray-900 dark:text-gray-100">Planning de la Semaine</h4>
-                  <div className="space-y-3">
-                    {['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'].map((day, idx) => (
-                      <div key={idx} className="p-3 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
-                        <div className="flex items-center justify-between mb-2">
-                          <p className="font-medium text-gray-900 dark:text-gray-100">{day}</p>
-                          <Badge className={
-                            staff?.workingDays.includes(day.substring(0, 3))
-                              ? 'bg-green-500 text-white text-xs'
-                              : 'bg-gray-400 dark:bg-gray-700 text-white text-xs'
-                          }>
-                            {staff?.workingDays.includes(day.substring(0, 3))
-                              ? 'Travaille' : 'Repos'}
-                          </Badge>
-                        </div>
-                        {staff?.workingDays.includes(day.substring(0, 3)) && (
-                          <div className="flex flex-wrap gap-2">
-                            <Badge variant="outline" className="text-xs border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400">
-                              <Clock className="w-3 h-3 mr-1" />
-                              09:00-12:00
-                            </Badge>
-                            <Badge variant="outline" className="text-xs border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400">
-                              <Clock className="w-3 h-3 mr-1" />
-                              13:00-16:00
-                            </Badge>
-                            <Badge variant="outline" className="text-xs border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400">
-                              <Clock className="w-3 h-3 mr-1" />
-                              16:00-18:00
-                            </Badge>
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-
-                  <EditScheduleModal
-                    staffId={staff?.id || ''}
-                    staffName={staff?.name}
-                    trigger={
-                      <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white dark:bg-purple-700 dark:hover:bg-purple-800">
-                        Modifier Planning
                       </Button>
                     }
                   />

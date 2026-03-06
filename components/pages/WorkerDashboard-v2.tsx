@@ -38,6 +38,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import ClientManagement from '../ClientManagement';
 import POSCheckout from '../POSCheckout';
 import BookingCalendar from '../BookingCalendar';
+import { StaffModal } from '../modals/StaffModals-v2';
 
 export default function WorkerDashboardV2() {
   const [notificationOpen, setNotificationOpen] = useState(false);
@@ -49,6 +50,7 @@ export default function WorkerDashboardV2() {
   >(undefined);
   const [selectedTime, setSelectedTime] = useState<string>('');
   const [selectedClient, setSelectedClient] = useState<any>();
+  const [profileOpen, setProfileOpen] = useState<boolean>(false);
 
 
   // Get authenticated user
@@ -366,6 +368,20 @@ export default function WorkerDashboardV2() {
                   </ScrollArea>
                 </SheetContent>
               </Sheet>
+              {/* <StaffModal
+                staffId={worker?.id || ''}
+                staff={worker}
+                open={profileOpen}
+                onOpenChange={() => {
+                  setProfileOpen(!profileOpen);
+                }}
+              />
+              <Avatar className="w-12 h-12 border-4 border-white shadow-lg" onClick={() => setProfileOpen(true)}>
+                <AvatarImage src="" />
+                <AvatarFallback className="text-2xl font-medium bg-gray-100 text-gray-600">
+                  {worker?.name.split(" ")[0]?.charAt(0) || worker?.name.charAt(0)}
+                </AvatarFallback>
+              </Avatar> */}
               <StaffProfileModal
                 staff={worker}
                 trigger={
@@ -432,7 +448,7 @@ export default function WorkerDashboardV2() {
 
         {/* Main Content */}
         <Tabs defaultValue="schedule" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2 lg:grid-cols-6 mt-3 lg:mt-6 bg-white dark:bg-gray-950 border border-gray-200 dark:border-pink-900/30 p-1 rounded-xl justify-start sm:justify-center ">
+          <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 mt-3 lg:mt-6 bg-white dark:bg-gray-950 border border-gray-200 dark:border-pink-900/30 p-1 rounded-xl justify-start sm:justify-center ">
             <TabsTrigger value="schedule" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">
               <CalendarIcon className="w-4 h-4 mr-2" />
               Planning
@@ -441,14 +457,14 @@ export default function WorkerDashboardV2() {
               <CalendarIcon className="w-4 h-4 mr-2" />
               Mon Calendrier
             </TabsTrigger>
-            <TabsTrigger value="clients" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">
+            {/* <TabsTrigger value="clients" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">
               <Users className="w-4 h-4 mr-2" />
               Clients
-            </TabsTrigger>
-            <TabsTrigger value="pos" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">
+            </TabsTrigger> */}
+            {/* <TabsTrigger value="pos" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">
               <ShoppingCart className="w-4 h-4 mr-2" />
               Caisse
-            </TabsTrigger>
+            </TabsTrigger> */}
             <TabsTrigger value="performance" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">
               <TrendingUp className="w-4 h-4 mr-2" />
               Performance
@@ -807,13 +823,13 @@ export default function WorkerDashboardV2() {
           </TabsContent>
 
           {/* Clients Tab */}
-          <TabsContent value="clients" className="mt-14 lg:mt-2">
+          {/* <TabsContent value="clients" className="mt-14 lg:mt-2">
             <ClientManagement showMock={false} />
-          </TabsContent>
+          </TabsContent> */}
 
-          <TabsContent value="pos" className="mt-14 lg:mt-6">
+          {/* <TabsContent value="pos" className="mt-14 lg:mt-6">
             <POSCheckout showMock={false} />
-          </TabsContent>
+          </TabsContent> */}
 
           {/* Performance Tab */}
           <TabsContent value="performance" className="space-y-6">

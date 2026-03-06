@@ -492,7 +492,7 @@ export default function AdminDashboardV2() {
         </Tabs>
 
         {/* Alerts Section */}
-        {(stats.lowStockItems > 0 || stats.pendingAppointments > 5) && (
+        {/* {(stats.lowStockItems > 0 || stats.pendingAppointments > 5) && (
           <Card className="p-6 mt-8 border-yellow-200 bg-yellow-50">
             <h3 className="text-lg font-semibold mb-4 flex items-center text-yellow-800">
               <AlertCircle className="w-5 h-5 mr-2" />
@@ -534,7 +534,7 @@ export default function AdminDashboardV2() {
               )}
             </div>
           </Card>
-        )}
+        )} */}
 
         {/* Tasks Management */}
         <div className="py-2">

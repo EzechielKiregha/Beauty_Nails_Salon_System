@@ -198,6 +198,13 @@ export const WorkerProfileScalarFieldEnum = {
   isAvailable: 'isAvailable',
   workingHours: 'workingHours',
   hireDate: 'hireDate',
+  bio: 'bio',
+  commissionType: 'commissionType',
+  commissionFrequency: 'commissionFrequency',
+  commissionDay: 'commissionDay',
+  minimumPayout: 'minimumPayout',
+  lastCommissionPaidAt: 'lastCommissionPaidAt',
+  payoutThresholdMetAt: 'payoutThresholdMetAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

@@ -163,6 +163,14 @@ model WorkerProfile {
   isAvailable    Boolean  @default(true)
   workingHours   Json?
   hireDate       DateTime @default(now())
+  bio            String?
+  commissionType        String?    // Type: "percentage" | "fixed"
+  commissionFrequency   String?    // How often paid: "daily" | "weekly" | "monthly"
+  commissionDay         Int?       // Day of week (1-7) or day of month (1-31) when paid
+  minimumPayout         Float?     // Minimum amount before commission is paid out
+  lastCommissionPaidAt  DateTime?  // Last date commission was paid
+  payoutThresholdMetAt  DateTime?  // When minimum payout threshold was met
+
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 

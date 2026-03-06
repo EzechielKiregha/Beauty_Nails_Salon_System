@@ -5,8 +5,8 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client"
-  output = "./generated"
+  provider               = "prisma-client"
+  output                 = "./generated"
   generatedFileExtension = "ts"
   importFileExtension    = ""
 }
@@ -15,27 +15,26 @@ datasource db {
   provider = "postgresql"
 }
 
-
 // ============================================
 // AUTHENTICATION & USER MANAGEMENT
 // ============================================
 
 model User {
-  id            String    @id @default(cuid())
-  name          String
-  email         String    @unique
-  emailVerified DateTime?
-  password      String
-  phone         String    @unique
-  avatar        String?
-  role          UserRole  @default(client)
-  isActive      Boolean   @default(true)
-  resetToken           String?           // Added for password reset
-  resetTokenExpires    DateTime?         // Added for token expiration
-  otpSecret            String?           // Added for OTP
-  otpSecretExpires     DateTime?         // Added for OTP expiration
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id                String    @id @default(cuid())
+  name              String
+  email             String    @unique
+  emailVerified     DateTime?
+  password          String
+  phone             String    @unique
+  avatar            String?
+  role              UserRole  @default(client)
+  isActive          Boolean   @default(true)
+  resetToken        String? // Added for password reset
+  resetTokenExpires DateTime? // Added for token expiration
+  otpSecret         String? // Added for OTP
+  otpSecretExpires  DateTime? // Added for OTP expiration
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
 
   // Relations
   accounts       Account[]
@@ -44,7 +43,7 @@ model User {
   workerProfile  WorkerProfile?
   notifications  Notification[]
   createdReports Report[]       @relation("ReportCreatedBy")
-  tasks          Task[]      @relation("TaskAssignedBy") // new: tasks assigned to this user
+  tasks          Task[]         @relation("TaskAssignedBy") // new: tasks assigned to this user
 
   // Indexes
   @@index([email])
@@ -105,38 +104,38 @@ model VerificationToken {
 // ============================================
 
 model ClientProfile {
-  id                 String   @id @default(cuid())
-  userId             String   @unique
-  tier               Tier     @default(Regular)
-  loyaltyPoints      Int      @default(0)
-  totalAppointments  Int      @default(0)
-  totalSpent         Float    @default(0)
-  referralCode       String   @unique
-  referredBy         String?
-  preferences        Json?
-  notes              String?  @db.Text
+  id                String    @id @default(cuid())
+  userId            String    @unique
+  tier              Tier      @default(Regular)
+  loyaltyPoints     Int       @default(0)
+  totalAppointments Int       @default(0)
+  totalSpent        Float     @default(0)
+  referralCode      String    @unique
+  referredBy        String?
+  preferences       Json?
+  notes             String?   @db.Text
   // Additional profile fields used by the UI
-  birthday           DateTime?
-  address            String?
-  favoriteServices   String[]
-  allergies          String?
-  prepaymentBalance  Float    @default(0)
-  giftCardBalance    Float    @default(0)
-  referrals          Int      @default(0)
+  birthday          DateTime?
+  address           String?
+  favoriteServices  String[]
+  allergies         String?
+  prepaymentBalance Float     @default(0)
+  giftCardBalance   Float     @default(0)
+  referrals         Int       @default(0)
 
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // Relations
-  user               User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
-  appointments       Appointment[]
-  reviews            Review[]
+  user                User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  appointments        Appointment[]
+  reviews             Review[]
   loyaltyTransactions LoyaltyTransaction[]
-  referralsReceived       Referral[]           @relation("ReferredClients")
-  referrer           Referral?            @relation("Referrer")
+  referralsMade       Referral[]           @relation("Referrer")
+  referralsReceived   Referral[]           @relation("ReferredClients")
   membershipPurchases MembershipPurchase[]
-  sales              Sale[]
-  tasks              Task[]
+  sales               Sale[]
+  tasks               Task[]
 
   @@index([tier])
   @@index([referralCode])
@@ -158,8 +157,8 @@ model WorkerProfile {
   userId         String   @unique
   position       String
   specialties    String[]
-  commissionRate Float @default(0)
-  rating         Float @default(0)
+  commissionRate Float    @default(0)
+  rating         Float    @default(0)
   totalReviews   Int      @default(0)
   isAvailable    Boolean  @default(true)
   workingHours   Json?
@@ -168,13 +167,13 @@ model WorkerProfile {
   updatedAt      DateTime @updatedAt
 
   // Relations
-  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  appointments  Appointment[]
-  schedules     WorkerSchedule[]
-  commissions   Commission[]
-  reviews       Review[]
-  leaves        WorkerLeave[]
-  tasks         Task[]       // new: tasks assigned to this worker
+  user         User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  appointments Appointment[]
+  schedules    WorkerSchedule[]
+  commissions  Commission[]
+  reviews      Review[]
+  leaves       WorkerLeave[]
+  tasks        Task[] // new: tasks assigned to this worker
 
   @@index([isAvailable])
   @@index([position])
@@ -247,27 +246,27 @@ enum TaskPriority {
 }
 
 model Task {
-  id                   String         @id @default(cuid())
-  title                String
-  description          String?        @db.Text
-  type                 TaskType       @default(general)
-  status               TaskStatus     @default(open)
-  priority             TaskPriority   @default(medium)
-  assignedToWorkerId   String? 
-  assignedTo           WorkerProfile? @relation(fields: [assignedToWorkerId], references: [id])
-  clientId             String?
-  client               ClientProfile? @relation(fields: [clientId], references: [id])
-  appointmentId        String?
-  appointment          Appointment?   @relation(fields: [appointmentId], references: [id])
-  createdById          String?
-  createdBy            User?          @relation("TaskAssignedBy", fields: [createdById], references: [id])
-  dueAt                DateTime?
-  scheduledAt          DateTime?
-  completedAt          DateTime?
-  metadata             Json?
-  isPrivate            Boolean        @default(false)
-  createdAt            DateTime       @default(now())
-  updatedAt            DateTime       @updatedAt
+  id                 String         @id @default(cuid())
+  title              String
+  description        String?        @db.Text
+  type               TaskType       @default(general)
+  status             TaskStatus     @default(open)
+  priority           TaskPriority   @default(medium)
+  assignedToWorkerId String?
+  assignedTo         WorkerProfile? @relation(fields: [assignedToWorkerId], references: [id])
+  clientId           String?
+  client             ClientProfile? @relation(fields: [clientId], references: [id])
+  appointmentId      String?
+  appointment        Appointment?   @relation(fields: [appointmentId], references: [id])
+  createdById        String?
+  createdBy          User?          @relation("TaskAssignedBy", fields: [createdById], references: [id])
+  dueAt              DateTime?
+  scheduledAt        DateTime?
+  completedAt        DateTime?
+  metadata           Json?
+  isPrivate          Boolean        @default(false)
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
 
   @@index([assignedToWorkerId])
   @@index([status])
@@ -280,19 +279,19 @@ model Task {
 // ============================================
 
 model Service {
-  id              String   @id @default(cuid())
-  name            String
-  category        Category
-  price           Float 
-  duration        Int // in minutes
-  description     String   @db.Text
-  imageUrl        String?
-  onlineBookable  Boolean  @default(true)
-  isPopular       Boolean  @default(false)
-  isActive        Boolean  @default(true)
-  displayOrder    Int      @default(0)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  id             String   @id @default(cuid())
+  name           String
+  category       Category
+  price          Float
+  duration       Int // in minutes
+  description    String   @db.Text
+  imageUrl       String?
+  onlineBookable Boolean  @default(true)
+  isPopular      Boolean  @default(false)
+  isActive       Boolean  @default(true)
+  displayOrder   Int      @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
   // Relations
   appointments Appointment[]
@@ -308,16 +307,16 @@ model Service {
 
 enum Category {
   onglerie // Nails
-  cils     // Lashes
-  tresses  // Tresses/Braids
+  cils // Lashes
+  tresses // Tresses/Braids
   maquillage // Makeup
 }
 
 model ServiceAddOn {
-  id          String  @id @default(cuid())
+  id          String   @id @default(cuid())
   serviceId   String
   name        String
-  price       Float 
+  price       Float
   duration    Int // in minutes
   description String?
   createdAt   DateTime @default(now())
@@ -334,8 +333,8 @@ model ServicePackage {
   id          String   @id @default(cuid())
   name        String
   description String   @db.Text
-  price       Float 
-  discount    Float @default(0)
+  price       Float
+  discount    Float    @default(0)
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -351,21 +350,21 @@ model ServicePackage {
 // ============================================
 
 model Appointment {
-  id        String            @id @default(cuid())
-  clientId  String
-  serviceId String
-  workerId  String
-  date      DateTime
-  time      String // "14:30"
-  duration  Int // in minutes
-  status    AppointmentStatus @default(pending)
-  location  Location          @default(salon)
-  price     Float          
-  addOns    String[] // Array of add-on IDs
-  notes     String?           @db.Text
-  cancelReason String?        @db.Text
-  createdAt DateTime          @default(now())
-  updatedAt DateTime          @updatedAt
+  id           String            @id @default(cuid())
+  clientId     String
+  serviceId    String
+  workerId     String
+  date         DateTime
+  time         String // "14:30"
+  duration     Int // in minutes
+  status       AppointmentStatus @default(pending)
+  location     Location          @default(salon)
+  price        Float
+  addOns       String[] // Array of add-on IDs
+  notes        String?           @db.Text
+  cancelReason String?           @db.Text
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
 
   // Relations
   client  ClientProfile @relation(fields: [clientId], references: [id], onDelete: Cascade)
@@ -373,7 +372,7 @@ model Appointment {
   worker  WorkerProfile @relation(fields: [workerId], references: [id])
   review  Review?
   sale    Sale?
-  tasks   Task[]       // new: tasks assigned to this worker
+  tasks   Task[] // new: tasks assigned to this worker
 
   @@index([clientId])
   @@index([workerId])
@@ -429,16 +428,16 @@ model Review {
 // ============================================
 
 model Membership {
-  id                String   @id @default(cuid())
-  name              String
-  duration          Int // in months (3 or 6)
-  price             Float 
-  discount          Float // percentage discount
-  benefits          Json
-  isActive          Boolean  @default(true)
-  displayOrder      Int      @default(0)
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  id           String   @id @default(cuid())
+  name         String
+  duration     Int // in months (3 or 6)
+  price        Float
+  discount     Float // percentage discount
+  benefits     Json
+  isActive     Boolean  @default(true)
+  displayOrder Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
   // Relations
   purchases MembershipPurchase[]
@@ -447,16 +446,16 @@ model Membership {
 }
 
 model MembershipPurchase {
-  id           String             @id @default(cuid())
+  id           String           @id @default(cuid())
   clientId     String
   membershipId String
   startDate    DateTime
   endDate      DateTime
-  status       MembershipStatus   @default(active)
-  autoRenew    Boolean            @default(false)
-  purchaseDate DateTime           @default(now())
-  createdAt    DateTime           @default(now())
-  updatedAt    DateTime           @updatedAt
+  status       MembershipStatus @default(active)
+  autoRenew    Boolean          @default(false)
+  purchaseDate DateTime         @default(now())
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
 
   // Relations
   client     ClientProfile @relation(fields: [clientId], references: [id], onDelete: Cascade)
@@ -480,13 +479,13 @@ enum MembershipStatus {
 // ============================================
 
 model LoyaltyTransaction {
-  id          String              @id @default(cuid())
+  id          String      @id @default(cuid())
   clientId    String
   points      Int
   type        LoyaltyType
   description String
   relatedId   String? // ID of related entity (appointment, referral, etc.)
-  createdAt   DateTime            @default(now())
+  createdAt   DateTime    @default(now())
 
   // Relations
   client ClientProfile @relation(fields: [clientId], references: [id], onDelete: Cascade)
@@ -506,13 +505,13 @@ enum LoyaltyType {
 }
 
 model Referral {
-  id            String        @id @default(cuid())
-  referrerId    String        @unique
-  referredId    String
+  id            String         @id @default(cuid())
+  referrerId    String
+  referredId    String         @unique
   status        ReferralStatus @default(pending)
-  rewardGranted Boolean       @default(false)
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
+  rewardGranted Boolean        @default(false)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
 
   // Relations
   referrer ClientProfile @relation("Referrer", fields: [referrerId], references: [id], onDelete: Cascade)
@@ -537,11 +536,11 @@ model Sale {
   id                String        @id @default(cuid())
   appointmentId     String?       @unique
   clientId          String
-  total             Float      
-  subtotal          Float      
-  discount          Float      @default(0) 
-  tax               Float      @default(0) 
-  tip               Float      @default(0) 
+  total             Float
+  subtotal          Float
+  discount          Float         @default(0)
+  tax               Float         @default(0)
+  tip               Float         @default(0)
   paymentMethod     PaymentMethod
   paymentStatus     PaymentStatus @default(pending)
   discountCode      String?
@@ -552,7 +551,7 @@ model Sale {
   updatedAt         DateTime      @updatedAt
 
   // Relations
-  appointment Appointment? @relation(fields: [appointmentId], references: [id])
+  appointment Appointment?  @relation(fields: [appointmentId], references: [id])
   client      ClientProfile @relation(fields: [clientId], references: [id], onDelete: Cascade)
   items       SaleItem[]
   payments    Payment[]
@@ -565,12 +564,12 @@ model Sale {
 }
 
 model SaleItem {
-  id        String  @id @default(cuid())
+  id        String @id @default(cuid())
   saleId    String
   serviceId String
-  quantity  Int     @default(1)
+  quantity  Int    @default(1)
   price     Float
-  discount  Float@default(0) 
+  discount  Float  @default(0)
 
   // Relations
   sale    Sale    @relation(fields: [saleId], references: [id], onDelete: Cascade)
@@ -583,7 +582,7 @@ model SaleItem {
 model Payment {
   id            String        @id @default(cuid())
   saleId        String
-  amount        Float      
+  amount        Float
   method        PaymentMethod
   transactionId String?       @unique
   status        PaymentStatus @default(completed)
@@ -612,20 +611,20 @@ enum PaymentStatus {
 }
 
 model DailyRegister {
-  id           String   @id @default(cuid())
-  date         DateTime @unique
-  openingCash  Float 
-  closingCash  Float 
-  expectedCash Float 
-  discrepancy  Float 
-  totalSales   Float 
-  cashSales    Float 
-  cardSales    Float 
-  mobileSales  Float 
-  notes        String?  @db.Text
+  id           String    @id @default(cuid())
+  date         DateTime  @unique
+  openingCash  Float
+  closingCash  Float
+  expectedCash Float
+  discrepancy  Float
+  totalSales   Float
+  cashSales    Float
+  cardSales    Float
+  mobileSales  Float
+  notes        String?   @db.Text
   closedBy     String?
   closedAt     DateTime?
-  createdAt    DateTime @default(now())
+  createdAt    DateTime  @default(now())
 
   @@index([date])
   @@map("daily_registers")
@@ -636,17 +635,17 @@ model DailyRegister {
 // ============================================
 
 model Commission {
-  id                String   @id @default(cuid())
+  id                String           @id @default(cuid())
   workerId          String
   period            String // "2024-01"
-  totalRevenue      Float 
+  totalRevenue      Float
   commissionRate    Float
-  commissionAmount  Float 
+  commissionAmount  Float
   appointmentsCount Int
   status            CommissionStatus @default(pending)
   paidAt            DateTime?
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
 
   // Relations
   worker WorkerProfile @relation(fields: [workerId], references: [id], onDelete: Cascade)
@@ -669,21 +668,21 @@ enum CommissionStatus {
 // ============================================
 
 model InventoryItem {
-  id            String        @id @default(cuid())
+  id            String      @id @default(cuid())
   name          String
   category      String
-  description   String?       @db.Text
+  description   String?     @db.Text
   currentStock  Int
   minStock      Int
   maxStock      Int?
   unit          String // "pièce", "ml", "kg"
-  cost          Float      
+  cost          Float
   supplier      String?
-  sku           String?       @unique
+  sku           String?     @unique
   lastRestocked DateTime?
   status        StockStatus
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
 
   // Relations
   transactions InventoryTransaction[]
@@ -704,14 +703,14 @@ enum StockStatus {
 }
 
 model InventoryTransaction {
-  id          String              @id @default(cuid())
+  id          String          @id @default(cuid())
   itemId      String
   quantity    Int
   type        TransactionType
-  cost        Decimal?            
+  cost        Decimal?
   notes       String?
   performedBy String?
-  createdAt   DateTime            @default(now())
+  createdAt   DateTime        @default(now())
 
   // Relations
   item InventoryItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
@@ -746,17 +745,17 @@ model InventoryUsage {
 }
 
 model ReorderRequest {
-  id           String        @id @default(cuid())
-  itemId       String
-  quantity     Int
-  supplier     String
-  estimatedCost Decimal?     
-  status       ReorderStatus @default(pending)
-  orderedAt    DateTime?
-  receivedAt   DateTime?
-  notes        String?       @db.Text
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
+  id            String        @id @default(cuid())
+  itemId        String
+  quantity      Int
+  supplier      String
+  estimatedCost Decimal?
+  status        ReorderStatus @default(pending)
+  orderedAt     DateTime?
+  receivedAt    DateTime?
+  notes         String?       @db.Text
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
 
   // Relations
   item InventoryItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
@@ -797,6 +796,8 @@ model Notification {
 }
 
 enum NotificationType {
+  appointment_created
+  appointment_assigned
   appointment_reminder
   appointment_confirmed
   appointment_cancelled
@@ -849,8 +850,8 @@ model DiscountCode {
   id          String       @id @default(cuid())
   code        String       @unique
   type        DiscountType
-  value       Float     
-  minPurchase Decimal?     
+  value       Float
+  minPurchase Decimal?
   maxUses     Int?
   usedCount   Int          @default(0)
   startDate   DateTime
@@ -875,15 +876,15 @@ enum DiscountType {
 // ============================================
 
 model Report {
-  id          String     @id @default(cuid())
-  name        String
-  type        ReportType
-  period      String // "daily", "weekly", "monthly", "custom"
-  startDate   DateTime
-  endDate     DateTime
-  data        Json
-  createdBy   String
-  createdAt   DateTime   @default(now())
+  id        String     @id @default(cuid())
+  name      String
+  type      ReportType
+  period    String // "daily", "weekly", "monthly", "custom"
+  startDate DateTime
+  endDate   DateTime
+  data      Json
+  createdBy String
+  createdAt DateTime   @default(now())
 
   // Relations
   creator User @relation("ReportCreatedBy", fields: [createdBy], references: [id])
@@ -908,21 +909,21 @@ enum ReportType {
 // ============================================
 
 model SalonProfile {
-  id          String   @id @default(cuid())
-  name        String
-  address     String   @db.Text
-  phone       String
-  email       String
-  website     String?
-  description String?  @db.Text
-  logo        String?
+  id           String   @id @default(cuid())
+  name         String
+  address      String   @db.Text
+  phone        String
+  email        String
+  website      String?
+  description  String?  @db.Text
+  logo         String?
   openingHours Json?
-  socialMedia Json?
-  currency    String   @default("CDF") // Congolese Franc
-  timezone    String   @default("Africa/Kinshasa")
-  language    String   @default("fr")
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  socialMedia  Json?
+  currency     String   @default("CDF") // Congolese Franc
+  timezone     String   @default("Africa/Kinshasa")
+  language     String   @default("fr")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
   @@map("salon_profile")
 }
@@ -940,11 +941,11 @@ model SystemSetting {
 }
 
 model Integration {
-  id        String  @id @default(cuid())
+  id        String   @id @default(cuid())
   type      String // "sms", "email", "payment", "calendar"
   name      String
   config    Json
-  isEnabled Boolean @default(false)
+  isEnabled Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -957,15 +958,15 @@ model Integration {
 // ============================================
 
 model AuditLog {
-  id         String   @id @default(cuid())
-  userId     String?
-  action     String // "create", "update", "delete"
-  entity     String // "appointment", "client", "inventory", etc.
-  entityId   String
-  changes    Json?
-  ipAddress  String?
-  userAgent  String?
-  createdAt  DateTime @default(now())
+  id        String   @id @default(cuid())
+  userId    String?
+  action    String // "create", "update", "delete"
+  entity    String // "appointment", "client", "inventory", etc.
+  entityId  String
+  changes   Json?
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
 
   @@index([userId])
   @@index([entity])
