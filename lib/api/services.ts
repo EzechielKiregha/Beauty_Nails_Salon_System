@@ -46,34 +46,6 @@ export interface CreateAddOnData {
   description?: string;
 }
 
-export interface ReferralData{
-  referredBy: string;
-  referralsRel: {
-    id: string;
-    status: ReferralStatus;
-    rewardGranted: boolean;
-    referred: {
-      id: string;
-      user: {
-          name: string;
-          email: string;
-          phone: string;
-      };
-      loyaltyPoints: number;
-      totalAppointments: number;
-      totalSpent: number;
-      referralCode: string;
-    };
-  }[];
-  id: string;
-  createdAt: Date;
-  updatedAt: Date;
-  referrerId: string;
-  referredId: string;
-  status: ReferralStatus;
-  rewardGranted: boolean;
-}
-
 export const servicesApi = {
   // Get all services
   getServices: async (params?: {
@@ -132,9 +104,5 @@ export const servicesApi = {
     return data;
   },
 
-  // Get client referrals
-  getClientReferrals: async (id: string): Promise<ReferralData> => {
-    const { data } = await axiosdb.get(`/services/${id}/referrals`);
-    return data;
-  }
+  
 };

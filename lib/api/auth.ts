@@ -20,6 +20,7 @@ export interface ClientProfile {
   totalSpent: number;
   referralCode: string;
   preferences?: any;
+  referredBy: string
   notes?: string;
 }
 

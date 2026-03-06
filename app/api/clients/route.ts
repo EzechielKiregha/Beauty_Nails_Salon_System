@@ -47,7 +47,7 @@ export async function GET(request: NextRequest) {
               createdAt: true,
             },
           },
-          referralsRel: {
+          referralsReceived: {
             select: {
               id: true,
               referrerId: true,

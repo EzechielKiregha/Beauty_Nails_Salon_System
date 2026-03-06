@@ -344,8 +344,8 @@ export type ClientProfileWhereInput = {
   appointments?: Prisma.AppointmentListRelationFilter
   reviews?: Prisma.ReviewListRelationFilter
   loyaltyTransactions?: Prisma.LoyaltyTransactionListRelationFilter
-  referralsRel?: Prisma.ReferralListRelationFilter
-  referrer?: Prisma.XOR<Prisma.ReferralNullableScalarRelationFilter, Prisma.ReferralWhereInput> | null
+  referralsMade?: Prisma.ReferralListRelationFilter
+  referralsReceived?: Prisma.ReferralListRelationFilter
   membershipPurchases?: Prisma.MembershipPurchaseListRelationFilter
   sales?: Prisma.SaleListRelationFilter
   tasks?: Prisma.TaskListRelationFilter
@@ -375,8 +375,8 @@ export type ClientProfileOrderByWithRelationInput = {
   appointments?: Prisma.AppointmentOrderByRelationAggregateInput
   reviews?: Prisma.ReviewOrderByRelationAggregateInput
   loyaltyTransactions?: Prisma.LoyaltyTransactionOrderByRelationAggregateInput
-  referralsRel?: Prisma.ReferralOrderByRelationAggregateInput
-  referrer?: Prisma.ReferralOrderByWithRelationInput
+  referralsMade?: Prisma.ReferralOrderByRelationAggregateInput
+  referralsReceived?: Prisma.ReferralOrderByRelationAggregateInput
   membershipPurchases?: Prisma.MembershipPurchaseOrderByRelationAggregateInput
   sales?: Prisma.SaleOrderByRelationAggregateInput
   tasks?: Prisma.TaskOrderByRelationAggregateInput
@@ -409,8 +409,8 @@ export type ClientProfileWhereUniqueInput = Prisma.AtLeast<{
   appointments?: Prisma.AppointmentListRelationFilter
   reviews?: Prisma.ReviewListRelationFilter
   loyaltyTransactions?: Prisma.LoyaltyTransactionListRelationFilter
-  referralsRel?: Prisma.ReferralListRelationFilter
-  referrer?: Prisma.XOR<Prisma.ReferralNullableScalarRelationFilter, Prisma.ReferralWhereInput> | null
+  referralsMade?: Prisma.ReferralListRelationFilter
+  referralsReceived?: Prisma.ReferralListRelationFilter
   membershipPurchases?: Prisma.MembershipPurchaseListRelationFilter
   sales?: Prisma.SaleListRelationFilter
   tasks?: Prisma.TaskListRelationFilter
@@ -491,8 +491,8 @@ export type ClientProfileCreateInput = {
   appointments?: Prisma.AppointmentCreateNestedManyWithoutClientInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutClientInput
   loyaltyTransactions?: Prisma.LoyaltyTransactionCreateNestedManyWithoutClientInput
-  referralsRel?: Prisma.ReferralCreateNestedManyWithoutReferredInput
-  referrer?: Prisma.ReferralCreateNestedOneWithoutReferrerInput
+  referralsMade?: Prisma.ReferralCreateNestedManyWithoutReferrerInput
+  referralsReceived?: Prisma.ReferralCreateNestedManyWithoutReferredInput
   membershipPurchases?: Prisma.MembershipPurchaseCreateNestedManyWithoutClientInput
   sales?: Prisma.SaleCreateNestedManyWithoutClientInput
   tasks?: Prisma.TaskCreateNestedManyWithoutClientInput
@@ -521,8 +521,8 @@ export type ClientProfileUncheckedCreateInput = {
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutClientInput
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutClientInput
   loyaltyTransactions?: Prisma.LoyaltyTransactionUncheckedCreateNestedManyWithoutClientInput
-  referralsRel?: Prisma.ReferralUncheckedCreateNestedManyWithoutReferredInput
-  referrer?: Prisma.ReferralUncheckedCreateNestedOneWithoutReferrerInput
+  referralsMade?: Prisma.ReferralUncheckedCreateNestedManyWithoutReferrerInput
+  referralsReceived?: Prisma.ReferralUncheckedCreateNestedManyWithoutReferredInput
   membershipPurchases?: Prisma.MembershipPurchaseUncheckedCreateNestedManyWithoutClientInput
   sales?: Prisma.SaleUncheckedCreateNestedManyWithoutClientInput
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutClientInput
@@ -551,8 +551,8 @@ export type ClientProfileUpdateInput = {
   appointments?: Prisma.AppointmentUpdateManyWithoutClientNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutClientNestedInput
   loyaltyTransactions?: Prisma.LoyaltyTransactionUpdateManyWithoutClientNestedInput
-  referralsRel?: Prisma.ReferralUpdateManyWithoutReferredNestedInput
-  referrer?: Prisma.ReferralUpdateOneWithoutReferrerNestedInput
+  referralsMade?: Prisma.ReferralUpdateManyWithoutReferrerNestedInput
+  referralsReceived?: Prisma.ReferralUpdateManyWithoutReferredNestedInput
   membershipPurchases?: Prisma.MembershipPurchaseUpdateManyWithoutClientNestedInput
   sales?: Prisma.SaleUpdateManyWithoutClientNestedInput
   tasks?: Prisma.TaskUpdateManyWithoutClientNestedInput
@@ -581,8 +581,8 @@ export type ClientProfileUncheckedUpdateInput = {
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutClientNestedInput
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutClientNestedInput
   loyaltyTransactions?: Prisma.LoyaltyTransactionUncheckedUpdateManyWithoutClientNestedInput
-  referralsRel?: Prisma.ReferralUncheckedUpdateManyWithoutReferredNestedInput
-  referrer?: Prisma.ReferralUncheckedUpdateOneWithoutReferrerNestedInput
+  referralsMade?: Prisma.ReferralUncheckedUpdateManyWithoutReferrerNestedInput
+  referralsReceived?: Prisma.ReferralUncheckedUpdateManyWithoutReferredNestedInput
   membershipPurchases?: Prisma.MembershipPurchaseUncheckedUpdateManyWithoutClientNestedInput
   sales?: Prisma.SaleUncheckedUpdateManyWithoutClientNestedInput
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutClientNestedInput
@@ -884,32 +884,32 @@ export type ClientProfileUpdateOneRequiredWithoutLoyaltyTransactionsNestedInput 
   update?: Prisma.XOR<Prisma.XOR<Prisma.ClientProfileUpdateToOneWithWhereWithoutLoyaltyTransactionsInput, Prisma.ClientProfileUpdateWithoutLoyaltyTransactionsInput>, Prisma.ClientProfileUncheckedUpdateWithoutLoyaltyTransactionsInput>
 }
 
-export type ClientProfileCreateNestedOneWithoutReferrerInput = {
-  create?: Prisma.XOR<Prisma.ClientProfileCreateWithoutReferrerInput, Prisma.ClientProfileUncheckedCreateWithoutReferrerInput>
-  connectOrCreate?: Prisma.ClientProfileCreateOrConnectWithoutReferrerInput
+export type ClientProfileCreateNestedOneWithoutReferralsMadeInput = {
+  create?: Prisma.XOR<Prisma.ClientProfileCreateWithoutReferralsMadeInput, Prisma.ClientProfileUncheckedCreateWithoutReferralsMadeInput>
+  connectOrCreate?: Prisma.ClientProfileCreateOrConnectWithoutReferralsMadeInput
   connect?: Prisma.ClientProfileWhereUniqueInput
 }
 
-export type ClientProfileCreateNestedOneWithoutReferralsRelInput = {
-  create?: Prisma.XOR<Prisma.ClientProfileCreateWithoutReferralsRelInput, Prisma.ClientProfileUncheckedCreateWithoutReferralsRelInput>
-  connectOrCreate?: Prisma.ClientProfileCreateOrConnectWithoutReferralsRelInput
+export type ClientProfileCreateNestedOneWithoutReferralsReceivedInput = {
+  create?: Prisma.XOR<Prisma.ClientProfileCreateWithoutReferralsReceivedInput, Prisma.ClientProfileUncheckedCreateWithoutReferralsReceivedInput>
+  connectOrCreate?: Prisma.ClientProfileCreateOrConnectWithoutReferralsReceivedInput
   connect?: Prisma.ClientProfileWhereUniqueInput
 }
 
-export type ClientProfileUpdateOneRequiredWithoutReferrerNestedInput = {
-  create?: Prisma.XOR<Prisma.ClientProfileCreateWithoutReferrerInput, Prisma.ClientProfileUncheckedCreateWithoutReferrerInput>
-  connectOrCreate?: Prisma.ClientProfileCreateOrConnectWithoutReferrerInput
-  upsert?: Prisma.ClientProfileUpsertWithoutReferrerInput
+export type ClientProfileUpdateOneRequiredWithoutReferralsMadeNestedInput = {
+  create?: Prisma.XOR<Prisma.ClientProfileCreateWithoutReferralsMadeInput, Prisma.ClientProfileUncheckedCreateWithoutReferralsMadeInput>
+  connectOrCreate?: Prisma.ClientProfileCreateOrConnectWithoutReferralsMadeInput
+  upsert?: Prisma.ClientProfileUpsertWithoutReferralsMadeInput
   connect?: Prisma.ClientProfileWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.ClientProfileUpdateToOneWithWhereWithoutReferrerInput, Prisma.ClientProfileUpdateWithoutReferrerInput>, Prisma.ClientProfileUncheckedUpdateWithoutReferrerInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ClientProfileUpdateToOneWithWhereWithoutReferralsMadeInput, Prisma.ClientProfileUpdateWithoutReferralsMadeInput>, Prisma.ClientProfileUncheckedUpdateWithoutReferralsMadeInput>
 }
 
-export type ClientProfileUpdateOneRequiredWithoutReferralsRelNestedInput = {
-  create?: Prisma.XOR<Prisma.ClientProfileCreateWithoutReferralsRelInput, Prisma.ClientProfileUncheckedCreateWithoutReferralsRelInput>
-  connectOrCreate?: Prisma.ClientProfileCreateOrConnectWithoutReferralsRelInput
-  upsert?: Prisma.ClientProfileUpsertWithoutReferralsRelInput
+export type ClientProfileUpdateOneRequiredWithoutReferralsReceivedNestedInput = {
+  create?: Prisma.XOR<Prisma.ClientProfileCreateWithoutReferralsReceivedInput, Prisma.ClientProfileUncheckedCreateWithoutReferralsReceivedInput>
+  connectOrCreate?: Prisma.ClientProfileCreateOrConnectWithoutReferralsReceivedInput
+  upsert?: Prisma.ClientProfileUpsertWithoutReferralsReceivedInput
   connect?: Prisma.ClientProfileWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.ClientProfileUpdateToOneWithWhereWithoutReferralsRelInput, Prisma.ClientProfileUpdateWithoutReferralsRelInput>, Prisma.ClientProfileUncheckedUpdateWithoutReferralsRelInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ClientProfileUpdateToOneWithWhereWithoutReferralsReceivedInput, Prisma.ClientProfileUpdateWithoutReferralsReceivedInput>, Prisma.ClientProfileUncheckedUpdateWithoutReferralsReceivedInput>
 }
 
 export type ClientProfileCreateNestedOneWithoutSalesInput = {
@@ -948,8 +948,8 @@ export type ClientProfileCreateWithoutUserInput = {
   appointments?: Prisma.AppointmentCreateNestedManyWithoutClientInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutClientInput
   loyaltyTransactions?: Prisma.LoyaltyTransactionCreateNestedManyWithoutClientInput
-  referralsRel?: Prisma.ReferralCreateNestedManyWithoutReferredInput
-  referrer?: Prisma.ReferralCreateNestedOneWithoutReferrerInput
+  referralsMade?: Prisma.ReferralCreateNestedManyWithoutReferrerInput
+  referralsReceived?: Prisma.ReferralCreateNestedManyWithoutReferredInput
   membershipPurchases?: Prisma.MembershipPurchaseCreateNestedManyWithoutClientInput
   sales?: Prisma.SaleCreateNestedManyWithoutClientInput
   tasks?: Prisma.TaskCreateNestedManyWithoutClientInput
@@ -977,8 +977,8 @@ export type ClientProfileUncheckedCreateWithoutUserInput = {
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutClientInput
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutClientInput
   loyaltyTransactions?: Prisma.LoyaltyTransactionUncheckedCreateNestedManyWithoutClientInput
-  referralsRel?: Prisma.ReferralUncheckedCreateNestedManyWithoutReferredInput
-  referrer?: Prisma.ReferralUncheckedCreateNestedOneWithoutReferrerInput
+  referralsMade?: Prisma.ReferralUncheckedCreateNestedManyWithoutReferrerInput
+  referralsReceived?: Prisma.ReferralUncheckedCreateNestedManyWithoutReferredInput
   membershipPurchases?: Prisma.MembershipPurchaseUncheckedCreateNestedManyWithoutClientInput
   sales?: Prisma.SaleUncheckedCreateNestedManyWithoutClientInput
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutClientInput
@@ -1022,8 +1022,8 @@ export type ClientProfileUpdateWithoutUserInput = {
   appointments?: Prisma.AppointmentUpdateManyWithoutClientNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutClientNestedInput
   loyaltyTransactions?: Prisma.LoyaltyTransactionUpdateManyWithoutClientNestedInput
-  referralsRel?: Prisma.ReferralUpdateManyWithoutReferredNestedInput
-  referrer?: Prisma.ReferralUpdateOneWithoutReferrerNestedInput
+  referralsMade?: Prisma.ReferralUpdateManyWithoutReferrerNestedInput
+  referralsReceived?: Prisma.ReferralUpdateManyWithoutReferredNestedInput
   membershipPurchases?: Prisma.MembershipPurchaseUpdateManyWithoutClientNestedInput
   sales?: Prisma.SaleUpdateManyWithoutClientNestedInput
   tasks?: Prisma.TaskUpdateManyWithoutClientNestedInput
@@ -1051,8 +1051,8 @@ export type ClientProfileUncheckedUpdateWithoutUserInput = {
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutClientNestedInput
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutClientNestedInput
   loyaltyTransactions?: Prisma.LoyaltyTransactionUncheckedUpdateManyWithoutClientNestedInput
-  referralsRel?: Prisma.ReferralUncheckedUpdateManyWithoutReferredNestedInput
-  referrer?: Prisma.ReferralUncheckedUpdateOneWithoutReferrerNestedInput
+  referralsMade?: Prisma.ReferralUncheckedUpdateManyWithoutReferrerNestedInput
+  referralsReceived?: Prisma.ReferralUncheckedUpdateManyWithoutReferredNestedInput
   membershipPurchases?: Prisma.MembershipPurchaseUncheckedUpdateManyWithoutClientNestedInput
   sales?: Prisma.SaleUncheckedUpdateManyWithoutClientNestedInput
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutClientNestedInput
@@ -1081,8 +1081,8 @@ export type ClientProfileCreateWithoutTasksInput = {
   appointments?: Prisma.AppointmentCreateNestedManyWithoutClientInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutClientInput
   loyaltyTransactions?: Prisma.LoyaltyTransactionCreateNestedManyWithoutClientInput
-  referralsRel?: Prisma.ReferralCreateNestedManyWithoutReferredInput
-  referrer?: Prisma.ReferralCreateNestedOneWithoutReferrerInput
+  referralsMade?: Prisma.ReferralCreateNestedManyWithoutReferrerInput
+  referralsReceived?: Prisma.ReferralCreateNestedManyWithoutReferredInput
   membershipPurchases?: Prisma.MembershipPurchaseCreateNestedManyWithoutClientInput
   sales?: Prisma.SaleCreateNestedManyWithoutClientInput
 }
@@ -1110,8 +1110,8 @@ export type ClientProfileUncheckedCreateWithoutTasksInput = {
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutClientInput
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutClientInput
   loyaltyTransactions?: Prisma.LoyaltyTransactionUncheckedCreateNestedManyWithoutClientInput
-  referralsRel?: Prisma.ReferralUncheckedCreateNestedManyWithoutReferredInput
-  referrer?: Prisma.ReferralUncheckedCreateNestedOneWithoutReferrerInput
+  referralsMade?: Prisma.ReferralUncheckedCreateNestedManyWithoutReferrerInput
+  referralsReceived?: Prisma.ReferralUncheckedCreateNestedManyWithoutReferredInput
   membershipPurchases?: Prisma.MembershipPurchaseUncheckedCreateNestedManyWithoutClientInput
   sales?: Prisma.SaleUncheckedCreateNestedManyWithoutClientInput
 }
@@ -1155,8 +1155,8 @@ export type ClientProfileUpdateWithoutTasksInput = {
   appointments?: Prisma.AppointmentUpdateManyWithoutClientNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutClientNestedInput
   loyaltyTransactions?: Prisma.LoyaltyTransactionUpdateManyWithoutClientNestedInput
-  referralsRel?: Prisma.ReferralUpdateManyWithoutReferredNestedInput
-  referrer?: Prisma.ReferralUpdateOneWithoutReferrerNestedInput
+  referralsMade?: Prisma.ReferralUpdateManyWithoutReferrerNestedInput
+  referralsReceived?: Prisma.ReferralUpdateManyWithoutReferredNestedInput
   membershipPurchases?: Prisma.MembershipPurchaseUpdateManyWithoutClientNestedInput
   sales?: Prisma.SaleUpdateManyWithoutClientNestedInput
 }
@@ -1184,8 +1184,8 @@ export type ClientProfileUncheckedUpdateWithoutTasksInput = {
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutClientNestedInput
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutClientNestedInput
   loyaltyTransactions?: Prisma.LoyaltyTransactionUncheckedUpdateManyWithoutClientNestedInput
-  referralsRel?: Prisma.ReferralUncheckedUpdateManyWithoutReferredNestedInput
-  referrer?: Prisma.ReferralUncheckedUpdateOneWithoutReferrerNestedInput
+  referralsMade?: Prisma.ReferralUncheckedUpdateManyWithoutReferrerNestedInput
+  referralsReceived?: Prisma.ReferralUncheckedUpdateManyWithoutReferredNestedInput
   membershipPurchases?: Prisma.MembershipPurchaseUncheckedUpdateManyWithoutClientNestedInput
   sales?: Prisma.SaleUncheckedUpdateManyWithoutClientNestedInput
 }
@@ -1212,8 +1212,8 @@ export type ClientProfileCreateWithoutAppointmentsInput = {
   user: Prisma.UserCreateNestedOneWithoutClientProfileInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutClientInput
   loyaltyTransactions?: Prisma.LoyaltyTransactionCreateNestedManyWithoutClientInput
-  referralsRel?: Prisma.ReferralCreateNestedManyWithoutReferredInput
-  referrer?: Prisma.ReferralCreateNestedOneWithoutReferrerInput
+  referralsMade?: Prisma.ReferralCreateNestedManyWithoutReferrerInput
+  referralsReceived?: Prisma.ReferralCreateNestedManyWithoutReferredInput
   membershipPurchases?: Prisma.MembershipPurchaseCreateNestedManyWithoutClientInput
   sales?: Prisma.SaleCreateNestedManyWithoutClientInput
   tasks?: Prisma.TaskCreateNestedManyWithoutClientInput
@@ -1241,8 +1241,8 @@ export type ClientProfileUncheckedCreateWithoutAppointmentsInput = {
   updatedAt?: Date | string
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutClientInput
   loyaltyTransactions?: Prisma.LoyaltyTransactionUncheckedCreateNestedManyWithoutClientInput
-  referralsRel?: Prisma.ReferralUncheckedCreateNestedManyWithoutReferredInput
-  referrer?: Prisma.ReferralUncheckedCreateNestedOneWithoutReferrerInput
+  referralsMade?: Prisma.ReferralUncheckedCreateNestedManyWithoutReferrerInput
+  referralsReceived?: Prisma.ReferralUncheckedCreateNestedManyWithoutReferredInput
   membershipPurchases?: Prisma.MembershipPurchaseUncheckedCreateNestedManyWithoutClientInput
   sales?: Prisma.SaleUncheckedCreateNestedManyWithoutClientInput
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutClientInput
@@ -1286,8 +1286,8 @@ export type ClientProfileUpdateWithoutAppointmentsInput = {
   user?: Prisma.UserUpdateOneRequiredWithoutClientProfileNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutClientNestedInput
   loyaltyTransactions?: Prisma.LoyaltyTransactionUpdateManyWithoutClientNestedInput
-  referralsRel?: Prisma.ReferralUpdateManyWithoutReferredNestedInput
-  referrer?: Prisma.ReferralUpdateOneWithoutReferrerNestedInput
+  referralsMade?: Prisma.ReferralUpdateManyWithoutReferrerNestedInput
+  referralsReceived?: Prisma.ReferralUpdateManyWithoutReferredNestedInput
   membershipPurchases?: Prisma.MembershipPurchaseUpdateManyWithoutClientNestedInput
   sales?: Prisma.SaleUpdateManyWithoutClientNestedInput
   tasks?: Prisma.TaskUpdateManyWithoutClientNestedInput
@@ -1315,8 +1315,8 @@ export type ClientProfileUncheckedUpdateWithoutAppointmentsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutClientNestedInput
   loyaltyTransactions?: Prisma.LoyaltyTransactionUncheckedUpdateManyWithoutClientNestedInput
-  referralsRel?: Prisma.ReferralUncheckedUpdateManyWithoutReferredNestedInput
-  referrer?: Prisma.ReferralUncheckedUpdateOneWithoutReferrerNestedInput
+  referralsMade?: Prisma.ReferralUncheckedUpdateManyWithoutReferrerNestedInput
+  referralsReceived?: Prisma.ReferralUncheckedUpdateManyWithoutReferredNestedInput
   membershipPurchases?: Prisma.MembershipPurchaseUncheckedUpdateManyWithoutClientNestedInput
   sales?: Prisma.SaleUncheckedUpdateManyWithoutClientNestedInput
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutClientNestedInput
@@ -1344,8 +1344,8 @@ export type ClientProfileCreateWithoutReviewsInput = {
   user: Prisma.UserCreateNestedOneWithoutClientProfileInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutClientInput
   loyaltyTransactions?: Prisma.LoyaltyTransactionCreateNestedManyWithoutClientInput
-  referralsRel?: Prisma.ReferralCreateNestedManyWithoutReferredInput
-  referrer?: Prisma.ReferralCreateNestedOneWithoutReferrerInput
+  referralsMade?: Prisma.ReferralCreateNestedManyWithoutReferrerInput
+  referralsReceived?: Prisma.ReferralCreateNestedManyWithoutReferredInput
   membershipPurchases?: Prisma.MembershipPurchaseCreateNestedManyWithoutClientInput
   sales?: Prisma.SaleCreateNestedManyWithoutClientInput
   tasks?: Prisma.TaskCreateNestedManyWithoutClientInput
@@ -1373,8 +1373,8 @@ export type ClientProfileUncheckedCreateWithoutReviewsInput = {
   updatedAt?: Date | string
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutClientInput
   loyaltyTransactions?: Prisma.LoyaltyTransactionUncheckedCreateNestedManyWithoutClientInput
-  referralsRel?: Prisma.ReferralUncheckedCreateNestedManyWithoutReferredInput
-  referrer?: Prisma.ReferralUncheckedCreateNestedOneWithoutReferrerInput
+  referralsMade?: Prisma.ReferralUncheckedCreateNestedManyWithoutReferrerInput
+  referralsReceived?: Prisma.ReferralUncheckedCreateNestedManyWithoutReferredInput
   membershipPurchases?: Prisma.MembershipPurchaseUncheckedCreateNestedManyWithoutClientInput
   sales?: Prisma.SaleUncheckedCreateNestedManyWithoutClientInput
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutClientInput
@@ -1418,8 +1418,8 @@ export type ClientProfileUpdateWithoutReviewsInput = {
   user?: Prisma.UserUpdateOneRequiredWithoutClientProfileNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutClientNestedInput
   loyaltyTransactions?: Prisma.LoyaltyTransactionUpdateManyWithoutClientNestedInput
-  referralsRel?: Prisma.ReferralUpdateManyWithoutReferredNestedInput
-  referrer?: Prisma.ReferralUpdateOneWithoutReferrerNestedInput
+  referralsMade?: Prisma.ReferralUpdateManyWithoutReferrerNestedInput
+  referralsReceived?: Prisma.ReferralUpdateManyWithoutReferredNestedInput
   membershipPurchases?: Prisma.MembershipPurchaseUpdateManyWithoutClientNestedInput
   sales?: Prisma.SaleUpdateManyWithoutClientNestedInput
   tasks?: Prisma.TaskUpdateManyWithoutClientNestedInput
@@ -1447,8 +1447,8 @@ export type ClientProfileUncheckedUpdateWithoutReviewsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutClientNestedInput
   loyaltyTransactions?: Prisma.LoyaltyTransactionUncheckedUpdateManyWithoutClientNestedInput
-  referralsRel?: Prisma.ReferralUncheckedUpdateManyWithoutReferredNestedInput
-  referrer?: Prisma.ReferralUncheckedUpdateOneWithoutReferrerNestedInput
+  referralsMade?: Prisma.ReferralUncheckedUpdateManyWithoutReferrerNestedInput
+  referralsReceived?: Prisma.ReferralUncheckedUpdateManyWithoutReferredNestedInput
   membershipPurchases?: Prisma.MembershipPurchaseUncheckedUpdateManyWithoutClientNestedInput
   sales?: Prisma.SaleUncheckedUpdateManyWithoutClientNestedInput
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutClientNestedInput
@@ -1477,8 +1477,8 @@ export type ClientProfileCreateWithoutMembershipPurchasesInput = {
   appointments?: Prisma.AppointmentCreateNestedManyWithoutClientInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutClientInput
   loyaltyTransactions?: Prisma.LoyaltyTransactionCreateNestedManyWithoutClientInput
-  referralsRel?: Prisma.ReferralCreateNestedManyWithoutReferredInput
-  referrer?: Prisma.ReferralCreateNestedOneWithoutReferrerInput
+  referralsMade?: Prisma.ReferralCreateNestedManyWithoutReferrerInput
+  referralsReceived?: Prisma.ReferralCreateNestedManyWithoutReferredInput
   sales?: Prisma.SaleCreateNestedManyWithoutClientInput
   tasks?: Prisma.TaskCreateNestedManyWithoutClientInput
 }
@@ -1506,8 +1506,8 @@ export type ClientProfileUncheckedCreateWithoutMembershipPurchasesInput = {
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutClientInput
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutClientInput
   loyaltyTransactions?: Prisma.LoyaltyTransactionUncheckedCreateNestedManyWithoutClientInput
-  referralsRel?: Prisma.ReferralUncheckedCreateNestedManyWithoutReferredInput
-  referrer?: Prisma.ReferralUncheckedCreateNestedOneWithoutReferrerInput
+  referralsMade?: Prisma.ReferralUncheckedCreateNestedManyWithoutReferrerInput
+  referralsReceived?: Prisma.ReferralUncheckedCreateNestedManyWithoutReferredInput
   sales?: Prisma.SaleUncheckedCreateNestedManyWithoutClientInput
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutClientInput
 }
@@ -1551,8 +1551,8 @@ export type ClientProfileUpdateWithoutMembershipPurchasesInput = {
   appointments?: Prisma.AppointmentUpdateManyWithoutClientNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutClientNestedInput
   loyaltyTransactions?: Prisma.LoyaltyTransactionUpdateManyWithoutClientNestedInput
-  referralsRel?: Prisma.ReferralUpdateManyWithoutReferredNestedInput
-  referrer?: Prisma.ReferralUpdateOneWithoutReferrerNestedInput
+  referralsMade?: Prisma.ReferralUpdateManyWithoutReferrerNestedInput
+  referralsReceived?: Prisma.ReferralUpdateManyWithoutReferredNestedInput
   sales?: Prisma.SaleUpdateManyWithoutClientNestedInput
   tasks?: Prisma.TaskUpdateManyWithoutClientNestedInput
 }
@@ -1580,8 +1580,8 @@ export type ClientProfileUncheckedUpdateWithoutMembershipPurchasesInput = {
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutClientNestedInput
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutClientNestedInput
   loyaltyTransactions?: Prisma.LoyaltyTransactionUncheckedUpdateManyWithoutClientNestedInput
-  referralsRel?: Prisma.ReferralUncheckedUpdateManyWithoutReferredNestedInput
-  referrer?: Prisma.ReferralUncheckedUpdateOneWithoutReferrerNestedInput
+  referralsMade?: Prisma.ReferralUncheckedUpdateManyWithoutReferrerNestedInput
+  referralsReceived?: Prisma.ReferralUncheckedUpdateManyWithoutReferredNestedInput
   sales?: Prisma.SaleUncheckedUpdateManyWithoutClientNestedInput
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutClientNestedInput
 }
@@ -1608,8 +1608,8 @@ export type ClientProfileCreateWithoutLoyaltyTransactionsInput = {
   user: Prisma.UserCreateNestedOneWithoutClientProfileInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutClientInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutClientInput
-  referralsRel?: Prisma.ReferralCreateNestedManyWithoutReferredInput
-  referrer?: Prisma.ReferralCreateNestedOneWithoutReferrerInput
+  referralsMade?: Prisma.ReferralCreateNestedManyWithoutReferrerInput
+  referralsReceived?: Prisma.ReferralCreateNestedManyWithoutReferredInput
   membershipPurchases?: Prisma.MembershipPurchaseCreateNestedManyWithoutClientInput
   sales?: Prisma.SaleCreateNestedManyWithoutClientInput
   tasks?: Prisma.TaskCreateNestedManyWithoutClientInput
@@ -1637,8 +1637,8 @@ export type ClientProfileUncheckedCreateWithoutLoyaltyTransactionsInput = {
   updatedAt?: Date | string
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutClientInput
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutClientInput
-  referralsRel?: Prisma.ReferralUncheckedCreateNestedManyWithoutReferredInput
-  referrer?: Prisma.ReferralUncheckedCreateNestedOneWithoutReferrerInput
+  referralsMade?: Prisma.ReferralUncheckedCreateNestedManyWithoutReferrerInput
+  referralsReceived?: Prisma.ReferralUncheckedCreateNestedManyWithoutReferredInput
   membershipPurchases?: Prisma.MembershipPurchaseUncheckedCreateNestedManyWithoutClientInput
   sales?: Prisma.SaleUncheckedCreateNestedManyWithoutClientInput
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutClientInput
@@ -1682,8 +1682,8 @@ export type ClientProfileUpdateWithoutLoyaltyTransactionsInput = {
   user?: Prisma.UserUpdateOneRequiredWithoutClientProfileNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutClientNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutClientNestedInput
-  referralsRel?: Prisma.ReferralUpdateManyWithoutReferredNestedInput
-  referrer?: Prisma.ReferralUpdateOneWithoutReferrerNestedInput
+  referralsMade?: Prisma.ReferralUpdateManyWithoutReferrerNestedInput
+  referralsReceived?: Prisma.ReferralUpdateManyWithoutReferredNestedInput
   membershipPurchases?: Prisma.MembershipPurchaseUpdateManyWithoutClientNestedInput
   sales?: Prisma.SaleUpdateManyWithoutClientNestedInput
   tasks?: Prisma.TaskUpdateManyWithoutClientNestedInput
@@ -1711,14 +1711,14 @@ export type ClientProfileUncheckedUpdateWithoutLoyaltyTransactionsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutClientNestedInput
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutClientNestedInput
-  referralsRel?: Prisma.ReferralUncheckedUpdateManyWithoutReferredNestedInput
-  referrer?: Prisma.ReferralUncheckedUpdateOneWithoutReferrerNestedInput
+  referralsMade?: Prisma.ReferralUncheckedUpdateManyWithoutReferrerNestedInput
+  referralsReceived?: Prisma.ReferralUncheckedUpdateManyWithoutReferredNestedInput
   membershipPurchases?: Prisma.MembershipPurchaseUncheckedUpdateManyWithoutClientNestedInput
   sales?: Prisma.SaleUncheckedUpdateManyWithoutClientNestedInput
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutClientNestedInput
 }
 
-export type ClientProfileCreateWithoutReferrerInput = {
+export type ClientProfileCreateWithoutReferralsMadeInput = {
   id?: string
   tier?: $Enums.Tier
   loyaltyPoints?: number
@@ -1741,13 +1741,13 @@ export type ClientProfileCreateWithoutReferrerInput = {
   appointments?: Prisma.AppointmentCreateNestedManyWithoutClientInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutClientInput
   loyaltyTransactions?: Prisma.LoyaltyTransactionCreateNestedManyWithoutClientInput
-  referralsRel?: Prisma.ReferralCreateNestedManyWithoutReferredInput
+  referralsReceived?: Prisma.ReferralCreateNestedManyWithoutReferredInput
   membershipPurchases?: Prisma.MembershipPurchaseCreateNestedManyWithoutClientInput
   sales?: Prisma.SaleCreateNestedManyWithoutClientInput
   tasks?: Prisma.TaskCreateNestedManyWithoutClientInput
 }
 
-export type ClientProfileUncheckedCreateWithoutReferrerInput = {
+export type ClientProfileUncheckedCreateWithoutReferralsMadeInput = {
   id?: string
   userId: string
   tier?: $Enums.Tier
@@ -1770,18 +1770,18 @@ export type ClientProfileUncheckedCreateWithoutReferrerInput = {
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutClientInput
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutClientInput
   loyaltyTransactions?: Prisma.LoyaltyTransactionUncheckedCreateNestedManyWithoutClientInput
-  referralsRel?: Prisma.ReferralUncheckedCreateNestedManyWithoutReferredInput
+  referralsReceived?: Prisma.ReferralUncheckedCreateNestedManyWithoutReferredInput
   membershipPurchases?: Prisma.MembershipPurchaseUncheckedCreateNestedManyWithoutClientInput
   sales?: Prisma.SaleUncheckedCreateNestedManyWithoutClientInput
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutClientInput
 }
 
-export type ClientProfileCreateOrConnectWithoutReferrerInput = {
+export type ClientProfileCreateOrConnectWithoutReferralsMadeInput = {
   where: Prisma.ClientProfileWhereUniqueInput
-  create: Prisma.XOR<Prisma.ClientProfileCreateWithoutReferrerInput, Prisma.ClientProfileUncheckedCreateWithoutReferrerInput>
+  create: Prisma.XOR<Prisma.ClientProfileCreateWithoutReferralsMadeInput, Prisma.ClientProfileUncheckedCreateWithoutReferralsMadeInput>
 }
 
-export type ClientProfileCreateWithoutReferralsRelInput = {
+export type ClientProfileCreateWithoutReferralsReceivedInput = {
   id?: string
   tier?: $Enums.Tier
   loyaltyPoints?: number
@@ -1804,13 +1804,13 @@ export type ClientProfileCreateWithoutReferralsRelInput = {
   appointments?: Prisma.AppointmentCreateNestedManyWithoutClientInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutClientInput
   loyaltyTransactions?: Prisma.LoyaltyTransactionCreateNestedManyWithoutClientInput
-  referrer?: Prisma.ReferralCreateNestedOneWithoutReferrerInput
+  referralsMade?: Prisma.ReferralCreateNestedManyWithoutReferrerInput
   membershipPurchases?: Prisma.MembershipPurchaseCreateNestedManyWithoutClientInput
   sales?: Prisma.SaleCreateNestedManyWithoutClientInput
   tasks?: Prisma.TaskCreateNestedManyWithoutClientInput
 }
 
-export type ClientProfileUncheckedCreateWithoutReferralsRelInput = {
+export type ClientProfileUncheckedCreateWithoutReferralsReceivedInput = {
   id?: string
   userId: string
   tier?: $Enums.Tier
@@ -1833,29 +1833,29 @@ export type ClientProfileUncheckedCreateWithoutReferralsRelInput = {
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutClientInput
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutClientInput
   loyaltyTransactions?: Prisma.LoyaltyTransactionUncheckedCreateNestedManyWithoutClientInput
-  referrer?: Prisma.ReferralUncheckedCreateNestedOneWithoutReferrerInput
+  referralsMade?: Prisma.ReferralUncheckedCreateNestedManyWithoutReferrerInput
   membershipPurchases?: Prisma.MembershipPurchaseUncheckedCreateNestedManyWithoutClientInput
   sales?: Prisma.SaleUncheckedCreateNestedManyWithoutClientInput
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutClientInput
 }
 
-export type ClientProfileCreateOrConnectWithoutReferralsRelInput = {
+export type ClientProfileCreateOrConnectWithoutReferralsReceivedInput = {
   where: Prisma.ClientProfileWhereUniqueInput
-  create: Prisma.XOR<Prisma.ClientProfileCreateWithoutReferralsRelInput, Prisma.ClientProfileUncheckedCreateWithoutReferralsRelInput>
+  create: Prisma.XOR<Prisma.ClientProfileCreateWithoutReferralsReceivedInput, Prisma.ClientProfileUncheckedCreateWithoutReferralsReceivedInput>
 }
 
-export type ClientProfileUpsertWithoutReferrerInput = {
-  update: Prisma.XOR<Prisma.ClientProfileUpdateWithoutReferrerInput, Prisma.ClientProfileUncheckedUpdateWithoutReferrerInput>
-  create: Prisma.XOR<Prisma.ClientProfileCreateWithoutReferrerInput, Prisma.ClientProfileUncheckedCreateWithoutReferrerInput>
+export type ClientProfileUpsertWithoutReferralsMadeInput = {
+  update: Prisma.XOR<Prisma.ClientProfileUpdateWithoutReferralsMadeInput, Prisma.ClientProfileUncheckedUpdateWithoutReferralsMadeInput>
+  create: Prisma.XOR<Prisma.ClientProfileCreateWithoutReferralsMadeInput, Prisma.ClientProfileUncheckedCreateWithoutReferralsMadeInput>
   where?: Prisma.ClientProfileWhereInput
 }
 
-export type ClientProfileUpdateToOneWithWhereWithoutReferrerInput = {
+export type ClientProfileUpdateToOneWithWhereWithoutReferralsMadeInput = {
   where?: Prisma.ClientProfileWhereInput
-  data: Prisma.XOR<Prisma.ClientProfileUpdateWithoutReferrerInput, Prisma.ClientProfileUncheckedUpdateWithoutReferrerInput>
+  data: Prisma.XOR<Prisma.ClientProfileUpdateWithoutReferralsMadeInput, Prisma.ClientProfileUncheckedUpdateWithoutReferralsMadeInput>
 }
 
-export type ClientProfileUpdateWithoutReferrerInput = {
+export type ClientProfileUpdateWithoutReferralsMadeInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   tier?: Prisma.EnumTierFieldUpdateOperationsInput | $Enums.Tier
   loyaltyPoints?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1878,13 +1878,13 @@ export type ClientProfileUpdateWithoutReferrerInput = {
   appointments?: Prisma.AppointmentUpdateManyWithoutClientNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutClientNestedInput
   loyaltyTransactions?: Prisma.LoyaltyTransactionUpdateManyWithoutClientNestedInput
-  referralsRel?: Prisma.ReferralUpdateManyWithoutReferredNestedInput
+  referralsReceived?: Prisma.ReferralUpdateManyWithoutReferredNestedInput
   membershipPurchases?: Prisma.MembershipPurchaseUpdateManyWithoutClientNestedInput
   sales?: Prisma.SaleUpdateManyWithoutClientNestedInput
   tasks?: Prisma.TaskUpdateManyWithoutClientNestedInput
 }
 
-export type ClientProfileUncheckedUpdateWithoutReferrerInput = {
+export type ClientProfileUncheckedUpdateWithoutReferralsMadeInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   tier?: Prisma.EnumTierFieldUpdateOperationsInput | $Enums.Tier
@@ -1907,24 +1907,24 @@ export type ClientProfileUncheckedUpdateWithoutReferrerInput = {
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutClientNestedInput
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutClientNestedInput
   loyaltyTransactions?: Prisma.LoyaltyTransactionUncheckedUpdateManyWithoutClientNestedInput
-  referralsRel?: Prisma.ReferralUncheckedUpdateManyWithoutReferredNestedInput
+  referralsReceived?: Prisma.ReferralUncheckedUpdateManyWithoutReferredNestedInput
   membershipPurchases?: Prisma.MembershipPurchaseUncheckedUpdateManyWithoutClientNestedInput
   sales?: Prisma.SaleUncheckedUpdateManyWithoutClientNestedInput
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutClientNestedInput
 }
 
-export type ClientProfileUpsertWithoutReferralsRelInput = {
-  update: Prisma.XOR<Prisma.ClientProfileUpdateWithoutReferralsRelInput, Prisma.ClientProfileUncheckedUpdateWithoutReferralsRelInput>
-  create: Prisma.XOR<Prisma.ClientProfileCreateWithoutReferralsRelInput, Prisma.ClientProfileUncheckedCreateWithoutReferralsRelInput>
+export type ClientProfileUpsertWithoutReferralsReceivedInput = {
+  update: Prisma.XOR<Prisma.ClientProfileUpdateWithoutReferralsReceivedInput, Prisma.ClientProfileUncheckedUpdateWithoutReferralsReceivedInput>
+  create: Prisma.XOR<Prisma.ClientProfileCreateWithoutReferralsReceivedInput, Prisma.ClientProfileUncheckedCreateWithoutReferralsReceivedInput>
   where?: Prisma.ClientProfileWhereInput
 }
 
-export type ClientProfileUpdateToOneWithWhereWithoutReferralsRelInput = {
+export type ClientProfileUpdateToOneWithWhereWithoutReferralsReceivedInput = {
   where?: Prisma.ClientProfileWhereInput
-  data: Prisma.XOR<Prisma.ClientProfileUpdateWithoutReferralsRelInput, Prisma.ClientProfileUncheckedUpdateWithoutReferralsRelInput>
+  data: Prisma.XOR<Prisma.ClientProfileUpdateWithoutReferralsReceivedInput, Prisma.ClientProfileUncheckedUpdateWithoutReferralsReceivedInput>
 }
 
-export type ClientProfileUpdateWithoutReferralsRelInput = {
+export type ClientProfileUpdateWithoutReferralsReceivedInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   tier?: Prisma.EnumTierFieldUpdateOperationsInput | $Enums.Tier
   loyaltyPoints?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1947,13 +1947,13 @@ export type ClientProfileUpdateWithoutReferralsRelInput = {
   appointments?: Prisma.AppointmentUpdateManyWithoutClientNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutClientNestedInput
   loyaltyTransactions?: Prisma.LoyaltyTransactionUpdateManyWithoutClientNestedInput
-  referrer?: Prisma.ReferralUpdateOneWithoutReferrerNestedInput
+  referralsMade?: Prisma.ReferralUpdateManyWithoutReferrerNestedInput
   membershipPurchases?: Prisma.MembershipPurchaseUpdateManyWithoutClientNestedInput
   sales?: Prisma.SaleUpdateManyWithoutClientNestedInput
   tasks?: Prisma.TaskUpdateManyWithoutClientNestedInput
 }
 
-export type ClientProfileUncheckedUpdateWithoutReferralsRelInput = {
+export type ClientProfileUncheckedUpdateWithoutReferralsReceivedInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   tier?: Prisma.EnumTierFieldUpdateOperationsInput | $Enums.Tier
@@ -1976,7 +1976,7 @@ export type ClientProfileUncheckedUpdateWithoutReferralsRelInput = {
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutClientNestedInput
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutClientNestedInput
   loyaltyTransactions?: Prisma.LoyaltyTransactionUncheckedUpdateManyWithoutClientNestedInput
-  referrer?: Prisma.ReferralUncheckedUpdateOneWithoutReferrerNestedInput
+  referralsMade?: Prisma.ReferralUncheckedUpdateManyWithoutReferrerNestedInput
   membershipPurchases?: Prisma.MembershipPurchaseUncheckedUpdateManyWithoutClientNestedInput
   sales?: Prisma.SaleUncheckedUpdateManyWithoutClientNestedInput
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutClientNestedInput
@@ -2005,8 +2005,8 @@ export type ClientProfileCreateWithoutSalesInput = {
   appointments?: Prisma.AppointmentCreateNestedManyWithoutClientInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutClientInput
   loyaltyTransactions?: Prisma.LoyaltyTransactionCreateNestedManyWithoutClientInput
-  referralsRel?: Prisma.ReferralCreateNestedManyWithoutReferredInput
-  referrer?: Prisma.ReferralCreateNestedOneWithoutReferrerInput
+  referralsMade?: Prisma.ReferralCreateNestedManyWithoutReferrerInput
+  referralsReceived?: Prisma.ReferralCreateNestedManyWithoutReferredInput
   membershipPurchases?: Prisma.MembershipPurchaseCreateNestedManyWithoutClientInput
   tasks?: Prisma.TaskCreateNestedManyWithoutClientInput
 }
@@ -2034,8 +2034,8 @@ export type ClientProfileUncheckedCreateWithoutSalesInput = {
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutClientInput
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutClientInput
   loyaltyTransactions?: Prisma.LoyaltyTransactionUncheckedCreateNestedManyWithoutClientInput
-  referralsRel?: Prisma.ReferralUncheckedCreateNestedManyWithoutReferredInput
-  referrer?: Prisma.ReferralUncheckedCreateNestedOneWithoutReferrerInput
+  referralsMade?: Prisma.ReferralUncheckedCreateNestedManyWithoutReferrerInput
+  referralsReceived?: Prisma.ReferralUncheckedCreateNestedManyWithoutReferredInput
   membershipPurchases?: Prisma.MembershipPurchaseUncheckedCreateNestedManyWithoutClientInput
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutClientInput
 }
@@ -2079,8 +2079,8 @@ export type ClientProfileUpdateWithoutSalesInput = {
   appointments?: Prisma.AppointmentUpdateManyWithoutClientNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutClientNestedInput
   loyaltyTransactions?: Prisma.LoyaltyTransactionUpdateManyWithoutClientNestedInput
-  referralsRel?: Prisma.ReferralUpdateManyWithoutReferredNestedInput
-  referrer?: Prisma.ReferralUpdateOneWithoutReferrerNestedInput
+  referralsMade?: Prisma.ReferralUpdateManyWithoutReferrerNestedInput
+  referralsReceived?: Prisma.ReferralUpdateManyWithoutReferredNestedInput
   membershipPurchases?: Prisma.MembershipPurchaseUpdateManyWithoutClientNestedInput
   tasks?: Prisma.TaskUpdateManyWithoutClientNestedInput
 }
@@ -2108,8 +2108,8 @@ export type ClientProfileUncheckedUpdateWithoutSalesInput = {
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutClientNestedInput
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutClientNestedInput
   loyaltyTransactions?: Prisma.LoyaltyTransactionUncheckedUpdateManyWithoutClientNestedInput
-  referralsRel?: Prisma.ReferralUncheckedUpdateManyWithoutReferredNestedInput
-  referrer?: Prisma.ReferralUncheckedUpdateOneWithoutReferrerNestedInput
+  referralsMade?: Prisma.ReferralUncheckedUpdateManyWithoutReferrerNestedInput
+  referralsReceived?: Prisma.ReferralUncheckedUpdateManyWithoutReferredNestedInput
   membershipPurchases?: Prisma.MembershipPurchaseUncheckedUpdateManyWithoutClientNestedInput
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutClientNestedInput
 }
@@ -2123,7 +2123,8 @@ export type ClientProfileCountOutputType = {
   appointments: number
   reviews: number
   loyaltyTransactions: number
-  referralsRel: number
+  referralsMade: number
+  referralsReceived: number
   membershipPurchases: number
   sales: number
   tasks: number
@@ -2133,7 +2134,8 @@ export type ClientProfileCountOutputTypeSelect<ExtArgs extends runtime.Types.Ext
   appointments?: boolean | ClientProfileCountOutputTypeCountAppointmentsArgs
   reviews?: boolean | ClientProfileCountOutputTypeCountReviewsArgs
   loyaltyTransactions?: boolean | ClientProfileCountOutputTypeCountLoyaltyTransactionsArgs
-  referralsRel?: boolean | ClientProfileCountOutputTypeCountReferralsRelArgs
+  referralsMade?: boolean | ClientProfileCountOutputTypeCountReferralsMadeArgs
+  referralsReceived?: boolean | ClientProfileCountOutputTypeCountReferralsReceivedArgs
   membershipPurchases?: boolean | ClientProfileCountOutputTypeCountMembershipPurchasesArgs
   sales?: boolean | ClientProfileCountOutputTypeCountSalesArgs
   tasks?: boolean | ClientProfileCountOutputTypeCountTasksArgs
@@ -2173,7 +2175,14 @@ export type ClientProfileCountOutputTypeCountLoyaltyTransactionsArgs<ExtArgs ext
 /**
  * ClientProfileCountOutputType without action
  */
-export type ClientProfileCountOutputTypeCountReferralsRelArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type ClientProfileCountOutputTypeCountReferralsMadeArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ReferralWhereInput
+}
+
+/**
+ * ClientProfileCountOutputType without action
+ */
+export type ClientProfileCountOutputTypeCountReferralsReceivedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.ReferralWhereInput
 }
 
@@ -2223,8 +2232,8 @@ export type ClientProfileSelect<ExtArgs extends runtime.Types.Extensions.Interna
   appointments?: boolean | Prisma.ClientProfile$appointmentsArgs<ExtArgs>
   reviews?: boolean | Prisma.ClientProfile$reviewsArgs<ExtArgs>
   loyaltyTransactions?: boolean | Prisma.ClientProfile$loyaltyTransactionsArgs<ExtArgs>
-  referralsRel?: boolean | Prisma.ClientProfile$referralsRelArgs<ExtArgs>
-  referrer?: boolean | Prisma.ClientProfile$referrerArgs<ExtArgs>
+  referralsMade?: boolean | Prisma.ClientProfile$referralsMadeArgs<ExtArgs>
+  referralsReceived?: boolean | Prisma.ClientProfile$referralsReceivedArgs<ExtArgs>
   membershipPurchases?: boolean | Prisma.ClientProfile$membershipPurchasesArgs<ExtArgs>
   sales?: boolean | Prisma.ClientProfile$salesArgs<ExtArgs>
   tasks?: boolean | Prisma.ClientProfile$tasksArgs<ExtArgs>
@@ -2305,8 +2314,8 @@ export type ClientProfileInclude<ExtArgs extends runtime.Types.Extensions.Intern
   appointments?: boolean | Prisma.ClientProfile$appointmentsArgs<ExtArgs>
   reviews?: boolean | Prisma.ClientProfile$reviewsArgs<ExtArgs>
   loyaltyTransactions?: boolean | Prisma.ClientProfile$loyaltyTransactionsArgs<ExtArgs>
-  referralsRel?: boolean | Prisma.ClientProfile$referralsRelArgs<ExtArgs>
-  referrer?: boolean | Prisma.ClientProfile$referrerArgs<ExtArgs>
+  referralsMade?: boolean | Prisma.ClientProfile$referralsMadeArgs<ExtArgs>
+  referralsReceived?: boolean | Prisma.ClientProfile$referralsReceivedArgs<ExtArgs>
   membershipPurchases?: boolean | Prisma.ClientProfile$membershipPurchasesArgs<ExtArgs>
   sales?: boolean | Prisma.ClientProfile$salesArgs<ExtArgs>
   tasks?: boolean | Prisma.ClientProfile$tasksArgs<ExtArgs>
@@ -2326,8 +2335,8 @@ export type $ClientProfilePayload<ExtArgs extends runtime.Types.Extensions.Inter
     appointments: Prisma.$AppointmentPayload<ExtArgs>[]
     reviews: Prisma.$ReviewPayload<ExtArgs>[]
     loyaltyTransactions: Prisma.$LoyaltyTransactionPayload<ExtArgs>[]
-    referralsRel: Prisma.$ReferralPayload<ExtArgs>[]
-    referrer: Prisma.$ReferralPayload<ExtArgs> | null
+    referralsMade: Prisma.$ReferralPayload<ExtArgs>[]
+    referralsReceived: Prisma.$ReferralPayload<ExtArgs>[]
     membershipPurchases: Prisma.$MembershipPurchasePayload<ExtArgs>[]
     sales: Prisma.$SalePayload<ExtArgs>[]
     tasks: Prisma.$TaskPayload<ExtArgs>[]
@@ -2750,8 +2759,8 @@ export interface Prisma__ClientProfileClient<T, Null = never, ExtArgs extends ru
   appointments<T extends Prisma.ClientProfile$appointmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ClientProfile$appointmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AppointmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   reviews<T extends Prisma.ClientProfile$reviewsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ClientProfile$reviewsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   loyaltyTransactions<T extends Prisma.ClientProfile$loyaltyTransactionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ClientProfile$loyaltyTransactionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LoyaltyTransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  referralsRel<T extends Prisma.ClientProfile$referralsRelArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ClientProfile$referralsRelArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  referrer<T extends Prisma.ClientProfile$referrerArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ClientProfile$referrerArgs<ExtArgs>>): Prisma.Prisma__ReferralClient<runtime.Types.Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  referralsMade<T extends Prisma.ClientProfile$referralsMadeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ClientProfile$referralsMadeArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  referralsReceived<T extends Prisma.ClientProfile$referralsReceivedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ClientProfile$referralsReceivedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   membershipPurchases<T extends Prisma.ClientProfile$membershipPurchasesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ClientProfile$membershipPurchasesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MembershipPurchasePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   sales<T extends Prisma.ClientProfile$salesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ClientProfile$salesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SalePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   tasks<T extends Prisma.ClientProfile$tasksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ClientProfile$tasksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -3271,9 +3280,9 @@ export type ClientProfile$loyaltyTransactionsArgs<ExtArgs extends runtime.Types.
 }
 
 /**
- * ClientProfile.referralsRel
+ * ClientProfile.referralsMade
  */
-export type ClientProfile$referralsRelArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type ClientProfile$referralsMadeArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
    * Select specific fields to fetch from the Referral
    */
@@ -3295,9 +3304,9 @@ export type ClientProfile$referralsRelArgs<ExtArgs extends runtime.Types.Extensi
 }
 
 /**
- * ClientProfile.referrer
+ * ClientProfile.referralsReceived
  */
-export type ClientProfile$referrerArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type ClientProfile$referralsReceivedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
    * Select specific fields to fetch from the Referral
    */
@@ -3311,6 +3320,11 @@ export type ClientProfile$referrerArgs<ExtArgs extends runtime.Types.Extensions.
    */
   include?: Prisma.ReferralInclude<ExtArgs> | null
   where?: Prisma.ReferralWhereInput
+  orderBy?: Prisma.ReferralOrderByWithRelationInput | Prisma.ReferralOrderByWithRelationInput[]
+  cursor?: Prisma.ReferralWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ReferralScalarFieldEnum | Prisma.ReferralScalarFieldEnum[]
 }
 
 /**

@@ -72,8 +72,8 @@ export default function MarketingLoyalty() {
     return {
       name: client.user?.name || 'Client Inconnu',
       referrals: client.referrals,
-      reward: `${client.referralsRel.filter(r => r.status === 'rewarded').length}/${loyaltyRules.referralsForReward}`, // Placeholder for actual calculation
-      status: client.referralsRel.some(r => r.status === 'rewarded') ? 'eligible' : 'progress',
+      reward: `${client.referralsReceived.filter(r => r.status === 'rewarded').length}/${loyaltyRules.referralsForReward}`, // Placeholder for actual calculation
+      status: client.referralsReceived.some(r => r.status === 'rewarded') ? 'eligible' : 'progress',
       userId: client.userId
     }
   })
@@ -83,7 +83,7 @@ export default function MarketingLoyalty() {
   const inactiveUsers = allClients.filter(c => c.user?.isActive !== true).length;
 
   const clientsCount = allClients.length;
-  const rewardedClientsCount = allClients.reduce((count, client) => count + (client.referralsRel.some(r => r.status === 'rewarded') ? 1 : 0), 0);
+  const rewardedClientsCount = allClients.reduce((count, client) => count + (client.referralsReceived.some(r => r.status === 'rewarded') ? 1 : 0), 0);
 
   const handleSendBirthdayNotification = (client: typeof birthdayClients[0], channel: 'email' | 'sms') => {
     if (!client.userId) {

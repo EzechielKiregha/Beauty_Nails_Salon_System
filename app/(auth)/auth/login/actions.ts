@@ -30,6 +30,6 @@ export async function handleLogin(formData: FormData, expectedRole: string, redi
     }
 
   } catch (err: any) {
-    return { error: "Incorrect Email or Password, verifier votre role et essayez encore une fois..." };
+    return { error: "Incorrect Email or Password, verifier votre role et essayez encore une fois." };
   }
 }

@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { servicesApi, CreateServiceData, Service, ServiceAddOn, CreateAddOnData } from '../api/services';
 import { toast } from 'sonner';
+import { clientsApi } from '../api/clients';
 
 export function useServices(params?: {
   category?: string;
@@ -88,10 +89,10 @@ export function useAddOns(serviceId: string) {
   });
 }
 
-export function useClientReferrals(clientId: string) {
+export function useClientReferrals(clientId: string | undefined) {
   return useQuery({
     queryKey: ['clients', clientId, 'referrals'],
-    queryFn: () => servicesApi.getClientReferrals(clientId),
+    queryFn: () => clientsApi.getClientReferrals(clientId),
     enabled: !!clientId,
   });
 }

@@ -1,3 +1,4 @@
+import { ReferralStatus, Tier } from '@/prisma/generated/enums';
 import axiosdb from '../axios';
 export interface Client {
   id: string;
@@ -30,7 +31,7 @@ export interface Client {
     isActive: boolean;
     createdAt: string;
   };
-  referralsRel: {
+  referralsReceived: {
     id: string,
     referrerId: string,
     referredId: string,
@@ -41,6 +42,42 @@ export interface Client {
   loyaltyTransactions?: any[];
   membershipPurchases?: any[];
 }
+
+
+export interface ReferralData{
+  referrer: {
+    id: string;
+    tier: Tier;
+    loyaltyPoints: number;
+    totalAppointments: number;
+    totalSpent: number;
+    referrals: number;
+    user: {
+        name: string;
+        email: string;
+        phone: string;
+    };
+  }
+  referred: {
+    id: string;
+    tier: Tier;
+    loyaltyPoints: number;
+    totalAppointments: number;
+    totalSpent: number;
+    referrals: number;
+    user: {
+        name: string;
+        email: string;
+        phone: string;
+    };
+  }
+  id: string;
+  createdAt: Date;
+  referrerId: string;
+  referredId: string;
+  status: ReferralStatus;
+  rewardGranted: boolean;
+}[]
 
 export interface ClientsParams {
   search?: string;
@@ -97,4 +134,11 @@ export const clientsApi = {
     const { data } = await axiosdb.get(`/clients/${id}/appointments`, { params });
     return data;
   },
+
+
+  // Get client referrals
+  getClientReferrals: async (id: string | undefined): Promise<ReferralData[]> => {
+    const { data } = await axiosdb.get(`/clients/${id}/referrals`);
+    return data;
+  }
 };

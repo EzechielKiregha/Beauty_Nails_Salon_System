@@ -82,7 +82,7 @@ export default function ClientDashboardV2() {
   const router = useRouter();
   // Get authenticated user
   const { user, isLoading: isAuthLoading } = useAuth();
-  const { data, isLoading } = useClientReferrals(user ? user.id : '');
+  const { data: referrals, isLoading } = useClientReferrals(user?.clientProfile?.id);
 
   // API hook
   const { clients: allClients = [] } = useClients()
@@ -111,7 +111,7 @@ export default function ClientDashboardV2() {
     }))
     : [];
 
-  const selectedClient = clients.find((client: any) => client.userId === user?.id);
+  const selectedClient = clients.find((client: any) => client.id === user?.clientProfile?.id);
   // Get appointments
   const {
     appointments = [],
@@ -145,11 +145,10 @@ export default function ClientDashboardV2() {
   // Get referral data
   const {
     referralCode = "",
-    referrals = 0,
     isLoading: isReferralLoading,
   } = useReferral();
 
-  const referralList = data?.referralsRel || [];
+  const referralList = referrals || [];
   const successfulReferrals = referralList.filter(r => r.status === "completed").length;
   const canClaimBonus = successfulReferrals >= 5;
 
@@ -176,7 +175,7 @@ export default function ClientDashboardV2() {
     (apt) => apt.status === "completed"
   ).length;
   const nextFreeService = Math.max(0, 5 - (completedAppointments % 5));
-  const nextFreeReferral = Math.max(0, 5 - referrals);
+  const nextFreeReferral = Math.max(0, 5 - (referrals ? referrals?.length : 0)) || 0;
 
   const stats = {
     loyaltyPoints,
@@ -469,7 +468,7 @@ export default function ClientDashboardV2() {
                 </div>
               </div>
               <p className="text-xs sm:text-sm text-gray-900  dark:text-gray-300 mb-1">Parrainages</p>
-              <p className="text-2xl sm:text-3xl  text-gray-900 dark:text-gray-100">{referrals}</p>
+              <p className="text-2xl sm:text-3xl  text-gray-900 dark:text-gray-100">{referrals?.length}</p>
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
                 {nextFreeReferral} pour service gratuit
               </p>
@@ -488,6 +487,29 @@ export default function ClientDashboardV2() {
               </p>
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">rendez-vous</p>
             </Card>
+          </div>
+          {/* Quick Stats */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 pt-4">
+            <div className="bg-linear-to-br from-blue-50 to-cyan-50 dark:from-gray-950 dark:to-gray-950 p-5 rounded-3xl text-center shadow-sm sm:p-6 hover:shadow-lg transition-shadow border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 ">
+              <CalendarIcon className="w-6 h-6 text-blue-600 dark:text-blue-400 mx-auto mb-2" />
+              <p className="text-2xl font-black text-gray-900 dark:text-gray-100">{selectedClient?.totalAppointments}</p>
+              <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase  tracking-tight">Tout les Rendez-vous</p>
+            </div>
+            <div className="bg-linear-to-br from-green-50 to-emerald-50 dark:from-gray-950 dark:to-gray-950 p-5 rounded-3xl text-center shadow-sm sm:p-6 hover:shadow-lg transition-shadow border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 ">
+              <DollarSign className="w-6 h-6 text-green-600 dark:text-green-400 mx-auto mb-2" />
+              <p className="text-lg font-black text-gray-900 dark:text-gray-100 truncate px-1">{selectedClient?.totalSpent}</p>
+              <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase  tracking-tight">Dépensé en Fc</p>
+            </div>
+            <div className="bg-linear-to-br from-purple-50 to-pink-50 dark:from-gray-950 dark:to-gray-950 p-5 rounded-3xl text-center shadow-sm sm:p-6 hover:shadow-lg transition-shadow border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 ">
+              <Award className="w-6 h-6 text-purple-600 dark:text-purple-400 mx-auto mb-2" />
+              <p className="text-2xl font-black text-gray-900 dark:text-gray-100">{selectedClient?.loyaltyPoints}</p>
+              <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase  tracking-tight">Points</p>
+            </div>
+            <div className="bg-linear-to-br from-amber-50 to-orange-50 dark:from-gray-950 dark:to-gray-950 p-5 rounded-3xl text-center shadow-sm sm:p-6 hover:shadow-lg transition-shadow border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 ">
+              <Gift className="w-6 h-6 text-amber-600 dark:text-amber-400 mx-auto mb-2" />
+              <p className="text-2xl font-black text-gray-900 dark:text-gray-100">{referrals?.length}</p>
+              <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase  tracking-tight">Parrains</p>
+            </div>
           </div>
         </div>
 
@@ -802,7 +824,7 @@ export default function ClientDashboardV2() {
                 <div className="grid grid-cols-2 gap-4 text-center">
                   <div className="p-4 bg-white dark:bg-gray-800 rounded-lg">
                     <p className="text-2xl  text-pink-600">
-                      {referrals}
+                      {referrals?.length || 0}
                     </p>
                     <p className="text-sm text-gray-900 dark:text-gray-100">Parrainages réussis</p>
                   </div>
@@ -821,6 +843,13 @@ export default function ClientDashboardV2() {
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="text-lg font-semibold">
                     Historique des Parrainages
+                  </h3>
+
+                  <p className="text-sm">
+                    referred by{" "}
+                  </p>
+                  <h3 className="text-pink-500 fontbold text-lg">
+                    {user?.clientProfile?.referredBy}
                   </h3>
 
                   {canClaimBonus && (
@@ -874,7 +903,7 @@ export default function ClientDashboardV2() {
                               </td>
 
                               <td className="p-3">
-                                {ref.referred.totalSpent.toLocaleString()} CDF
+                                {ref.referred.totalSpent.toLocaleString()} Fc
                               </td>
 
                               <td className="p-3">
@@ -975,11 +1004,27 @@ export default function ClientDashboardV2() {
                         <Badge className="bg-amber-500 text-white">{loyaltyTier || 'Standard'}</Badge>
                       </div>
                     </div>
-                    <div className="bg-white dark:bg-gray-800/50 p-4 rounded-xl border border-amber-100 dark:border-amber-900/30 mb-4">
-                      <p className="text-center text-gray-700 dark:text-gray-300">
-                        Points actuels: <span className=" text-amber-600 dark:text-amber-400">{loyaltyPoints}</span>
-                      </p>
-                    </div>
+                    <Card className="p-6 bg-linear-to-br from-amber-50 to-orange-50 dark:from-amber-900/10 dark:to-orange-900/10 border-amber-100 dark:border-amber-900/30 rounded-3xl">
+                      {/* <h4 className="text-sm font-black text-gray-900 dark:text-gray-100 mb-4 uppercase tracking-widest flex items-center gap-2">
+                      <Award className="w-4 h-4 text-amber-500" />
+                      Programme de Fidélité
+                    </h4> */}
+                      <div className="space-y-4">
+                        <div className="flex justify-between items-center">
+                          <span className="text-xs text-gray-700 dark:text-gray-400 font-medium">Points actuels</span>
+                          <span className="text-2xl text-gray-900 dark:text-gray-100 font-black">{selectedClient?.loyaltyPoints || 0} pts</span>
+                        </div>
+                        <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+                          <div
+                            className="bg-linear-to-r from-amber-500 to-orange-500 h-full rounded-full transition-all duration-500"
+                            style={{ width: `${(selectedClient?.loyaltyPoints / 500) * 100}%` }}
+                          />
+                        </div>
+                        <p className="text-xs text-gray-600 dark:text-gray-400 italic">
+                          Encore {500 - (selectedClient?.loyaltyPoints || 0)} points pour votre prochaine récompense !
+                        </p>
+                      </div>
+                    </Card>
                   </Card>
 
                 </div>
@@ -1141,30 +1186,6 @@ export default function ClientDashboardV2() {
                       </div>
                     </div>
 
-                    {/* Quick Stats */}
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                      <div className="bg-linear-to-br from-blue-50 to-cyan-50 dark:from-gray-800 dark:to-gray-800/50 p-5 rounded-3xl border border-blue-100 dark:border-blue-900/30 text-center shadow-sm">
-                        <CalendarIcon className="w-6 h-6 text-blue-600 dark:text-blue-400 mx-auto mb-2" />
-                        <p className="text-2xl font-black text-gray-900 dark:text-gray-100">{selectedClient.totalAppointments}</p>
-                        <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase  tracking-tight">Visites</p>
-                      </div>
-                      <div className="bg-linear-to-br from-green-50 to-emerald-50 dark:from-gray-800 dark:to-gray-800/50 p-5 rounded-3xl border border-green-100 dark:border-green-900/30 text-center shadow-sm">
-                        <DollarSign className="w-6 h-6 text-green-600 dark:text-green-400 mx-auto mb-2" />
-                        <p className="text-lg font-black text-gray-900 dark:text-gray-100 truncate px-1">{selectedClient.totalSpent}</p>
-                        <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase  tracking-tight">Dépensé en Fc</p>
-                      </div>
-                      <div className="bg-linear-to-br from-purple-50 to-pink-50 dark:from-gray-800 dark:to-gray-800/50 p-5 rounded-3xl border border-purple-100 dark:border-purple-900/30 text-center shadow-sm">
-                        <Award className="w-6 h-6 text-purple-600 dark:text-purple-400 mx-auto mb-2" />
-                        <p className="text-2xl font-black text-gray-900 dark:text-gray-100">{selectedClient.loyaltyPoints}</p>
-                        <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase  tracking-tight">Points</p>
-                      </div>
-                      <div className="bg-linear-to-br from-amber-50 to-orange-50 dark:from-gray-800 dark:to-gray-800/50 p-5 rounded-3xl border border-amber-100 dark:border-amber-900/30 text-center shadow-sm">
-                        <Gift className="w-6 h-6 text-amber-600 dark:text-amber-400 mx-auto mb-2" />
-                        <p className="text-2xl font-black text-gray-900 dark:text-gray-100">{selectedClient.referrals}</p>
-                        <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase  tracking-tight">Parrains</p>
-                      </div>
-                    </div>
-
                     {/* {selectedClient && (
                       <Card className="p-6 bg-linear-to-br from-purple-50 to-pink-50 dark:from-purple-900/10 dark:to-pink-900/10 border border-purple-100 dark:border-purple-900/30 rounded-3xl">
                         <h4 className="text-sm font-black text-gray-900 dark:text-gray-100 mb-4 uppercase tracking-widest flex items-center gap-2">
@@ -1212,7 +1233,7 @@ export default function ClientDashboardV2() {
                         </div>
                         <div className="flex items-center justify-between w-full sm:w-auto gap-4">
                           <p className="text-sm sm:text-base font-black text-gray-900 dark:text-gray-100">{apt.price}</p>
-                          <Badge className="bg-green-500/10 text-green-600 dark:text-green-400 border-green-200 dark:border-green-900/30 px-3 py-1 text-[10px] ">
+                          <Badge className={`bg-green-500/10 ${apt.status === 'completed' ? 'text-green-600 dark:text-green-400 border-green-200 dark:border-green-900/30' : apt.status === 'cancelled' ? 'text-red-600 dark:text-red-400 border-red-200 dark:border-red-900/30' : ''} px-3 py-1 text-[10px] `}>
                             {apt.status}
                           </Badge>
                         </div>
@@ -1287,27 +1308,7 @@ export default function ClientDashboardV2() {
                     </Card>
                   </div>
 
-                  <Card className="p-6 bg-linear-to-br from-amber-50 to-orange-50 dark:from-amber-900/10 dark:to-orange-900/10 border-amber-100 dark:border-amber-900/30 rounded-3xl">
-                    <h4 className="text-sm font-black text-gray-900 dark:text-gray-100 mb-4 uppercase tracking-widest flex items-center gap-2">
-                      <Award className="w-4 h-4 text-amber-500" />
-                      Programme de Fidélité
-                    </h4>
-                    <div className="space-y-4">
-                      <div className="flex justify-between items-center">
-                        <span className="text-xs text-gray-700 dark:text-gray-400 font-medium">Points actuels</span>
-                        <span className="text-2xl text-gray-900 dark:text-gray-100 font-black">{selectedClient?.loyaltyPoints || 0} pts</span>
-                      </div>
-                      <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
-                        <div
-                          className="bg-linear-to-r from-amber-500 to-orange-500 h-full rounded-full transition-all duration-500"
-                          style={{ width: `${(selectedClient?.loyaltyPoints / 500) * 100}%` }}
-                        />
-                      </div>
-                      <p className="text-xs text-gray-600 dark:text-gray-400 italic">
-                        Encore {500 - (selectedClient?.loyaltyPoints || 0)} points pour votre prochaine récompense !
-                      </p>
-                    </div>
-                  </Card>
+
                 </TabsContent>
               </Tabs>
             </Card>

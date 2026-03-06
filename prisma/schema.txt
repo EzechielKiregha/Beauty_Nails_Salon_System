@@ -132,7 +132,7 @@ model ClientProfile {
   appointments       Appointment[]
   reviews            Review[]
   loyaltyTransactions LoyaltyTransaction[]
-  referralsRel       Referral[]           @relation("ReferredClients")
+  referralsReceived       Referral[]           @relation("ReferredClients")
   referrer           Referral?            @relation("Referrer")
   membershipPurchases MembershipPurchase[]
   sales              Sale[]

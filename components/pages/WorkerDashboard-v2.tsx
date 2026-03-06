@@ -619,7 +619,7 @@ export default function WorkerDashboardV2() {
               </Card>
             )}
             {/* missed Confirmations */}
-            {missedAppointments.length > 0 && (
+            {/* {missedAppointments.length > 0 && (
               <Card className="p-6">
                 <h3 className="text-lg font-semibold mb-4 flex items-center text-yellow-800 dark:text-yellow-400">
                   <AlertCircle className="w-5 h-5 mr-2" />
@@ -725,7 +725,7 @@ export default function WorkerDashboardV2() {
                   ))}
                 </div>
               </Card>
-            )}
+            )} */}
             {/* completed Confirmations */}
             {completedAppointments.length > 0 && (
               <Card className="p-6">
