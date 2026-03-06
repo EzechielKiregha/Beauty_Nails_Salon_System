@@ -437,7 +437,7 @@ export default function AdminDashboardV2() {
           {/* More Tab */}
           <TabsContent value="more" className="space-y-6">
             <Tabs defaultValue="services" >
-              <TabsList className="grid w-full grid-cols-2 lg:grid-cols-6 mt-8 lg:mt-6 bg-white dark:bg-gray-950 border border-gray-200 dark:border-pink-900/30 p-1 rounded-xl justify-start sm:justify-center ">
+              <TabsList className="grid w-full grid-cols-2 lg:grid-cols-5 mt-8 lg:mt-6 bg-white dark:bg-gray-950 border border-gray-200 dark:border-pink-900/30 p-1 rounded-xl justify-start sm:justify-center ">
                 <TabsTrigger value="services" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">
                   <Scissors className="w-4 h-4 mr-2" />
                   Services
@@ -446,10 +446,10 @@ export default function AdminDashboardV2() {
                   <Package className="w-4 h-4 mr-2" />
                   Inventaire
                 </TabsTrigger>
-                <TabsTrigger value="pos" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">
+                {/* <TabsTrigger value="pos" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">
                   <ShoppingCart className="w-4 h-4 mr-2" />
                   Caisse
-                </TabsTrigger>
+                </TabsTrigger> */}
                 <TabsTrigger value="reports" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">
                   <BarChart3 className="w-4 h-4 mr-2" />
                   Rapports
@@ -472,9 +472,9 @@ export default function AdminDashboardV2() {
                 <InventoryManagement showMock={showMock} />
               </TabsContent>
 
-              <TabsContent value="pos" className="mt-14 lg:mt-6">
+              {/* <TabsContent value="pos" className="mt-14 lg:mt-6">
                 <POSCheckout showMock={showMock} />
-              </TabsContent>
+              </TabsContent> */}
 
               <TabsContent value="reports" className="mt-14 lg:mt-6">
                 <ReportsAnalytics />
