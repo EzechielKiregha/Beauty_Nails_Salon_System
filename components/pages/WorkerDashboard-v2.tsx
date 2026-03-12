@@ -368,21 +368,19 @@ export default function WorkerDashboardV2() {
                   </ScrollArea>
                 </SheetContent>
               </Sheet>
-              {/* <StaffModal
+              <StaffModal
                 staffId={worker?.id || ''}
-                staff={worker}
-                open={profileOpen}
-                onOpenChange={() => {
-                  setProfileOpen(!profileOpen);
-                }}
+                trigger={
+                  <Avatar className="w-12 h-12 border-4 border-white shadow-lg" onClick={() => setProfileOpen(true)}>
+                    <AvatarImage src="" />
+                    <AvatarFallback className="text-2xl font-medium bg-gray-100 text-gray-600">
+                      {worker?.name.split(" ")[0]?.charAt(0) || worker?.name.charAt(0)}
+                    </AvatarFallback>
+                  </Avatar>
+                }
               />
-              <Avatar className="w-12 h-12 border-4 border-white shadow-lg" onClick={() => setProfileOpen(true)}>
-                <AvatarImage src="" />
-                <AvatarFallback className="text-2xl font-medium bg-gray-100 text-gray-600">
-                  {worker?.name.split(" ")[0]?.charAt(0) || worker?.name.charAt(0)}
-                </AvatarFallback>
-              </Avatar> */}
-              <StaffProfileModal
+
+              {/* <StaffProfileModal
                 staff={worker}
                 trigger={
                   <Avatar className="w-12 h-12 border-4 border-white shadow-lg">
@@ -392,7 +390,7 @@ export default function WorkerDashboardV2() {
                     </AvatarFallback>
                   </Avatar>
                 }
-              />
+              /> */}
             </div>
           </div>
 
@@ -483,28 +481,28 @@ export default function WorkerDashboardV2() {
                   <Clock className="w-6 h-6 mr-2 text-purple-500" />
                   Planning d'aujourd'hui
                 </h2>
-                <AppointmentModal
+                {/* <AppointmentModal
                   client={selectedClient}
                   trigger={
                     <Button size="sm" className="bg-linear-to-r from-pink-500 to-purple-500 text-white rounded-full py-5 px-6 shadow-lg shadow-pink-500/20  transition-all text-sm">
                       <Plus className="w-5 h-5 mr-3" />
                       Nouveau rendez-vous
                     </Button>
-                  } />
+                  } /> */}
               </div>
 
               {todaySchedule.length === 0 ? (
                 <div className="text-center py-12 text-gray-500">
                   <CalendarIcon className="w-16 h-16 mx-auto mb-4 opacity-20" />
                   <p>Aucun rendez-vous aujourd'hui</p>
-                  <AppointmentModal
+                  {/* <AppointmentModal
                     client={selectedClient}
                     trigger={
                       <Button size="sm" className="bg-linear-to-r mt-1.5 from-pink-500 to-purple-500 text-white rounded-full py-5 px-6 shadow-lg shadow-pink-500/20  transition-all text-sm">
                         <Plus className="w-5 h-5 mr-3" />
                         Nouveau rendez-vous
                       </Button>
-                    } />
+                    } /> */}
                 </div>
               ) : (
                 <div className="space-y-4">

@@ -72,7 +72,7 @@ export async function PUT(request: NextRequest,
 
     const body = await request.json();
     // Destructure allowed fields to prevent overposting
-    const { position, specialties, bio, isAvailable, workingHours, commissionRate, commissionType, commissionFrequency, commissionDay, minimumPayout } = body;
+    const { position, specialties, bio, isAvailable, workingHours, commissionRate, commissionType, commissionFrequency, commissionDay, minimumPayout, lastCommissionPaidAt } = body;
 
     // Prepare data for Prisma update
     let updateData: any = {};
@@ -80,18 +80,19 @@ export async function PUT(request: NextRequest,
     if (specialties !== undefined) updateData.specialties = specialties;
     if (isAvailable !== undefined) updateData.isAvailable = isAvailable;
     if (workingHours !== undefined) updateData.workingHours = workingHours;
+    if (bio !== undefined) updateData.bio = bio;
     // Add these if the fields exist in the schema later:
     if (commissionRate !== undefined) updateData.commissionRate = commissionRate;
     if (commissionType !== undefined) updateData.commissionType = commissionType;
     if (commissionFrequency !== undefined) updateData.commissionFrequency = commissionFrequency;
     if (commissionDay !== undefined) updateData.commissionDay = commissionDay;
     if (minimumPayout !== undefined) updateData.minimumPayout = minimumPayout;
-    // if (lastCommissionPaidAt !== undefined) updateData.lastCommissionPaidAt = lastCommissionPaidAt ? new Date(lastCommissionPaidAt) : null;
+    if (lastCommissionPaidAt !== undefined) updateData.lastCommissionPaidAt = lastCommissionPaidAt ? new Date(lastCommissionPaidAt) : null;
 
     // Find the worker profile to get the associated user ID
     const workerProfile = await prisma.workerProfile.findUnique({
-      where: { userId: id },
-      select: { userId: true }
+      where: { id: id },
+      select: { id: true }
     });
 
     if (!workerProfile) {
@@ -100,7 +101,7 @@ export async function PUT(request: NextRequest,
 
     // Update the WorkerProfile
     const updatedWorkerProfile = await prisma.workerProfile.update({
-      where: { userId: id },
+      where: { id: id },
       data: updateData,
       include: {
         user: {

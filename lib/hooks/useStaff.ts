@@ -13,6 +13,7 @@ export function useStaff(params?: {
     data: staff = [],
     isLoading,
     error,
+    refetch,
   } = useQuery({
     queryKey: ['staff', params],
     queryFn: () => staffApi.getStaff(params),
@@ -34,6 +35,7 @@ export function useStaff(params?: {
     staff,
     isLoading,
     error,
+    refetch,
     createWorker: createMutation.mutate,
     isCreating: createMutation.isPending,
   };
