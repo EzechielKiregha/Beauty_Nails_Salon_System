@@ -11,9 +11,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Calendar, Clock, MapPin, Phone, Mail, DollarSign, Star, FileText, Download, Copy, Save, Loader2, CalendarIcon, TrendingUp, Award } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { Separator } from '@/components/ui/separator';
-import { useCommission, useWorkerSchedule } from '@/lib/hooks/useStaff';
+import { useCommission, useWorker, useWorkerSchedule } from '@/lib/hooks/useStaff';
 import { Worker } from '@/lib/api/staff';
 import { useAuth } from '@/lib/hooks/useAuth';
+import { toast } from 'sonner';
 
 // --- Edit Schedule Modal (Mobile Optimized with Dark Mode) ---
 interface EditScheduleModalProps {
@@ -557,6 +558,7 @@ export function StaffProfileModal({ staff, trigger }: StaffProfileModalProps) {
 }
 
 // --- Payroll Modal (Mobile Optimized with Dark Mode) ---
+
 interface PayrollModalProps {
   staffName?: string;
   staff?: Worker;
@@ -569,61 +571,207 @@ export function PayrollModal({ staffName, staff, period, trigger }: PayrollModal
   const isAdmin = user?.role === "admin";
   const { createCommission, isCreating } = useCommission();
   const { updateCommission, commissions, isUpdating } = useCommission();
+  const { data: workerProfile } = useWorker(staff?.id || ''); // Fetch worker profile to get frequency
 
-  const allMonths = [
-    { value: "2026-01", label: "Janvier 2026" },
-    { value: "2026-02", label: "Février 2026" },
-    { value: "2026-03", label: "Mars 2026" },
-    { value: "2026-04", label: "Avril 2026" },
-    { value: "2026-05", label: "Mai 2026" },
-    { value: "2026-06", label: "Juin 2026" },
-    { value: "2026-07", label: "Juillet 2026" },
-    { value: "2026-08", label: "Août 2026" },
-    { value: "2026-09", label: "Septembre 2026" },
-    { value: "2026-10", label: "Octobre 2026" },
-    { value: "2026-11", label: "Novembre 2026" },
-    { value: "2026-12", label: "Décembre 2026" },
-  ];
+  const [localPeriod, setLocalPeriod] = useState(period || '');
 
-  const getCommissionForMonth = (month: string) =>
+  // Generate periods based on worker's frequency
+  const generatedPeriods = useState(() => {
+    if (!workerProfile?.commissionFrequency) return [];
+
+    const now = new Date();
+    const periods = [];
+
+    if (workerProfile.commissionFrequency === 'daily') {
+      // Generate last 30 days
+      for (let i = 0; i < 30; i++) {
+        const date = new Date(now);
+        date.setDate(date.getDate() - i);
+        const periodStr = date.toISOString().split('T')[0]; // YYYY-MM-DD
+        periods.push({
+          value: periodStr,
+          label: date.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short' })
+        });
+      }
+    } else if (workerProfile.commissionFrequency === 'weekly') {
+      // Generate last 12 weeks
+      for (let i = 0; i < 12; i++) {
+        const date = new Date(now);
+        date.setDate(date.getDate() - (i * 7)); // Go back i weeks
+
+        // Calculate the start of the week (Monday) for the period string
+        const day = date.getDay();
+        const diff = date.getDate() - day + (day === 0 ? -6 : 1); // Adjust to get Monday
+        const monday = new Date(date.setDate(diff));
+        const periodStr = monday.toISOString().split('T')[0]; // Use Monday's date as identifier
+
+        const endOfWeek = new Date(monday);
+        endOfWeek.setDate(monday.getDate() + 6);
+
+        periods.push({
+          value: periodStr,
+          label: `Semaine du ${monday.toLocaleDateString('fr-FR')} au ${endOfWeek.toLocaleDateString('fr-FR')}`
+        });
+      }
+    } else { // monthly
+      // Generate last 12 months
+      for (let i = 0; i < 12; i++) {
+        const date = new Date(now);
+        date.setMonth(date.getMonth() - i);
+        const periodStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`; // YYYY-MM
+        periods.push({
+          value: periodStr,
+          label: date.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })
+        });
+      }
+    }
+    return periods;
+  })[0]; // Use only the getter part of useState
+
+
+  // Get commission data for the selected period
+  const getCommissionForPeriod = (periodStr: string) =>
     commissions.find(
       (c: any) =>
         c.workerId === staff?.id &&
-        c.period === month
+        c.period === periodStr // period format matches generated format
     );
 
-  const isMonthPaid = (month: string) =>
-    getCommissionForMonth(month)?.status === "paid";
+  const isPeriodPaid = (periodStr: string) =>
+    getCommissionForPeriod(periodStr)?.status === "paid";
 
-  const unpaidMonths = allMonths.filter(
-    (m) => !isMonthPaid(m.value)
+  const unpaidPeriods = generatedPeriods.filter(
+    (p) => !isPeriodPaid(p.value)
   );
 
-  const totalRevenue = getCommissionForMonth(period || "")?.totalRevenue || 0;
-  const commissionRate = getCommissionForMonth(period || "")?.commissionRate || 0;
-  const appointmentsCount = getCommissionForMonth(period || "")?.appointmentsCount || 0;
-  const commissionAmount = getCommissionForMonth(period || "")?.commissionAmount || 0;
+  // Determine if a commission record already exists for the selected period
+  const commissionRecordExists = !!getCommissionForPeriod(localPeriod);
+
+  // Use the existing commission data if available, otherwise calculate from profile (for preview)
+  const commissionData = getCommissionForPeriod(localPeriod);
+  const totalRevenue = commissionData?.totalRevenue || 0;
+  const commissionRate = commissionData?.commissionRate || workerProfile?.commissionRate || 0;
+  const appointmentsCount = commissionData?.appointmentsCount || 0;
+  const commissionAmount = totalRevenue * (commissionRate / 100);
   const employerShare = totalRevenue - commissionAmount;
 
-  const handleGenerate = () => {
-    if (!staff) return;
-    createCommission({
-      workerId: staff.id,
-      period,
-      totalRevenue,
-      appointmentsCount,
-      commissionRate,
-    });
+  const handleGenerateOrRequest = () => {
+    if (!staff || !localPeriod) {
+      toast.error("Veuillez sélectionner une période.");
+      return;
+    }
+
+    if (isPeriodPaid(localPeriod)) {
+      toast.info("Cette période est déjà payée.");
+      return;
+    }
+
+    if (commissionRecordExists) {
+      // If record exists but is not paid, worker is requesting approval
+      if (!isAdmin) {
+        toast.info("La demande de paiement est déjà soumise. En attente d'approbation.");
+        // Optionally, trigger an update mutation to set status to 'pending' if it wasn't already
+        // This depends on your backend logic for handling requests.
+        // Example: updateCommission({ id: commissionData.id, status: 'pending' });
+      } else {
+        toast.info("Un enregistrement existe déjà pour cette période.");
+      }
+      return;
+    }
+
+    // Only create a new record if it doesn't exist yet
+    // Admin can always create/overwrite. Worker can only request if not already created.
+    if (isAdmin) {
+      // Admin creates the initial record with calculated values (or values entered in UI)
+      // In a real scenario, the totalRevenue etc. might come from an aggregation of appointments for that period
+      // For this modal, we assume the values are known or pre-calculated elsewhere.
+      // Here, we'll use placeholder values if not fetched from a specific endpoint.
+      // The actual creation should ideally happen after calculating from appointments.
+      // Let's assume the values are passed or fetched externally for simplicity here.
+      // We'll pass the current displayed values.
+      createCommission({
+        workerId: staff.id,
+        period: localPeriod,
+        totalRevenue: totalRevenue || 0, // Use fetched/entered value or 0
+        appointmentsCount: appointmentsCount || 0, // Use fetched/entered value or 0
+        commissionRate: commissionRate,
+        // status defaults to 'pending' in backend
+      });
+    } else {
+      // Worker requests generation - this might involve creating a record with status 'requested'
+      // or sending a notification. For now, we'll create a 'pending' record.
+      // Backend logic might differ.
+      createCommission({
+        workerId: staff.id,
+        period: localPeriod,
+        totalRevenue: totalRevenue || 0, // Value might come from backend calc
+        appointmentsCount: appointmentsCount || 0, // Value might come from backend calc
+        commissionRate: commissionRate,
+        // status defaults to 'pending' in backend, which is appropriate for a request
+      });
+    }
   };
 
   const handleApprove = () => {
-    const commission = getCommissionForMonth(period || "");
-    if (!commission?.id) return;
+    const commission = getCommissionForPeriod(localPeriod);
+    if (!commission?.id) {
+      toast.error('Aucun enregistrement de commission trouvé pour cette période.');
+      return;
+    }
+    // Admin approves by changing status to 'paid'
     updateCommission({
       id: commission.id,
       status: "paid",
     });
   };
+
+  // Determine button states based on user role, period status, and record existence
+  const isPaid = isPeriodPaid(localPeriod);
+  const isPending = getCommissionForPeriod(localPeriod)?.status === 'pending';
+  const isRequested = isPending && !isAdmin; // Worker sees 'requested' as 'pending'
+  const canAdminApprove = isAdmin && isPending && localPeriod;
+
+  // Determine button text and state
+  let buttonText = "Générer Demande";
+  let buttonVariant: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link" | null | undefined = "default";
+  let buttonDisabled = !localPeriod || isPaid;
+
+  if (isAdmin) {
+    if (canAdminApprove) {
+      buttonText = isUpdating ? "Paiement..." : "Approuver & Payer";
+      buttonVariant = "default"; // Purple
+    } else if (isPaid) {
+      buttonText = "Payé";
+      buttonVariant = "outline";
+      buttonDisabled = true;
+    } else if (commissionRecordExists) {
+      buttonText = "Payé (en attente)";
+      buttonVariant = "outline";
+      buttonDisabled = true; // Admin cannot re-request, only approve
+    } else {
+      buttonText = isCreating ? "Création..." : "Créer & Demander";
+      buttonVariant = "default";
+    }
+  } else { // Worker
+    if (isPaid) {
+      buttonText = "Payé";
+      buttonVariant = "outline";
+      buttonDisabled = true;
+    } else if (isRequested) {
+      buttonText = "Demande envoyée";
+      buttonVariant = "outline";
+      buttonDisabled = true;
+    } else if (commissionRecordExists) {
+      // Record exists but is not paid or requested yet (maybe created by admin but not approved)
+      buttonText = "Demande envoyée";
+      buttonVariant = "outline";
+      buttonDisabled = true;
+    } else {
+      buttonText = isCreating ? "Envoi..." : "Demander Paiement";
+      buttonVariant = "default"; // Green
+    }
+  }
+
 
   return (
     <Dialog>
@@ -636,24 +784,24 @@ export function PayrollModal({ staffName, staff, period, trigger }: PayrollModal
         <div className="py-4 space-y-4">
           <div className="grid grid-cols-1 gap-3">
             <div className="space-y-2">
-              <Label className="text-sm text-gray-700 dark:text-gray-300">Employée</Label>
+              <Label className="text-sm text-gray-700 dark:text-gray-300">Employé(e)</Label>
               <Input
-                value={staffName || 'Marie Nkumu'}
+                value={staffName || staff?.user?.name || 'Employé(e)'}
                 disabled
                 className="bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 h-11 text-base"
               />
             </div>
 
             <div className="space-y-2">
-              <Label className="text-sm text-gray-700 dark:text-gray-300">Période</Label>
-              <Select value={period}>
+              <Label className="text-sm text-gray-700 dark:text-gray-300">Période ({workerProfile?.commissionFrequency || 'période'})</Label>
+              <Select value={localPeriod} onValueChange={setLocalPeriod}>
                 <SelectTrigger>
-                  <SelectValue />
+                  <SelectValue placeholder="Sélectionnez une période" />
                 </SelectTrigger>
                 <SelectContent>
-                  {unpaidMonths.filter(m => m.value === period && !isMonthPaid(m.value)).map((month) => (
-                    <SelectItem key={month.value} value={month.value}>
-                      {month.label}
+                  {unpaidPeriods.map((periodOption) => (
+                    <SelectItem key={periodOption.value} value={periodOption.value}>
+                      {periodOption.label}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -668,23 +816,49 @@ export function PayrollModal({ staffName, staff, period, trigger }: PayrollModal
 
             <div className="space-y-3">
               <div className="flex justify-between items-center">
-                <Label className="text-gray-600 dark:text-gray-400 text-sm">Totall Revenue</Label>
+                <Label className="text-gray-600 dark:text-gray-400 text-sm">Revenu Généré</Label>
                 <div className="flex items-center">
                   <span className="text-sm text-gray-500 dark:text-gray-400 mr-1">Fc</span>
                   <Input
                     type="number"
                     value={totalRevenue}
-                    className="text-right w-32 h-10 text-base bg-white dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300"
+                    // onChange={(e) => setLocalTotalRevenue(parseFloat(e.target.value) || 0)} // Disable editing in this view
+                    className="text-right w-32 h-10 text-base bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300"
+                    disabled // Values are calculated/fetched, not edited here
                   />
                 </div>
               </div>
 
               <div className="flex justify-between items-center">
-                <Label className="text-gray-600 dark:text-gray-400 text-sm">Commissions (Auto)</Label>
+                <Label className="text-gray-600 dark:text-gray-400 text-sm">Nb. Rendez-vous</Label>
+                <Input
+                  type="number"
+                  value={appointmentsCount}
+                  // onChange={(e) => setLocalAppointmentsCount(parseInt(e.target.value) || 0)} // Disable editing
+                  className="text-right w-32 h-10 text-base bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300"
+                  disabled // Values are calculated/fetched
+                />
+              </div>
+
+              <div className="flex justify-between items-center">
+                <Label className="text-gray-600 dark:text-gray-400 text-sm">Taux de Commission</Label>
+                <div className="flex items-center">
+                  <Input
+                    type="number"
+                    value={commissionRate}
+                    className="text-right w-24 h-10 text-base bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300"
+                    disabled
+                  />
+                  <span className="ml-1 text-gray-500 dark:text-gray-400">%</span>
+                </div>
+              </div>
+
+              <div className="flex justify-between items-center">
+                <Label className="text-gray-600 dark:text-gray-400 text-sm">Commission (Calculée)</Label>
                 <div className="flex items-center">
                   <span className="text-sm text-gray-500 dark:text-gray-400 mr-1">Fc</span>
                   <Input
-                    value={commissionAmount}
+                    value={commissionAmount.toFixed(2)}
                     disabled
                     className="text-right w-32 h-10 bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300"
                   />
@@ -697,7 +871,7 @@ export function PayrollModal({ staffName, staff, period, trigger }: PayrollModal
                   <div className="flex items-center">
                     <span className="text-sm text-gray-500 dark:text-gray-400 mr-1">Fc</span>
                     <Input
-                      value={employerShare}
+                      value={employerShare.toFixed(2)}
                       disabled
                       className="text-right w-32 h-10 bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300"
                     />
@@ -717,30 +891,32 @@ export function PayrollModal({ staffName, staff, period, trigger }: PayrollModal
                 defaultChecked
                 className="border-gray-400 dark:border-gray-600 data-[state=checked]:bg-pink-500 data-[state=checked]:border-pink-500 dark:data-[state=checked]:bg-pink-600 dark:data-[state=checked]:border-pink-600"
               />
-              <Label htmlFor="email-slip" className="text-gray-600 dark:text-gray-400">Envoyer par email à l'employeur</Label>
+              <Label htmlFor="email-slip" className="text-gray-600 dark:text-gray-400">Envoyer par email à l'employé(e)</Label>
             </div>
           </div>
         </div>
 
         <DialogFooter className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2 mt-4">
-          <Button variant="outline" className="w-full sm:w-auto gap-2 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800">
+          <Button variant="outline" className="w-full sm:w-auto gap-2 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800" disabled>
             <Download className="w-4 h-4" /> PDF
           </Button>
           {isAdmin ? (
             <Button
               onClick={handleApprove}
-              disabled={isUpdating}
-              className="w-full sm:w-auto bg-purple-600 hover:bg-purple-700 text-white dark:bg-purple-700 dark:hover:bg-purple-800"
+              disabled={!canAdminApprove || isUpdating}
+              variant={buttonVariant}
+              className="w-full sm:w-auto"
             >
-              {isUpdating ? "Paiement..." : "Approuver & Payer"}
+              {isUpdating ? "Paiement..." : buttonText}
             </Button>
           ) : (
             <Button
-              onClick={handleGenerate}
-              disabled={isCreating || !isMonthPaid(period || "")}
-              className="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white dark:bg-green-600 dark:hover:bg-green-700"
+              onClick={handleGenerateOrRequest}
+              disabled={buttonDisabled || isCreating}
+              variant={buttonVariant}
+              className="w-full sm:w-auto"
             >
-              {isCreating ? "Envoi..." : !isMonthPaid(period || "") ? "Payement en attente" : "Demander Paiement"}
+              {isCreating ? "Envoi..." : buttonText}
             </Button>
           )}
         </DialogFooter>

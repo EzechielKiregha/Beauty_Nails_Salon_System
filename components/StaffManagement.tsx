@@ -1,73 +1,153 @@
 "use client"
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Card } from './ui/card';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
-import { Calendar as CalendarIcon, Clock, DollarSign, Star, TrendingUp, Award, CheckCircle, AlertCircle, Users } from 'lucide-react';
-import { useAvailableStaff, useCommission, useStaff } from '@/lib/hooks/useStaff';
+import { Calendar as CalendarIcon, Clock, DollarSign, Star, TrendingUp, Award, CheckCircle, AlertCircle, Users, FileText } from 'lucide-react';
+import { useAvailableStaff, useCommission, useStaff, useWorker } from '@/lib/hooks/useStaff';
 import CreateWorkerModal from '@/components/modals/CreateWorkerModal';
 import { EditScheduleModal, PayrollModal, StaffProfileModal } from './modals/StaffModals';
 import { Worker } from '@/lib/api/staff';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-// import CreateTaskModal from './modals/CreateTaskModal';
+import { toast } from 'sonner';
+import { useAuth } from '@/lib/hooks/useAuth';
 
-export default function StaffManagement({ showMock }: { showMock?: boolean }) {
+export default function StaffManagement() {
   const [selectedStaff, setSelectedStaff] = useState<Worker | null>(null);
-  const [selectedMonth, setSelectedMonth] = useState("2026-02");
-
+  const [selectedPeriod, setSelectedPeriod] = useState<string>(""); // Changed from selectedMonth, make it a string
+  const [isInitializing, setIsInitializing] = useState(false); // State for initialization process
+  const { user } = useAuth()
 
   // API hook
   const { staff, isLoading: staffLoading } = useStaff();
+  const { commissions, isUpdating } = useCommission(); // Use the global // Fetch selected staff's profile to get commission frequency
+  const { data: workerProfile, isLoading: profileLoading } = useWorker(selectedStaff?.id || '');
+  const { createCommission, isCreating } = useCommission();
 
-  const scheduleData = [
-    { day: 'Lundi', slots: ['09:00-12:00', '13:00-16:00', '16:00-18:00'] },
-    { day: 'Mardi', slots: ['09:00-12:00', '13:00-16:00', '16:00-18:00'] },
-    { day: 'Mercredi', slots: ['09:00-12:00', '13:00-16:00', '16:00-18:00'] },
-    { day: 'Jeudi', slots: ['09:00-12:00', '13:00-16:00', '16:00-18:00'] },
-    { day: 'Vendredi', slots: ['09:00-12:00', '13:00-16:00', '16:00-19:00'] },
-    { day: 'Samedi', slots: ['08:00-12:00', '13:00-17:00'] }
-  ];
+  // Generate periods based on worker's frequency
+  const generatedPeriods = useMemo(() => {
+    if (!workerProfile?.commissionFrequency) return [];
+    const now = new Date();
+    const periods = [];
 
-  const allMonths = [
-    { value: "2026-01", label: "Janvier 2026" }
-    , { value: "2026-02", label: "Février 2026" }
-    , { value: "2026-03", label: "Mars 2026" }
-    , { value: "2026-04", label: "Avril 2026" }
-    , { value: "2026-05", label: "Mai 2026" }
-    , { value: "2026-06", label: "Juin 2026" }
-    , { value: "2026-07", label: "Juillet 2026" }
-    , { value: "2026-08", label: "Août 2026" }
-    , { value: "2026-09", label: "Septembre 2026" }
-    , { value: "2026-10", label: "Octobre 2026" }
-    , { value: "2026-11", label: "Novembre 2026" }
-    , { value: "2026-12", label: "Décembre 2026" },
-  ]
+    if (workerProfile.commissionFrequency === 'daily') {
+      for (let i = 0; i < 30; i++) {
+        const date = new Date(now);
+        date.setDate(date.getDate() - i);
+        const periodStr = date.toISOString().split('T')[0]; // YYYY-MM-DD
+        periods.push({
+          value: periodStr,
+          label: date.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short' })
+        });
+      }
+    } else if (workerProfile.commissionFrequency === 'weekly') {
+      for (let i = 0; i < 12; i++) {
+        const date = new Date(now);
+        date.setDate(date.getDate() - (i * 7));
+        const day = date.getDay();
+        const diff = date.getDate() - day + (day === 0 ? -6 : 1);
+        const monday = new Date(date.setDate(diff));
+        const periodStr = monday.toISOString().split('T')[0];
+        const endOfWeek = new Date(monday);
+        endOfWeek.setDate(monday.getDate() + 6);
+        periods.push({
+          value: periodStr,
+          label: `Semaine du ${monday.toLocaleDateString('fr-FR')} au ${endOfWeek.toLocaleDateString('fr-FR')}`
+        });
+      }
+    } else { // monthly
+      for (let i = 0; i < 12; i++) {
+        const date = new Date(now);
+        date.setMonth(date.getMonth() - i);
+        const periodStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`; // YYYY-MM
+        periods.push({
+          value: periodStr,
+          label: date.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })
+        });
+      }
+    }
+    return periods;
+  }, [workerProfile]); // Recalculate when workerProfile changes
 
-  const { commissions, isUpdating } = useCommission();
 
-  const getCommissionForMonth = (month: string) =>
+  // Determine commission records for the selected staff
+  const staffCommissions = useMemo(() => {
+    if (!selectedStaff) return { pending: [], paid: [] };
+    const filtered = commissions.filter(c => c.workerId === selectedStaff.id);
+    return {
+      pending: filtered.filter(c => c.status !== 'paid'),
+      paid: filtered.filter(c => c.status === 'paid')
+    };
+  }, [commissions, selectedStaff]);
+
+  // Function to check if a period has a commission record
+  const hasCommissionRecord = (periodStr: string) => {
+    return !!commissions.find(c => c.workerId === selectedStaff?.id && c.period === periodStr);
+  };
+
+  // Get commission data for the selected period
+  const getCommissionForPeriod = (periodStr: string) =>
     commissions.find(
       (c: any) =>
         c.workerId === selectedStaff?.id &&
-        c.period === month
+        c.period === periodStr
     );
 
-  const isMonthPaid = (month: string) =>
-    getCommissionForMonth(month)?.status === "paid";
+  // Determine if selected period is paid
+  const isPeriodPaid = (periodStr: string) => {
+    const record = getCommissionForPeriod(periodStr);
+    return record?.status === 'paid';
+  };
 
-  const unpaidMonths = allMonths.filter(
-    (m) => !isMonthPaid(m.value)
-  );
-
-  const totalRevenue = getCommissionForMonth(selectedMonth || "")?.totalRevenue || 0;
-  const commissionRate = getCommissionForMonth(selectedMonth || "")?.commissionRate || 0;
-  const appointmentsCount = getCommissionForMonth(selectedMonth || "")?.appointmentsCount || 0;
-  const commissionAmount = getCommissionForMonth(selectedMonth || "")?.commissionAmount || 0;
+  const commissionData = getCommissionForPeriod(selectedPeriod);
+  const totalRevenue = commissionData?.totalRevenue || 0;
+  const commissionRate = commissionData?.commissionRate || workerProfile?.commissionRate || 0;
+  const appointmentsCount = commissionData?.appointmentsCount || 0;
+  const commissionAmount = totalRevenue * (commissionRate / 100);
   const employerShare = totalRevenue - commissionAmount;
-  const materielShare = employerShare * 0.05; // 5% du total pour les produits de beauté.
-  const operationalCosts = employerShare * 0.05; // 5% du total pour les coûts opérationnels.
+
+  // Calculate totals for unpaid periods (for initialization suggestion)
+  // This is a placeholder - actual calculation happens on the backend based on appointments.
+  // const calculateTotalsForPeriod = (periodStr: string) => {
+  //   // Implementation depends on backend logic
+  //   return { totalRevenue: 0, appointmentsCount: 0 };
+  // };
+
+  // Admin function to initialize a commission record for a period
+  const handleInitializeCommission = async () => {
+    if (!selectedStaff || !selectedPeriod || !workerProfile || hasCommissionRecord(selectedPeriod)) {
+      return; // Prevent initializing if no staff, no period, no profile, or record already exists
+    }
+
+    setIsInitializing(true);
+    try {
+      // Send minimal data, backend calculates totals from appointments
+      createCommission({
+        workerId: selectedStaff.id,
+        period: selectedPeriod,
+        totalRevenue: totalRevenue || 0, // Use fetched/entered value or 0
+        appointmentsCount: appointmentsCount || 0, // Use fetched/entered value or 0
+        commissionRate: commissionRate,
+        // status defaults to 'pending' in backend
+      });
+      toast.success(`Commission pour ${selectedPeriod} initialisée.`);
+      setSelectedPeriod(""); // Reset selection after initialization
+    } catch (error) {
+      console.error("Erreur d'initialisation de la commission:", error);
+      toast.error("Erreur lors de l'initialisation de la commission.");
+    } finally {
+      setIsInitializing(false);
+    }
+  };
+
+  // Determine status of the currently selected period
+  const selectedPeriodCommission = getCommissionForPeriod(selectedPeriod);
+  const selectedPeriodStatus = selectedPeriodCommission?.status || 'none'; // 'none', 'pending', 'paid'
+  const canInitializeSelectedPeriod = selectedPeriod && !hasCommissionRecord(selectedPeriod) && user?.role === 'admin';
+  const canRequestPaymentSelectedPeriod = selectedPeriod && selectedPeriodStatus === 'none' && user?.role === 'worker'; // Worker requests if no record exists yet
+  const canApproveSelectedPeriod = selectedPeriod && selectedPeriodStatus === 'pending' && user?.role === 'admin';
 
 
   return (
@@ -148,7 +228,7 @@ export default function StaffManagement({ showMock }: { showMock?: boolean }) {
             <Tabs defaultValue="performance" className="space-y-6">
               <TabsList className="w-full bg-white dark:bg-gray-950 border border-gray-200 dark:border-pink-900/30 p-1 rounded-xl flex overflow-x-auto no-scrollbar justify-start sm:justify-center">
                 <TabsTrigger value="performance" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">Performance</TabsTrigger>
-                <TabsTrigger value="schedule" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">Horaires</TabsTrigger>
+                {/* <TabsTrigger value="schedule" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">Horaires</TabsTrigger> */}
                 <TabsTrigger value="commission" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">Commission</TabsTrigger>
               </TabsList>
 
@@ -225,127 +305,354 @@ export default function StaffManagement({ showMock }: { showMock?: boolean }) {
                 </div>
               </TabsContent>
 
-              {/* Schedule Tab */}
-              <TabsContent value="schedule" className="space-y-6">
-                <h4 className="text-lg sm:text-xl text-gray-900 dark:text-gray-100 mb-4 font-medium">Planning de la Semaine</h4>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                  {scheduleData.map((day, idx) => (
-                    <div key={idx} className="p-4 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700">
-                      <div className="flex items-center justify-between mb-3">
-                        <p className="text-sm sm:text-base text-gray-900 dark:text-gray-100 font-medium">{day.day}</p>
-                        <Badge className={
-                          selectedStaff.workingDays.includes(day.day.substring(0, 3))
-                            ? 'bg-green-500 text-white text-[10px]'
-                            : 'bg-gray-400 text-white text-[10px]'
-                        }>
-                          {selectedStaff.workingDays.includes(day.day.substring(0, 3))
-                            ? 'Travaille' : 'Repos'}
-                        </Badge>
-                      </div>
-                      {selectedStaff.workingDays.includes(day.day.substring(0, 3)) && (
-                        <div className="flex flex-wrap gap-2">
-                          {day.slots.map((slot, sidx) => (
-                            <Badge key={sidx} variant="outline" className="text-[10px] sm:text-xs border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400">
-                              <Clock className="w-3 h-3 mr-1" />
-                              {slot}
-                            </Badge>
-                          ))}
+              {/* Commission Tab */}
+              < TabsContent value="commission" className="space-y-6" >
+                <h4 className="text-lg sm:text-xl text-gray-900 dark:text-gray-100 mb-4 font-medium">Calcul Commission & Paie</h4>
+
+                {/* Admin Controls for Initialization */}
+                {user?.role === 'admin' && selectedStaff && (
+                  <div className="mb-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
+                    <h5 className="font-medium text-gray-900 dark:text-gray-100 mb-3">Initialiser Commission (Admin)</h5>
+                    <div className="flex flex-col sm:flex-row gap-3">
+                      <Select
+                        value={selectedPeriod}
+                        onValueChange={setSelectedPeriod}
+                      >
+                        <SelectTrigger className="flex-grow">
+                          <SelectValue placeholder="Sélectionnez une période à initialiser" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {generatedPeriods
+                            .filter(gp => !hasCommissionRecord(gp.value)) // Only show periods without records
+                            .map((gp) => (
+                              <SelectItem key={gp.value} value={gp.value}>
+                                {gp.label}
+                              </SelectItem>
+                            ))}
+                        </SelectContent>
+                      </Select>
+                      <Button
+                        onClick={handleInitializeCommission}
+                        disabled={!selectedPeriod || isInitializing || !selectedStaff || !hasCommissionRecord(selectedPeriod)}
+                        className="bg-purple-600 hover:bg-purple-700 text-white"
+                      >
+                        {isInitializing ? "Initialisation..." : "Initialiser"}
+                      </Button>
+                    </div>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                      Cela créera un enregistrement de commission pour la période sélectionnée si aucun n'existe déjà.
+                    </p>
+                  </div>
+                )
+                }
+
+                {/* Selected Period Details */}
+                {
+                  selectedPeriod && (
+                    <div className="mb-6">
+                      <h5 className="text-sm sm:text-base text-gray-900 dark:text-gray-100 mb-3 font-medium">
+                        Détails pour la période: {generatedPeriods.find(gp => gp.value === selectedPeriod)?.label || selectedPeriod}
+                      </h5>
+
+                      {selectedPeriodStatus === 'none' && (
+                        <Card className="bg-amber-50 dark:bg-amber-900/10 border-0 p-5 shadow-sm">
+                          <div className="text-center py-4">
+                            <p className="text-gray-600 dark:text-gray-400">Aucun enregistrement de commission trouvé pour cette période.</p>
+                            {user?.role === 'admin' && (
+                              <p className="text-sm text-gray-500 dark:text-gray-500 mt-1">Utilisez la section "Initialiser Commission" ci-dessus.</p>
+                            )}
+                            {user?.role === 'worker' && (
+                              <p className="text-sm text-gray-500 dark:text-gray-500 mt-1">Contactez un administrateur pour initialiser cette période.</p>
+                            )}
+                          </div>
+                        </Card>
+                      )}
+
+                      {selectedPeriodStatus === 'pending' && (
+                        <Card className="bg-amber-50 dark:bg-amber-900/10 border-0 p-5 shadow-sm">
+                          {selectedPeriodCommission && (
+                            <>
+                              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+                                <div className="flex-1">
+                                  <h6 className="font-medium text-gray-900 dark:text-gray-100">En Attente / Non Payé</h6>
+                                  <div className="space-y-1 text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-1">
+                                    <div className="flex justify-between">
+                                      <span>Revenu Généré:</span>
+                                      <span>{selectedPeriodCommission.totalRevenue.toLocaleString()} Fc</span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                      <span>Nb. RDV:</span>
+                                      <span>{selectedPeriodCommission.appointmentsCount}</span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                      <span>Taux Commission:</span>
+                                      <span>{selectedPeriodCommission.commissionRate}%</span>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className="flex flex-col items-end gap-2">
+                                  <div className="text-right">
+                                    <p className="text-sm text-gray-600 dark:text-gray-400">Commission</p>
+                                    <p className="text-xl font-bold text-green-600 dark:text-green-400">{selectedPeriodCommission.commissionAmount.toLocaleString()} Fc</p>
+                                  </div>
+                                  {user?.role === 'admin' && (
+                                    <PayrollModal
+                                      staffName={selectedStaff.name}
+                                      staff={selectedStaff}
+                                      period={selectedPeriodCommission.period}
+                                      trigger={
+                                        <Button size="sm" className="bg-green-600 hover:bg-green-700 text-white">
+                                          Approuver & Payer
+                                        </Button>
+                                      }
+                                    />
+                                  )}
+                                  {user?.role === 'worker' && (
+                                    <p className="text-xs text-amber-600 dark:text-amber-400">En attente d'approbation</p>
+                                  )}
+                                </div>
+                              </div>
+                              {/* Detailed Breakdown */}
+                              <div className="pt-4 border-t border-amber-200 dark:border-amber-800 text-xs text-gray-600 dark:text-gray-400">
+                                <div className="grid grid-cols-2 gap-2">
+                                  <div>Total Revenu:</div>
+                                  <div className="text-right">{selectedPeriodCommission.totalRevenue.toLocaleString()} Fc</div>
+
+                                  <div className="pl-2">- Commission ({selectedPeriodCommission.commissionRate}%):</div>
+                                  <div className="text-right pl-2">-{selectedPeriodCommission.commissionAmount.toLocaleString()} Fc</div>
+
+                                  <div className="pt-2">Business Revenue (Brut):</div>
+                                  <div className="text-right pt-2">{(selectedPeriodCommission.totalRevenue - selectedPeriodCommission.commissionAmount).toLocaleString()} Fc</div>
+
+                                  <div className="pl-2 pt-1">- Matériel (5%):</div>
+                                  <div className="text-right pl-2 pt-1">-{(selectedPeriodCommission.totalRevenue - selectedPeriodCommission.commissionAmount) * 0.05} Fc</div>
+
+                                  <div className="pl-2">- Coûts Op. (5%):</div>
+                                  <div className="text-right pl-2">-{(selectedPeriodCommission.totalRevenue - selectedPeriodCommission.commissionAmount) * 0.05} Fc</div>
+
+                                  <div className="pt-2 font-medium">Business Revenue (Net):</div>
+                                  <div className="text-right pt-2 font-medium">{(selectedPeriodCommission.totalRevenue - selectedPeriodCommission.commissionAmount - ((selectedPeriodCommission.totalRevenue - selectedPeriodCommission.commissionAmount) * 0.1)).toLocaleString()} Fc</div>
+                                </div>
+                              </div>
+                            </>
+                          )}
+                        </Card>
+                      )}
+
+                      {selectedPeriodStatus === 'paid' && (
+                        <Card className="bg-green-50 dark:bg-green-900/10 border-0 p-5 shadow-sm">
+                          {selectedPeriodCommission && (
+                            <>
+                              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+                                <div className="flex-1">
+                                  <h6 className="font-medium text-gray-900 dark:text-gray-100">Payé</h6>
+                                  <div className="space-y-1 text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-1">
+                                    <div className="flex justify-between">
+                                      <span>Payé le:</span>
+                                      <span>{selectedPeriodCommission.paidAt ? new Date(selectedPeriodCommission.paidAt).toLocaleDateString('fr-FR') : 'N/A'}</span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                      <span>Revenu Généré:</span>
+                                      <span>{selectedPeriodCommission.totalRevenue.toLocaleString()} Fc</span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                      <span>Commission Payée:</span>
+                                      <span className="text-green-600 dark:text-green-400">{selectedPeriodCommission.commissionAmount.toLocaleString()} Fc</span>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className="flex flex-col items-end gap-2">
+                                  <div className="text-right">
+                                    <p className="text-sm text-gray-600 dark:text-gray-400">Statut</p>
+                                    <p className="text-xl font-bold text-green-600 dark:text-green-400">Payé</p>
+                                  </div>
+                                </div>
+                              </div>
+                              {/* Detailed Breakdown for Paid */}
+                              <div className="pt-4 border-t border-green-200 dark:border-green-800 text-xs text-gray-600 dark:text-gray-400">
+                                <div className="grid grid-cols-2 gap-2">
+                                  <div>Total Revenu:</div>
+                                  <div className="text-right">{selectedPeriodCommission.totalRevenue.toLocaleString()} Fc</div>
+
+                                  <div className="pl-2">- Commission ({selectedPeriodCommission.commissionRate}%):</div>
+                                  <div className="text-right pl-2">-{selectedPeriodCommission.commissionAmount.toLocaleString()} Fc</div>
+
+                                  <div className="pt-2">Business Revenue (Brut):</div>
+                                  <div className="text-right pt-2">{(selectedPeriodCommission.totalRevenue - selectedPeriodCommission.commissionAmount).toLocaleString()} Fc</div>
+
+                                  <div className="pl-2 pt-1">- Matériel (5%):</div>
+                                  <div className="text-right pl-2 pt-1">-{(selectedPeriodCommission.totalRevenue - selectedPeriodCommission.commissionAmount) * 0.05} Fc</div>
+
+                                  <div className="pl-2">- Coûts Op. (5%):</div>
+                                  <div className="text-right pl-2">-{(selectedPeriodCommission.totalRevenue - selectedPeriodCommission.commissionAmount) * 0.05} Fc</div>
+
+                                  <div className="pt-2 font-medium">Business Revenue (Net):</div>
+                                  <div className="text-right pt-2 font-medium">{(selectedPeriodCommission.totalRevenue - selectedPeriodCommission.commissionAmount - ((selectedPeriodCommission.totalRevenue - selectedPeriodCommission.commissionAmount) * 0.1)).toLocaleString()} Fc</div>
+                                </div>
+                              </div>
+                            </>
+                          )}
+                        </Card>
+                      )}
+
+                      {/* Action Buttons for Selected Period - Conditionally rendered based on status and role */}
+                      {!isPeriodPaid(selectedPeriod) && !hasCommissionRecord(selectedPeriod) && user?.role === 'worker' && (
+                        <PayrollModal
+                          staffName={selectedStaff.name}
+                          staff={selectedStaff}
+                          period={selectedPeriod}
+                          trigger={
+                            <Button
+                              size="sm"
+                              className="w-full bg-linear-to-r from-green-500 to-emerald-500 text-white rounded-full mt-4"
+                            >
+                              Demander Paiement pour cette période
+                            </Button>
+                          }
+                        />
+                      )}
+
+                      {/* Approve Button for Admin (when status is pending) */}
+                      {canApproveSelectedPeriod && user?.role === 'admin' && (
+                        <PayrollModal
+                          staffName={selectedStaff.name}
+                          staff={selectedStaff}
+                          period={selectedPeriod}
+                          trigger={
+                            <Button
+                              size="sm"
+                              className="w-full bg-linear-to-r from-purple-500 to-indigo-500 text-white rounded-full mt-4"
+                            >
+                              Approuver & Payer cette période
+                            </Button>
+                          }
+                        />
+                      )}
+
+                    </div>
+                  )
+                }
+
+                {/* All Commissions List */}
+                {
+                  (staffCommissions.pending.length > 0 || staffCommissions.paid.length > 0) && (
+                    <div className="space-y-6">
+                      {/* Pending/Requested Commissions Section */}
+                      {staffCommissions.pending.length > 0 && (
+                        <div>
+                          <h5 className="text-sm sm:text-base text-gray-900 dark:text-gray-100 mb-3 font-medium flex items-center gap-2">
+                            <span className="w-2 h-2 rounded-full bg-amber-500"></span>
+                            Demandes en Attente / Non Payées ({staffCommissions.pending.length})
+                          </h5>
+                          <div className="space-y-4">
+                            {staffCommissions.pending.map((commission: any) => (
+                              <Card key={commission.id} className="bg-amber-50 dark:bg-amber-900/10 border-0 p-5 shadow-sm">
+                                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                                  <div className="flex-1">
+                                    <h6 className="font-medium text-gray-900 dark:text-gray-100">{commission.period}</h6>
+                                    <div className="space-y-1 text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-1">
+                                      <div className="flex justify-between">
+                                        <span>Revenu Généré:</span>
+                                        <span>{commission.totalRevenue.toLocaleString()} Fc</span>
+                                      </div>
+                                      <div className="flex justify-between">
+                                        <span>Nb. RDV:</span>
+                                        <span>{commission.appointmentsCount}</span>
+                                      </div>
+                                      <div className="flex justify-between">
+                                        <span>Taux Commission:</span>
+                                        <span>{commission.commissionRate}%</span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div className="flex flex-col items-end gap-2">
+                                    <div className="text-right">
+                                      <p className="text-sm text-gray-600 dark:text-gray-400">Commission</p>
+                                      <p className="text-xl font-bold text-green-600 dark:text-green-400">{commission.commissionAmount.toLocaleString()} Fc</p>
+                                    </div>
+                                    {user?.role === 'admin' && (
+                                      <PayrollModal
+                                        staffName={selectedStaff.name}
+                                        staff={selectedStaff}
+                                        period={commission.period}
+                                        trigger={
+                                          <Button size="sm" className="bg-green-600 hover:bg-green-700 text-white">
+                                            Approuver & Payer
+                                          </Button>
+                                        }
+                                      />
+                                    )}
+                                    {user?.role === 'worker' && (
+                                      <p className="text-xs text-amber-600 dark:text-amber-400">En attente</p>
+                                    )}
+                                  </div>
+                                </div>
+                              </Card>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Paid Commissions Section */}
+                      {staffCommissions.paid.length > 0 && (
+                        <div>
+                          <h5 className="text-sm sm:text-base text-gray-900 dark:text-gray-100 mb-3 font-medium flex items-center gap-2">
+                            <span className="w-2 h-2 rounded-full bg-green-500"></span>
+                            Commissions Payées ({staffCommissions.paid.length})
+                          </h5>
+                          <div className="space-y-4">
+                            {staffCommissions.paid.map((commission: any) => (
+                              <Card key={commission.id} className="bg-green-50 dark:bg-green-900/10 border-0 p-5 shadow-sm">
+                                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                                  <div className="flex-1">
+                                    <h6 className="font-medium text-gray-900 dark:text-gray-100">{commission.period}</h6>
+                                    <div className="space-y-1 text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-1">
+                                      <div className="flex justify-between">
+                                        <span>Payé le:</span>
+                                        <span>{commission.paidAt ? new Date(commission.paidAt).toLocaleDateString('fr-FR') : 'N/A'}</span>
+                                      </div>
+                                      <div className="flex justify-between">
+                                        <span>Revenu Généré:</span>
+                                        <span>{commission.totalRevenue.toLocaleString()} Fc</span>
+                                      </div>
+                                      <div className="flex justify-between">
+                                        <span>Commission Payée:</span>
+                                        <span className="text-green-600 dark:text-green-400">{commission.commissionAmount.toLocaleString()} Fc</span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div className="flex flex-col items-end gap-2">
+                                    <div className="text-right">
+                                      <p className="text-sm text-gray-600 dark:text-gray-400">Statut</p>
+                                      <p className="text-xl font-bold text-green-600 dark:text-green-400">Payé</p>
+                                    </div>
+                                  </div>
+                                </div>
+                              </Card>
+                            ))}
+                          </div>
                         </div>
                       )}
                     </div>
-                  ))}
-                </div>
-                <EditScheduleModal
-                  staffId={selectedStaff.id}
-                  staffName={selectedStaff.name}
-                  trigger={
-                    <Button className="w-full mt-4 bg-purple-600 hover:bg-purple-700 text-white rounded-full">
-                      Modifier Planning
-                    </Button>
-                  }
-                />
-              </TabsContent>
+                  )
+                }
 
-              {/* Commission Tab */}
-              <TabsContent value="commission" className="space-y-6">
-                <h4 className="text-lg sm:text-xl text-gray-900 dark:text-gray-100 mb-4 font-medium">Calcul Commission & Paie</h4>
-                <div className="grid grid-cols-1 gap-4">
-                  <Select
-                    value={selectedMonth}
-                    onValueChange={setSelectedMonth}
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {allMonths.map((m) => (
-                        <SelectItem
-                          key={m.value}
-                          value={m.value}
-                          disabled={isMonthPaid(m.value)}
-                        >
-                          {m.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-
-                  {selectedMonth && getCommissionForMonth(selectedMonth) && (
-                    <Card className="bg-linear-to-br from-green-50 to-emerald-50 dark:from-green-900/10 dark:to-emerald-900/10 border-0 p-5 sm:p-6 shadow-sm">
-                      <h5 className="text-sm sm:text-base text-gray-900 dark:text-gray-100 mb-4  flex items-center gap-2">
-                        <span className="w-2 h-2 rounded-full bg-green-500"></span>
-                        Ce Mois ( {allMonths.find((m) => m.value === selectedMonth)?.label} - {getCommissionForMonth(selectedMonth)?.status === "paid" ? "Payé" : "En attente"})
-                      </h5>
-                      <div className="space-y-4">
-                        <div className="flex justify-between items-center">
-                          <span className="text-xs sm:text-sm text-gray-700 dark:text-gray-400">Revenus générés</span>
-                          <span className="text-base sm:text-lg text-gray-900 dark:text-gray-100 ">{totalRevenue.toLocaleString()}</span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <span className="text-xs sm:text-sm text-gray-700 dark:text-gray-400">Taux commission</span>
-                          <span className="text-base sm:text-lg text-gray-900 dark:text-gray-100 ">{commissionRate}%</span>
-                        </div>
-
-                        <div className="flex justify-between items-center">
-                          <span className="text-xs sm:text-sm text-gray-700 dark:text-gray-400">Business revenue</span>
-                          <span className="text-sm sm:text-base text-gray-900 dark:text-gray-100 font-medium">{employerShare}</span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <span className="text-xs sm:text-sm text-gray-700 dark:text-gray-400">Materials reserve</span>
-                          <span className="text-sm sm:text-base text-gray-900 dark:text-gray-100 font-medium">{materielShare}</span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <span className="text-xs sm:text-sm text-gray-700 dark:text-gray-400">Operational costs </span>
-                          <span className="text-sm sm:text-base text-gray-900 dark:text-gray-100 font-medium">{operationalCosts}</span>
-                        </div>
-
-                        <div className="w-full h-px bg-gray-200 dark:bg-gray-700" />
-                        <div className="flex justify-between items-center pt-2">
-                          <span className="text-sm sm:text-base text-gray-900 dark:text-gray-100 font-medium">Commission totale</span>
-                          <span className="text-xl sm:text-2xl text-green-600 dark:text-green-400 font-black">{commissionAmount.toLocaleString()}</span>
-                        </div>
-                      </div>
+                {/* Fallback Message if no commissions exist */}
+                {
+                  staffCommissions.pending.length === 0 && staffCommissions.paid.length === 0 && !profileLoading && selectedStaff && !selectedPeriodCommission && (
+                    <Card className="p-8 text-center border-2 border-dashed border-gray-300 dark:border-gray-700">
+                      <FileText className="w-12 h-12 mx-auto text-gray-400 mb-4" />
+                      <p className="text-gray-500">Aucune commission enregistrée pour {selectedStaff.name}.</p>
+                      {user?.role === 'admin' && (
+                        <p className="text-sm text-gray-500 mt-1">Utilisez la section "Initialiser Commission" ci-dessus pour créer des enregistrements.</p>
+                      )}
+                      {user?.role === 'worker' && (
+                        <p className="text-sm text-gray-500 mt-1">Les commissions apparaîtront ici une fois traitées.</p>
+                      )}
                     </Card>
-                  )}
-
-                  {!isMonthPaid(selectedMonth) && (
-                    <PayrollModal
-                      staffName={selectedStaff.name}
-                      staff={selectedStaff}
-                      period={selectedMonth}
-                      trigger={
-                        <Button
-                          size="sm"
-                          className="w-full bg-linear-to-r from-green-500 to-emerald-500 text-white rounded-full"
-                        >
-                          Générer Fiche de Paie
-                        </Button>
-                      }
-                    />
-                  )}
-
-                </div>
-              </TabsContent>
+                  )
+                }
+              </TabsContent >
             </Tabs>
           </Card>
         ) : (

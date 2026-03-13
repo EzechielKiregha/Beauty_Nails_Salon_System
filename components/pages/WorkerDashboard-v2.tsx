@@ -37,6 +37,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import BookingCalendar from '../BookingCalendar';
 import { StaffModal } from '../modals/StaffModals-v2';
 import AppointmentCountdown from '../AppointmentCountdown';
+import { useWorkerProfile } from '@/lib/hooks/useWorkerProfile';
+import { PayrollModal } from '../modals/StaffModals';
 
 export default function WorkerDashboardV2() {
   const [notificationOpen, setNotificationOpen] = useState(false);
@@ -48,12 +50,11 @@ export default function WorkerDashboardV2() {
   const { staff, isLoading: staffLoading } = useStaff();
 
 
-  const { data: workerProfile, isLoading: isWorkerProfileLoading, error: workerProfileError } = useWorker(user?.workerProfile?.id || '');
+  const { profile: workerProfile, isLoading: isWorkerProfileLoading, error: workerProfileError } = useWorkerProfile(user?.workerProfile?.id || '');
   const { data: currentPeriodCommissionData, isLoading: isCurrentPeriodCommissionLoading, error: commissionDataError } = useWorkerCommission(user?.workerProfile?.id || '');
   const { commissions: allCommissions, isLoading: isAllCommissionsLoading } = useCommission(); // Fetch all commissions for history
   // Assuming the backend can accept a 'period' like 'week' to aggregate weekly data
   const { data: weeklyCommissionData, isLoading: isWeeklyCommissionLoading } = useWorkerCommission(user?.id || '', 'weekly');
-
 
   // Get today's date
   const today = new Date().toISOString().split('T')[0];
@@ -63,7 +64,6 @@ export default function WorkerDashboardV2() {
     appointments = [],
     isLoading: isAppointmentsLoading,
     updateStatus,
-    rescheduleAppointment
   } = useAppointments({
     workerId: user?.workerProfile?.id,
     date: today,
@@ -823,9 +823,30 @@ export default function WorkerDashboardV2() {
                         <p className="text-xl font-semibold text-green-600 dark:text-green-400">
                           {currentPeriodCommissionData?.commission ? currentPeriodCommissionData.commission.toLocaleString() : '0'} Fc
                         </p>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">
-                          Prêt pour paiement
-                        </p>
+                        {currentPeriodCommissionData?.commission && currentPeriodCommissionData?.commission >= 0 ? (
+                          <PayrollModal
+                            staffName={user?.name}
+                            staff={worker}
+                            period={workerProfile?.commissionFrequency}
+                            trigger={
+                              <Button
+                                size="default"
+                                className="w-full bg-green-500 hover:bg-green-600 text-white dark:bg-green-600 dark:hover:bg-green-700"
+                              >
+                                Générer Fiche de Paie
+                              </Button>
+                            }
+                          />
+                        ) : (
+                          <Button
+                            size="default"
+                            disabled
+                            className="w-full bg-emerald-700 hover:bg-green-600 text-white dark:bg-green-600 dark:hover:bg-green-700"
+                          >
+                            Vous n'avez pas pu generer de revenue {workerProfile?.commissionFrequency === 'daily' ? 'Aujourd\'hui' :
+                              workerProfile?.commissionFrequency === 'weekly' ? 'Cette semaine' : 'Ce mois-ci'}
+                          </Button>
+                        )}
                       </div>
                     </div>
                   </Card>

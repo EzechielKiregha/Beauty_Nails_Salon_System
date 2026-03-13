@@ -1,4 +1,5 @@
 import axiosdb from '../axios';
+import { Worker } from './staff'
 
 export interface WorkerProfileUpdateData {
   position?: string;
