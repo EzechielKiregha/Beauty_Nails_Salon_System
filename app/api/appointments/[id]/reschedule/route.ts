@@ -41,7 +41,7 @@ export async function PATCH(
       time: newTime,
       date: newDate,
       workerId: newStaffId,
-      status: 'pending', // Reset status to pending on reschedule
+      status: 'confirmed', // Reset status to pending on reschedule
     },
     include:{
       service:{

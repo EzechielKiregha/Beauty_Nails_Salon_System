@@ -26,7 +26,7 @@ interface Appointment {
   date?: string; // ISO date string
 }
 
-export default function BookingCalendar({ showMock }: { showMock?: boolean }) {
+export default function BookingCalendar() {
   const [currentWeekStart, setCurrentWeekStart] = useState<Date>(() => {
     const today = new Date();
     const day = today.getDay(); // Sunday = 0, Monday = 1, etc.
@@ -46,9 +46,11 @@ export default function BookingCalendar({ showMock }: { showMock?: boolean }) {
   // Get staff and appointments
   const { staff: allStaff } = useStaff();
   const { appointments: allAppointments } = useAppointments({
-    date: currentWeekStart.toISOString().split('T')[0],
-    workerId: user?.role === 'worker' ? user.id : undefined
+    // date: currentWeekStart.toISOString().split('T')[0],
+    workerId: user?.role === 'worker' ? user.workerProfile?.id : undefined
   });
+
+  // console.log("LES RENDEZ-VOUS : ", allAppointments)
 
   // Filter staff based on user role and selection
   const filteredStaff = useMemo(() => {
@@ -69,11 +71,13 @@ export default function BookingCalendar({ showMock }: { showMock?: boolean }) {
     }));
   }, [allStaff, user?.role, user?.id, selectedStaffFilter]);
 
+  // console.log("filtered Staffs: ", filteredStaff)
+
   // Process appointments
   const processedAppointments = useMemo(() => {
     if (!allAppointments || allAppointments.length === 0) return [];
 
-    return allAppointments.map((apt: any) => ({
+    return allAppointments.map((apt) => ({
       id: apt.id || `${apt.date}_${apt.time}`,
       time: apt.time || new Date(apt.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       duration: apt.duration || 60,
@@ -89,6 +93,8 @@ export default function BookingCalendar({ showMock }: { showMock?: boolean }) {
       date: apt.date
     }));
   }, [allAppointments]);
+
+  // console.log("processed rendez-vous: ", processedAppointments)
 
   // Generate days of the week (excluding Sunday)
   const daysOfWeek = useMemo(() => {
@@ -113,13 +119,15 @@ export default function BookingCalendar({ showMock }: { showMock?: boolean }) {
       grouped[day.isoDate] = {};
       filteredStaff.forEach(staff => {
         grouped[day.isoDate][staff.id] = processedAppointments.filter(apt =>
-          apt.date === day.isoDate && apt.staffId === staff.id
+          apt.date.toString().split('T')[0] === day.isoDate && apt.staffId === staff.id
         );
       });
     });
 
     return grouped;
   }, [daysOfWeek, filteredStaff, processedAppointments]);
+
+  // console.log("rendez-vous par staff: ", appointmentsByDayAndStaff)
 
   // Navigation functions
   const goToPreviousWeek = () => {

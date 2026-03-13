@@ -101,7 +101,7 @@ export async function PUT(request: NextRequest,
 
     // Update the WorkerProfile
     const updatedWorkerProfile = await prisma.workerProfile.update({
-      where: { id: id },
+      where: { id: workerProfile.id },
       data: updateData,
       include: {
         user: {
@@ -119,12 +119,12 @@ export async function PUT(request: NextRequest,
     // Also potentially update user details if provided in the request
     // Only allow updating name, email, phone, avatar through this specific endpoint if intended
     // Be careful about allowing sensitive changes like email/phone without verification here.
-    // Example: if (body.name || body.email || body.phone) {
-    //   await prisma.user.update({
-    //     where: { id: updatedWorkerProfile.userId },
-    //     data: { name: body.name, email: body.email, phone: body.phone }
-    //   });
-    // }
+    if (body.name || body.email || body.phone) {
+      await prisma.user.update({
+        where: { id: updatedWorkerProfile.userId },
+        data: { name: body.name, email: body.email, phone: body.phone }
+      });
+    }
 
     const responseData = {
       id: updatedWorkerProfile.id,
@@ -140,7 +140,6 @@ export async function PUT(request: NextRequest,
       createdAt: updatedWorkerProfile.createdAt.toISOString(),
       updatedAt: updatedWorkerProfile.updatedAt.toISOString(),
       user: updatedWorkerProfile.user,
-      // Add fields if they exist in schema later:
       commissionType: updatedWorkerProfile.commissionType,
       commissionFrequency: updatedWorkerProfile.commissionFrequency,
       commissionDay: updatedWorkerProfile.commissionDay,

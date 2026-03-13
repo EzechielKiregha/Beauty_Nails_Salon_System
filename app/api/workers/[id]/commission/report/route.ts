@@ -3,12 +3,11 @@ import { NextRequest } from 'next/server';
 import { requireRole, successResponse, handleApiError, errorResponse } from '@/lib/api/helpers';
 import prisma from '@/lib/prisma';
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
-  try {
-    // Authentication might be needed, similar to GET profile
-    // await requireRole(['admin', 'worker']);
-
-    const { id } = params; // Worker ID
+export async function GET(request: NextRequest, 
+  context: { params: Promise<{ id: string; }>; }
+  ) {
+    try {
+      const id = (await context.params).id;
     const { searchParams } = new URL(request.url);
     const period = searchParams.get('period'); // e.g., '2026-03' for March 2026
 

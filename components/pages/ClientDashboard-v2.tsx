@@ -49,6 +49,7 @@ import {
   Cake,
   Mail,
   CreditCard,
+  Wallet,
 } from "lucide-react";
 import Link from "next/link";
 import { useAppointments } from "@/lib/hooks/useAppointments";
@@ -67,6 +68,7 @@ import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { Calendar } from "../ui/calendar";
+import AppointmentCountdown from "../AppointmentCountdown";
 
 export default function ClientDashboardV2() {
   const [notificationOpen, setNotificationOpen] = useState(false);
@@ -162,7 +164,7 @@ export default function ClientDashboardV2() {
 
   // Filter appointments
   const upcomingAppointments = appointments.filter(
-    (apt) => (apt.status === "confirmed") && new Date(apt.date).getDate() >= new Date().getDate(),
+    (apt) => (apt.status === "confirmed" || apt.status === "pending") && new Date(apt.date).getDate() >= new Date().getDate(),
   );
 
   const appointmentHistory = appointments.filter(
@@ -336,23 +338,34 @@ export default function ClientDashboardV2() {
     <div className="min-h-screen py-8 bg-linear-to-br from-pink-50 via-purple-50 to-white dark:from-gray-950 dark:via-gray-950 dark:to-gray-950">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Welcome Section */}
-        <div className="mb-12">
+        {/* Welcome Section */}
+
+        <div className="mb-10">
+
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
+
             <div>
-              <h1 className="text-3xl sm:text-4xl  bg-linear-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent mb-2">
+              <h1 className="text-3xl sm:text-4xl bg-linear-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent mb-2">
                 Bonjour, {user?.name} 👋
               </h1>
-              <p className="text-gray-900  dark:text-gray-300 text-base sm:text-lg">
+
+              <p className="text-gray-900 dark:text-gray-300 text-base sm:text-lg">
                 Bienvenue dans votre espace beauté
               </p>
             </div>
 
-            <div className="space-x-4">
+            <div className="flex items-center gap-3">
+
               {/* Notifications */}
               <Sheet open={notificationOpen} onOpenChange={setNotificationOpen}>
                 <SheetTrigger asChild>
-                  <Button variant="outline" size="icon" className="relative dark:border-gray-700 dark:text-gray-200">
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="relative dark:border-gray-700 dark:text-gray-200"
+                  >
                     <Bell className="w-5 h-5" />
+
                     {unreadCount > 0 && (
                       <span className="absolute -top-1 -right-1 w-5 h-5 bg-pink-500 text-white text-xs rounded-full flex items-center justify-center">
                         {unreadCount}
@@ -360,13 +373,17 @@ export default function ClientDashboardV2() {
                     )}
                   </Button>
                 </SheetTrigger>
-                <SheetContent className="p-2 border-r-0 border-pink-100 dark:border-pink-900 shadow-xl rounded-l-2xl bg-white dark:bg-gray-950">
-                  <div className="mb-6">
-                    <h2 className="text-2xl   mb-2 dark:text-gray-100">Notifications</h2>
+
+                <SheetContent className="p-3 border-r-0 border-pink-100 dark:border-pink-900 shadow-xl rounded-l-2xl bg-white dark:bg-gray-950">
+
+                  <div className="mb-5">
+                    <h2 className="text-2xl mb-1 dark:text-gray-100">Notifications</h2>
+
                     <div className="flex items-center justify-between">
-                      <p className="text-sm text-gray-900  dark:text-gray-300">
+                      <p className="text-sm text-gray-900 dark:text-gray-300">
                         {unreadCount} non lues
                       </p>
+
                       {unreadCount > 0 && (
                         <Button
                           variant="ghost"
@@ -381,137 +398,224 @@ export default function ClientDashboardV2() {
                   </div>
 
                   <ScrollArea className="h-[calc(100vh-200px)]">
-                    <div className="space-y-4">
+
+                    <div className="space-y-3">
+
                       {notificationList.length === 0 ? (
+
                         <div className="text-center py-12 text-gray-500">
                           <Bell className="w-12 h-12 mx-auto mb-4 opacity-20" />
                           <p>Aucune notification</p>
                         </div>
+
                       ) : (
+
                         notificationList.map((notification) => (
+
                           <div
                             key={notification.id}
-                            className={`p-4 rounded-lg border cursor-pointer transition-colors ${notification.isRead
-                              ? "mb-8 p-6 border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950"
-                              : "mb-8 p-6 border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-pink-200 dark:bg-pink-950"
-                              }`}
                             onClick={() => markAsRead(notification.id)}
+                            className={`p-4 rounded-xl border cursor-pointer transition-colors
+                  ${notification.isRead
+                                ? "bg-white dark:bg-gray-950 border-pink-100 dark:border-pink-900"
+                                : "bg-pink-100 dark:bg-pink-950 border-pink-200 dark:border-pink-800"
+                              }`}
                           >
+
                             <div className="flex gap-3">
+
                               {getNotificationIcon(notification.type)}
+
                               <div className="flex-1">
                                 <h3 className="font-semibold text-sm mb-1">
                                   {notification.title}
                                 </h3>
-                                <p className="text-sm text-gray-900 dark:text-gray-100 mb-2">
+
+                                <p className="text-sm text-gray-900 dark:text-gray-100 mb-1">
                                   {notification.message}
                                 </p>
+
                                 <p className="text-xs text-gray-500">
                                   {formatDate(notification.createdAt)}
                                 </p>
                               </div>
+
                             </div>
+
                           </div>
+
                         ))
+
                       )}
+
                     </div>
+
                   </ScrollArea>
+
                 </SheetContent>
               </Sheet>
+
               <Link href="/appointments">
                 <Button className="bg-linear-to-r from-pink-500 to-purple-500">
                   Réserver un rendez-vous
                 </Button>
               </Link>
+
             </div>
+
           </div>
 
-          {/* Stats Overview */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-            {/* Loyalty Points Card */}
-            <Card className="p-4 sm:p-6 bg-linear-to-br from-pink-500 to-purple-500 text-white border-0 shadow-xl">
-              <div className="flex items-center justify-between mb-4">
-                <div className="p-3 bg-white/20 rounded-lg backdrop-blur-sm">
-                  <Gift className="w-5 h-5 sm:w-6 sm:h-6" />
+          {/* Main Stats */}
+
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+
+            {/* Loyalty */}
+            <Card className="p-4 sm:p-5 bg-linear-to-br from-pink-500 to-purple-500 text-white border-0 shadow-xl flex flex-col justify-between">
+
+              <div className="flex items-center justify-between">
+                <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
+                  <Gift className="w-5 h-5" />
                 </div>
-                {loyaltyTier === "VIP" && <Crown className="w-4 h-4 sm:w-5 sm:h-5 opacity-80" />}
-                {loyaltyTier === "Premium" && <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 opacity-80" />}
+
+                {loyaltyTier === "VIP" && <Crown className="w-5 h-5 opacity-80" />}
+                {loyaltyTier === "Premium" && <Sparkles className="w-5 h-5 opacity-80" />}
               </div>
-              <p className="text-xs sm:text-sm opacity-90 mb-1">Points de fidélité</p>
-              <p className="text-2xl sm:text-3xl  mb-2">{loyaltyPoints}</p>
-              <Badge className="bg-white/20 hover:bg-white/30 text-white border-0 text-xs sm:text-sm">
-                {loyaltyTier}
-              </Badge>
+
+              <div>
+                <p className="text-sm opacity-90">Points de fidélité</p>
+
+                <p className="text-2xl sm:text-3xl mt-1">{loyaltyPoints}</p>
+
+                <Badge className="bg-white/20 hover:bg-white/30 text-white border-0 mt-2 text-xs">
+                  {loyaltyTier}
+                </Badge>
+              </div>
+
             </Card>
 
-            {/* Total Appointments */}
-            <Card className="p-4 sm:p-6 hover:shadow-lg transition-shadow border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950">
-              <div className="flex items-center justify-between mb-4">
-                <div className="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
-                  <CalendarIcon className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600 dark:text-purple-400" />
-                </div>
+
+            {/* Appointments */}
+            <Card className="p-4 sm:p-5 hover:shadow-lg transition-shadow border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950 flex flex-col justify-between">
+
+              <div className="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-lg w-fit">
+                <CalendarIcon className="w-5 h-5 text-purple-600 dark:text-purple-400" />
               </div>
-              <p className="text-xs sm:text-sm text-gray-900 dark:text-gray-300 mb-1">Rendez-vous</p>
-              <p className="text-2xl sm:text-3xl  text-gray-900 dark:text-gray-100">
-                {completedAppointments}
-              </p>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                {upcomingAppointments.length} à venir
-              </p>
+
+              <div>
+                <p className="text-sm text-gray-900 dark:text-gray-300">
+                  Rendez-vous
+                </p>
+
+                <p className="text-2xl sm:text-3xl text-gray-900 dark:text-gray-100">
+                  {completedAppointments}
+                </p>
+
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  {upcomingAppointments.length} à venir
+                </p>
+              </div>
+
             </Card>
+
 
             {/* Referrals */}
-            <Card className="p-4 sm:p-6 hover:shadow-lg transition-shadow border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950">
-              <div className="flex items-center justify-between mb-4">
-                <div className="p-3 bg-amber-100 dark:bg-amber-900/30 rounded-lg">
-                  <Users className="w-5 h-5 sm:w-6 sm:h-6 text-amber-600 dark:text-amber-400" />
-                </div>
+            <Card className="p-4 sm:p-5 hover:shadow-lg transition-shadow border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950 flex flex-col justify-between">
+
+              <div className="p-2 bg-amber-100 dark:bg-amber-900/30 rounded-lg w-fit">
+                <Users className="w-5 h-5 text-amber-600 dark:text-amber-400" />
               </div>
-              <p className="text-xs sm:text-sm text-gray-900  dark:text-gray-300 mb-1">Parrainages</p>
-              <p className="text-2xl sm:text-3xl  text-gray-900 dark:text-gray-100">{referrals?.length}</p>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                {nextFreeReferral} pour service gratuit
-              </p>
+
+              <div>
+                <p className="text-sm text-gray-900 dark:text-gray-300">
+                  Parrainages
+                </p>
+
+                <p className="text-2xl sm:text-3xl text-gray-900 dark:text-gray-100">
+                  {referrals?.length}
+                </p>
+
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  {nextFreeReferral} pour service gratuit
+                </p>
+              </div>
+
             </Card>
 
-            {/* Next Free Service */}
-            <Card className="p-4 sm:p-6 hover:shadow-lg transition-shadow border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950">
-              <div className="flex items-center justify-between mb-4">
-                <div className="p-3 bg-green-100 dark:bg-green-900/30 rounded-lg">
-                  <Award className="w-5 h-5 sm:w-6 sm:h-6 text-green-600 dark:text-green-400" />
-                </div>
+
+            {/* Free Service */}
+            <Card className="p-4 sm:p-5 hover:shadow-lg transition-shadow border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950 flex flex-col justify-between">
+
+              <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-lg w-fit">
+                <Award className="w-5 h-5 text-green-600 dark:text-green-400" />
               </div>
-              <p className="text-xs sm:text-sm text-gray-900 dark:text-gray-300 mb-1">Service gratuit dans</p>
-              <p className="text-2xl sm:text-3xl  text-gray-900 dark:text-gray-100">
-                {nextFreeService}
-              </p>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">rendez-vous</p>
+
+              <div>
+                <p className="text-sm text-gray-900 dark:text-gray-300">
+                  Service gratuit dans
+                </p>
+
+                <p className="text-2xl sm:text-3xl text-gray-900 dark:text-gray-100">
+                  {nextFreeService}
+                </p>
+
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  rendez-vous
+                </p>
+              </div>
+
             </Card>
+
           </div>
-          {/* Quick Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 pt-4">
-            <div className="bg-linear-to-br from-blue-50 to-cyan-50 dark:from-gray-950 dark:to-gray-950 p-5 rounded-3xl text-center shadow-sm sm:p-6 hover:shadow-lg transition-shadow border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 ">
-              <CalendarIcon className="w-6 h-6 text-blue-600 dark:text-blue-400 mx-auto mb-2" />
-              <p className="text-2xl font-black text-gray-900 dark:text-gray-100">{selectedClient?.totalAppointments}</p>
-              <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase  tracking-tight">Tout les Rendez-vous</p>
+
+          {/* Secondary Stats */}
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-5">
+
+
+            <div className="bg-linear-to-br from-blue-50 to-cyan-50 dark:from-gray-950 dark:to-gray-950 p-4 rounded-2xl text-center shadow-sm hover:shadow-lg transition-shadow border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400">
+              <CalendarIcon className="w-5 h-5 text-blue-600 dark:text-blue-400 mx-auto mb-2" />
+              <p className="text-xl font-black text-gray-900 dark:text-gray-100">
+                {selectedClient?.totalAppointments}
+              </p>
+              <p className="text-xs text-gray-500 uppercase tracking-tight">
+                Tous les rendez-vous
+              </p>
             </div>
-            <div className="bg-linear-to-br from-green-50 to-emerald-50 dark:from-gray-950 dark:to-gray-950 p-5 rounded-3xl text-center shadow-sm sm:p-6 hover:shadow-lg transition-shadow border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 ">
-              <DollarSign className="w-6 h-6 text-green-600 dark:text-green-400 mx-auto mb-2" />
-              <p className="text-lg font-black text-gray-900 dark:text-gray-100 truncate px-1">{selectedClient?.totalSpent}</p>
-              <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase  tracking-tight">Dépensé en Fc</p>
+
+            <div className="bg-linear-to-br from-green-50 to-emerald-50 dark:from-gray-950 dark:to-gray-950 p-4 rounded-2xl text-center shadow-sm hover:shadow-lg transition-shadow border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400">
+              <DollarSign className="w-5 h-5 text-green-600 dark:text-green-400 mx-auto mb-2" />
+              <p className="text-xl font-black text-gray-900 dark:text-gray-100 truncate">
+                {selectedClient?.totalSpent}
+              </p>
+              <p className="text-xs text-gray-500 uppercase tracking-tight">
+                Dépensé
+              </p>
             </div>
-            <div className="bg-linear-to-br from-purple-50 to-pink-50 dark:from-gray-950 dark:to-gray-950 p-5 rounded-3xl text-center shadow-sm sm:p-6 hover:shadow-lg transition-shadow border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 ">
-              <Award className="w-6 h-6 text-purple-600 dark:text-purple-400 mx-auto mb-2" />
-              <p className="text-2xl font-black text-gray-900 dark:text-gray-100">{selectedClient?.loyaltyPoints}</p>
-              <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase  tracking-tight">Points</p>
+
+            <div className="bg-linear-to-br from-purple-50 to-pink-50 dark:from-gray-950 dark:to-gray-950 p-4 rounded-2xl text-center shadow-sm hover:shadow-lg transition-shadow border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400">
+              <Gift className="w-5 h-5 text-purple-600 dark:text-purple-400 mx-auto mb-2" />
+              <p className="text-xl font-black text-gray-900 dark:text-gray-100">
+                {selectedClient?.giftCardBalance}
+              </p>
+              <p className="text-xs text-gray-500 uppercase tracking-tight">
+                Carte cadeau
+              </p>
             </div>
-            <div className="bg-linear-to-br from-amber-50 to-orange-50 dark:from-gray-950 dark:to-gray-950 p-5 rounded-3xl text-center shadow-sm sm:p-6 hover:shadow-lg transition-shadow border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 ">
-              <Gift className="w-6 h-6 text-amber-600 dark:text-amber-400 mx-auto mb-2" />
-              <p className="text-2xl font-black text-gray-900 dark:text-gray-100">{referrals?.length}</p>
-              <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase  tracking-tight">Parrains</p>
+
+            <div className="bg-linear-to-br from-amber-50 to-orange-50 dark:from-gray-950 dark:to-gray-950 p-4 rounded-2xl text-center shadow-sm hover:shadow-lg transition-shadow border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400">
+              <Wallet className="w-5 h-5 text-amber-600 dark:text-amber-400 mx-auto mb-2" />
+              <p className="text-xl font-black text-gray-900 dark:text-gray-100">
+                {selectedClient?.prepaymentBalance}
+              </p>
+              <p className="text-xs text-gray-500 uppercase tracking-tight">
+                Prépayé
+              </p>
             </div>
+
           </div>
+
         </div>
+
 
         {/* Main Content Tabs */}
         <Tabs defaultValue="appointments" className="space-y-6">
@@ -616,7 +720,7 @@ export default function ClientDashboardV2() {
                               </p>
                             </div>
 
-                            {appointment.status !== "cancelled" && !missed && (
+                            {/* {appointment.status !== "cancelled" && !missed && (
                               <div className="flex gap-2">
                                 <Button variant="outline" size="sm">
                                   <Phone className="w-4 h-4 mr-2" />
@@ -635,7 +739,11 @@ export default function ClientDashboardV2() {
                                   Annuler
                                 </Button>
                               </div>
-                            )}
+                            )} */}
+                            <AppointmentCountdown
+                              date={appointment.date}
+                              time={appointment.time}
+                            />
                             {missed && appointment.status !== "cancelled" && (
                               <Popover>
                                 <PopoverTrigger asChild>

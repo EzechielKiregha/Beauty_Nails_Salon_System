@@ -2,12 +2,12 @@ import { NextRequest } from 'next/server';
 import { requireRole, successResponse, handleApiError, errorResponse } from '@/lib/api/helpers';
 import prisma from '@/lib/prisma';
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
-  try {
+export async function GET(request: NextRequest, 
+  context: { params: Promise<{ id: string; }>; }
+  ) {
+    try {
+      const id = (await context.params).id;
     // await requireRole(['admin', 'worker']); // Add auth if needed
-
-    const { id } = params; // Worker ID
-
     // Assuming payments are tracked in the Commission model where status is 'paid'
     const paidCommissions = await prisma.commission.findMany({
       where: {

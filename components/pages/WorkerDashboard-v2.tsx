@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Card } from '../ui/card';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
@@ -18,44 +18,42 @@ import {
   DollarSign,
   Plus,
   Users,
-  ShoppingCart
+  ShoppingCart,
+  ExternalLink,
+  FileText,
+  Loader2,
+  Info,
+  AlertTriangle
 } from 'lucide-react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { useAppointments } from '@/lib/hooks/useAppointments';
-import { useStaff, useWorkerCommission } from '@/lib/hooks/useStaff';
+import { useCommission, useStaff, useWorker, useWorkerCommission } from '@/lib/hooks/useStaff';
 import { useNotifications } from '@/lib/hooks/useNotifications';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import LoaderBN from '../Loader-BN';
-import { Label } from '../ui/label';
-import { Calendar } from '../ui/calendar';
-import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
-import { cn } from '../ui/utils';
-import { AppointmentModal } from '../modals/AppointmentModal';
-import { StaffProfileModal } from '../modals/StaffModals';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
-import ClientManagement from '../ClientManagement';
-import POSCheckout from '../POSCheckout';
 import BookingCalendar from '../BookingCalendar';
 import { StaffModal } from '../modals/StaffModals-v2';
+import AppointmentCountdown from '../AppointmentCountdown';
 
 export default function WorkerDashboardV2() {
   const [notificationOpen, setNotificationOpen] = useState(false);
   const [selectedAppointment, setSelectedAppointment] = useState<any>(null);
   const [detailsOpen, setDetailsOpen] = useState(false);
   const router = useRouter()
-  const [selectedDate, setSelectedDate] = useState<
-    Date | undefined
-  >(undefined);
-  const [selectedTime, setSelectedTime] = useState<string>('');
-  const [selectedClient, setSelectedClient] = useState<any>();
-  const [profileOpen, setProfileOpen] = useState<boolean>(false);
-
-
   // Get authenticated user
   const { user, isLoading: isAuthLoading } = useAuth();
   const { staff, isLoading: staffLoading } = useStaff();
+
+
+  const { data: workerProfile, isLoading: isWorkerProfileLoading, error: workerProfileError } = useWorker(user?.workerProfile?.id || '');
+  const { data: currentPeriodCommissionData, isLoading: isCurrentPeriodCommissionLoading, error: commissionDataError } = useWorkerCommission(user?.workerProfile?.id || '');
+  const { commissions: allCommissions, isLoading: isAllCommissionsLoading } = useCommission(); // Fetch all commissions for history
+  // Assuming the backend can accept a 'period' like 'week' to aggregate weekly data
+  const { data: weeklyCommissionData, isLoading: isWeeklyCommissionLoading } = useWorkerCommission(user?.id || '', 'weekly');
+
 
   // Get today's date
   const today = new Date().toISOString().split('T')[0];
@@ -89,16 +87,67 @@ export default function WorkerDashboardV2() {
     date: weekStartStr,
   });
 
-  // Get worker commission
-  const { data: commissionData, isLoading: isCommissionLoading } = useWorkerCommission(
-    user?.workerProfile?.id || '',
-    'weekly'
+  const [selectedPeriod, setSelectedPeriod] = useState<string>('current'); // Default to current period
+
+  // Filter commissions for the current worker if using the global hook
+  const workerCommissions = allCommissions?.filter(c => c.workerId === user?.id) || [];
+
+  // Determine if commission settings are incomplete
+  const isCommissionConfigIncomplete = workerProfile && (
+    !workerProfile.commissionFrequency ||
+    !workerProfile.commissionDay ||
+    workerProfile.minimumPayout === undefined
   );
 
-  // Get worker schedule
-  // const { schedule = [], isLoading: isScheduleLoading } = useWorkerSchedule(
-  //   user?.workerProfile?.id || ''
-  // );
+  // Prepare data for the weekly performance chart
+  const weeklyData = useMemo(() => {
+    // This assumes weeklyCommissionData contains aggregated data per day or a similar structure
+    // If the API doesn't provide this format, you might need to process workerCommissions or allCommissions
+    if (weeklyCommissionData && Array.isArray(weeklyCommissionData)) {
+      // If weeklyCommissionData is an array of daily stats
+      return weeklyCommissionData.map(item => ({
+        day: item.day || item.period || 'Unknown', // Adjust key based on actual API response
+        rendezVous: item.appointmentsCount || 0,
+        commission: item.commission || 0,
+        totalRevenue: item.totalRevenue || 0,
+      }));
+    } else if (weeklyCommissionData && typeof weeklyCommissionData === 'object') {
+      // If weeklyCommissionData is a single object with daily breakdowns
+      // Example: { mon: { appointmentsCount: 2, ... }, tue: { ... }, ... }
+      return Object.entries(weeklyCommissionData).map(([day, data]: [string, any]) => ({
+        day,
+        rendezVous: data.appointmentsCount || 0,
+        commission: data.commission || 0,
+        totalRevenue: data.totalRevenue || 0,
+      }));
+    }
+    // Fallback: Generate empty data for the chart
+    return [
+      { day: 'Lun', rendezVous: 0, commission: 0, totalRevenue: 0 },
+      { day: 'Mar', rendezVous: 0, commission: 0, totalRevenue: 0 },
+      { day: 'Mer', rendezVous: 0, commission: 0, totalRevenue: 0 },
+      { day: 'Jeu', rendezVous: 0, commission: 0, totalRevenue: 0 },
+      { day: 'Ven', rendezVous: 0, commission: 0, totalRevenue: 0 },
+      { day: 'Sam', rendezVous: 0, commission: 0, totalRevenue: 0 },
+      { day: 'Dim', rendezVous: 0, commission: 0, totalRevenue: 0 },
+    ];
+  }, [weeklyCommissionData]);
+
+
+
+  // Calculate next payment date based on profile settings (placeholder logic)
+  const getNextPaymentDate = () => {
+    if (!workerProfile?.commissionFrequency || !workerProfile?.commissionDay) return 'À configurer';
+    // This is simplified - actual calculation would depend on frequency and day
+    return `Le ${workerProfile.commissionDay} de chaque ${workerProfile.commissionFrequency}`;
+  };
+
+  // Handle saving commission settings (example action)
+  const handleConfigureCommission = () => {
+    // Navigate to profile edit or open a specific modal
+    // Example: router.push('/profile/edit') or setOpenCommissionSetupModal(true)
+    toast.info('Veuillez configurer vos paramètres de commission dans le profil.');
+  };
 
   // Get notifications
   const {
@@ -112,12 +161,12 @@ export default function WorkerDashboardV2() {
     apt => apt.status === 'confirmed' || apt.status === 'in_progress' || apt.status === 'pending'
   );
 
-  const completedToday = appointments.filter(
-    apt => apt.status === 'completed'
+  const pendingAppointments = AllAppointments.filter(
+    (apt) => (apt.status === "confirmed" || apt.status === "pending") && new Date(apt.date).getDate() >= new Date().getDate(),
   );
 
-  const pendingAppointments = appointments.filter(
-    apt => apt.status === 'pending'
+  const completedToday = appointments.filter(
+    apt => apt.status === 'completed'
   );
 
   const missedAppointments = AllAppointments.filter(
@@ -132,15 +181,22 @@ export default function WorkerDashboardV2() {
 
   const worker = staff?.find(s => s.id === user?.workerProfile?.id);
 
-  // Calculate stats
-  const stats = {
-    todayAppointments: todaySchedule.length,
-    completed: completedToday.length,
-    pending: pendingAppointments.length,
-    rating: user?.workerProfile?.rating || 0,
-    commission: commissionData?.commission || 0,
-    revenue: commissionData?.totalRevenue || 0,
-  };
+  // Stats for the summary cards and performance section
+  const stats = useMemo(() => {
+    // Calculate stats based on currentPeriodCommissionData or workerProfile
+    const commission = currentPeriodCommissionData?.commission || 0;
+    const totalRevenue = currentPeriodCommissionData?.totalRevenue || 0;
+    const rating = workerProfile?.rating || 0; // Assuming rating comes from profile
+
+    return {
+      commission,
+      revenue: totalRevenue,
+      rating,
+      todayAppointments: todaySchedule.length,
+      completed: completedToday.length,
+      pending: pendingAppointments.length,
+    };
+  }, [currentPeriodCommissionData, workerProfile]);
 
   // Handle update status
   const handleUpdateStatus = (appointmentId: string, newStatus: string) => {
@@ -158,24 +214,6 @@ export default function WorkerDashboardV2() {
     );
   };
 
-  const handleReschedule = (appointmentId: string, time: string, date: Date) => {
-    rescheduleAppointment(
-      {
-        id: appointmentId,
-        data: {
-          newTime: time,
-          newDate: date,
-          newStaffId: user?.workerProfile?.id,
-        }
-      },
-      {
-        onSuccess: () => {
-          toast.success('Statut mis à jour');
-          setDetailsOpen(false);
-        },
-      }
-    );
-  };
   // Get status badge
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -246,36 +284,28 @@ export default function WorkerDashboardV2() {
     });
   };
 
-  // Format time
-  const formatTime = (dateString: string) => {
-    return new Date(dateString).toLocaleTimeString('fr-FR', {
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-  };
-
   // Calculate weekly data from appointments
-  const weeklyData = (() => {
-    const days = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
-    const data = days.map((day, index) => {
-      const dayDate = new Date(weekStart);
-      dayDate.setDate(dayDate.getDate() + index);
-      const dayStr = dayDate.toISOString().split('T')[0];
+  // const weeklyData = (() => {
+  //   const days = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
+  //   const data = days.map((day, index) => {
+  //     const dayDate = new Date(weekStart);
+  //     dayDate.setDate(dayDate.getDate() + index);
+  //     const dayStr = dayDate.toISOString().split('T')[0];
 
-      const dayAppointments = weeklyAppointments.filter(
-        apt => apt.date?.toString().split('T')[0] === dayStr ||
-          apt.date === dayStr ||
-          new Date(apt.date).toISOString().split('T')[0] === dayStr
-      );
+  //     const dayAppointments = weeklyAppointments.filter(
+  //       apt => apt.date?.toString().split('T')[0] === dayStr ||
+  //         apt.date === dayStr ||
+  //         new Date(apt.date).toISOString().split('T')[0] === dayStr
+  //     );
 
-      return {
-        day,
-        rendezVous: dayAppointments.length,
-        revenus: dayAppointments.reduce((sum, apt) => sum + (apt.price || 0), 0),
-      };
-    });
-    return data;
-  })();
+  //     return {
+  //       day,
+  //       rendezVous: dayAppointments.length,
+  //       revenus: dayAppointments.reduce((sum, apt) => sum + (apt.price || 0), 0),
+  //     };
+  //   });
+  //   return data;
+  // })();
 
   // Calculate service statistics from appointments
   const serviceStats = (() => {
@@ -371,18 +401,6 @@ export default function WorkerDashboardV2() {
               <StaffModal
                 staffId={worker?.id || ''}
                 trigger={
-                  <Avatar className="w-12 h-12 border-4 border-white shadow-lg" onClick={() => setProfileOpen(true)}>
-                    <AvatarImage src="" />
-                    <AvatarFallback className="text-2xl font-medium bg-gray-100 text-gray-600">
-                      {worker?.name.split(" ")[0]?.charAt(0) || worker?.name.charAt(0)}
-                    </AvatarFallback>
-                  </Avatar>
-                }
-              />
-
-              {/* <StaffProfileModal
-                staff={worker}
-                trigger={
                   <Avatar className="w-12 h-12 border-4 border-white shadow-lg">
                     <AvatarImage src="" />
                     <AvatarFallback className="text-2xl font-medium bg-gray-100 text-gray-600">
@@ -390,7 +408,7 @@ export default function WorkerDashboardV2() {
                     </AvatarFallback>
                   </Avatar>
                 }
-              /> */}
+              />
             </div>
           </div>
 
@@ -446,7 +464,7 @@ export default function WorkerDashboardV2() {
 
         {/* Main Content */}
         <Tabs defaultValue="schedule" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 mt-3 lg:mt-6 bg-white dark:bg-gray-950 border border-gray-200 dark:border-pink-900/30 p-1 rounded-xl justify-start sm:justify-center ">
+          <TabsList className="grid w-full grid-cols-2 lg:grid-cols-3 mt-3 lg:mt-6 bg-white dark:bg-gray-950 border border-gray-200 dark:border-pink-900/30 p-1 rounded-xl justify-start sm:justify-center ">
             <TabsTrigger value="schedule" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">
               <CalendarIcon className="w-4 h-4 mr-2" />
               Planning
@@ -455,21 +473,9 @@ export default function WorkerDashboardV2() {
               <CalendarIcon className="w-4 h-4 mr-2" />
               Mon Calendrier
             </TabsTrigger>
-            {/* <TabsTrigger value="clients" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">
-              <Users className="w-4 h-4 mr-2" />
-              Clients
-            </TabsTrigger> */}
-            {/* <TabsTrigger value="pos" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">
-              <ShoppingCart className="w-4 h-4 mr-2" />
-              Caisse
-            </TabsTrigger> */}
             <TabsTrigger value="performance" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">
               <TrendingUp className="w-4 h-4 mr-2" />
               Performance
-            </TabsTrigger>
-            <TabsTrigger value="earnings" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">
-              <DollarSign className="w-4 h-4 mr-2" />
-              Commissions
             </TabsTrigger>
           </TabsList>
 
@@ -481,14 +487,6 @@ export default function WorkerDashboardV2() {
                   <Clock className="w-6 h-6 mr-2 text-purple-500" />
                   Planning d'aujourd'hui
                 </h2>
-                {/* <AppointmentModal
-                  client={selectedClient}
-                  trigger={
-                    <Button size="sm" className="bg-linear-to-r from-pink-500 to-purple-500 text-white rounded-full py-5 px-6 shadow-lg shadow-pink-500/20  transition-all text-sm">
-                      <Plus className="w-5 h-5 mr-3" />
-                      Nouveau rendez-vous
-                    </Button>
-                  } /> */}
               </div>
 
               {todaySchedule.length === 0 ? (
@@ -590,7 +588,7 @@ export default function WorkerDashboardV2() {
               <Card className="p-6">
                 <h3 className="text-lg font-semibold mb-4 flex items-center text-cyan-800 dark:text-cyan-400">
                   <AlertCircle className="w-5 h-5 mr-2" />
-                  En attente de confirmation ({pendingAppointments.length})
+                  En attente ({pendingAppointments.length})
                 </h3>
                 <div className="space-y-3">
                   {pendingAppointments.map((appointment) => (
@@ -607,139 +605,15 @@ export default function WorkerDashboardV2() {
                           date : {appointment.date ? format(new Date(appointment.date), "PPP", { locale: fr }) : 'Date non définie'}
                         </p>
                       </div>
-                      <div className="flex gap-2">
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className="text-red-600"
-                          onClick={() =>
-                            handleUpdateStatus(appointment.id, 'cancelled')
-                          }
-                        >
-                          Refuser
-                        </Button>
-                        <Button
-                          size="sm"
-                          onClick={() =>
-                            handleUpdateStatus(appointment.id, 'confirmed')
-                          }
-                        >
-                          Confirmer
-                        </Button>
-                      </div>
+                      <AppointmentCountdown
+                        date={appointment.date}
+                        time={appointment.time}
+                      />
                     </div>
                   ))}
                 </div>
               </Card>
             )}
-            {/* missed Confirmations */}
-            {/* {missedAppointments.length > 0 && (
-              <Card className="p-6">
-                <h3 className="text-lg font-semibold mb-4 flex items-center text-yellow-800 dark:text-yellow-400">
-                  <AlertCircle className="w-5 h-5 mr-2" />
-                  confirmation manquee ({missedAppointments.length})
-                </h3>
-                <div className="space-y-3">
-                  {missedAppointments.map((appointment) => (
-                    <div
-                      key={appointment.id}
-                      className="flex flex-col md:flex-row items-center justify-start md:justify-between p-4 border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950"
-                    >
-                      <div>
-                        <p className="font-semibold">{appointment.client?.user?.name}</p>
-                        <p className="text-sm text-gray-600 dark:text-gray-300 ">
-                          {appointment.service?.name}
-                        </p>
-                        <p className="text-sm text-gray-600 dark:text-gray-300">
-                          date : {format(new Date(appointment.date), "PPP", { locale: fr })} - {appointment.time}
-                        </p>
-                      </div>
-                      <div className="flex gap-2 flex-col md:flex-row lg:flex-row">
-
-                        <div className="space-y-2">
-                          <Popover>
-                            <PopoverTrigger asChild>
-                              <Button
-                                variant={"outline"}
-                                className={cn(
-                                  "w-full justify-start text-left font-normal",
-                                  !selectedDate && "text-muted-foreground"
-                                )}
-                              >
-                                <CalendarIcon className="mr-2 h-4 w-4" />
-                                {selectedDate ? format(selectedDate, "PPP", { locale: fr }) : <span>Choisir date</span>}
-                              </Button>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-auto p-0">
-                              <Calendar
-                                mode="single"
-                                selected={selectedDate}
-                                onSelect={setSelectedDate}
-                                className="dark:text-gray-100"
-                                disabled={(date) => date < new Date()}
-                              />
-                            </PopoverContent>
-                          </Popover>
-                        </div>
-                        <div className="flex-1 w-full">
-                          <Select value={selectedTime} onValueChange={setSelectedTime}>
-                            <SelectTrigger className="w-full">
-                              <SelectValue placeholder="Choisir une heure" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="09:00">
-                                <Clock className="inline mr-2 h-4 w-4" />
-                                09:00
-                              </SelectItem>
-                              <SelectItem value="10:00">
-                                <Clock className="inline mr-2 h-4 w-4" />
-                                10:00
-                              </SelectItem>
-                              <SelectItem value="11:00">
-                                <Clock className="inline mr-2 h-4 w-4" />
-                                11:00
-                              </SelectItem>
-                              <SelectItem value="14:00">
-                                <Clock className="inline mr-2 h-4 w-4" />
-                                14:00
-                              </SelectItem>
-                              <SelectItem value="15:00">
-                                <Clock className="inline mr-2 h-4 w-4" />
-                                15:00
-                              </SelectItem>
-                              <SelectItem value="16:00">
-                                <Clock className="inline mr-2 h-4 w-4" />
-                                16:00
-                              </SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                        <div className="flex flex-row w-full md:w-auto gap-2">
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            className="text-red-600"
-                            onClick={() =>
-                              handleUpdateStatus(appointment.id, 'cancelled')
-                            }
-                          >
-                            Refuser
-                          </Button>
-                          <Button
-                            size="sm"
-                            onClick={() =>
-                              handleReschedule(appointment.id, selectedTime, selectedDate!)
-                            }
-                          >
-                            Reschedule
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </Card>
-            )} */}
             {/* completed Confirmations */}
             {completedAppointments.length > 0 && (
               <Card className="p-6">
@@ -817,147 +691,242 @@ export default function WorkerDashboardV2() {
 
           {/* Calendar Tab */}
           <TabsContent value="calendar" className="mt-14 lg:mt-2">
-            <BookingCalendar showMock={false} />
+            <BookingCalendar />
           </TabsContent>
 
-          {/* Clients Tab */}
-          {/* <TabsContent value="clients" className="mt-14 lg:mt-2">
-            <ClientManagement showMock={false} />
-          </TabsContent> */}
-
-          {/* <TabsContent value="pos" className="mt-14 lg:mt-6">
-            <POSCheckout showMock={false} />
-          </TabsContent> */}
-
-          {/* Performance Tab */}
-          <TabsContent value="performance" className="space-y-6">
-            <Card className="p-6">
-              <h2 className="text-2xl   mb-6">Performance hebdomadaire</h2>
-              <div className="h-80">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={weeklyData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="day" />
-                    <YAxis />
-                    <Tooltip />
-                    <Bar dataKey="rendezVous" fill="#a855f7" name="Rendez-vous" />
-                  </BarChart>
-                </ResponsiveContainer>
+          <TabsContent value="performance" className="space-y-6"> {/* Changed value to 'performance' */}
+            {isWorkerProfileLoading || isCurrentPeriodCommissionLoading || isWeeklyCommissionLoading ? (
+              <div className="flex justify-center items-center h-64">
+                <Loader2 className="h-8 w-8 animate-spin" />
               </div>
-            </Card>
+            ) : workerProfileError ? (
+              <Card className="p-6 text-center">
+                <AlertTriangle className="w-12 h-12 mx-auto text-red-500 mb-4" />
+                <p className="text-red-500">Erreur de chargement des données de profil ou de commission.</p>
+              </Card>
+            ) : (
+              <>
+                {/* Commission Configuration Status Banner */}
+                {isCommissionConfigIncomplete && (
+                  <Card className="p-4 bg-amber-50 dark:bg-amber-950/30 border-amber-200 dark:border-amber-800">
+                    <div className="flex items-start gap-3">
+                      <AlertTriangle className="h-5 w-5 text-amber-600 dark:text-amber-400 mt-0.5 flex-shrink-0" />
+                      <div className="flex-1">
+                        <h3 className="font-medium text-amber-800 dark:text-amber-200">Configuration requise</h3>
+                        <p className="text-sm text-amber-700 dark:text-amber-300 mt-1">
+                          Vos paramètres de commission (fréquence, jour de paiement, seuil) ne sont pas encore configurés.
+                          Ces informations sont nécessaires pour calculer vos paiements et générer les rapports.
+                        </p>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="mt-2 text-amber-700 dark:text-amber-300 border-amber-600 dark:border-amber-600 hover:bg-amber-100 dark:hover:bg-amber-900/50"
+                          onClick={handleConfigureCommission}
+                        >
+                          <ExternalLink className="h-4 w-4 mr-2" />
+                          Configurer maintenant
+                        </Button>
+                      </div>
+                    </div>
+                  </Card>
+                )}
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <Card className="p-6">
-                <h3 className="text-lg font-semibold mb-4">Statistiques</h3>
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between py-2 border-b">
-                    <span className="text-gray-600 dark:text-gray-300">Rendez-vous cette semaine</span>
-                    <span className="">{commissionData?.appointmentsCount || 0}</span>
-                  </div>
-                  <div className="flex items-center justify-between py-2 border-b">
-                    <span className="text-gray-600 dark:text-gray-300">Taux de complétion</span>
-                    <span className=" text-green-600">
-                      {completedToday.length > 0
-                        ? Math.round((completedToday.length / todaySchedule.length) * 100)
-                        : 0}
-                      %
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between py-2">
-                    <span className="text-gray-600 dark:text-gray-300">Note moyenne</span>
-                    <div className="flex items-center gap-1">
-                      <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                      <span className="">{stats.rating.toFixed(1)}</span>
+                {/* Summary Cards */}
+                <Card className="p-6">
+                  <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
+                    <h2 className="text-2xl font-bold">Mes Commissions & Performance</h2>
+                    <div className="flex items-center gap-2">
+                      <Info className="h-4 w-4 text-gray-500" />
+                      <span className="text-sm text-gray-600 dark:text-gray-400">
+                        Prochain paiement: {getNextPaymentDate()}
+                      </span>
                     </div>
                   </div>
-                </div>
-              </Card>
 
-              <Card className="p-6">
-                <h3 className="text-lg font-semibold mb-4">Services populaires</h3>
-                <div className="space-y-3">
-                  {serviceStats.length === 0 ? (
-                    <p className="text-gray-500">Aucun rendez-vous cette semaine</p>
-                  ) : (
-                    serviceStats.map((service, index) => {
-                      const colors = ['bg-purple-50 dark:bg-gray-950', 'bg-pink-50 dark:bg-gray-950', 'bg-amber-50 dark:bg-gray-950'];
-                      return (
-                        <div
-                          key={service.name}
-                          className={`flex items-center justify-between p-3 ${colors[index] || 'bg-white dark:bg-gray-950'} border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-lg `}
-                        >
-                          <span>{service.name}</span>
-                          <Badge>{service.percentage}%</Badge>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <Card className="p-6 border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400 shadow-sm">
+                      <div className="flex items-center gap-2 mb-2">
+                        <DollarSign className="h-5 w-5 text-pink-500" />
+                        <p className="text-sm text-gray-600 dark:text-gray-300">Commission Attendue</p>
+                      </div>
+                      <p className="text-3xl font-semibold text-gray-900 dark:text-gray-100">
+                        {stats.commission ? stats.commission.toLocaleString() : '0'} Fc
+                      </p>
+                      <p className="text-sm text-gray-600 dark:text-gray-300 mt-2">
+                        Taux: {workerProfile?.commissionRate || 0}%
+                      </p>
+                    </Card>
+
+                    <Card className="p-6 border border-blue-100 hover:border-blue-400 dark:border-blue-900 dark:hover:border-blue-400 shadow-sm">
+                      <div className="flex items-center gap-2 mb-2">
+                        <TrendingUp className="h-5 w-5 text-blue-500" />
+                        <p className="text-sm text-gray-600 dark:text-gray-300">Revenus Générés</p>
+                      </div>
+                      <p className="text-3xl font-semibold text-gray-900 dark:text-gray-100">
+                        {stats.revenue ? stats.revenue.toLocaleString() : '0'} Fc
+                      </p>
+                      <p className="text-sm text-gray-600 dark:text-gray-300 mt-2">
+                        {currentPeriodCommissionData?.appointmentsCount || 0} rendez-vous
+                      </p>
+                    </Card>
+
+                    <Card className="p-6 border border-amber-100 hover:border-amber-400 dark:border-amber-900 dark:hover:border-amber-400 shadow-sm">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Star className="h-5 w-5 text-amber-500" />
+                        <p className="text-sm text-gray-600 dark:text-gray-300">Note Moyenne</p>
+                      </div>
+                      <p className="text-3xl font-semibold text-gray-900 dark:text-gray-100">
+                        {stats.rating.toFixed(1)}
+                      </p>
+                      <p className="text-sm text-gray-600 dark:text-gray-300 mt-2">
+                        Basé sur {workerProfile?.totalReviews || 0} avis
+                      </p>
+                    </Card>
+                  </div>
+                </Card>
+
+                {/* Performance Chart */}
+                <Card className="p-6">
+                  <h3 className="text-lg font-semibold mb-4">Performance Hebdomadaire</h3>
+                  <div className="h-80">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={weeklyData}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="day" />
+                        <YAxis />
+                        <Tooltip formatter={(value) => [`${value}`, 'Valeur']} labelFormatter={(label) => `Jour: ${label}`} />
+                        <Legend />
+                        <Bar dataKey="rendezVous" fill="#a855f7" name="Rendez-vous" />
+                        <Bar dataKey="commission" fill="#10b981" name="Commission (Fc)" />
+                        <Bar dataKey="totalRevenue" fill="#3b82f6" name="Revenu (Fc)" />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+                </Card>
+
+                {/* Current Period Summary */}
+                <Card className="p-6">
+                  <h3 className="text-lg font-semibold mb-4">Période Actuelle</h3>
+                  <Card className="p-4 border border-pink-100 dark:border-pink-900 shadow-sm">
+                    <div className="flex flex-wrap items-center justify-between gap-4">
+                      <div>
+                        <p className="font-medium text-gray-900 dark:text-gray-100">
+                          {/* Display period dynamically based on workerProfile.frequency */}
+                          {workerProfile?.commissionFrequency === 'daily' ? 'Aujourd\'hui' :
+                            workerProfile?.commissionFrequency === 'weekly' ? 'Cette semaine' : 'Ce mois-ci'}
+                        </p>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                          {currentPeriodCommissionData?.appointmentsCount || 0} rendez-vous complétés
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-xl font-semibold text-green-600 dark:text-green-400">
+                          {currentPeriodCommissionData?.commission ? currentPeriodCommissionData.commission.toLocaleString() : '0'} Fc
+                        </p>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                          Prêt pour paiement
+                        </p>
+                      </div>
+                    </div>
+                  </Card>
+                </Card>
+
+                {/* Upcoming Payments Section (only if config is complete) */}
+                {workerProfile && !isCommissionConfigIncomplete && (
+                  <Card className="p-6">
+                    <h3 className="text-lg font-semibold mb-4">Paiements Attendus</h3>
+                    <Card className="p-4 border border-gray-200 dark:border-gray-700 shadow-sm">
+                      <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                        <div>
+                          <p className="font-medium text-gray-900 dark:text-gray-100">Prochain paiement</p>
+                          <p className="text-sm text-gray-600 dark:text-gray-400">{getNextPaymentDate()}</p>
                         </div>
-                      );
-                    })
-                  )}
-                </div>
-              </Card>
-            </div>
-          </TabsContent>
-
-          {/* Earnings Tab */}
-          <TabsContent value="earnings" className="space-y-6">
-            <Card className="p-6">
-              <h2 className="text-2xl mb-6">Commissions</h2>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <div className="p-6 border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950">
-                  <p className="text-sm text-gray-600  dark:text-gray-300 mb-2">Cette semaine</p>
-                  <p className="text-3xl font-semibold  text-gray-900 dark:text-gray-100">
-                    {stats.commission.toLocaleString()} Fc
-                  </p>
-                  <p className="text-sm text-gray-600  dark:text-gray-300 mt-2">
-                    Taux: {user?.workerProfile?.commissionRate || 0}%
-                  </p>
-                </div>
-
-                <div className="p-6 border border-blue-100 hover:border-blue-400  dark:border-blue-900 dark:hover:border-blue-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950">
-                  <p className="text-sm text-gray-600  dark:text-gray-300 mb-2">Revenus générés</p>
-                  <p className="text-3xl font-semibold  text-gray-900 dark:text-gray-100">
-                    {stats.revenue.toLocaleString()} Fc
-                  </p>
-                  <p className="text-sm text-gray-600  dark:text-gray-300 mt-2">
-                    {commissionData?.appointmentsCount || 0} rendez-vous
-                  </p>
-                </div>
-
-                <div className="p-6 border border-amber-100 hover:border-amber-400  dark:border-amber-900 dark:hover:border-amber-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950">
-                  <p className="text-sm text-gray-600  dark:text-gray-300  mb-2">Moyenne par service</p>
-                  <p className="text-3xl font-semibold  text-gray-900 dark:text-gray-100">
-                    {commissionData?.appointmentsCount
-                      ? Math.round(stats.revenue / commissionData.appointmentsCount).toLocaleString()
-                      : 0}{' '}
-                    Fc
-                  </p>
-                </div>
-              </div>
-
-              <h3 className="text-lg font-semibold mb-4">Commission actuelle</h3>
-              <div className="space-y-3">
-                <div className="flex items-center justify-between p-4 border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950">
-                  <div>
-                    <p className="font-semibold text-gray-400">Période actuelle (Semaine)</p>
-                    <p className="text-sm text-gray-600  dark:text-gray-300 ">
-                      {commissionData?.appointmentsCount || 0} rendez-vous
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-xl  text-green-500">
-                      {stats.commission.toLocaleString()} Fc
-                    </p>
-                  </div>
-                </div>
-
-                {commissionData?.appointmentsCount === 0 && (
-                  <div className="text-center py-8 text-gray-500">
-                    <CalendarIcon className="w-12 h-12 mx-auto mb-4 opacity-20" />
-                    <p>Aucun rendez-vous complété cette semaine</p>
-                  </div>
+                        <div className="text-right">
+                          <p className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                            {/* Estimate based on current period or average */
+                              currentPeriodCommissionData?.commission ? currentPeriodCommissionData.commission.toLocaleString() : '0'} Fc
+                          </p>
+                          <Badge variant="outline" className="text-xs">Estimé</Badge>
+                        </div>
+                      </div>
+                    </Card>
+                  </Card>
                 )}
-              </div>
-            </Card>
+
+                {/* Commission History / Earnings Statement */}
+                <Card className="p-6">
+                  <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
+                    <h3 className="text-lg font-semibold">Historique des Commissions</h3>
+                    <div className="flex items-center gap-2">
+                      <Select value={selectedPeriod} onValueChange={setSelectedPeriod}>
+                        <SelectTrigger className="w-[180px]">
+                          <SelectValue placeholder="Sélectionner période" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="current">Période en cours</SelectItem>
+                          <SelectItem value="last">Dernière période</SelectItem>
+                          <SelectItem value="all">Tout l'historique</SelectItem>
+                          {/* Add more options based on actual available periods */}
+                        </SelectContent>
+                      </Select>
+                      <Button variant="outline" size="sm">
+                        <FileText className="h-4 w-4 mr-2" />
+                        Télécharger Rapport
+                      </Button>
+                    </div>
+                  </div>
+
+                  {isAllCommissionsLoading ? (
+                    <div className="flex justify-center py-4">
+                      <Loader2 className="h-6 w-6 animate-spin" />
+                    </div>
+                  ) : workerCommissions.length === 0 ? (
+                    <Card className="p-8 text-center border-2 border-dashed border-gray-300 dark:border-gray-700">
+                      <FileText className="w-12 h-12 mx-auto text-gray-400 mb-4" />
+                      <p className="text-gray-500">Aucune commission enregistrée pour le moment.</p>
+                      <p className="text-sm text-gray-500 mt-1">Les commissions apparaîtront ici après que vous aurez terminé des rendez-vous.</p>
+                    </Card>
+                  ) : (
+                    <div className="space-y-3 max-h-96 overflow-y-auto pr-2">
+                      {[...workerCommissions].sort((a, b) => new Date(b.period).getTime() - new Date(a.period).getTime()).map((commission) => (
+                        <Card key={commission.id} className="p-4 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+                          <div className="flex flex-wrap items-center justify-between gap-4">
+                            <div>
+                              <p className="font-medium text-gray-900 dark:text-gray-100">{commission.period}</p>
+                              <p className="text-sm text-gray-600 dark:text-gray-400">
+                                {commission.appointmentsCount} RDV • {commission.totalRevenue.toLocaleString()} Fc généré(s)
+                              </p>
+                            </div>
+                            <div className="flex items-center gap-4">
+                              <div className="text-right">
+                                <p className={`text-lg font-semibold ${commission.status === 'paid' ? 'text-green-600 dark:text-green-400' :
+                                  commission.status === 'pending' ? 'text-amber-600 dark:text-amber-400' :
+                                    'text-gray-600 dark:text-gray-400'
+                                  }`}>
+                                  {commission.commissionAmount.toLocaleString()} Fc
+                                  <Badge variant={
+                                    commission.status === 'paid' ? 'default' :
+                                      commission.status === 'pending' ? 'outline' : 'secondary'
+                                  }>
+                                    {commission.status === 'paid' ? 'Payé' :
+                                      commission.status === 'pending' ? 'En attente' : 'Inconnu'}
+                                  </Badge>
+                                </p>
+                                <Button variant="ghost" size="sm">
+                                  <ExternalLink className="h-4 w-4" />
+                                </Button>
+                              </div>
+                            </div>
+                          </div>
+                        </Card>
+                      )
+                      )
+                      }
+                    </div>
+                  )}
+                </Card>
+              </>
+            )}
           </TabsContent>
         </Tabs>
       </div>

@@ -1,5 +1,6 @@
 import { ReferralStatus, Tier } from '@/prisma/generated/enums';
 import axiosdb from '../axios';
+
 export interface Client {
   id: string;
   userId: string;

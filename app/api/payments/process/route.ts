@@ -74,7 +74,7 @@ export async function POST(request: NextRequest) {
     if (existingSale && existingSale.paymentStatus === 'pending') {
       // Update existing sale
       result = await prisma.$transaction(async (tx) => {
-      // 1. Create Sale
+      // 1. update Sale
       const sale = await tx.sale.update({
         where: { id: existingSale.id },
         data: {

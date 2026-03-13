@@ -411,22 +411,22 @@ export default function AdminDashboardV2() {
 
           {/* Overview Tab */}
           <TabsContent value="overview" className="mt-14 lg:mt-2">
-            <TodayOverview showMock={showMock} />
+            <TodayOverview />
           </TabsContent>
 
           {/* Calendar Tab */}
           <TabsContent value="calendar" className="mt-14 lg:mt-2">
-            <BookingCalendar showMock={showMock} />
+            <BookingCalendar />
           </TabsContent>
 
           {/* Clients Tab */}
           <TabsContent value="clients" className="mt-14 lg:mt-2">
-            <ClientManagement showMock={showMock} />
+            <ClientManagement />
           </TabsContent>
 
           {/* Staff Tab */}
           <TabsContent value="staff" className="mt-14 lg:mt-2">
-            <StaffManagement showMock={showMock} />
+            <StaffManagement />
           </TabsContent>
 
           {/* membership Tab */}
@@ -465,15 +465,15 @@ export default function AdminDashboardV2() {
               </TabsList>
 
               <TabsContent value="services" className="mt-14 lg:mt-6">
-                <ServiceManagement showMock={showMock} />
+                <ServiceManagement />
               </TabsContent>
 
               <TabsContent value="inventory" className="mt-14 lg:mt-6">
-                <InventoryManagement showMock={showMock} />
+                <InventoryManagement />
               </TabsContent>
 
               {/* <TabsContent value="pos" className="mt-14 lg:mt-6">
-                <POSCheckout showMock={showMock} />
+                <POSCheckout/>
               </TabsContent> */}
 
               <TabsContent value="reports" className="mt-14 lg:mt-6">
