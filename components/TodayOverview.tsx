@@ -231,13 +231,17 @@ export default function TodayOverview({ showMock }: { showMock?: boolean }) {
               <CreditCard className="w-5 h-5 mr-3" />
               Encaisser Cliente
             </Button>
-            <AdjustStockModal
+            {/* <AdjustStockModal
               trigger={
                 <Button className="w-full bg-linear-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-full py-6 justify-start px-6  shadow-lg shadow-amber-500/25 transition-all hover:scale-[1.02]">
                   <Package className="w-5 h-5 mr-3" />
                   Ajouter Stock
                 </Button>
-              } />
+              } /> */}
+            <Button className="w-full bg-linear-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-full py-6 justify-start px-6  shadow-lg shadow-amber-500/25 transition-all hover:scale-[1.02]">
+              <Package className="w-5 h-5 mr-3" />
+              Ajouter Stock
+            </Button>
             <ClientModal
               trigger={
                 <Button variant="outline" className="w-full rounded-full py-6 justify-start px-6  dark:border-gray-700 dark:hover:bg-gray-800 transition-all hover:scale-[1.02]">

@@ -35,11 +35,11 @@ const AddOnModal = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50 backdrop-blur-sm">
-      <div className="relative w-full max-w-md max-h-[80vh] overflow-y-auto bg-white dark:bg-gray-900 rounded-2xl shadow-xl">
+      <div className="relative w-full max-w-xl max-h-[80vh] overflow-y-auto bg-white dark:bg-gray-900 rounded-2xl shadow-xl">
         {/* Modal Header */}
         <div className="sticky top-0 z-10 flex items-center justify-between p-6 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
           <div>
-            <h3 className="text-xl  text-gray-900 dark:text-gray-100">{service.name}</h3>
+            <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">{service.name}</h3>
             <p className="text-sm text-gray-600 dark:text-gray-400">{service.description}</p>
           </div>
           <button
@@ -203,11 +203,11 @@ export default function CatalogPage() {
             </TabsList>
 
             {/* Services Tab */}
-            <TabsContent value="services" className="space-y-12">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <TabsContent value="services" className="space-y-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 {Object.entries(servicesByCategory).map(([category, categoryServices]) => (
                   <div key={category} className="space-y-4">
-                    <h3 className="text-2xl  text-gray-900 dark:text-gray-100 flex items-center gap-2">
+                    <h3 className="text-2xl text-gray-900 dark:text-gray-100 flex items-center gap-2">
                       <Scissors className="w-5 h-5 text-pink-500" />
                       {category.charAt(0).toUpperCase() + category.slice(1)}
                     </h3>
@@ -501,29 +501,6 @@ export default function CatalogPage() {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-16 mb-0 bg-linear-to-r from-pink-500 to-purple-500 dark:from-pink-700 dark:to-purple-700">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl sm:text-4xl  text-white mb-4">
-            Transformez votre routine beauté
-          </h2>
-          <p className="text-lg text-pink-100 max-w-2xl mx-auto mb-8">
-            Devenez membre dès aujourd'hui et profitez d'une expérience sur mesure.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/auth/signup">
-              <Button size="sm" className="bg-white text-pink-600 hover:bg-gray-100 rounded-full text-base sm:text-lg  shadow-md">
-                Devenir Membre
-              </Button>
-            </Link>
-            <Link href="/contact">
-              <Button variant="secondary" size="sm" className="bg-transparent border-2 border-white text-white hover:bg-white/10 rounded-full text-base sm:text-lg ">
-                Nous Contacter
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </section>
     </div>
   );
 };

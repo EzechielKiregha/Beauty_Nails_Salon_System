@@ -1,6 +1,6 @@
 'use client';
 
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useMemo } from 'react';
 import { Card } from '../ui/card';
@@ -13,6 +13,7 @@ export default function ServiceDetail() {
   const params = useParams();
   const categoryId = params?.id as string;
   const { services, isLoading } = useServices();
+  const route = useRouter()
 
   // Category metadata with enhanced descriptions for Goma & Kigali
   const categoryMetadata: Record<string, any> = {
@@ -54,11 +55,13 @@ export default function ServiceDetail() {
       <div className="min-h-screen py-24 bg-background dark:bg-gray-950">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl text-gray-900 dark:text-gray-100 mb-6">Catégorie non trouvée</h1>
-          <Link href="/services">
-            <Button className="bg-linear-to-r from-pink-500 to-amber-400 hover:from-pink-600 hover:to-amber-500 text-white rounded-full px-8">
-              Retour aux services
-            </Button>
-          </Link>
+          <Button className="bg-linear-to-r from-pink-500 to-amber-400 hover:from-pink-600 hover:to-amber-500 text-white rounded-full px-8"
+            onClick={() => {
+              route.back()
+            }}
+          >
+            Retour aux services
+          </Button>
         </div>
       </div>
     );
