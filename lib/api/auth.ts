@@ -1,4 +1,5 @@
 import axiosdb from '../axios';
+import { Worker } from './staff'
 
 export interface User {
   id: string;
@@ -9,7 +10,7 @@ export interface User {
   avatar: string | null;
   isActive: boolean;
   clientProfile?: ClientProfile | null;
-  workerProfile?: WorkerProfile | null;
+  workerProfile?: Worker | null;
 }
 
 export interface ClientProfile {

@@ -17,24 +17,42 @@ import { useServices, useAddOnMutations } from "@/lib/hooks/useServices";
 import { toast } from "sonner";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { PlusCircle, MinusCircle } from 'lucide-react';
+import { Service, ServiceAddOn } from "@/lib/api/services";
 
-export default function CreateServiceModal({ triggerLabel = "Créer un service" }: { triggerLabel?: string }) {
-  const [name, setName] = useState("");
-  const [category, setCategory] = useState<'onglerie' | 'cils' | 'tresses' | 'maquillage' | ''>('');
-  const [description, setDescription] = useState("");
-  const [price, setPrice] = useState<number | ''>('');
-  const [duration, setDuration] = useState<number | ''>('');
-  const [imageUrl, setImageUrl] = useState('');
+export default function CreateServiceModal({ trigger, service }: { trigger?: React.ReactNode, service?: Service; }) {
+  const [name, setName] = useState(service?.name || "");
+  const [category, setCategory] = useState<'onglerie' | 'cils' | 'tresses' | 'maquillage' | ''>(service?.category || '');
+  const [description, setDescription] = useState(service?.description || "");
+  const [price, setPrice] = useState<number | ''>(service?.price || '');
+  const [duration, setDuration] = useState<number | ''>(service?.duration || '');
+  const [imageUrl, setImageUrl] = useState(service?.imageUrl || '');
   const [onlineBookable, setOnlineBookable] = useState(true);
-  const [isPopular, setIsPopular] = useState(false);
+  const [isPopular, setIsPopular] = useState(service?.isPopular || false);
   const [isOpen, setIsOpen] = useState(false);
   const [showAddOnFlow, setShowAddOnFlow] = useState(false);
-  const [createdServiceId, setCreatedServiceId] = useState<string | null>(null);
-  const [addOns, setAddOns] = useState([
-    { name: '', price: '', duration: '' as number | '' }
-  ]);
+  const [createdServiceId, setCreatedServiceId] = useState<string | null>(service?.id || null);
+  const [addOns, setAddOns] = useState(() => {
 
-  const { createService, isCreating, createdService } = useServices();
+    const addOnList: {
+      name: string;
+      price: number;
+      duration: number;
+      addOnDesc?: string;
+    }[] = []
+
+    if (service?.addOns && service?.addOns?.length >= 0) {
+      service?.addOns?.map((addOn) => {
+        addOnList.push(
+          { name: addOn.name, price: addOn.price, duration: addOn.duration as number, addOnDesc: addOn?.addOnDesc as string }
+        )
+      })
+    }
+    return [
+      { name: '', price: '', duration: '' as number | '', addOnDesc: '' }
+    ]
+  });
+
+  const { createService, updateService, isUpdating, isCreating, createdService, updatedService } = useServices();
   const { createAddOn, isCreatingAddOn } = useAddOnMutations();
 
   const onSubmit = () => {
@@ -56,6 +74,29 @@ export default function CreateServiceModal({ triggerLabel = "Créer un service" 
 
     createService(payload);
   };
+  const onUpdate = () => {
+    if (service) {
+      if (!name || !category || !price || !duration) {
+        toast.error("Veuillez renseigner le nom, la catégorie, le prix et la durée");
+        return;
+      }
+
+      const payload = {
+        name,
+        category,
+        price: Number(price),
+        duration: Number(duration),
+        description,
+        imageUrl: imageUrl || undefined,
+        onlineBookable,
+        isPopular,
+      } as import('@/lib/api/services').CreateServiceData;
+
+      updateService({ id: service?.id, updates: payload });
+    } else {
+      toast.warning("Vous ne pouvez pas modifier, re-essayer encore")
+    }
+  };
 
   // Handle service creation success
   useEffect(() => {
@@ -64,7 +105,11 @@ export default function CreateServiceModal({ triggerLabel = "Créer un service" 
       setCreatedServiceId(createdService.service.id);
       setShowAddOnFlow(true);
     }
-  }, [createdService]);
+    if (updatedService) {
+      setCreatedServiceId(updatedService.id);
+      setShowAddOnFlow(true);
+    }
+  }, [createdService, updatedService]);
 
   // Handle add-on submission
   const handleAddOnSubmit = () => {
@@ -104,13 +149,13 @@ export default function CreateServiceModal({ triggerLabel = "Créer un service" 
     setImageUrl('');
     setOnlineBookable(true);
     setIsPopular(false);
-    setAddOns([{ name: '', price: '', duration: '' }]);
+    setAddOns([{ name: '', price: '', duration: '', addOnDesc: '' }]);
     setShowAddOnFlow(false);
     setCreatedServiceId(null);
   };
 
   const addAddOnField = () => {
-    setAddOns([...addOns, { name: '', price: '', duration: '' }]);
+    setAddOns([...addOns, { name: '', price: '', duration: '', addOnDesc: '' }]);
   };
 
   const removeAddOnField = (index: number) => {
@@ -129,14 +174,12 @@ export default function CreateServiceModal({ triggerLabel = "Créer un service" 
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        <Button variant="ghost">{triggerLabel}</Button>
-      </DialogTrigger>
+      {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         {!showAddOnFlow ? (
           <>
             <DialogHeader>
-              <DialogTitle>Créer un nouveau service</DialogTitle>
+              <DialogTitle>{!service ? 'Créer un nouveau service' : `Modification - ${service.name}`}</DialogTitle>
             </DialogHeader>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-4">
@@ -245,12 +288,22 @@ export default function CreateServiceModal({ triggerLabel = "Créer un service" 
               <DialogClose asChild>
                 <Button variant="outline">Annuler</Button>
               </DialogClose>
-              <Button
-                onClick={onSubmit}
-                disabled={isCreating}
-              >
-                {isCreating ? "Création..." : "Créer"}
-              </Button>
+              {!service ?
+                <Button
+                  onClick={onSubmit}
+                  disabled={isCreating}
+                >
+                  {isCreating ? "Création..." : "Créer"}
+                </Button>
+                :
+                <Button
+                  onClick={onUpdate}
+                  disabled={isUpdating}
+                >
+                  {isUpdating ? "Updating..." : "Update"}
+                </Button>
+
+              }
             </DialogFooter>
           </>
         ) : (
@@ -293,6 +346,15 @@ export default function CreateServiceModal({ triggerLabel = "Créer un service" 
                         placeholder="Ex: 15"
                       />
                     </div>
+                  </div>
+                  <div className="md:col-span-2">
+                    <Label htmlFor="add-on-desc">Description</Label>
+                    <Textarea
+                      id="add-on-desc"
+                      value={addOn.addOnDesc}
+                      onChange={(e) => updateAddOnField(index, 'addOnDesc', e.target.value)}
+                      placeholder="Décrivez le add-on..."
+                    />
                   </div>
 
                   {addOns.length > 1 && (

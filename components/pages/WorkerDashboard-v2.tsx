@@ -54,7 +54,7 @@ export default function WorkerDashboardV2() {
   const { data: currentPeriodCommissionData, isLoading: isCurrentPeriodCommissionLoading, error: commissionDataError } = useWorkerCommission(user?.workerProfile?.id || '');
   const { commissions: allCommissions, isLoading: isAllCommissionsLoading } = useCommission(); // Fetch all commissions for history
   // Assuming the backend can accept a 'period' like 'week' to aggregate weekly data
-  const { data: weeklyCommissionData, isLoading: isWeeklyCommissionLoading } = useWorkerCommission(user?.id || '', 'weekly');
+  const { data: weeklyCommissionData, isLoading: isWeeklyCommissionLoading } = useWorkerCommission(user?.id || '', user?.workerProfile?.commissionFrequency);
 
   // Get today's date
   const today = new Date().toISOString().split('T')[0];

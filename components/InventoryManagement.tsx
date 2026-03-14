@@ -8,6 +8,7 @@ import { Badge } from './ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Package, AlertCircle, TrendingUp, ShoppingCart, Phone, Mail, Search, Users } from 'lucide-react';
 import { AddProductModal, AdjustStockModal, OrderModal } from './modals/InventoryModals';
+import CreateInventoryModal from './modals/CreateInventoryModal';
 
 interface InventoryItem {
   id: string;
@@ -121,14 +122,14 @@ export default function InventoryManagement({ showMock }: { showMock?: boolean }
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <h2 className="text-2xl  sm:text-3xl  text-gray-900 dark:text-gray-100">Gestion de l'Inventaire</h2>
-        {/* <CreateInventoryModal triggerLabel="+ Ajouter Produit" /> */}
-        <AddProductModal
+        <CreateInventoryModal triggerLabel="+ Ajouter Produit" />
+        {/* <AddProductModal
           trigger={
             <Button className="bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-full">
               + Ajouter Produit
             </Button>
           }
-        />
+        /> */}
       </div>
 
       {/* Alert Panel */}

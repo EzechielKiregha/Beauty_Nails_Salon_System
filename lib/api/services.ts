@@ -24,7 +24,7 @@ export interface ServiceAddOn {
   name: string;
   price: number;
   duration: number;
-  description?: string;
+  addOnDesc?: string;
 }
 
 export interface CreateServiceData {

@@ -18,6 +18,7 @@ import { DiscountCode } from '@/lib/api/marketing';
 import { AddProductModal } from './modals/InventoryModals';
 import CreateServiceModal from './modals/CreateServiceModal';
 import { toast } from 'sonner';
+import { Label } from './ui/label';
 
 // Define interfaces matching the API
 interface ServiceCategoryMap {
@@ -75,7 +76,7 @@ export default function ServiceManagement({ showMock }: { showMock?: boolean }) 
     return services.find(s => s.id === selectedServiceId) || null;
   }, [services, selectedServiceId]);
 
-  const [newAddOn, setNewAddOn] = useState({ name: '', price: '', duration: '' });
+  const [newAddOn, setNewAddOn] = useState({ name: '', price: '', duration: '', addOnDesc: '' });
 
   // Fetch add-ons for selected service
   const { data: addOns = [], isLoading: addOnsLoading, refetch } = useAddOns(selectedServiceId || '');
@@ -105,7 +106,7 @@ export default function ServiceManagement({ showMock }: { showMock?: boolean }) 
       description: ''
     }, {
       onSuccess: () => {
-        setNewAddOn({ name: '', price: '', duration: '' });
+        setNewAddOn({ name: '', price: '', duration: '', addOnDesc: '' });
         refetch(); // Refresh add-ons list
       }
     });
@@ -162,7 +163,13 @@ export default function ServiceManagement({ showMock }: { showMock?: boolean }) 
               <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
               <Input placeholder="Rechercher un service..." className="pl-9 rounded-full bg-white" />
             </div>
-            <CreateServiceModal triggerLabel="+ Nouveau Service" />
+            <CreateServiceModal
+              trigger={
+                <Button className="bg-linear-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white rounded-full py-6 transition-all">
+                  + Nouveau Service
+                </Button>
+              }
+            />
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -322,6 +329,15 @@ export default function ServiceManagement({ showMock }: { showMock?: boolean }) 
                             className="rounded-xl dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
                           />
                         </div>
+                        <div className="md:col-span-2 py-1 space-y-1">
+                          <Label htmlFor="add-on-desc">Description</Label>
+                          <Textarea
+                            id="add-on-desc"
+                            value={newAddOn.addOnDesc}
+                            onChange={(e) => setNewAddOn({ ...newAddOn, addOnDesc: e.target.value })}
+                            placeholder="Décrivez le add-on..."
+                          />
+                        </div>
                         <Button
                           onClick={handleAddAddOn}
                           disabled={isCreatingAddOn}
@@ -334,7 +350,7 @@ export default function ServiceManagement({ showMock }: { showMock?: boolean }) 
                     </div>
 
                     <div className="flex flex-col sm:flex-row gap-3 pt-4">
-                      <ServiceModal
+                      <CreateServiceModal
                         service={selectedService}
                         trigger={
                           <Button className="flex-1 bg-linear-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white rounded-full py-6 transition-all">

@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { mutationOptions, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { servicesApi, CreateServiceData, Service, ServiceAddOn, CreateAddOnData } from '../api/services';
 import { toast } from 'sonner';
 import { clientsApi } from '../api/clients';
@@ -66,6 +66,7 @@ export function useServices(params?: {
     createService: createService,
     createdService: createdService,
     updateService: updateMutation.mutate,
+    updatedService: updateMutation.data,
     deleteService: deleteMutation.mutate,
     isCreating: isCreating,
     isUpdating: updateMutation.isPending,
