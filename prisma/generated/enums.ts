@@ -132,7 +132,9 @@ export const PaymentMethod = {
   cash: 'cash',
   card: 'card',
   mobile: 'mobile',
-  mixed: 'mixed'
+  mixed: 'mixed',
+  giftcard: 'giftcard',
+  prepaid: 'prepaid'
 } as const
 
 export type PaymentMethod = (typeof PaymentMethod)[keyof typeof PaymentMethod]
