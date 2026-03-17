@@ -183,8 +183,9 @@ export default function CatalogPage() {
       <section className="py-16 bg-background dark:bg-gray-950">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Tabs */}
+          <p className=" dark:text-pink-400 text-xs sm:text-xs">{'glisser  <--- | --->'}</p>
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-2 lg:grid-cols-5 bg-white dark:bg-gray-900 border border-gray-200 dark:border-pink-900/30 p-1 rounded-xl mb-16 lg:mb-12">
+            <TabsList className="w-full bg-white dark:bg-gray-950 border border-gray-200 dark:border-pink-900/30 p-1 rounded-xl flex overflow-x-auto no-scrollbar justify-start sm:justify-center">
               <TabsTrigger value="services" className="rounded-lg data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">
                 <Scissors className="w-4 h-4 mr-2" /> Services
               </TabsTrigger>
@@ -275,7 +276,7 @@ export default function CatalogPage() {
                       <Badge className="absolute top-2 right-2 bg-white text-gray-900 hover:bg-white">{product.currentStock} en stock</Badge>
                     </div>
                     <div className="p-4">
-                      <p className="text-sm text-amber-600  uppercase tracking-wider mb-1">{product.name}</p>
+                      <p className="text-base text-amber-600  uppercase tracking-wider mb-1">{product.name}</p>
                       <h3 className=" text-gray-900 mb-1">{product.name}</h3>
                       <p className="text-gray-500 text-lg mb-3">{product.category}</p>
                       <div className="flex items-center justify-between">
@@ -314,7 +315,7 @@ export default function CatalogPage() {
                       </p> */}
 
                       <div className="space-y-3 mb-8 bg-gray-50 dark:bg-gray-800/50 p-4 rounded-xl border border-gray-100 dark:border-gray-700">
-                        <p className="text-sm  text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Services inclus</p>
+                        <p className="text-base  text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Services inclus</p>
                         {pkg.services?.slice(0, 3).map((service, idx) => ( // Show first 3 services
                           <div key={idx} className="flex items-center gap-3 text-lg text-gray-700 dark:text-gray-300">
                             <Sparkles className="w-4 h-4 text-pink-500 shrink-0" />
@@ -322,7 +323,7 @@ export default function CatalogPage() {
                           </div>
                         ))}
                         {pkg.services && pkg.services.length > 3 && (
-                          <p className="text-sm text-gray-500 dark:text-gray-400">+ {pkg.services.length - 3} autres</p>
+                          <p className="text-base text-gray-500 dark:text-gray-400">+ {pkg.services.length - 3} autres</p>
                         )}
                       </div>
 
@@ -366,7 +367,7 @@ export default function CatalogPage() {
                       </div>
                       <div className="text-right">
                         <p className="text-3xl font-black text-amber-600 dark:text-amber-400">{promo.value}</p>
-                        <p className="text-[10px] sm:text-sm  text-gray-500 dark:text-gray-400 uppercase tracking-widest">
+                        <p className="text-[10px] sm:text-base  text-gray-500 dark:text-gray-400 uppercase tracking-widest">
                           {promo.type === 'percentage' ? 'Réduction %' : 'Réduction Fixe'}
                         </p>
                       </div>
@@ -417,21 +418,21 @@ export default function CatalogPage() {
 
                   <div className="space-y-4">
                     <Card className="bg-linear-to-br from-purple-50 to-pink-50 dark:from-gray-800 dark:to-gray-800/50 border border-purple-100 dark:border-purple-900/30 p-4 sm:p-5 rounded-2xl">
-                      <p className="text-[10px] sm:text-sm  text-purple-600 dark:text-purple-400 uppercase tracking-widest mb-1">Points par dépense</p>
+                      <p className="text-[10px] sm:text-base  text-purple-600 dark:text-purple-400 uppercase tracking-widest mb-1">Points par dépense</p>
                       <p className="text-base sm:text-2xl font-black text-gray-900 dark:text-gray-100">
                         {loyaltyRules.pointsPerSpend} point / 1 000 Fc dépensé
                       </p>
                     </Card>
 
                     <Card className="bg-linear-to-br from-blue-50 to-cyan-50 dark:from-gray-800 dark:to-gray-800/50 border border-blue-100 dark:border-blue-900/30 p-4 sm:p-5 rounded-2xl">
-                      <p className="text-[10px] sm:text-sm  text-blue-600 dark:text-blue-400 uppercase tracking-widest mb-1">Récompense par visites</p>
+                      <p className="text-[10px] sm:text-base  text-blue-600 dark:text-blue-400 uppercase tracking-widest mb-1">Récompense par visites</p>
                       <p className="text-base sm:text-2xl font-black text-gray-900 dark:text-gray-100">
                         Service gratuit après {loyaltyRules.appointmentsForReward} rendez-vous
                       </p>
                     </Card>
 
                     <Card className="bg-linear-to-br from-green-50 to-emerald-50 dark:from-gray-800 dark:to-gray-800/50 border border-green-100 dark:border-green-900/30 p-4 sm:p-5 rounded-2xl">
-                      <p className="text-[10px] sm:text-sm  text-green-600 dark:text-green-400 uppercase tracking-widest mb-1">Récompense par parrainages</p>
+                      <p className="text-[10px] sm:text-base  text-green-600 dark:text-green-400 uppercase tracking-widest mb-1">Récompense par parrainages</p>
                       <p className="text-base sm:text-2xl font-black text-gray-900 dark:text-gray-100">
                         Service gratuit après {loyaltyRules.referralsForReward} parrainages
                       </p>
@@ -453,12 +454,12 @@ export default function CatalogPage() {
                         <div className="flex items-center justify-between gap-4">
                           <div>
                             <p className="text-base sm:text-lg  text-gray-900 dark:text-gray-100 mb-1">{reward.reward}</p>
-                            <p className="text-sm sm:text-lg text-gray-600 dark:text-gray-400 flex items-center gap-1">
+                            <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400 flex items-center gap-1">
                               <Target className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-amber-500" />
                               {reward.points} points requis
                             </p>
                           </div>
-                          <Badge className="bg-amber-500 dark:bg-amber-600 text-white border-0 font-black px-3 sm:px-4 py-1 sm:py-1.5 rounded-full shadow-lg shadow-amber-500/20 text-[10px] sm:text-sm">
+                          <Badge className="bg-amber-500 dark:bg-amber-600 text-white border-0 font-black px-3 sm:px-4 py-1 sm:py-1.5 rounded-full shadow-lg shadow-amber-500/20 text-[10px] sm:text-base">
                             {reward.points} PTS
                           </Badge>
                         </div>

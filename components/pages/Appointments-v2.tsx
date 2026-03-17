@@ -299,7 +299,7 @@ export default function AppointmentsV2() {
             <CalendarIcon className="w-4 h-4 mr-2" />
             Réservation
           </Badge>
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl text-gray-900 dark:text-gray-100 mb-6">
+          <h1 className="text-3xl sm:text-4xl font-medium lg:text-5xl text-gray-900 dark:text-gray-100 mb-6">
             Prenez rendez-vous en quelques clics
           </h1>
           <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
@@ -496,7 +496,7 @@ export default function AppointmentsV2() {
                         <p className="text-gray-900 dark:text-gray-100 font-medium">
                           Au salon
                         </p>
-                        <p className="text-sm sm:text-lg text-gray-500 dark:text-gray-400">
+                        <p className="text-base sm:text-lg text-gray-500 dark:text-gray-400">
                           Quartier HIMBI, Commune de Goma, Ville de Goma
                         </p>
                       </div>
@@ -514,7 +514,7 @@ export default function AppointmentsV2() {
                         <p className="text-gray-900 dark:text-gray-100 font-medium">
                           À domicile
                         </p>
-                        <p className="text-sm sm:text-lg text-gray-500 dark:text-gray-400">
+                        <p className="text-base sm:text-lg text-gray-500 dark:text-gray-400">
                           +20 000 Fc - Dans la zone de Goma
                         </p>
                       </div>
@@ -577,14 +577,14 @@ export default function AppointmentsV2() {
               <div className="space-y-4 mb-6">
                 {services?.filter((service: Service) => service.id === selectedServiceId).map((service: Service) => (
                   <div className="pb-4 border-b border-gray-200 dark:border-gray-700">
-                    <p className="text-sm sm:text-lg text-gray-500 dark:text-gray-400 mb-1">
+                    <p className="text-base sm:text-lg text-gray-500 dark:text-gray-400 mb-1">
                       Service
                     </p>
                     <div className="flex flex-row justify-between">
                       <p className="text-lg sm:text-base text-gray-900 dark:text-gray-100 font-medium">
                         {service.name}
                       </p>
-                      <span className="text-sm sm:text-base text-gray-900 dark:text-gray-100 font-medium" >
+                      <span className="text-base sm:text-base text-gray-900 dark:text-gray-100 font-medium" >
                         {service.price.toLocaleString()} Fc
                       </span>
                     </div>
@@ -592,7 +592,7 @@ export default function AppointmentsV2() {
                 ))}
 
                 <div className="pb-4 border-b border-gray-200 dark:border-gray-700">
-                  <p className="text-sm sm:text-lg text-gray-500 dark:text-gray-400 mb-1">
+                  <p className="text-base sm:text-lg text-gray-500 dark:text-gray-400 mb-1">
                     Spécialiste
                   </p>
                   <div className="flex flex-row justify-between">
@@ -613,7 +613,7 @@ export default function AppointmentsV2() {
 
                 {selectedDate && selectedTime && (
                   <div className="pb-4 border-b border-gray-200 dark:border-gray-700">
-                    <p className="text-sm sm:text-lg text-gray-500 dark:text-gray-400 mb-1">
+                    <p className="text-base sm:text-lg text-gray-500 dark:text-gray-400 mb-1">
                       Date et heure
                     </p>
                     <div className="flex items-center text-gray-900 dark:text-gray-100 text-lg sm:text-base">
@@ -632,7 +632,7 @@ export default function AppointmentsV2() {
                 )}
 
                 <div className="pb-4 border-b border-gray-200 dark:border-gray-700">
-                  <p className="text-sm sm:text-lg text-gray-500 dark:text-gray-400 mb-1">
+                  <p className="text-base sm:text-lg text-gray-500 dark:text-gray-400 mb-1">
                     Lieu
                   </p>
                   <div className="flex items-center text-gray-900 dark:text-gray-100 text-lg sm:text-base">
@@ -652,14 +652,14 @@ export default function AppointmentsV2() {
 
                 {addOns.length > 0 && (
                   <div className="pb-4">
-                    <p className="text-sm sm:text-lg text-gray-500 dark:text-gray-400 mb-2">
+                    <p className="text-base sm:text-lg text-gray-500 dark:text-gray-400 mb-2">
                       Options
                     </p>
                     <ul className="space-y-1">
                       {addOns.map((addon) => (
                         <li
                           key={addon}
-                          className="text-sm sm:text-lg text-gray-700 dark:text-gray-300"
+                          className="text-base sm:text-lg text-gray-700 dark:text-gray-300"
                         >
                           • {addon}
                         </li>
@@ -687,7 +687,7 @@ export default function AppointmentsV2() {
                             <p className="text-gray-900 dark:text-gray-100 font-medium">
                               Ajoutez vos informations de payement.
                             </p>
-                            <p className="text-sm sm:text-lg text-gray-500 dark:text-gray-400">
+                            <p className="text-base sm:text-lg text-gray-500 dark:text-gray-400">
                               Faites vos payements en ligne avec nos ligne de payements tres securisees.
                             </p>
                           </div>
@@ -705,7 +705,7 @@ export default function AppointmentsV2() {
                             <p className="text-gray-900 dark:text-gray-100 font-medium">
                               Faite vos payements sur place
                             </p>
-                            <p className="text-sm sm:text-lg text-gray-500 dark:text-gray-400">
+                            <p className="text-base sm:text-lg text-gray-500 dark:text-gray-400">
                               Q. HIMBI, C. de Goma, Ville de Goma, No - 22
                             </p>
                           </div>
@@ -718,13 +718,13 @@ export default function AppointmentsV2() {
 
               {!user ? (
                 <div className="mb-6 p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl">
-                  <p className="text-sm sm:text-lg text-amber-800 dark:text-amber-200">
+                  <p className="text-base sm:text-lg text-amber-800 dark:text-amber-200">
                     Vous devez être connecté(e) pour réserver un
                     rendez-vous
                   </p>
                   <Link
                     href="/auth/login"
-                    className="text-sm sm:text-lg text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 underline mt-2 inline-block"
+                    className="text-base sm:text-lg text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 underline mt-2 inline-block"
                   >
                     Se connecter
                   </Link>
@@ -903,7 +903,7 @@ export default function AppointmentsV2() {
                 {appointmentLoading ? "En cours de traitement" : "Confirmer le rendez-vous"}
               </Button>)}
 
-              <p className="text-sm text-gray-500 dark:text-gray-400 text-center mt-4">
+              <p className="text-base text-gray-500 dark:text-gray-400 text-center mt-4">
                 Vous recevrez une confirmation par email et
                 WhatsApp
               </p>

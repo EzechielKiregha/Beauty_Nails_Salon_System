@@ -361,10 +361,11 @@ export function AppointmentModal({ open, onOpenChange, appointment, trigger, cli
 
         {/* <form onSubmit={handleSubmit} className="p-6 space-y-6"> */}
         <div className="p-6 space-y-6">
+          <p className=" dark:text-pink-400 text-xs sm:text-xs">{'glisser  <--- | --->'}</p>
           <Tabs defaultValue="details" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 mb-4">
-              <TabsTrigger value="details">Détails</TabsTrigger>
-              <TabsTrigger value="payment">Paiement & Statut</TabsTrigger>
+            <TabsList className="w-full bg-white dark:bg-gray-950 border border-gray-200 dark:border-pink-900/30 p-1 rounded-xl flex overflow-x-auto no-scrollbar justify-start sm:justify-center">
+              <TabsTrigger value="details" className="data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400 text-base sm:text-base">Détails</TabsTrigger>
+              <TabsTrigger value="payment" className="data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400 text-base sm:text-base">Paiement & Statut</TabsTrigger>
             </TabsList>
 
             <TabsContent value="details" className="space-y-4">
@@ -601,7 +602,7 @@ export function AppointmentModal({ open, onOpenChange, appointment, trigger, cli
                         <p className="text-gray-900 dark:text-gray-100 font-medium">
                           Au salon
                         </p>
-                        <p className="text-sm sm:text-lg text-gray-500 dark:text-gray-400">
+                        <p className="text-base sm:text-lg text-gray-500 dark:text-gray-400">
                           Q. HIMBI, C. de Goma, Ville de Goma
                         </p>
                       </div>
@@ -619,7 +620,7 @@ export function AppointmentModal({ open, onOpenChange, appointment, trigger, cli
                         <p className="text-gray-900 dark:text-gray-100 font-medium">
                           À domicile
                         </p>
-                        <p className="text-sm sm:text-lg text-gray-500 dark:text-gray-400">
+                        <p className="text-base sm:text-lg text-gray-500 dark:text-gray-400">
                           +20 000 Fc - Dans la zone de Goma
                         </p>
                       </div>
@@ -726,15 +727,15 @@ export function AppointmentModal({ open, onOpenChange, appointment, trigger, cli
                     <div className="grid grid-cols-3 gap-2">
                       <Button type="button" onClick={() => setPaymentMethod("cash")} variant="outline" className={`flex flex-col gap-1 h-auto py-3 border ${paymentMethod === "cash" ? " border-green-500 dark:border-green-500 bg-green-50" : " border-green-200 bg-green-50"}`}>
                         <Banknote className="w-5 h-5 text-green-600" />
-                        <span className="text-sm">Espèces</span>
+                        <span className="text-base">Espèces</span>
                       </Button>
                       <Button type="button" onClick={() => setPaymentMethod("mobile")} variant="outline" className={`flex flex-col gap-1 h-auto py-3 border ${paymentMethod === "mobile" ? " border-pink-500 dark:border-pink-500 bg-pink-50" : " border-pink-200 bg-pink-50"}`}>
                         <CreditCard className="w-5 h-5 text-pink-600" />
-                        <span className="text-sm">Mobile Money</span>
+                        <span className="text-base">Mobile Money</span>
                       </Button>
                       <Button type="button" onClick={() => setPaymentMethod("card")} variant="outline" className={`flex flex-col gap-1 h-auto py-3 border ${paymentMethod === "card" ? " border-blue-500 dark:border-blue-500 bg-blue-50" : " border-blue-200 bg-blue-50"}`}>
                         <CreditCard className="w-5 h-5 text-blue-600" />
-                        <span className="text-sm">Carte</span>
+                        <span className="text-base">Carte</span>
                       </Button>
                     </div>
                   </div>

@@ -100,7 +100,7 @@ export function ServiceModal({ service, trigger, onSubmit }: ServiceModalProps) 
                   onChange={(e) => handleChange('price', parseFloat(e.target.value) || 0)}
                   className="pl-10 h-11 text-base"
                 />
-                <span className="absolute left-3 top-2.5 text-sm text-gray-500">Fr</span>
+                <span className="absolute left-3 top-2.5 text-base text-gray-500">Fr</span>
               </div>
             </div>
 
@@ -146,7 +146,7 @@ export function ServiceModal({ service, trigger, onSubmit }: ServiceModalProps) 
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
                 <Label className="text-lg">Réservation en ligne</Label>
-                <p className="text-sm text-gray-500">Visible sur le site</p>
+                <p className="text-base text-gray-500">Visible sur le site</p>
               </div>
               <Switch
                 checked={formData.onlineBookable}
@@ -157,7 +157,7 @@ export function ServiceModal({ service, trigger, onSubmit }: ServiceModalProps) 
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
                 <Label className="text-lg">Service Populaire</Label>
-                <p className="text-sm text-gray-500">Mettre en avant</p>
+                <p className="text-base text-gray-500">Mettre en avant</p>
               </div>
               <Switch
                 checked={formData.isPopular}
@@ -403,7 +403,7 @@ export function PromoModal({ promo, trigger, onSubmit }: PromoModalProps) {
                   onChange={(e) => handleChange('code', e.target.value.toUpperCase())}
                   className="uppercase font-mono pl-10 h-11 text-base bg-amber-50 border-amber-200 text-amber-800"
                 />
-                <span className="absolute left-3 top-2.5 text-sm text-amber-500">#</span>
+                <span className="absolute left-3 top-2.5 text-base text-amber-500">#</span>
               </div>
             </div>
 

@@ -153,7 +153,7 @@ export default function StaffManagement() {
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <h2 className="text-2xl  sm:text-3xl text-gray-900 dark:text-gray-100">Gestion du Personnel</h2>
+        <h2 className="text-2xl  sm:text-3xl font-medium text-gray-900 dark:text-gray-100">Gestion du Personnel</h2>
         <CreateWorkerModal triggerLabel="+ Nouvelle Employée" />
       </div>
 
@@ -176,15 +176,15 @@ export default function StaffManagement() {
                 </div>
                 <Badge className={`${member.status === 'active' ? 'bg-green-500' :
                   member.status === 'busy' ? 'bg-blue-500' : 'bg-gray-500'
-                  } text-white text-[10px] sm:text-sm`}>
+                  } text-white text-[10px] sm:text-base`}>
                   {member.status === 'active' ? 'Disponible' :
                     member.status === 'busy' ? 'Occupée' : 'Absente'}
                 </Badge>
               </div>
               <h4 className="text-gray-900 dark:text-gray-100 mb-1 font-medium">{member.name}</h4>
-              <p className="text-sm sm:text-lg text-gray-600 dark:text-gray-400">{member.role}</p>
+              <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400">{member.role}</p>
               {member.status === 'busy' && (
-                <p className="text-[10px] sm:text-sm text-blue-600 dark:text-blue-400 mt-2 font-medium">Cliente actuelle: Marie K.</p>
+                <p className="text-[10px] sm:text-base text-blue-600 dark:text-blue-400 mt-2 font-medium">Cliente actuelle: Marie K.</p>
               )}
             </Card>
           ))}
@@ -209,13 +209,13 @@ export default function StaffManagement() {
                   <p className="text-gray-900 dark:text-gray-100 font-medium">{member.name}</p>
                   <div className="flex items-center gap-1">
                     <Star className="w-3 h-3 sm:w-4 sm:h-4 fill-amber-400 text-amber-400" />
-                    <span className="text-sm sm:text-lg text-gray-900 dark:text-gray-100">{member.rating}</span>
+                    <span className="text-base sm:text-lg text-gray-900 dark:text-gray-100">{member.rating}</span>
                   </div>
                 </div>
-                <p className="text-sm sm:text-lg text-gray-600 dark:text-gray-400">{member.role}</p>
+                <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400">{member.role}</p>
                 <div className="flex items-center justify-between mt-2">
-                  <span className="text-[10px] sm:text-sm text-gray-500 dark:text-gray-500">{member.appointmentsCount} RDV</span>
-                  <span className="text-[10px] sm:text-sm text-gray-900 dark:text-gray-200 font-medium">{member.revenue}</span>
+                  <span className="text-[10px] sm:text-base text-gray-500 dark:text-gray-500">{member.appointmentsCount} RDV</span>
+                  <span className="text-[10px] sm:text-base text-gray-900 dark:text-gray-200 font-medium">{member.revenue}</span>
                 </div>
               </div>
             ))}
@@ -225,11 +225,12 @@ export default function StaffManagement() {
         {/* Staff Details */}
         {selectedStaff ? (
           <Card className="border-0 shadow-lg rounded-2xl p-4 sm:p-8 lg:col-span-2 bg-white dark:bg-gray-950 dark:border dark:border-pink-900/30">
+            <p className=" dark:text-pink-400 text-xs sm:text-xs">{'glisser  <--- | --->'}</p>
             <Tabs defaultValue="performance" className="space-y-6">
               <TabsList className="w-full bg-white dark:bg-gray-950 border border-gray-200 dark:border-pink-900/30 p-1 rounded-xl flex overflow-x-auto no-scrollbar justify-start sm:justify-center">
-                <TabsTrigger value="performance" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">Performance</TabsTrigger>
-                {/* <TabsTrigger value="schedule" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">Horaires</TabsTrigger> */}
-                <TabsTrigger value="commission" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">Commission</TabsTrigger>
+                <TabsTrigger value="performance" className="data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400 text-base sm:text-base">Performance</TabsTrigger>
+                {/* <TabsTrigger value="schedule" className="data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400 text-base sm:text-base">Horaires</TabsTrigger> */}
+                <TabsTrigger value="commission" className="data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400 text-base sm:text-base">Commission</TabsTrigger>
               </TabsList>
 
               {/* Performance Tab */}
@@ -238,7 +239,7 @@ export default function StaffManagement() {
                   <div>
                     <h3 className="text-xl sm:text-2xl text-gray-900 dark:text-gray-100 mb-2">{selectedStaff.name}</h3>
                     <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400 mb-4">{selectedStaff.role}</p>
-                    <div className="space-y-1 text-sm sm:text-lg text-gray-600 dark:text-gray-400">
+                    <div className="space-y-1 text-base sm:text-lg text-gray-600 dark:text-gray-400">
                       <p className="flex items-center gap-2"><span>📞</span> {selectedStaff.phone}</p>
                       <p className="flex items-center gap-2"><span>📧</span> {selectedStaff.email}</p>
                       <p className="flex items-center gap-2"><span>🕒</span> {selectedStaff.workingHours}</p>
@@ -246,7 +247,7 @@ export default function StaffManagement() {
                   </div>
                   <div className="flex items-center gap-2 bg-amber-50 dark:bg-amber-900/10 p-3 sm:p-4 rounded-2xl border border-amber-100 dark:border-amber-900/30">
                     <Star className="w-5 h-5 sm:w-6 sm:h-6 fill-amber-400 text-amber-400" />
-                    <span className="text-2xl sm:text-3xl text-gray-900 dark:text-gray-100 ">{selectedStaff.rating}</span>
+                    <span className="text-2xl sm:text-3xl font-medium text-gray-900 dark:text-gray-100 ">{selectedStaff.rating}</span>
                   </div>
                 </div>
 
@@ -255,22 +256,22 @@ export default function StaffManagement() {
                   <Card className="bg-linear-to-br from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 border-0 p-3 sm:p-4 shadow-sm">
                     <CalendarIcon className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600 dark:text-blue-400 mb-2" />
                     <p className="text-xl sm:text-2xl text-gray-900 dark:text-gray-100 ">{selectedStaff.appointmentsCount}</p>
-                    <p className="text-[10px] sm:text-sm text-gray-600 dark:text-gray-400 uppercase tracking-wider font-medium">RDV ce mois</p>
+                    <p className="text-[10px] sm:text-base text-gray-600 dark:text-gray-400 uppercase tracking-wider font-medium">RDV ce mois</p>
                   </Card>
                   <Card className="bg-linear-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-0 p-3 sm:p-4 shadow-sm">
                     <DollarSign className="w-5 h-5 sm:w-6 sm:h-6 text-green-600 dark:text-green-400 mb-2" />
                     <p className="text-base sm:text-lg text-gray-900 dark:text-gray-100 ">{selectedStaff.revenue}</p>
-                    <p className="text-[10px] sm:text-sm text-gray-600 dark:text-gray-400 uppercase tracking-wider font-medium">Revenus</p>
+                    <p className="text-[10px] sm:text-base text-gray-600 dark:text-gray-400 uppercase tracking-wider font-medium">Revenus</p>
                   </Card>
                   <Card className="bg-linear-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border-0 p-3 sm:p-4 shadow-sm">
                     <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600 dark:text-purple-400 mb-2" />
                     <p className="text-xl sm:text-2xl text-gray-900 dark:text-gray-100 ">{selectedStaff.clientRetention}</p>
-                    <p className="text-[10px] sm:text-sm text-gray-600 dark:text-gray-400 uppercase tracking-wider font-medium">Rétention</p>
+                    <p className="text-[10px] sm:text-base text-gray-600 dark:text-gray-400 uppercase tracking-wider font-medium">Rétention</p>
                   </Card>
                   <Card className="bg-linear-to-br from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 border-0 p-3 sm:p-4 shadow-sm">
                     <Award className="w-5 h-5 sm:w-6 sm:h-6 text-amber-600 dark:text-amber-400 mb-2" />
                     <p className="text-xl sm:text-2xl text-gray-900 dark:text-gray-100 ">{selectedStaff.upsellRate}</p>
-                    <p className="text-[10px] sm:text-sm text-gray-600 dark:text-gray-400 uppercase tracking-wider font-medium">Taux Vente+</p>
+                    <p className="text-[10px] sm:text-base text-gray-600 dark:text-gray-400 uppercase tracking-wider font-medium">Taux Vente+</p>
                   </Card>
                 </div>
 
@@ -339,7 +340,7 @@ export default function StaffManagement() {
                         {isInitializing ? "Initialisation..." : "Initialiser"}
                       </Button>
                     </div>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
+                    <p className="text-base text-gray-500 dark:text-gray-400 mt-2">
                       Cela créera un enregistrement de commission pour la période sélectionnée si aucun n'existe déjà.
                     </p>
                   </div>
@@ -375,7 +376,7 @@ export default function StaffManagement() {
                               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
                                 <div className="flex-1">
                                   <h6 className="font-medium text-gray-900 dark:text-gray-100">En Attente / Non Payé</h6>
-                                  <div className="space-y-1 text-sm sm:text-lg text-gray-600 dark:text-gray-400 mt-1">
+                                  <div className="space-y-1 text-base sm:text-lg text-gray-600 dark:text-gray-400 mt-1">
                                     <div className="flex justify-between">
                                       <span>Revenu Généré:</span>
                                       <span>{selectedPeriodCommission.totalRevenue.toLocaleString()} Fc</span>
@@ -408,12 +409,12 @@ export default function StaffManagement() {
                                     />
                                   )}
                                   {user?.role === 'worker' && (
-                                    <p className="text-sm text-amber-600 dark:text-amber-400">En attente d'approbation</p>
+                                    <p className="text-base text-amber-600 dark:text-amber-400">En attente d'approbation</p>
                                   )}
                                 </div>
                               </div>
                               {/* Detailed Breakdown */}
-                              <div className="pt-4 border-t border-amber-200 dark:border-amber-800 text-sm text-gray-600 dark:text-gray-400">
+                              <div className="pt-4 border-t border-amber-200 dark:border-amber-800 text-base text-gray-600 dark:text-gray-400">
                                 <div className="grid grid-cols-2 gap-2">
                                   <div>Total Revenu:</div>
                                   <div className="text-right">{selectedPeriodCommission.totalRevenue.toLocaleString()} Fc</div>
@@ -446,7 +447,7 @@ export default function StaffManagement() {
                               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
                                 <div className="flex-1">
                                   <h6 className="font-medium text-gray-900 dark:text-gray-100">Payé</h6>
-                                  <div className="space-y-1 text-sm sm:text-lg text-gray-600 dark:text-gray-400 mt-1">
+                                  <div className="space-y-1 text-base sm:text-lg text-gray-600 dark:text-gray-400 mt-1">
                                     <div className="flex justify-between">
                                       <span>Payé le:</span>
                                       <span>{selectedPeriodCommission.paidAt ? new Date(selectedPeriodCommission.paidAt).toLocaleDateString('fr-FR') : 'N/A'}</span>
@@ -469,7 +470,7 @@ export default function StaffManagement() {
                                 </div>
                               </div>
                               {/* Detailed Breakdown for Paid */}
-                              <div className="pt-4 border-t border-green-200 dark:border-green-800 text-sm text-gray-600 dark:text-gray-400">
+                              <div className="pt-4 border-t border-green-200 dark:border-green-800 text-base text-gray-600 dark:text-gray-400">
                                 <div className="grid grid-cols-2 gap-2">
                                   <div>Total Revenu:</div>
                                   <div className="text-right">{selectedPeriodCommission.totalRevenue.toLocaleString()} Fc</div>
@@ -550,7 +551,7 @@ export default function StaffManagement() {
                                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                                   <div className="flex-1">
                                     <h6 className="font-medium text-gray-900 dark:text-gray-100">{commission.period}</h6>
-                                    <div className="space-y-1 text-sm sm:text-lg text-gray-600 dark:text-gray-400 mt-1">
+                                    <div className="space-y-1 text-base sm:text-lg text-gray-600 dark:text-gray-400 mt-1">
                                       <div className="flex justify-between">
                                         <span>Revenu Généré:</span>
                                         <span>{commission.totalRevenue.toLocaleString()} Fc</span>
@@ -583,7 +584,7 @@ export default function StaffManagement() {
                                       />
                                     )}
                                     {user?.role === 'worker' && (
-                                      <p className="text-sm text-amber-600 dark:text-amber-400">En attente</p>
+                                      <p className="text-base text-amber-600 dark:text-amber-400">En attente</p>
                                     )}
                                   </div>
                                 </div>
@@ -606,7 +607,7 @@ export default function StaffManagement() {
                                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                                   <div className="flex-1">
                                     <h6 className="font-medium text-gray-900 dark:text-gray-100">{commission.period}</h6>
-                                    <div className="space-y-1 text-sm sm:text-lg text-gray-600 dark:text-gray-400 mt-1">
+                                    <div className="space-y-1 text-base sm:text-lg text-gray-600 dark:text-gray-400 mt-1">
                                       <div className="flex justify-between">
                                         <span>Payé le:</span>
                                         <span>{commission.paidAt ? new Date(commission.paidAt).toLocaleDateString('fr-FR') : 'N/A'}</span>

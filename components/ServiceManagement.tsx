@@ -141,19 +141,20 @@ export default function ServiceManagement({ showMock }: { showMock?: boolean }) 
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <h2 className="text-2xl  sm:text-3xl  text-gray-900 dark:text-gray-100">Gestion des Services</h2>
+        <h2 className="text-2xl  sm:text-3xl font-medium  text-gray-900 dark:text-gray-100">Gestion des Services</h2>
 
       </div>
 
+      <p className=" dark:text-pink-400 text-xs sm:text-xs">{'glisser  <--- | --->'}</p>
       <Tabs defaultValue="services" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4  bg-white dark:bg-gray-950 border border-gray-200 dark:border-pink-900/30 p-1 rounded-xl justify-start sm:justify-center ">
-          <TabsTrigger value="services" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">Services</TabsTrigger>
-          {/* <TabsTrigger value="products" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">
+        <TabsList className="w-full bg-white dark:bg-gray-950 border border-gray-200 dark:border-pink-900/30 p-1 rounded-xl flex overflow-x-auto no-scrollbar justify-start sm:justify-center">
+          <TabsTrigger value="services" className="data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400 text-base sm:text-base">Services</TabsTrigger>
+          {/* <TabsTrigger value="products" className="data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400 text-base sm:text-base">
             Produits Retail
           </TabsTrigger> */}
-          <TabsTrigger value="packages" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">Forfaits</TabsTrigger>
-          <TabsTrigger value="promotions" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">Promotions</TabsTrigger>
-          <TabsTrigger value="online" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">Réservation en Ligne</TabsTrigger>
+          <TabsTrigger value="packages" className="data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400 text-base sm:text-base">Forfaits</TabsTrigger>
+          <TabsTrigger value="promotions" className="data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400 text-base sm:text-base">Promotions</TabsTrigger>
+          <TabsTrigger value="online" className="data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400 text-base sm:text-base">Réservation en Ligne</TabsTrigger>
         </TabsList>
 
         {/* Services Tab */}
@@ -196,12 +197,12 @@ export default function ServiceManagement({ showMock }: { showMock?: boolean }) 
                             <div className="flex flex-wrap items-center gap-2 mb-3">
                               <p className="font-semibold text-gray-900 dark:text-gray-100">{service.name}</p>
                               {service.isPopular && (
-                                <Badge className="bg-amber-500 dark:bg-amber-600 text-white text-[10px] sm:text-sm">
+                                <Badge className="bg-amber-500 dark:bg-amber-600 text-white text-[10px] sm:text-base">
                                   Populaire
                                 </Badge>
                               )}
                               {service.onlineBookable && (
-                                <Badge variant="outline" className="text-[10px] sm:text-sm dark:text-gray-300 dark:border-gray-700">
+                                <Badge variant="outline" className="text-[10px] sm:text-base dark:text-gray-300 dark:border-gray-700">
                                   <Globe className="w-3 h-3 mr-1" />
                                   En ligne
                                 </Badge>
@@ -379,7 +380,7 @@ export default function ServiceManagement({ showMock }: { showMock?: boolean }) 
         </TabsContent>
 
         {/* Products Retail Tab (New) */}
-        {/* <TabsContent value="products" className="mt-14 lg:mt-2">
+        {/* <TabsContent value="products" className="mt-6">
           <div className="flex justify-between items-center mb-6">
             <div className="relative w-72">
               <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
@@ -412,7 +413,7 @@ export default function ServiceManagement({ showMock }: { showMock?: boolean }) 
         }
 
         {/* Packages Tab */}
-        <TabsContent value="packages" className="mt-14 lg:mt-2">
+        <TabsContent value="packages" className="mt-6">
           <div className="flex justify-between items-center mb-6">
             <div className="relative w-72">
               <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
@@ -454,7 +455,7 @@ export default function ServiceManagement({ showMock }: { showMock?: boolean }) 
                     </p>
 
                     <div className="space-y-3 mb-8 bg-gray-50 dark:bg-gray-800/50 p-4 rounded-xl border border-gray-100 dark:border-gray-700">
-                      <p className="text-sm  text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Services inclus</p>
+                      <p className="text-base  text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Services inclus</p>
                       {(pkg.services || []).map((service, idx) => (
                         <div key={idx} className="flex items-center gap-3 text-lg text-gray-700 dark:text-gray-300">
                           <Sparkles className="w-4 h-4 text-pink-500 shrink-0" />
@@ -491,7 +492,7 @@ export default function ServiceManagement({ showMock }: { showMock?: boolean }) 
         </TabsContent>
 
         {/* Promotions Tab */}
-        <TabsContent value="promotions" className="mt-14 lg:mt-2">
+        <TabsContent value="promotions" className="mt-6">
           <Card className="p-4 sm:p-8 hover:shadow-lg transition-all border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
               <div className="flex items-center gap-4">
@@ -531,7 +532,7 @@ export default function ServiceManagement({ showMock }: { showMock?: boolean }) 
                     </div>
                     <div className="text-right">
                       <p className="text-3xl font-black text-amber-600 dark:text-amber-400">{promo.value}</p>
-                      <p className="text-[10px] sm:text-sm  text-gray-500 dark:text-gray-400 uppercase tracking-widest">
+                      <p className="text-[10px] sm:text-base  text-gray-500 dark:text-gray-400 uppercase tracking-widest">
                         {promo.type === 'percentage' ? 'Réduction %' : 'Réduction Fixe'}
                       </p>
                     </div>
@@ -577,7 +578,7 @@ export default function ServiceManagement({ showMock }: { showMock?: boolean }) 
 
 
         {/* Online Booking Settings Tab */}
-        <TabsContent value="online" className="mt-14 lg:mt-2">
+        <TabsContent value="online" className="mt-6">
           <Card className="p-4 sm:p-8 hover:shadow-lg transition-all border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950">
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-8">
               <div className="w-14 h-14 rounded-2xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center shadow-lg shadow-blue-500/10">
@@ -594,7 +595,7 @@ export default function ServiceManagement({ showMock }: { showMock?: boolean }) 
                 <div key={service.id} className="flex items-center justify-between p-4 sm:p-5 bg-gray-50 dark:bg-gray-800/50 rounded-2xl border border-gray-100 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-900/50 transition-all">
                   <div>
                     <p className=" text-gray-900 dark:text-gray-100">{service.name}</p>
-                    <p className="text-sm sm:text-lg text-gray-600 dark:text-gray-400 mt-1">{service.category} • {service.duration} min • {service.price.toLocaleString()} CDF</p>
+                    <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400 mt-1">{service.category} • {service.duration} min • {service.price.toLocaleString()} CDF</p>
                   </div>
                   <Switch checked={service.onlineBookable} disabled className="data-[state=checked]:bg-blue-500" /> {/* Disabled for display only */}
                 </div>

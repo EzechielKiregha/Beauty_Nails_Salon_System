@@ -20,7 +20,7 @@ Comprehensive dark mode and mobile responsiveness has been successfully applied 
 - **Header/container**: Dark background `dark:bg-gray-950`, responsive `py-16 sm:py-24`
 - **Badge**: Dark mode `dark:bg-pink-900 dark:text-pink-200`
 - **All prose content**: 
-  - h2 headers: `text-2xl sm:text-3xl text-gray-900 dark:text-gray-100`
+  - h2 headers: `text-2xl sm:text-3xl font-medium text-gray-900 dark:text-gray-100`
   - h3 headers: `text-lg sm:text-xl text-gray-900 dark:text-gray-100`
   - Paragraphs: `text-lg sm:text-base text-gray-700 dark:text-gray-300`
   - Lists: `text-lg sm:text-base text-gray-700 dark:text-gray-300 space-y-1 sm:space-y-2`
@@ -59,7 +59,7 @@ Comprehensive dark mode and mobile responsiveness has been successfully applied 
 - **Container**: Dark background `dark:bg-gray-950`
 - **Header/Badge**: Dark mode throughout
 - **Story Section**:
-  - Heading: `text-3xl sm:text-4xl lg:text-5xl text-gray-900 dark:text-gray-100`
+  - Heading: `text-3xl sm:text-4xl font-medium lg:text-5xl text-gray-900 dark:text-gray-100`
   - Text: Responsive sizing with dark colors
   - Stats boxes: Dark styling with color variants
 - **Values Section**:
@@ -149,7 +149,7 @@ Regular shadows: Add dark:shadow-gray-900/50 or just dark:shadow-lg
 
 ### Text Sizing
 ```
-Headings: text-3xl sm:text-4xl lg:text-5xl
+Headings: text-3xl sm:text-4xl font-medium lg:text-5xl
 Subheadings: text-lg sm:text-xl
 Body: text-lg sm:text-base
 Captions: text-xs sm:text-lg

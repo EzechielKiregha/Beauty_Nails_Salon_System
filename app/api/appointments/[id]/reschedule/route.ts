@@ -1,4 +1,4 @@
-import { errorResponse, successResponse } from "@/lib/api/helpers";
+import { errorResponse, getAuthenticatedUser, successResponse } from "@/lib/api/helpers";
 import prisma from "@/lib/prisma";
 import { NextRequest } from "next/server";
 import { error } from "node:console";
@@ -11,8 +11,10 @@ export async function PATCH(
 
   const id = (await context.params).id;
 
+  const userProfileId = (await getAuthenticatedUser()).clientProfile?.id
+
   const body = await request.json();
-  const { newTime, newDate, newStaffId } = body;
+  const { newTime, newDate, newStaffId, isPrePaidUsed } = body;
 
   // Validate input
   if (!newTime) return error('New time is required');
@@ -20,20 +22,20 @@ export async function PATCH(
   if (newStaffId && typeof newStaffId !== 'string') return errorResponse('Invalid staff ID format');
 
   // Check for conflicts
-      const conflictingAppointment = await prisma.appointment.findFirst({
-        where: {
-          workerId: newStaffId,
-          date: new Date(newDate),
-          time: newTime,
-          status: {
-            in: ['confirmed', 'in_progress', 'pending'],
-          },
-        },
-      });
-  
-      if (conflictingAppointment) {
-        return errorResponse('A cette date et heure, ce rendez-vous n\'est pas disponible', 409);
-      }
+  const conflictingAppointment = await prisma.appointment.findFirst({
+    where: {
+      workerId: newStaffId,
+      date: new Date(newDate),
+      time: newTime,
+      status: {
+        in: ['confirmed', 'in_progress', 'pending'],
+      },
+    },
+  });
+
+  if (conflictingAppointment) {
+    return errorResponse('A cette date et heure, ce rendez-vous n\'est pas disponible', 409);
+  }
 
   const app = await prisma.appointment.update({
     where: { id },
@@ -52,6 +54,17 @@ export async function PATCH(
       },
     }
   });
+
+  if (isPrePaidUsed) {
+    await prisma.clientProfile.update({
+      where: { id : userProfileId},
+      data : {
+        prepaymentBalance : {
+          decrement : app.price
+        }
+      }
+    })
+  }
 
   return successResponse(app);
   }

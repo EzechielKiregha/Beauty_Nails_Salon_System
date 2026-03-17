@@ -39,7 +39,7 @@ export default function ForgotPasswordForm() {
 
           <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
             <div>
-              <Label htmlFor="email" className="text-sm sm:text-lg text-gray-700 dark:text-gray-300">Email</Label>
+              <Label htmlFor="email" className="text-base sm:text-lg text-gray-700 dark:text-gray-300">Email</Label>
               <Input
                 id="email"
                 type="email"
@@ -63,7 +63,7 @@ export default function ForgotPasswordForm() {
           <div className="mt-6 text-center">
             <Link
               href="/auth/login"
-              className="text-sm sm:text-lg text-purple-600 dark:text-purple-400 hover:underline flex items-center justify-center gap-1"
+              className="text-base sm:text-lg text-purple-600 dark:text-purple-400 hover:underline flex items-center justify-center gap-1"
             >
               <ArrowLeft className="w-4 h-4" />
               Retour à la connexion

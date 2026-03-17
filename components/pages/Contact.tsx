@@ -123,7 +123,7 @@ export default function Contact() {
           {/* Contact Form */}
           <div className="lg:col-span-2">
             <Card className="bg-white dark:bg-gray-950 border-b border-pink-100 dark:border-pink-900 shadow-xl rounded-2xl p-6 sm:p-8">
-              <h2 className="text-2xl  sm:text-3xl text-gray-900 dark:text-gray-100 mb-6 sm:mb-8">Envoyez-nous un message</h2>
+              <h2 className="text-2xl  sm:text-3xl font-medium text-gray-900 dark:text-gray-100 mb-6 sm:mb-8">Envoyez-nous un message</h2>
               <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                   <div>
@@ -217,7 +217,7 @@ export default function Contact() {
                   Contactez-nous directement pour une réponse rapide
                 </p>
                 <a href="https://wa.me/243123456789" target="_blank" rel="noopener noreferrer">
-                  <Button className="w-full bg-green-500 hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700 text-white rounded-full py-4 sm:py-5 text-sm sm:text-lg">
+                  <Button className="w-full bg-green-500 hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700 text-white rounded-full py-4 sm:py-5 text-base sm:text-lg">
                     Ouvrir WhatsApp
                   </Button>
                 </a>
@@ -232,7 +232,7 @@ export default function Contact() {
               </h3>
               <div className="space-y-3 sm:space-y-4">
                 {hours.map((item, index) => (
-                  <div key={index} className="flex justify-between text-sm sm:text-lg">
+                  <div key={index} className="flex justify-between text-base sm:text-lg">
                     <span className="text-gray-700 dark:text-gray-300">{item.day}</span>
                     <span className={`${item.hours === 'Sur rendez-vous' ? 'text-amber-600 dark:text-amber-400' : 'text-gray-900 dark:text-gray-100'}`}>
                       {item.hours}
@@ -252,7 +252,7 @@ export default function Contact() {
                   rel="noopener noreferrer"
                   className="flex items-center gap-3 p-3 sm:p-4 bg-white dark:bg-gray-800 rounded-xl hover:shadow-md dark:hover:shadow-gray-900/50 transition-shadow"
                 >
-                  <div className="w-10 h-10 rounded-full bg-blue-500 dark:bg-blue-600 flex items-center justify-center text-white text-sm sm:text-lg ">
+                  <div className="w-10 h-10 rounded-full bg-blue-500 dark:bg-blue-600 flex items-center justify-center text-white text-base sm:text-lg ">
                     F
                   </div>
                   <span className="text-lg sm:text-base text-gray-700 dark:text-gray-300">Facebook</span>
@@ -263,7 +263,7 @@ export default function Contact() {
                   rel="noopener noreferrer"
                   className="flex items-center gap-3 p-3 sm:p-4 bg-white dark:bg-gray-800 rounded-xl hover:shadow-md dark:hover:shadow-gray-900/50 transition-shadow"
                 >
-                  <div className="w-10 h-10 rounded-full bg-linear-to-br from-purple-500 to-pink-500 dark:from-purple-600 dark:to-pink-600 flex items-center justify-center text-white text-sm sm:text-lg ">
+                  <div className="w-10 h-10 rounded-full bg-linear-to-br from-purple-500 to-pink-500 dark:from-purple-600 dark:to-pink-600 flex items-center justify-center text-white text-base sm:text-lg ">
                     I
                   </div>
                   <span className="text-lg sm:text-base text-gray-700 dark:text-gray-300">Instagram</span>
@@ -274,7 +274,7 @@ export default function Contact() {
                   rel="noopener noreferrer"
                   className="flex items-center gap-3 p-3 sm:p-4 bg-white dark:bg-gray-800 rounded-xl hover:shadow-md dark:hover:shadow-gray-900/50 transition-shadow"
                 >
-                  <div className="w-10 h-10 rounded-full bg-blue-400 dark:bg-blue-500 flex items-center justify-center text-white text-sm sm:text-lg ">
+                  <div className="w-10 h-10 rounded-full bg-blue-400 dark:bg-blue-500 flex items-center justify-center text-white text-base sm:text-lg ">
                     T
                   </div>
                   <span className="text-lg sm:text-base text-gray-700 dark:text-gray-300">Twitter</span>
@@ -288,7 +288,7 @@ export default function Contact() {
         <div className="mt-16 sm:mt-24">
           <Card className="bg-white dark:bg-gray-950 border-b border-pink-100 dark:border-pink-900 shadow-xl rounded-2xl overflow-hidden">
             <div className="p-6 sm:p-8 bg-linear-to-r from-pink-50 to-purple-50 dark:from-gray-800 dark:to-gray-800">
-              <h2 className="text-2xl  sm:text-3xl text-gray-900 dark:text-gray-100 flex items-center">
+              <h2 className="text-2xl  sm:text-3xl font-medium text-gray-900 dark:text-gray-100 flex items-center">
                 <MapPin className="w-6 h-6 mr-2 sm:mr-3 text-pink-500" />
                 Notre Emplacement
               </h2>
@@ -305,7 +305,7 @@ export default function Contact() {
                   href="https://maps.google.com"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-pink-600 dark:text-pink-400 hover:text-pink-700 dark:hover:text-pink-300 text-sm sm:text-lg inline-block transition-colors"
+                  className="text-pink-600 dark:text-pink-400 hover:text-pink-700 dark:hover:text-pink-300 text-base sm:text-lg inline-block transition-colors"
                 >
                   Voir sur Google Maps →
                 </a> */}

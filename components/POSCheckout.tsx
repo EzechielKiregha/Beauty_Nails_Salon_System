@@ -111,7 +111,7 @@ export default function POSCheckout({ showMock }: { showMock?: boolean }) {
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <h2 className="text-2xl  sm:text-3xl  text-gray-900 dark:text-gray-100">Caisse (POS)</h2>
+        <h2 className="text-2xl  sm:text-3xl font-medium  text-gray-900 dark:text-gray-100">Caisse (POS)</h2>
         <div className="flex items-center gap-3 w-full sm:w-auto">
           <Badge className="flex-1 sm:flex-none justify-center bg-linear-to-r from-green-500 to-emerald-500 text-white px-4 py-2 border-0 shadow-lg shadow-green-500/20">
             Caisse Ouverte
@@ -203,7 +203,7 @@ export default function POSCheckout({ showMock }: { showMock?: boolean }) {
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex-1">
                         <p className=" text-gray-900 dark:text-gray-100 mb-1">{item.name}</p>
-                        <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                        <p className="text-base font-medium text-gray-500 dark:text-gray-400">
                           {item.price.toLocaleString()} Fc × {item.quantity}
                         </p>
                       </div>

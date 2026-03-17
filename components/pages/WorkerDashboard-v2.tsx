@@ -361,7 +361,7 @@ export default function WorkerDashboardV2() {
                   <Button variant="outline" size="icon" className="relative dark:border-gray-700 dark:text-gray-200">
                     <Bell className="w-5 h-5" />
                     {unreadCount > 0 && (
-                      <span className="absolute -top-1 -right-1 w-5 h-5 bg-pink-500 text-white text-sm rounded-full flex items-center justify-center">
+                      <span className="absolute -top-1 -right-1 w-5 h-5 bg-pink-500 text-white text-base rounded-full flex items-center justify-center">
                         {unreadCount}
                       </span>
                     )}
@@ -420,9 +420,9 @@ export default function WorkerDashboardV2() {
                   <CalendarIcon className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600 dark:text-purple-400" />
                 </div>
               </div>
-              <p className="text-sm sm:text-lg text-gray-600 dark:text-gray-300  mb-1">Aujourd'hui</p>
-              <p className="text-2xl sm:text-3xl font-semibold  text-gray-900 dark:text-gray-100">{stats.todayAppointments}</p>
-              <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">{stats.completed} terminés</p>
+              <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300  mb-1">Aujourd'hui</p>
+              <p className="text-2xl sm:text-3xl font-medium font-semibold  text-gray-900 dark:text-gray-100">{stats.todayAppointments}</p>
+              <p className="text-base text-gray-500 dark:text-gray-400 mt-2">{stats.completed} terminés</p>
             </Card>
 
             <Card className="p-4 sm:p-6 hover:shadow-lg transition-shadow border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950">
@@ -431,9 +431,9 @@ export default function WorkerDashboardV2() {
                   <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6 text-green-600 dark:text-green-400" />
                 </div>
               </div>
-              <p className="text-sm sm:text-lg text-gray-600 dark:text-gray-300  mb-1">Complétés</p>
-              <p className="text-2xl sm:text-3xl font-semibold  text-gray-900 dark:text-gray-100">{completedAppointments.length}</p>
-              <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">rendez-vous</p>
+              <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300  mb-1">Complétés</p>
+              <p className="text-2xl sm:text-3xl font-medium font-semibold  text-gray-900 dark:text-gray-100">{completedAppointments.length}</p>
+              <p className="text-base text-gray-500 dark:text-gray-400 mt-2">rendez-vous</p>
             </Card>
 
             <Card className="p-4 sm:p-6 hover:shadow-lg transition-shadow border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950">
@@ -442,9 +442,9 @@ export default function WorkerDashboardV2() {
                   <Clock className="w-5 h-5 sm:w-6 sm:h-6 text-yellow-600 dark:text-yellow-400" />
                 </div>
               </div>
-              <p className="text-sm sm:text-lg text-gray-600 dark:text-gray-300  mb-1">En attente</p>
-              <p className="text-2xl sm:text-3xl font-semibold  text-gray-900 dark:text-gray-100">{stats.pending}</p>
-              <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">vous avez rater  {missedAppointments.length} rendez-vous</p>
+              <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300  mb-1">En attente</p>
+              <p className="text-2xl sm:text-3xl font-medium font-semibold  text-gray-900 dark:text-gray-100">{stats.pending}</p>
+              <p className="text-base text-gray-500 dark:text-gray-400 mt-2">vous avez rater  {missedAppointments.length} rendez-vous</p>
             </Card>
             <Card className="p-4 sm:p-6 bg-linear-to-br from-amber-500 to-pink-500 text-white border-0 shadow-xl">
               <div className="flex items-center justify-between mb-4">
@@ -453,9 +453,9 @@ export default function WorkerDashboardV2() {
                 </div>
                 <Star className="w-4 h-4 sm:w-5 sm:h-5" />
               </div>
-              <p className="text-sm sm:text-lg opacity-90 mb-1">Note moyenne</p>
-              <p className="text-2xl sm:text-3xl font-semibold ">{stats.rating.toFixed(1)}</p>
-              <p className="text-sm opacity-80 mt-2">
+              <p className="text-base sm:text-lg opacity-90 mb-1">Note moyenne</p>
+              <p className="text-2xl sm:text-3xl font-medium font-semibold ">{stats.rating.toFixed(1)}</p>
+              <p className="text-base opacity-80 mt-2">
                 {user?.workerProfile?.totalReviews || 0} avis
               </p>
             </Card>
@@ -463,17 +463,18 @@ export default function WorkerDashboardV2() {
         </div>
 
         {/* Main Content */}
+        <p className=" dark:text-pink-400 text-xs sm:text-xs">{'glisser  <--- | --->'}</p>
         <Tabs defaultValue="schedule" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2 lg:grid-cols-3 mt-3 lg:mt-6 bg-white dark:bg-gray-950 border border-gray-200 dark:border-pink-900/30 p-1 rounded-xl justify-start sm:justify-center ">
-            <TabsTrigger value="schedule" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">
+          <TabsList className="w-full bg-white dark:bg-gray-950 border border-gray-200 dark:border-pink-900/30 p-1 rounded-xl flex overflow-x-auto no-scrollbar justify-start sm:justify-center">
+            <TabsTrigger value="schedule" className="data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400 text-base sm:text-base">
               <CalendarIcon className="w-4 h-4 mr-2" />
               Planning
             </TabsTrigger>
-            <TabsTrigger value="calendar" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">
+            <TabsTrigger value="calendar" className="data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400 text-base sm:text-base">
               <CalendarIcon className="w-4 h-4 mr-2" />
               Mon Calendrier
             </TabsTrigger>
-            <TabsTrigger value="performance" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">
+            <TabsTrigger value="performance" className="data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400 text-base sm:text-base">
               <TrendingUp className="w-4 h-4 mr-2" />
               Performance
             </TabsTrigger>
@@ -515,7 +516,7 @@ export default function WorkerDashboardV2() {
                             <div className="text-2xl  text-purple-600">
                               {appointment.time}
                             </div>
-                            <div className="text-sm text-gray-500">
+                            <div className="text-base text-gray-500">
                               {appointment.duration} min
                             </div>
                           </div>
@@ -690,7 +691,7 @@ export default function WorkerDashboardV2() {
           </TabsContent>
 
           {/* Calendar Tab */}
-          <TabsContent value="calendar" className="mt-14 lg:mt-2">
+          <TabsContent value="calendar" className="mt-6">
             <BookingCalendar />
           </TabsContent>
 
@@ -867,7 +868,7 @@ export default function WorkerDashboardV2() {
                             {/* Estimate based on current period or average */
                               currentPeriodCommissionData?.commission ? currentPeriodCommissionData.commission.toLocaleString() : '0'} Fc
                           </p>
-                          <Badge variant="outline" className="text-sm">Estimé</Badge>
+                          <Badge variant="outline" className="text-base">Estimé</Badge>
                         </div>
                       </div>
                     </Card>

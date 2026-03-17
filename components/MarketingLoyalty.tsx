@@ -155,16 +155,17 @@ export default function MarketingLoyalty() {
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <h2 className="text-2xl  sm:text-3xl  text-gray-900 dark:text-gray-100">Marketing & Fidélité</h2>
+        <h2 className="text-2xl  sm:text-3xl font-medium  text-gray-900 dark:text-gray-100">Marketing & Fidélité</h2>
       </div>
 
+      <p className=" dark:text-pink-400 text-xs sm:text-xs">{'glisser  <--- | --->'}</p>
       <Tabs defaultValue="loyalty" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-2 lg:grid-cols-6  bg-white dark:bg-gray-950 border border-gray-200 dark:border-pink-900/30 p-1 rounded-xl justify-start sm:justify-center ">
-          <TabsTrigger value="loyalty" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">Programme Fidélité</TabsTrigger>
-          <TabsTrigger value="campaigns" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">Campagnes</TabsTrigger>
-          <TabsTrigger value="birthday" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">Anniversaires</TabsTrigger>
-          <TabsTrigger value="referral" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">Parrainages</TabsTrigger>
-          <TabsTrigger value="broadcast" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">Envoi Groupé</TabsTrigger>
+        <TabsList className="w-full bg-white dark:bg-gray-950 border border-gray-200 dark:border-pink-900/30 p-1 rounded-xl flex overflow-x-auto no-scrollbar justify-start sm:justify-center">
+          <TabsTrigger value="loyalty" className="data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400 text-base sm:text-base">Programme Fidélité</TabsTrigger>
+          <TabsTrigger value="campaigns" className="data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400 text-base sm:text-base">Campagnes</TabsTrigger>
+          <TabsTrigger value="birthday" className="data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400 text-base sm:text-base">Anniversaires</TabsTrigger>
+          <TabsTrigger value="referral" className="data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400 text-base sm:text-base">Parrainages</TabsTrigger>
+          <TabsTrigger value="broadcast" className="data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400 text-base sm:text-base">Envoi Groupé</TabsTrigger>
         </TabsList>
 
         {/* Loyalty Program Tab */}
@@ -180,21 +181,21 @@ export default function MarketingLoyalty() {
 
               <div className="space-y-4">
                 <Card className="bg-linear-to-br from-purple-50 to-pink-50 dark:from-gray-800 dark:to-gray-800/50 border border-purple-100 dark:border-purple-900/30 p-4 sm:p-5 rounded-2xl">
-                  <p className="text-[10px] sm:text-sm  text-purple-600 dark:text-purple-400 uppercase tracking-widest mb-1">Points par dépense</p>
+                  <p className="text-[10px] sm:text-base  text-purple-600 dark:text-purple-400 uppercase tracking-widest mb-1">Points par dépense</p>
                   <p className="text-base sm:text-2xl font-black text-gray-900 dark:text-gray-100">
                     {loyaltyRules.pointsPerSpend} point / 1 000 Fc dépensé
                   </p>
                 </Card>
 
                 <Card className="bg-linear-to-br from-blue-50 to-cyan-50 dark:from-gray-800 dark:to-gray-800/50 border border-blue-100 dark:border-blue-900/30 p-4 sm:p-5 rounded-2xl">
-                  <p className="text-[10px] sm:text-sm  text-blue-600 dark:text-blue-400 uppercase tracking-widest mb-1">Récompense par visites</p>
+                  <p className="text-[10px] sm:text-base  text-blue-600 dark:text-blue-400 uppercase tracking-widest mb-1">Récompense par visites</p>
                   <p className="text-base sm:text-2xl font-black text-gray-900 dark:text-gray-100">
                     Service gratuit après {loyaltyRules.appointmentsForReward} rendez-vous
                   </p>
                 </Card>
 
                 <Card className="bg-linear-to-br from-green-50 to-emerald-50 dark:from-gray-800 dark:to-gray-800/50 border border-green-100 dark:border-green-900/30 p-4 sm:p-5 rounded-2xl">
-                  <p className="text-[10px] sm:text-sm  text-green-600 dark:text-green-400 uppercase tracking-widest mb-1">Récompense par parrainages</p>
+                  <p className="text-[10px] sm:text-base  text-green-600 dark:text-green-400 uppercase tracking-widest mb-1">Récompense par parrainages</p>
                   <p className="text-base sm:text-2xl font-black text-gray-900 dark:text-gray-100">
                     Service gratuit après {loyaltyRules.referralsForReward} parrainages
                   </p>
@@ -224,12 +225,12 @@ export default function MarketingLoyalty() {
                     <div className="flex items-center justify-between gap-4">
                       <div>
                         <p className="text-base sm:text-lg  text-gray-900 dark:text-gray-100 mb-1">{reward.reward}</p>
-                        <p className="text-sm sm:text-lg text-gray-600 dark:text-gray-400 flex items-center gap-1">
+                        <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400 flex items-center gap-1">
                           <Target className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-amber-500" />
                           {reward.points} points requis
                         </p>
                       </div>
-                      <Badge className="bg-amber-500 dark:bg-amber-600 text-white border-0 font-black px-3 sm:px-4 py-1 sm:py-1.5 rounded-full shadow-lg shadow-amber-500/20 text-[10px] sm:text-sm">
+                      <Badge className="bg-amber-500 dark:bg-amber-600 text-white border-0 font-black px-3 sm:px-4 py-1 sm:py-1.5 rounded-full shadow-lg shadow-amber-500/20 text-[10px] sm:text-base">
                         {reward.points} PTS
                       </Badge>
                     </div>
@@ -301,12 +302,12 @@ export default function MarketingLoyalty() {
                           <h4 className="text-base sm:text-lg  text-gray-900 dark:text-gray-100">{campaign.name}</h4>
                           <Badge className={`${campaign.status === 'sent' ? 'bg-green-500 dark:bg-green-600' :
                             campaign.status === 'sending' ? 'bg-blue-500 dark:bg-blue-600' : campaign.status === 'scheduled' ? 'bg-amber-500 dark:bg-amber-600' : 'bg-gray-500 dark:bg-gray-600'
-                            } text-white border-0  px-3 text-[10px] sm:text-sm`}>
+                            } text-white border-0  px-3 text-[10px] sm:text-base`}>
                             {campaign.status === 'sent' ? 'Envoyée' :
                               campaign.status === 'sending' ? 'Envoi en cours' : campaign.status === 'scheduled' ? 'Programmée' : 'Autre'}
                           </Badge>
                         </div>
-                        <p className="text-sm sm:text-lg text-gray-600 dark:text-gray-400 flex flex-wrap items-center gap-2">
+                        <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400 flex flex-wrap items-center gap-2">
                           <span className="flex items-center gap-1.5">
                             {campaign.type === 'email' ? <Mail className="w-3.5 h-3.5" /> : <MessageSquare className="w-3.5 h-3.5" />}
                             {campaign.type === 'email' ? '📧 Email' : campaign.type === 'sms' ? '📱 SMS' : '📧/📱 Both'}
@@ -319,10 +320,10 @@ export default function MarketingLoyalty() {
                         </p>
                       </div>
                       <div className="flex gap-2 w-full sm:w-auto">
-                        <Button size="sm" variant="outline" className="flex-1 sm:flex-none rounded-full dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800 transition-all text-sm sm:text-lg">
+                        <Button size="sm" variant="outline" className="flex-1 sm:flex-none rounded-full dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800 transition-all text-base sm:text-lg">
                           Voir Détails
                         </Button>
-                        <Button size="sm" variant="outline" className="flex-1 sm:flex-none rounded-full dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800 transition-all text-sm sm:text-lg">
+                        <Button size="sm" variant="outline" className="flex-1 sm:flex-none rounded-full dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800 transition-all text-base sm:text-lg">
                           Dupliquer
                         </Button>
                       </div>
@@ -376,20 +377,20 @@ export default function MarketingLoyalty() {
               <div className="bg-linear-to-br from-blue-50 to-cyan-50 dark:from-gray-800 dark:to-gray-800/50 p-6 rounded-3xl border border-blue-100 dark:border-blue-900/30 text-center">
                 <Send className="w-8 h-8 text-blue-600 dark:text-blue-400 mx-auto mb-3" />
                 <p className="text-4xl font-black text-gray-900 dark:text-gray-100">{apiCampaigns.reduce((sum, c) => sum + c.recipients, 0)}</p>
-                <p className="text-sm text-gray-600 dark:text-gray-400 uppercase  mt-2 tracking-widest">Total Envois</p>
+                <p className="text-base text-gray-600 dark:text-gray-400 uppercase  mt-2 tracking-widest">Total Envois</p>
               </div>
               <div className="bg-linear-to-br from-green-50 to-emerald-50 dark:from-gray-800 dark:to-gray-800/50 p-6 rounded-3xl border border-green-100 dark:border-green-900/30 text-center">
                 <Target className="w-8 h-8 text-green-600 dark:text-green-400 mx-auto mb-3" />
                 <p className="text-4xl font-black text-gray-900 dark:text-gray-100">N/A</p>
-                <p className="text-sm text-gray-600 dark:text-gray-400 uppercase  mt-2 tracking-widest">Conversions</p>
+                <p className="text-base text-gray-600 dark:text-gray-400 uppercase  mt-2 tracking-widest">Conversions</p>
               </div>
               <div className="bg-linear-to-br from-purple-50 to-pink-50 dark:from-gray-800 dark:to-gray-800/50 p-6 rounded-3xl border border-purple-100 dark:border-purple-900/30 text-center">
                 <TrendingUp className="w-8 h-8 text-purple-600 dark:text-purple-400 mx-auto mb-3" />
                 <p className="text-4xl font-black text-gray-900 dark:text-gray-100">N/A</p>
-                <p className="text-sm text-gray-600 dark:text-gray-400 uppercase  mt-2 tracking-widest">Taux Conversion</p>
+                <p className="text-base text-gray-600 dark:text-gray-400 uppercase  mt-2 tracking-widest">Taux Conversion</p>
               </div>
               <div className="bg-linear-to-br from-amber-50 to-orange-50 dark:from-gray-800 dark:to-gray-800/50 p-6 rounded-3xl border border-amber-100 dark:border-amber-900/30 text-center">
-                <p className="text-sm text-gray-600 dark:text-gray-400 uppercase  mb-2 tracking-widest">ROI Campagnes</p>
+                <p className="text-base text-gray-600 dark:text-gray-400 uppercase  mb-2 tracking-widest">ROI Campagnes</p>
                 <p className="text-2xl font-black text-green-600 dark:text-green-400">N/A</p>
                 <p className="text-[10px] text-gray-500 dark:text-gray-400 mt-2">Derniers 30 jours</p>
               </div>
@@ -406,7 +407,7 @@ export default function MarketingLoyalty() {
               </div>
               <div>
                 <h3 className="text-xl sm:text-2xl  text-gray-900 dark:text-gray-100 mb-1">Anniversaires à Venir</h3>
-                <p className="text-sm sm:text-lg text-gray-600 dark:text-gray-400">Envoi automatique de messages d'anniversaire personnalisés</p>
+                <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400">Envoi automatique de messages d'anniversaire personnalisés</p>
               </div>
             </div>
 
@@ -420,17 +421,17 @@ export default function MarketingLoyalty() {
                       </div>
                       <div>
                         <p className="text-base sm:text-lg  text-gray-900 dark:text-gray-100 mb-0.5">{client.name}</p>
-                        <p className="text-[10px] sm:text-sm text-gray-600 dark:text-gray-400 flex items-center gap-2">
+                        <p className="text-[10px] sm:text-base text-gray-600 dark:text-gray-400 flex items-center gap-2">
                           <span className="text-pink-500">🎂{client.birthday}</span>
                         </p>
                       </div>
                     </div>
                     <div className="flex gap-2 w-full sm:w-auto">
-                      <Button size="sm" className="flex-1 bg-pink-600 hover:bg-pink-700 text-white rounded-full py-4 sm:py-5 px-4  transition-all shadow-md text-sm" onClick={() => handleSendBirthdayNotification(client, 'email')}>
+                      <Button size="sm" className="flex-1 bg-pink-600 hover:bg-pink-700 text-white rounded-full py-4 sm:py-5 px-4  transition-all shadow-md text-base" onClick={() => handleSendBirthdayNotification(client, 'email')}>
                         <Mail className="w-3.5 h-3.5 mr-2" />
                         Email
                       </Button>
-                      <Button size="sm" className="flex-1 bg-purple-600 hover:bg-purple-700 text-white rounded-full py-4 sm:py-5 px-4  transition-all shadow-md text-sm" onClick={() => handleSendBirthdayNotification(client, 'sms')}>
+                      <Button size="sm" className="flex-1 bg-purple-600 hover:bg-purple-700 text-white rounded-full py-4 sm:py-5 px-4  transition-all shadow-md text-base" onClick={() => handleSendBirthdayNotification(client, 'sms')}>
                         <MessageSquare className="w-3.5 h-3.5 mr-2" />
                         SMS
                       </Button>
@@ -471,7 +472,7 @@ export default function MarketingLoyalty() {
               </div>
               <div>
                 <h3 className="text-xl sm:text-2xl  text-gray-900 dark:text-gray-100 mb-1">Programme de Parrainage</h3>
-                <p className="text-sm sm:text-lg text-gray-600 dark:text-gray-400">Récompensez vos clientes qui recommandent vos services</p>
+                <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400">Récompensez vos clientes qui recommandent vos services</p>
               </div>
             </div>
 
@@ -484,7 +485,7 @@ export default function MarketingLoyalty() {
                   <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <div>
                       <p className="text-base sm:text-lg  text-gray-900 dark:text-gray-100 mb-1">{referrer.name}</p>
-                      <p className="text-sm sm:text-lg text-gray-600 dark:text-gray-400 flex items-center gap-2">
+                      <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400 flex items-center gap-2">
                         <Users className="w-3.5 h-3.5 text-gray-400" />
                         {referrer.referrals} parrainages
                       </p>
@@ -492,19 +493,19 @@ export default function MarketingLoyalty() {
                     <div className="text-left sm:text-right w-full sm:w-auto">
                       <Badge className={`${referrer.status === 'vip' ? 'bg-amber-500 dark:bg-amber-600' :
                         referrer.status === 'eligible' ? 'bg-green-500 dark:bg-green-600' : 'bg-blue-500 dark:bg-blue-600'
-                        } text-white border-0  mb-2 px-3 text-[10px] sm:text-sm`}>
+                        } text-white border-0  mb-2 px-3 text-[10px] sm:text-base`}>
                         {referrer.status === 'vip' ? 'VIP' :
                           referrer.status === 'eligible' ? 'Éligible' : 'En cours'}
                       </Badge>
-                      <p className="text-sm sm:text-lg  text-gray-700 dark:text-gray-300">{referrer.reward}</p>
+                      <p className="text-base sm:text-lg  text-gray-700 dark:text-gray-300">{referrer.reward}</p>
                     </div>
                   </div>
                   <div className="flex gap-2 mt-4">
-                    <Button size="sm" className="flex-1 bg-pink-600 hover:bg-pink-700 text-white rounded-full py-3 sm:py-4 px-4  transition-all shadow-md text-sm" onClick={() => handleSendReferralNotification(referrer, 'email')}>
+                    <Button size="sm" className="flex-1 bg-pink-600 hover:bg-pink-700 text-white rounded-full py-3 sm:py-4 px-4  transition-all shadow-md text-base" onClick={() => handleSendReferralNotification(referrer, 'email')}>
                       <Mail className="w-3.5 h-3.5 mr-2" />
                       Email
                     </Button>
-                    <Button size="sm" className="flex-1 bg-purple-600 hover:bg-purple-700 text-white rounded-full py-3 sm:py-4 px-4  transition-all shadow-md text-sm" onClick={() => handleSendReferralNotification(referrer, 'sms')}>
+                    <Button size="sm" className="flex-1 bg-purple-600 hover:bg-purple-700 text-white rounded-full py-3 sm:py-4 px-4  transition-all shadow-md text-base" onClick={() => handleSendReferralNotification(referrer, 'sms')}>
                       <MessageSquare className="w-3.5 h-3.5 mr-2" />
                       SMS
                     </Button>
@@ -546,16 +547,16 @@ export default function MarketingLoyalty() {
 
               <div className="space-y-6">
                 <div>
-                  <label className="block text-sm sm:text-lg  text-gray-700 dark:text-gray-300 mb-3 uppercase tracking-widest">Destinataires</label>
+                  <label className="block text-base sm:text-lg  text-gray-700 dark:text-gray-300 mb-3 uppercase tracking-widest">Destinataires</label>
                   <div className="flex flex-wrap gap-2">
-                    <Badge className="bg-blue-500 dark:bg-blue-600 text-white border-0 py-1.5 px-3 text-[10px] sm:text-sm">Toutes les clientes ({totalUsers})</Badge>
-                    <Badge variant="outline" className="border-purple-200 dark:border-purple-900 text-purple-600 dark:text-pink-400 py-1.5 px-3 text-[10px] sm:text-sm">Membres VIP ({vipUsers})</Badge>
-                    <Badge variant="outline" className="border-green-200 dark:border-green-900 text-green-600 dark:text-green-400 py-1.5 px-3 text-[10px] sm:text-sm">Inactives ({inactiveUsers})</Badge>
+                    <Badge className="bg-blue-500 dark:bg-blue-600 text-white border-0 py-1.5 px-3 text-[10px] sm:text-base">Toutes les clientes ({totalUsers})</Badge>
+                    <Badge variant="outline" className="border-purple-200 dark:border-purple-900 text-purple-600 dark:text-pink-400 py-1.5 px-3 text-[10px] sm:text-base">Membres VIP ({vipUsers})</Badge>
+                    <Badge variant="outline" className="border-green-200 dark:border-green-900 text-green-600 dark:text-green-400 py-1.5 px-3 text-[10px] sm:text-base">Inactives ({inactiveUsers})</Badge>
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm sm:text-lg  text-gray-700 dark:text-gray-300 mb-2 uppercase tracking-widest">Sujet de l'Email</label>
+                  <label className="block text-base sm:text-lg  text-gray-700 dark:text-gray-300 mb-2 uppercase tracking-widest">Sujet de l'Email</label>
                   <Input
                     placeholder="Ex: Offre spéciale du mois..."
                     value={emailSubject}
@@ -565,7 +566,7 @@ export default function MarketingLoyalty() {
                 </div>
 
                 <div>
-                  <label className="block text-sm sm:text-lg  text-gray-700 dark:text-gray-300 mb-2 uppercase tracking-widest">Message</label>
+                  <label className="block text-base sm:text-lg  text-gray-700 dark:text-gray-300 mb-2 uppercase tracking-widest">Message</label>
                   <Textarea
                     placeholder="Contenu de votre email..."
                     rows={8}
@@ -598,15 +599,15 @@ export default function MarketingLoyalty() {
 
               <div className="space-y-6">
                 <div>
-                  <label className="block text-sm sm:text-lg  text-gray-700 dark:text-gray-300 mb-3 uppercase tracking-widest">Destinataires</label>
+                  <label className="block text-base sm:text-lg  text-gray-700 dark:text-gray-300 mb-3 uppercase tracking-widest">Destinataires</label>
                   <div className="flex flex-wrap gap-2">
-                    <Badge className="bg-purple-500 dark:bg-purple-600 text-white border-0 py-1.5 px-3 text-[10px] sm:text-sm">Toutes les clientes ({totalUsers})</Badge>
-                    <Badge variant="outline" className="border-pink-200 dark:border-pink-900 text-pink-600 dark:text-pink-400 py-1.5 px-3 text-[10px] sm:text-sm">RDV demain (12)</Badge>
+                    <Badge className="bg-purple-500 dark:bg-purple-600 text-white border-0 py-1.5 px-3 text-[10px] sm:text-base">Toutes les clientes ({totalUsers})</Badge>
+                    <Badge variant="outline" className="border-pink-200 dark:border-pink-900 text-pink-600 dark:text-pink-400 py-1.5 px-3 text-[10px] sm:text-base">RDV demain (12)</Badge>
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm sm:text-lg  text-gray-700 dark:text-gray-300 mb-2 uppercase tracking-widest">Message SMS</label>
+                  <label className="block text-base sm:text-lg  text-gray-700 dark:text-gray-300 mb-2 uppercase tracking-widest">Message SMS</label>
                   <Textarea
                     placeholder="Votre message SMS (max 160 caractères)..."
                     rows={6}
@@ -615,11 +616,11 @@ export default function MarketingLoyalty() {
                     onChange={(e) => setSmsMessage(e.target.value)}
                     className="rounded-xl sm:rounded-2xl bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 dark:text-gray-100 p-4 text-lg sm:text-base"
                   />
-                  <p className="text-[10px] sm:text-sm text-right text-gray-500 mt-2 font-medium">{smsMessage.length}/160 caractères</p>
+                  <p className="text-[10px] sm:text-base text-right text-gray-500 mt-2 font-medium">{smsMessage.length}/160 caractères</p>
                 </div>
 
                 <div className="bg-amber-50 dark:bg-amber-900/10 p-4 rounded-xl border border-amber-100 dark:border-amber-900/30">
-                  <p className="text-sm sm:text-lg text-amber-700 dark:text-amber-400 leading-relaxed">
+                  <p className="text-base sm:text-lg text-amber-700 dark:text-amber-400 leading-relaxed">
                     <span className=" mr-1">💡 Astuce:</span>
                     Les SMS ont un taux d'ouverture de 98% par rapport aux emails. Soyez concis et percutant!
                   </p>

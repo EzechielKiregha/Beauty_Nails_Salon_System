@@ -265,7 +265,7 @@ export default function Home() {
       <section className=" bg-background pt-16 dark:bg-gray-950">
         <div className="text-center mb-16">
           <Badge className="mb-4 bg-pink-100 dark:bg-pink-900 text-pink-600 dark:text-pink-200">Nos Services</Badge>
-          <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight text-gray-900 dark:text-gray-100 mb-4">
+          <h2 className="text-3xl sm:text-4xl font-medium font-semibold tracking-tight text-gray-900 dark:text-gray-100 mb-4">
             Des services d'excellence pour votre beauté
           </h2>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
@@ -305,7 +305,7 @@ export default function Home() {
       <section className="py-16 bg-background dark:bg-gray-950">
         <div className="text-center mb-16">
           <Badge className="mb-4 bg-pink-100 dark:bg-pink-900 text-pink-600 dark:text-pink-200">Nos Abonnements</Badge>
-          <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight text-gray-900 dark:text-gray-100 mb-4">
+          <h2 className="text-3xl sm:text-4xl font-medium font-semibold tracking-tight text-gray-900 dark:text-gray-100 mb-4">
             Rejoignez notre cercle de clientes privilégiées
           </h2>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
@@ -362,7 +362,7 @@ export default function Home() {
                       {membership.benefits.map((benefit: any, idx: any) => (
                         <li key={idx} className="flex items-start">
                           <div className="w-6 h-6 rounded-full bg-pink-500 dark:bg-pink-600 flex items-center justify-center mr-3 shrink-0">
-                            <span className="text-white text-sm ">✓</span>
+                            <span className="text-white text-base ">✓</span>
                           </div>
                           <span className="text-gray-700 dark:text-gray-300">{benefit}</span>
                         </li>
@@ -394,7 +394,7 @@ export default function Home() {
               <Heart className="w-4 h-4 mr-2" />
               Témoignages
             </Badge>
-            <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight text-gray-900 dark:text-gray-100 mb-4">
+            <h2 className="text-3xl sm:text-4xl font-medium font-semibold tracking-tight text-gray-900 dark:text-gray-100 mb-4">
               Ce que nos clientes disent de nous
             </h2>
             <div className="flex items-center justify-center gap-2 mb-4">
@@ -457,7 +457,7 @@ export default function Home() {
 
           <div>
             <Badge className="mb-4 bg-pink-100 text-pink-600">Notre Histoire</Badge>
-            <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight text-gray-900 dark:text-gray-100 mb-4">
+            <h2 className="text-3xl sm:text-4xl font-medium font-semibold tracking-tight text-gray-900 dark:text-gray-100 mb-4">
               La beauté au service du bien-être
             </h2>
             <p className="text-lg text-gray-600 dark:text-gray-200 mb-6">

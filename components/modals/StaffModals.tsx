@@ -131,7 +131,7 @@ export function EditScheduleModal({
           <DialogTitle className="flex justify-between items-center">
             <span className="text-gray-900 dark:text-gray-100">Modifier Planning - {staffName || "Employée"}</span>
 
-            <Button variant="outline" size="sm" className="gap-2 text-sm dark:border-pink-900 dark:text-pink-300 dark:hover:border-pink-400">
+            <Button variant="outline" size="sm" className="gap-2 text-base dark:border-pink-900 dark:text-pink-300 dark:hover:border-pink-400">
               <Copy className="w-3 h-3" /> Copier semaine précédente
             </Button>
           </DialogTitle>
@@ -171,7 +171,7 @@ export function EditScheduleModal({
                         updateDay(day.idx, { startTime: e.target.value })
                       }
                       onBlur={() => saveDay(day.idx)}
-                      className="h-8 text-sm bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 focus:border-pink-500 dark:focus:border-pink-400"
+                      className="h-8 text-base bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 focus:border-pink-500 dark:focus:border-pink-400"
                     />
                   </div>
 
@@ -185,7 +185,7 @@ export function EditScheduleModal({
                         updateDay(day.idx, { endTime: e.target.value })
                       }
                       onBlur={() => saveDay(day.idx)}
-                      className="h-8 text-sm bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 focus:border-pink-500 dark:focus:border-pink-400"
+                      className="h-8 text-base bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 focus:border-pink-500 dark:focus:border-pink-400"
                     />
                   </div>
 
@@ -357,8 +357,9 @@ export function StaffProfileModal({ staff, trigger }: StaffProfileModalProps) {
 
             {/* Main Content Tabs */}
             <div className="w-full pt-2">
+              <p className=" dark:text-pink-400 text-xs sm:text-xs">{'glisser  <--- | --->'}</p>
               <Tabs defaultValue="performance" className="w-full">
-                <TabsList className="w-full justify-start border-b rounded-none h-auto p-0 bg-transparent flex-wrap dark:border-gray-700">
+                <TabsList className="w-full bg-white dark:bg-gray-950 border border-gray-200 dark:border-pink-900/30 p-1 rounded-xl flex overflow-x-auto no-scrollbar justify-start sm:justify-center">
                   <TabsTrigger
                     value="performance"
                     className="rounded-lg px-4 py-2 mb-2 sm:mb-0 sm:mr-2 text-lg data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 data-[state=active]:text-pink-700 dark:data-[state=active]:text-pink-400"
@@ -397,22 +398,22 @@ export function StaffProfileModal({ staff, trigger }: StaffProfileModalProps) {
                     <Card className="hover:shadow-lg transition-shadow border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950 p-3">
                       <CalendarIcon className="w-5 h-5 text-blue-600 dark:text-blue-400 mb-2" />
                       <p className="text-xl font-bold text-gray-900 dark:text-gray-100">{staff?.appointmentsCount}</p>
-                      <p className="text-sm text-gray-600 dark:text-gray-400 uppercase tracking-wider">RDV ce mois</p>
+                      <p className="text-base text-gray-600 dark:text-gray-400 uppercase tracking-wider">RDV ce mois</p>
                     </Card>
                     <Card className="hover:shadow-lg transition-shadow border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950 p-3">
                       <DollarSign className="w-5 h-5 text-green-600 dark:text-green-400 mb-2" />
                       <p className="text-lg font-bold text-gray-900 dark:text-gray-100">{staff?.revenue}</p>
-                      <p className="text-sm text-gray-600 dark:text-gray-400 uppercase tracking-wider">Revenus</p>
+                      <p className="text-base text-gray-600 dark:text-gray-400 uppercase tracking-wider">Revenus</p>
                     </Card>
                     <Card className="hover:shadow-lg transition-shadow border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950 p-3">
                       <TrendingUp className="w-5 h-5 text-purple-600 dark:text-purple-400 mb-2" />
                       <p className="text-xl font-bold text-gray-900 dark:text-gray-100">{staff?.clientRetention}</p>
-                      <p className="text-sm text-gray-600 dark:text-gray-400 uppercase tracking-wider">Rétention</p>
+                      <p className="text-base text-gray-600 dark:text-gray-400 uppercase tracking-wider">Rétention</p>
                     </Card>
                     <Card className="hover:shadow-lg transition-shadow border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950 p-3">
                       <Award className="w-5 h-5 text-amber-600 dark:text-amber-400 mb-2" />
                       <p className="text-xl font-bold text-gray-900 dark:text-gray-100">{staff?.upsellRate}</p>
-                      <p className="text-sm text-gray-600 dark:text-gray-400 uppercase tracking-wider">Taux Vente+</p>
+                      <p className="text-base text-gray-600 dark:text-gray-400 uppercase tracking-wider">Taux Vente+</p>
                     </Card>
                   </div>
 
@@ -535,7 +536,7 @@ export function StaffProfileModal({ staff, trigger }: StaffProfileModalProps) {
                           </div>
                           <div>
                             <p className="font-medium text-gray-900 dark:text-gray-100">{doc}</p>
-                            <p className="text-sm text-gray-500 dark:text-gray-400">Ajouté le 12 Jan 2023</p>
+                            <p className="text-base text-gray-500 dark:text-gray-400">Ajouté le 12 Jan 2023</p>
                           </div>
                         </div>
                         <Button variant="ghost" size="icon" className="text-gray-400 dark:text-gray-400 group-hover:text-pink-600 dark:group-hover:text-pink-400">

@@ -112,6 +112,8 @@ export async function POST(request: NextRequest) {
       location = 'salon',
       addOns = [],
       notes,
+      isPrepaidUsed,
+      isGiftCardUsed,
       paymentInfo = {}, // Removed decidedToPay since it's no longer used
     } = body;
     
@@ -319,12 +321,52 @@ export async function POST(request: NextRequest) {
           transactionId: paymentInfo.transactionId || null,
         },
       });
+
       
       // Update client loyalty points
       const loyaltyPointsEarned = Math.floor(finalTotal / 1000); // 1 point per 1000 CDF
-      const updateClient = await tx.clientProfile.update({
-        where: { id: clientId },
-        data: {
+      const clientUpdateData: any = {}
+
+      if (isPrepaidUsed) {
+        clientUpdateData.data = {
+          loyaltyPoints: {
+            increment: loyaltyPointsEarned,
+          },
+          prepaymentBalance : {
+            decrement: finalTotal
+          },
+          totalSpent: {
+            increment: finalTotal,
+          },
+          loyaltyTransactions: {
+            create: {
+              points: loyaltyPointsEarned,
+              type: 'earned_appointment',
+              description: `Bonus pour avoir réservé ${service.name}`,
+            },
+          },
+        }
+      } else if (isGiftCardUsed) {
+        clientUpdateData.data = {
+          loyaltyPoints: {
+            increment: loyaltyPointsEarned,
+          },
+          giftCardBalance : {
+            decrement: finalTotal
+          },
+          totalSpent: {
+            increment: finalTotal,
+          },
+          loyaltyTransactions: {
+            create: {
+              points: loyaltyPointsEarned,
+              type: 'earned_appointment',
+              description: `Bonus pour avoir réservé ${service.name}`,
+            },
+          },
+        }
+      } else {
+        clientUpdateData.data = {
           loyaltyPoints: {
             increment: loyaltyPointsEarned,
           },
@@ -338,7 +380,11 @@ export async function POST(request: NextRequest) {
               description: `Bonus pour avoir réservé ${service.name}`,
             },
           },
-        },
+        }
+      }
+      const updateClient = await tx.clientProfile.update({
+        where: { id: clientId },
+        data: clientUpdateData.data,
         select: {
           userId: true
         }

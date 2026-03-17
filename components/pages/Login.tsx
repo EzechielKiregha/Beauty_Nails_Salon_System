@@ -52,7 +52,7 @@ export default function Login() {
           >
             <Logo width={250} height={70} />
           </Link>
-          <h1 className="text-2xl sm:text-3xl text-gray-900 dark:text-gray-100 mb-1 sm:mb-2">
+          <h1 className="text-2xl sm:text-3xl font-medium text-gray-900 dark:text-gray-100 mb-1 sm:mb-2">
             Connexion
           </h1>
           <p className="text-lg sm:text-base text-gray-600 dark:text-gray-300">
@@ -61,13 +61,14 @@ export default function Login() {
         </div>
 
         <Card className="p-6 sm:p-8 border-b border-pink-100 dark:border-pink-900 bg-white dark:bg-gray-950 shadow-2xl rounded-3xl">
+          {/* <p className=" dark:text-pink-400 text-xs sm:text-xs">{'glisser  <--- | --->'}</p> */}
           <Tabs
             defaultValue="client"
           >
-            <TabsList className="grid w-full grid-cols-3 mb-4 sm:mb-6">
-              <TabsTrigger value="client" className="text-sm sm:text-lg">Client</TabsTrigger>
-              <TabsTrigger value="worker" className="text-sm sm:text-lg">Employée</TabsTrigger>
-              <TabsTrigger value="admin" className="text-sm sm:text-lg">Admin</TabsTrigger>
+            <TabsList className="w-full bg-white dark:bg-gray-950 border border-gray-200 dark:border-pink-900/30 p-1 rounded-xl flex overflow-x-auto no-scrollbar justify-start sm:justify-center">
+              <TabsTrigger value="client" className="data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400 text-base sm:text-base">Client</TabsTrigger>
+              <TabsTrigger value="worker" className="data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400 text-base sm:text-base">Employée</TabsTrigger>
+              <TabsTrigger value="admin" className="data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400 text-base sm:text-base">Admin</TabsTrigger>
             </TabsList>
 
             <TabsContent value="client">
@@ -200,7 +201,7 @@ export default function Login() {
           <div className="mt-4 sm:mt-6 text-center">
             <a
               href="/auth/forgot-password"
-              className="text-sm sm:text-lg text-pink-600 dark:text-pink-400 hover:text-pink-700 dark:hover:text-pink-300"
+              className="text-base sm:text-lg text-pink-600 dark:text-pink-400 hover:text-pink-700 dark:hover:text-pink-300"
             >
               Mot de passe oublié ?
             </a>

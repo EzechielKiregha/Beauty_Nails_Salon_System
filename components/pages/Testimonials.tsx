@@ -165,14 +165,14 @@ export default function Testimonials() {
                 const percentage = (count / stats.totalReviews) * 100;
                 return (
                   <div key={stars} className="flex items-center gap-3 sm:gap-4">
-                    <span className="text-sm sm:text-lg text-gray-700 dark:text-gray-300 w-12">{stars} étoile{stars > 1 ? 's' : ''}</span>
+                    <span className="text-base sm:text-lg text-gray-700 dark:text-gray-300 w-12">{stars} étoile{stars > 1 ? 's' : ''}</span>
                     <div className="flex-1 h-2 sm:h-3 bg-white dark:bg-gray-700 rounded-full overflow-hidden">
                       <div
                         className="h-full bg-linear-to-r from-amber-400 to-orange-400 rounded-full"
                         style={{ width: `${percentage}%` }}
                       />
                     </div>
-                    <span className="text-sm sm:text-lg text-gray-600 dark:text-gray-400 w-8 text-right">{count}</span>
+                    <span className="text-base sm:text-lg text-gray-600 dark:text-gray-400 w-8 text-right">{count}</span>
                   </div>
                 );
               })}
@@ -195,7 +195,7 @@ export default function Testimonials() {
                   ))}
                 </div>
                 {testimonial.verified && (
-                  <Badge className="bg-green-500 text-white text-sm px-2 py-0.5">Vérifié</Badge>
+                  <Badge className="bg-green-500 text-white text-base px-2 py-0.5">Vérifié</Badge>
                 )}
               </div>
 
@@ -208,9 +208,9 @@ export default function Testimonials() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-lg sm:text-base text-gray-900 dark:text-gray-100">{testimonial.name}</p>
-                    <p className="text-sm sm:text-lg text-gray-500 dark:text-gray-400">{testimonial.service}</p>
+                    <p className="text-base sm:text-lg text-gray-500 dark:text-gray-400">{testimonial.service}</p>
                   </div>
-                  <span className="text-sm text-gray-400 dark:text-gray-600">{testimonial.date}</span>
+                  <span className="text-base text-gray-400 dark:text-gray-600">{testimonial.date}</span>
                 </div>
               </div>
             </Card>

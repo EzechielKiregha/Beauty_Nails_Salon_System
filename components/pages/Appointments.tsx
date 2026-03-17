@@ -447,7 +447,7 @@ export default function Appointments() {
                 )}
 
                 {/* Reserve link (generated href) */}
-                <div className="mt-2 text-sm text-gray-400">
+                <div className="mt-2 text-base text-gray-400">
                   <p>Lien de réservation: <span className="break-all">{reserveHref}</span></p>
                 </div>
 
@@ -543,7 +543,7 @@ export default function Appointments() {
                 {isCreating ? "Réservation..." : "Confirmer le rendez-vous"}
               </Button>
 
-              <p className="text-sm text-gray-500 text-center mt-4">
+              <p className="text-base text-gray-500 text-center mt-4">
                 Vous recevrez une confirmation par email et
                 WhatsApp
               </p>

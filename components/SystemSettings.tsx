@@ -116,7 +116,7 @@ export default function SystemSettings() {
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">Paramètres Système</h2>
+        <h2 className="text-2xl sm:text-3xl font-medium font-bold text-gray-900 dark:text-gray-100">Paramètres Système</h2>
         <div className="flex gap-3">
           <Button
             onClick={() => {

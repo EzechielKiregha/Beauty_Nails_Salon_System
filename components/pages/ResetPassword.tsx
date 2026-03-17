@@ -56,7 +56,7 @@ export default function ResetPasswordComponent() {
 
         <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
           <div>
-            <Label htmlFor="password" className="text-sm sm:text-lg text-gray-700 dark:text-gray-300">Nouveau mot de passe</Label>
+            <Label htmlFor="password" className="text-base sm:text-lg text-gray-700 dark:text-gray-300">Nouveau mot de passe</Label>
             <Input
               id="password"
               type="password"
@@ -69,7 +69,7 @@ export default function ResetPasswordComponent() {
           </div>
 
           <div>
-            <Label htmlFor="confirmPassword" className="text-sm sm:text-lg text-gray-700 dark:text-gray-300">Confirmer le mot de passe</Label>
+            <Label htmlFor="confirmPassword" className="text-base sm:text-lg text-gray-700 dark:text-gray-300">Confirmer le mot de passe</Label>
             <Input
               id="confirmPassword"
               type="password"
@@ -93,7 +93,7 @@ export default function ResetPasswordComponent() {
         <div className="mt-6 text-center">
           <button
             onClick={() => router.push('/auth/login')}
-            className="text-sm sm:text-lg text-purple-600 dark:text-purple-400 hover:underline flex items-center justify-center gap-1"
+            className="text-base sm:text-lg text-purple-600 dark:text-purple-400 hover:underline flex items-center justify-center gap-1"
           >
             <ArrowLeft className="w-4 h-4" />
             Retour à la connexion

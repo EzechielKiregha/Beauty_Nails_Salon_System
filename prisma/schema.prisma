@@ -609,6 +609,8 @@ enum PaymentMethod {
   card
   mobile // Mobile money (Airtel Money, M-Pesa, etc.)
   mixed
+  giftcard
+  prepaid
 }
 
 enum PaymentStatus {

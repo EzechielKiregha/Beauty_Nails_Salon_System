@@ -15,14 +15,45 @@ export interface User {
 
 export interface ClientProfile {
   id: string;
+  userId: string;
   tier: 'Regular' | 'VIP' | 'Premium';
   loyaltyPoints: number;
   totalAppointments: number;
-  totalSpent: number;
+  // totalSpent may be a number from the server; UI may display as string
+  totalSpent: number | string;
   referralCode: string;
+  referredBy?: string;
   preferences?: any;
-  referredBy: string
   notes?: string;
+  // new profile fields
+  birthday?: string;
+  address?: string;
+  favoriteServices?: string[];
+  allergies?: string;
+  prepaymentBalance?: number | string;
+  giftCardBalance?: number | string;
+  referrals?: number;
+  createdAt: string;
+  updatedAt: string;
+  user?: {
+    id: string;
+    name: string;
+    email: string;
+    phone: string;
+    avatar: string | null;
+    isActive: boolean;
+    createdAt: string;
+  };
+  referralsReceived: {
+    id: string,
+    referrerId: string,
+    referredId: string,
+    status: "pending" | "completed" | "rewarded",
+    rewardGranted: boolean,
+  }[]
+  appointments?: any[];
+  loyaltyTransactions?: any[];
+  membershipPurchases?: any[];
 }
 
 export interface WorkerProfile {

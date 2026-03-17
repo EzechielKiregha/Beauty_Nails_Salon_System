@@ -240,7 +240,7 @@ export default function BookingCalendar() {
                   {/* Sticky Day Name */}
                   <div className="p-2 text-center text-lg border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950">
                     <div className="font-medium">{day.name}</div>
-                    <div className="text-sm">{day.formattedDate}</div>
+                    <div className="text-base">{day.formattedDate}</div>
                   </div>
 
                   {/* Staff Cells */}
@@ -275,7 +275,7 @@ export default function BookingCalendar() {
                                 {appointments.length} RDV
                               </span>
                               {appointments.length > 0 && (
-                                <Badge className="text-sm bg-pink-500 text-white">
+                                <Badge className="text-base bg-pink-500 text-white">
                                   {appointments.length}
                                 </Badge>
                               )}
@@ -298,7 +298,7 @@ export default function BookingCalendar() {
                                   <div key={apt.id} className="border-b border-gray-200 dark:border-gray-700 pb-3 last:border-0 last:pb-0">
                                     <div className="flex items-center justify-between mb-1">
                                       <span className="font-medium text-gray-900 dark:text-white">{apt.time}</span>
-                                      <Badge className={`text-sm ${apt.status === 'confirmed' ? 'bg-green-500' :
+                                      <Badge className={`text-base ${apt.status === 'confirmed' ? 'bg-green-500' :
                                         apt.status === 'pending' ? 'bg-amber-500' :
                                           apt.status === 'completed' ? 'bg-blue-500' :
                                             'bg-red-500'
@@ -309,7 +309,7 @@ export default function BookingCalendar() {
                                       </Badge>
                                     </div>
                                     <p className="text-lg text-gray-900 dark:text-white">{apt.clientName}</p>
-                                    <p className="text-sm text-gray-600 dark:text-gray-400">{apt.service}</p>
+                                    <p className="text-base text-gray-600 dark:text-gray-400">{apt.service}</p>
                                   </div>
                                 ))
                               ) : (

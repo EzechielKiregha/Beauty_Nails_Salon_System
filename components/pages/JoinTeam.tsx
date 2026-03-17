@@ -110,7 +110,7 @@ export default function JoinTeam() {
         {/* Why Join Us */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 items-center mb-16 sm:mb-24">
           <div>
-            <h2 className="text-3xl sm:text-4xl text-gray-900 dark:text-gray-100 mb-4 sm:mb-6">
+            <h2 className="text-3xl sm:text-4xl font-medium text-gray-900 dark:text-gray-100 mb-4 sm:mb-6">
               Pourquoi travailler chez Beauty Nails ?
             </h2>
             <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300 mb-4 sm:mb-6">
@@ -123,12 +123,12 @@ export default function JoinTeam() {
             </p>
             <div className="grid grid-cols-2 gap-4 sm:gap-6">
               <div className="text-center p-4 sm:p-6 bg-pink-50 dark:bg-gray-950 border-b border-pink-100 dark:border-pink-900 rounded-2xl">
-                <div className="text-3xl sm:text-4xl text-pink-600 dark:text-pink-400 mb-1 sm:mb-2">8</div>
-                <div className="text-sm sm:text-lg text-gray-600 dark:text-gray-300">Membres de l'équipe</div>
+                <div className="text-3xl sm:text-4xl font-medium text-pink-600 dark:text-pink-400 mb-1 sm:mb-2">8</div>
+                <div className="text-base sm:text-lg text-gray-600 dark:text-gray-300">Membres de l'équipe</div>
               </div>
               <div className="text-center p-4 sm:p-6 bg-purple-50 dark:bg-gray-950 border-b border-pink-100 dark:border-pink-900 rounded-2xl">
-                <div className="text-3xl sm:text-4xl text-purple-600 dark:text-purple-400 mb-1 sm:mb-2">5+</div>
-                <div className="text-sm sm:text-lg text-gray-600 dark:text-gray-300">Années d'expérience</div>
+                <div className="text-3xl sm:text-4xl font-medium text-purple-600 dark:text-purple-400 mb-1 sm:mb-2">5+</div>
+                <div className="text-base sm:text-lg text-gray-600 dark:text-gray-300">Années d'expérience</div>
               </div>
             </div>
           </div>
@@ -146,7 +146,7 @@ export default function JoinTeam() {
         {/* Benefits */}
         <div className="mb-16 sm:mb-24">
           <div className="text-center mb-10 sm:mb-12">
-            <h2 className="text-3xl sm:text-4xl text-gray-900 dark:text-gray-100 mb-2 sm:mb-4">Avantages</h2>
+            <h2 className="text-3xl sm:text-4xl font-medium text-gray-900 dark:text-gray-100 mb-2 sm:mb-4">Avantages</h2>
             <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300">Nous prenons soin de notre équipe</p>
           </div>
 
@@ -166,7 +166,7 @@ export default function JoinTeam() {
         {/* Open Positions */}
         <div className="mb-16 sm:mb-24">
           <div className="text-center mb-10 sm:mb-12">
-            <h2 className="text-3xl sm:text-4xl text-gray-900 dark:text-gray-100 mb-2 sm:mb-4">Postes Ouverts</h2>
+            <h2 className="text-3xl sm:text-4xl font-medium text-gray-900 dark:text-gray-100 mb-2 sm:mb-4">Postes Ouverts</h2>
             <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300">Trouvez le poste qui vous correspond</p>
           </div>
 
@@ -176,7 +176,7 @@ export default function JoinTeam() {
                 <h3 className="text-xl sm:text-2xl text-gray-900 dark:text-gray-100 mb-2 sm:mb-3">{position.title}</h3>
                 <p className="text-lg sm:text-base text-gray-600 dark:text-gray-300 mb-4 sm:mb-6">{position.description}</p>
                 <div className="mb-6">
-                  <p className="text-sm sm:text-lg text-gray-500 dark:text-gray-400 mb-3">Exigences :</p>
+                  <p className="text-base sm:text-lg text-gray-500 dark:text-gray-400 mb-3">Exigences :</p>
                   <ul className="space-y-2">
                     {position.requirements.map((req, i) => (
                       <li key={i} className="flex items-start text-lg sm:text-base text-gray-700 dark:text-gray-300">
@@ -283,7 +283,7 @@ export default function JoinTeam() {
                 </div>
 
                 <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-3 sm:p-4">
-                  <p className="text-sm sm:text-lg text-gray-600 dark:text-gray-300">
+                  <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300">
                     📎 Vous pouvez également envoyer votre CV et portfolio par email à <strong>recrutement@beautynails.cd</strong>
                   </p>
                 </div>
@@ -304,39 +304,39 @@ export default function JoinTeam() {
               <h3 className="text-lg sm:text-xl text-gray-900 dark:text-gray-100 mb-3 sm:mb-4">Processus de Recrutement</h3>
               <div className="space-y-3 sm:space-y-4">
                 <div className="flex gap-3 sm:gap-4">
-                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-pink-500 text-white flex items-center justify-center flex-shrink-0 text-sm sm:text-lg">
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-pink-500 text-white flex items-center justify-center flex-shrink-0 text-base sm:text-lg">
                     1
                   </div>
                   <div>
                     <p className="text-lg sm:text-base text-gray-900 dark:text-gray-100">Candidature</p>
-                    <p className="text-sm sm:text-lg text-gray-600 dark:text-gray-400">Envoi de votre CV et portfolio</p>
+                    <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400">Envoi de votre CV et portfolio</p>
                   </div>
                 </div>
                 <div className="flex gap-3 sm:gap-4">
-                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-pink-500 text-white flex items-center justify-center flex-shrink-0 text-sm sm:text-lg">
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-pink-500 text-white flex items-center justify-center flex-shrink-0 text-base sm:text-lg">
                     2
                   </div>
                   <div>
                     <p className="text-lg sm:text-base text-gray-900 dark:text-gray-100">Entretien</p>
-                    <p className="text-sm sm:text-lg text-gray-600 dark:text-gray-400">Discussion avec notre équipe</p>
+                    <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400">Discussion avec notre équipe</p>
                   </div>
                 </div>
                 <div className="flex gap-3 sm:gap-4">
-                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-pink-500 text-white flex items-center justify-center flex-shrink-0 text-sm sm:text-lg">
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-pink-500 text-white flex items-center justify-center flex-shrink-0 text-base sm:text-lg">
                     3
                   </div>
                   <div>
                     <p className="text-lg sm:text-base text-gray-900 dark:text-gray-100">Test Pratique</p>
-                    <p className="text-sm sm:text-lg text-gray-600 dark:text-gray-400">Démonstration de vos compétences</p>
+                    <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400">Démonstration de vos compétences</p>
                   </div>
                 </div>
                 <div className="flex gap-3 sm:gap-4">
-                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-pink-500 text-white flex items-center justify-center flex-shrink-0 text-sm sm:text-lg">
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-pink-500 text-white flex items-center justify-center flex-shrink-0 text-base sm:text-lg">
                     4
                   </div>
                   <div>
                     <p className="text-lg sm:text-base text-gray-900 dark:text-gray-100">Bienvenue !</p>
-                    <p className="text-sm sm:text-lg text-gray-600 dark:text-gray-400">Intégration dans l'équipe</p>
+                    <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400">Intégration dans l'équipe</p>
                   </div>
                 </div>
               </div>
@@ -347,10 +347,10 @@ export default function JoinTeam() {
               <p className="text-lg sm:text-base text-gray-600 dark:text-gray-300 mb-3 sm:mb-4">
                 Contactez notre responsable RH pour plus d'informations
               </p>
-              <p className="text-sm sm:text-lg text-gray-700 dark:text-gray-300 mb-2">
+              <p className="text-base sm:text-lg text-gray-700 dark:text-gray-300 mb-2">
                 📧 recrutement@beautynails.cd
               </p>
-              <p className="text-sm sm:text-lg text-gray-700 dark:text-gray-300">
+              <p className="text-base sm:text-lg text-gray-700 dark:text-gray-300">
                 📞 +243 123 456 789
               </p>
             </Card>

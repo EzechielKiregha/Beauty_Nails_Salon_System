@@ -76,10 +76,11 @@ export function AddProductModal({ trigger }: AddProductModalProps) {
           </DialogTitle>
         </DialogHeader>
 
+        <p className=" dark:text-pink-400 text-xs sm:text-xs">{'glisser  <--- | --->'}</p>
         <Tabs defaultValue="details" className="w-full py-2">
-          <TabsList className="grid w-full grid-cols-2 mb-4">
-            <TabsTrigger value="details">Détails Produit</TabsTrigger>
-            <TabsTrigger value="inventory">Stock & Fournisseur</TabsTrigger>
+          <TabsList className="w-full bg-white dark:bg-gray-950 border border-gray-200 dark:border-pink-900/30 p-1 rounded-xl flex overflow-x-auto no-scrollbar justify-start sm:justify-center">
+            <TabsTrigger value="details" className="data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400 text-base sm:text-base">Détails Produit</TabsTrigger>
+            <TabsTrigger value="inventory" className="data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400 text-base sm:text-base">Stock & Fournisseur</TabsTrigger>
           </TabsList>
 
           <TabsContent value="details" className="space-y-4 pt-4">
@@ -451,7 +452,7 @@ export function OrderModal({ productName, supplierName, trigger }: OrderModalPro
                   onChange={(e) => setUnitPrice(e.target.value === '' ? '' : Number(e.target.value))}
                   className="pr-10 h-12 text-base"
                 />
-                <span className="absolute right-3 top-3 text-sm sm:text-lg text-gray-500">CDF</span>
+                <span className="absolute right-3 top-3 text-base sm:text-lg text-gray-500">CDF</span>
               </div>
             </div>
           </div>

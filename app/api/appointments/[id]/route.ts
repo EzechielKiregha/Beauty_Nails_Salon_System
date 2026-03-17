@@ -53,6 +53,9 @@ export async function DELETE(
         loyaltyPoints:{
           decrement: updated.service.price / 1000
         },
+        prepaymentBalance:{
+          increment : appointment.price
+        },
         loyaltyTransactions:{
           create:{
             type:"earned_appointment",

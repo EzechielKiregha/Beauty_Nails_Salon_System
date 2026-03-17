@@ -109,7 +109,7 @@ export default function ManageClientMembership({ clientId }: ManageClientMembers
 
           </div>
 
-          <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+          <div className="flex items-center gap-2 text-base text-gray-500 dark:text-gray-400">
             <input
               id="autoRenew"
               type="checkbox"
@@ -144,7 +144,7 @@ export default function ManageClientMembership({ clientId }: ManageClientMembers
               </div>
 
               <Badge
-                className={`px-3 py-1 text-sm font-medium rounded-full ${activePurchase.status === "active"
+                className={`px-3 py-1 text-base font-medium rounded-full ${activePurchase.status === "active"
                   ? "bg-green-500/20 text-green-200 border border-green-300/30"
                   : activePurchase.status === "expired"
                     ? "bg-yellow-500/20 text-yellow-200 border border-yellow-300/30"

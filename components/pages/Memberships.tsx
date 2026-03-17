@@ -88,7 +88,7 @@ export default function MembershipsPage() {
                       {membership.benefits.map((benefit: any, idx: any) => (
                         <li key={idx} className="flex items-start">
                           <div className="w-6 h-6 rounded-full bg-pink-500 dark:bg-pink-600 flex items-center justify-center mr-3 shrink-0">
-                            <span className="text-white text-sm ">✓</span>
+                            <span className="text-white text-base ">✓</span>
                           </div>
                           <span className="text-gray-700 dark:text-gray-300">{benefit}</span>
                         </li>
@@ -110,7 +110,7 @@ export default function MembershipsPage() {
       {/* Benefits Comparison */}
       <section className="py-16 bg-gray-50 dark:bg-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl sm:text-4xl text-gray-900 dark:text-gray-100 mb-12 text-center">Comparaison des Avantages</h2>
+          <h2 className="text-3xl sm:text-4xl font-medium text-gray-900 dark:text-gray-100 mb-12 text-center">Comparaison des Avantages</h2>
           <Card className="bg-white dark:bg-gray-800 border-b border-pink-100 dark:border-pink-900 shadow-xl rounded-3xl overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full">
@@ -157,7 +157,7 @@ export default function MembershipsPage() {
       {/* FAQ */}
       <section className="py-16 bg-background dark:bg-gray-950">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl sm:text-4xl text-gray-900 dark:text-gray-100 mb-12 text-center">Questions Fréquentes</h2>
+          <h2 className="text-3xl sm:text-4xl font-medium text-gray-900 dark:text-gray-100 mb-12 text-center">Questions Fréquentes</h2>
           <Accordion type="single" collapsible className="w-full space-y-4">
             <AccordionItem value="item-1">
               <AccordionTrigger>Comment fonctionne l'abonnement ?</AccordionTrigger>
@@ -190,7 +190,7 @@ export default function MembershipsPage() {
       {/* CTA Section */}
       <section className="py-16 bg-linear-to-r from-pink-500 to-purple-500 dark:from-pink-700 dark:to-purple-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl sm:text-4xl  text-white mb-4">
+          <h2 className="text-3xl sm:text-4xl font-medium  text-white mb-4">
             Transformez votre routine beauté
           </h2>
           <p className="text-lg text-pink-100 max-w-2xl mx-auto mb-8">

@@ -20,7 +20,8 @@ import {
   Home,
   Calendar as CalendarIcon,
   HardHatIcon,
-  RefreshCcw
+  RefreshCcw,
+  Info
 } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { Button } from '../ui/button';
@@ -66,7 +67,7 @@ export default function AppointmentsV3() {
   const [payerPhone, setPayerPhone] = useState("");
   const [discountCode, setDiscountCode] = useState("");
   const [tip, setTip] = useState(0);
-  const [selectedMethod, setSelectedMethod] = useState<"mobile" | "card" | "cash">("mobile");
+  const [selectedMethod, setSelectedMethod] = useState<"mobile" | "card" | "cash" | "prepaid" | "giftcard">("mobile");
 
   const TAX_RATE = 0.16; // 16% tax
 
@@ -194,6 +195,15 @@ export default function AppointmentsV3() {
     "maquillage": <Sparkles className="w-6 h-6" />,
   };
 
+  const prepaid = Number(user?.clientProfile?.prepaymentBalance || 0);
+  const giftCard = Number(user?.clientProfile?.giftCardBalance || 0);
+
+  // ⚠️ define your total cost properly (service + tip - discount etc.)
+  const totalCost = Number(total || 0) + Number(tip || 0);
+
+  const canUsePrepaid = prepaid >= totalCost;
+  const canUseGiftCard = giftCard > 0;
+
 
   const paymentInfo = useMemo(() => ({
     discountCode,
@@ -203,6 +213,8 @@ export default function AppointmentsV3() {
     tip,
     total,
     method: selectedMethod,
+    isPrepaidUsed: selectedMethod === "prepaid" && canUsePrepaid,
+    isGiftCardUsed: selectedMethod === "giftcard" && canUseGiftCard,
     status: 'completed', // Default to pending
     receipt: `RCT-${Date.now()}`,
     transactionId: null
@@ -320,7 +332,7 @@ export default function AppointmentsV3() {
             <CalendarIcon className="w-4 h-4 mr-2" />
             Réservation
           </Badge>
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl text-gray-900 dark:text-gray-100 mb-6">
+          <h1 className="text-3xl sm:text-4xl font-medium lg:text-5xl text-gray-900 dark:text-gray-100 mb-6">
             Prenez rendez-vous en quelques clics
           </h1>
           <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
@@ -400,7 +412,7 @@ export default function AppointmentsV3() {
                     </Badge>
                   </div>
                   <p className="text-lg text-gray-600 dark:text-gray-400 truncate">{service.description}</p>
-                  <p className="text-sm text-gray-500 dark:text-gray-500 mt-1">{service.duration} min</p>
+                  <p className="text-base text-gray-500 dark:text-gray-500 mt-1">{service.duration} min</p>
                 </Card>
               ))}
             </div>
@@ -597,7 +609,7 @@ export default function AppointmentsV3() {
                       <p className="text-gray-900 dark:text-gray-100 font-medium">
                         Au salon
                       </p>
-                      <p className="text-sm sm:text-lg text-gray-500 dark:text-gray-400">
+                      <p className="text-base sm:text-lg text-gray-500 dark:text-gray-400">
                         Quartier HIMBI, Commune de Goma, Ville de Goma
                       </p>
                     </div>
@@ -615,7 +627,7 @@ export default function AppointmentsV3() {
                       <p className="text-gray-900 dark:text-gray-100 font-medium">
                         À domicile
                       </p>
-                      <p className="text-sm sm:text-lg text-gray-500 dark:text-gray-400">
+                      <p className="text-base sm:text-lg text-gray-500 dark:text-gray-400">
                         +20 000 Fc - Dans la zone de Goma
                       </p>
                     </div>
@@ -628,14 +640,14 @@ export default function AppointmentsV3() {
 
         {!user && (
           <div className="mb-6 p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl">
-            <p className="text-sm sm:text-lg text-amber-800 dark:text-amber-200">
+            <p className="text-base sm:text-lg text-amber-800 dark:text-amber-200">
               Vous devez être connecté(e) pour réserver un
               rendez-vous
             </p>
             <Button
               variant="link"
               onClick={handleRequireAuth}
-              className="text-sm sm:text-lg text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 underline mt-2 inline-block"
+              className="text-base sm:text-lg text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 underline mt-2 inline-block"
             >
               Se connecter
             </Button>
@@ -671,25 +683,121 @@ export default function AppointmentsV3() {
               </div>
             </div>
 
-            <div className="mb-4">
-              <label className="block text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">Méthode de Paiement</label>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                {["mobile", "card", "cash"].map((method) => (
-                  <button
-                    key={method}
-                    type="button"
-                    onClick={() => setSelectedMethod(method as any)}
-                    className={`p-3 rounded-lg border ${selectedMethod === method
-                      ? 'bg-pink-500 text-white border-pink-500'
-                      : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-700'
-                      }`}
-                  >
-                    {method === 'mobile' && 'Mobile Money'}
-                    {method === 'card' && 'Virement Bancaire'}
-                    {method === 'cash' && 'Espèces'}
-                  </button>
-                ))}
+            <div className="mb-4 space-y-4">
+
+              <label className="block text-lg font-medium text-gray-700 dark:text-gray-300">
+                Méthode de Paiement
+              </label>
+
+              {/* 💰 BALANCES */}
+              <div className="grid grid-cols-2 gap-3 text-sm">
+
+                {/* Prepaid */}
+                <div className="p-3 rounded-xl bg-green-50 dark:bg-green-900/10 border border-green-100 dark:border-green-900/30">
+                  <div className="flex items-center justify-between">
+                    <span className="text-green-600 font-semibold">Prépayé</span>
+
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Info className="w-4 h-4 cursor-pointer text-green-500" />
+                      </PopoverTrigger>
+
+                      <PopoverContent className="w-72 text-sm space-y-2">
+                        <p className="font-semibold text-green-600">💡 Solde Prépayé</p>
+                        <p>
+                          Ce solde provient des rendez-vous manqués ou reprogrammés.
+                        </p>
+                        <ul className="list-disc pl-4 space-y-1">
+                          <li>Utilisable uniquement si suffisant</li>
+                          <li>Non négatif</li>
+                          <li>Déduit automatiquement si utilisé</li>
+                        </ul>
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+
+                  <p className="text-lg font-bold text-gray-900 dark:text-gray-100">
+                    {prepaid} Fc
+                  </p>
+                </div>
+
+                {/* Gift Card */}
+                <div className="p-3 rounded-xl bg-purple-50 dark:bg-purple-900/10 border border-purple-100 dark:border-purple-900/30">
+                  <div className="flex items-center justify-between">
+                    <span className="text-purple-600 font-semibold">Carte Cadeau</span>
+
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Info className="w-4 h-4 cursor-pointer text-purple-500" />
+                      </PopoverTrigger>
+
+                      <PopoverContent className="w-72 text-sm space-y-2">
+                        <p className="font-semibold text-purple-600">🎁 Carte Cadeau</p>
+                        <p>
+                          Montant offert utilisable comme moyen de paiement.
+                        </p>
+                        <ul className="list-disc pl-4 space-y-1">
+                          <li>Peut couvrir totalement ou partiellement</li>
+                          <li>Non échangeable</li>
+                        </ul>
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+
+                  <p className="text-lg font-bold text-gray-900 dark:text-gray-100">
+                    {giftCard} Fc
+                  </p>
+                </div>
+
               </div>
+
+              {/* 💳 METHODS */}
+              <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+
+                {[
+                  { key: "mobile", label: "Mobile Money" },
+                  { key: "card", label: "Virement" },
+                  { key: "cash", label: "Espèces" },
+                  { key: "prepaid", label: "Prépayé" },
+                  { key: "giftcard", label: "Carte Cadeau" },
+                ].map((method) => {
+
+                  const isPrepaid = method.key === "prepaid";
+                  const isGift = method.key === "giftcard";
+
+                  const disabled =
+                    (isPrepaid && !canUsePrepaid) ||
+                    (isGift && !canUseGiftCard);
+
+                  return (
+                    <button
+                      key={method.key}
+                      type="button"
+                      disabled={disabled}
+                      onClick={() => !disabled && setSelectedMethod(method.key as any)}
+                      className={`
+            p-3 rounded-lg border text-sm transition
+            ${selectedMethod === method.key
+                          ? 'bg-pink-500 text-white border-pink-500'
+                          : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-700'
+                        }
+            ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
+          `}
+                    >
+                      {method.label}
+                    </button>
+                  );
+                })}
+
+              </div>
+
+              {/* ⚠️ FEEDBACK MESSAGE */}
+              {!canUsePrepaid && (
+                <p className="text-sm text-red-500">
+                  Le solde prépayé est insuffisant pour couvrir ce service.
+                </p>
+              )}
+
             </div>
           </div>
         )}
@@ -719,7 +827,7 @@ export default function AppointmentsV3() {
                 <div className="space-y-4 text-lg text-gray-700 dark:text-gray-300">
 
                   <div>
-                    <p className="text-sm uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                    <p className="text-base uppercase tracking-wide text-gray-500 dark:text-gray-400">
                       Numéro à payer
                     </p>
                     <p className="text-xl font-semibold tracking-wide mt-1">
@@ -729,19 +837,19 @@ export default function AppointmentsV3() {
 
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">Nom</p>
+                      <p className="text-base text-gray-500 dark:text-gray-400">Nom</p>
                       <p className="font-medium">Therese Zawadi</p>
                     </div>
 
                     <div>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">MoMoPay</p>
+                      <p className="text-base text-gray-500 dark:text-gray-400">MoMoPay</p>
                       <p className="font-medium">66666 (TIGer-6)</p>
                     </div>
                   </div>
 
                   {/* Payer Phone Field */}
                   <div className="pt-4 border-t border-gray-200 dark:border-gray-800">
-                    <label className="block text-sm mb-1 text-gray-500 dark:text-gray-400">
+                    <label className="block text-base mb-1 text-gray-500 dark:text-gray-400">
                       Numéro utilisé pour le paiement
                     </label>
                     <input
@@ -786,7 +894,7 @@ export default function AppointmentsV3() {
                 <div className="space-y-4 text-lg text-gray-700 dark:text-gray-300">
 
                   <div>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                    <p className="text-base text-gray-500 dark:text-gray-400">
                       Banque
                     </p>
                     <p className="font-medium">
@@ -795,7 +903,7 @@ export default function AppointmentsV3() {
                   </div>
 
                   <div>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                    <p className="text-base text-gray-500 dark:text-gray-400">
                       Numéro de compte
                     </p>
                     <p className="text-xl font-semibold tracking-wide">
@@ -804,7 +912,7 @@ export default function AppointmentsV3() {
                   </div>
 
                   <div>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                    <p className="text-base text-gray-500 dark:text-gray-400">
                       Nom du compte
                     </p>
                     <p className="font-medium">
@@ -812,7 +920,7 @@ export default function AppointmentsV3() {
                     </p>
                   </div>
 
-                  <div className="pt-4 border-t border-gray-200 dark:border-gray-800 text-sm text-gray-500 dark:text-gray-400">
+                  <div className="pt-4 border-t border-gray-200 dark:border-gray-800 text-base text-gray-500 dark:text-gray-400">
                     Après le virement, veuillez confirmer le paiement pour finaliser la réservation.
                   </div>
 
@@ -894,7 +1002,7 @@ export default function AppointmentsV3() {
                   </span>
                 </div>
 
-                <p className="text-sm text-indigo-300 mt-1">
+                <p className="text-base text-indigo-300 mt-1">
                   Paiement via {selectedMethod}
                 </p>
 

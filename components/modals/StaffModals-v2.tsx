@@ -236,12 +236,13 @@ export function StaffModal({ staffId, trigger }: StaffModalProps) {
           <DialogTitle className="sr-only">Profil Employée - {workerData.user?.name || workerData.name}</DialogTitle>
         </DialogHeader>
         <div className="py-4 space-y-4">
+          <p className=" dark:text-pink-400 text-xs sm:text-xs">{'glisser  <--- | --->'}</p>
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid grid-cols-4 w-full">
-              <TabsTrigger value="personal">Personnel</TabsTrigger>
-              <TabsTrigger value="professional">Professionnel</TabsTrigger>
-              <TabsTrigger value="commission">Commission</TabsTrigger>
-              <TabsTrigger value="documents">Documents</TabsTrigger>
+            <TabsList className="w-full bg-white dark:bg-gray-950 border border-gray-200 dark:border-pink-900/30 p-1 rounded-xl flex overflow-x-auto no-scrollbar justify-start sm:justify-center">
+              <TabsTrigger value="personal" className="data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400 text-base sm:text-base">Personnel</TabsTrigger>
+              <TabsTrigger value="professional" className="data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400 text-base sm:text-base">Professionnel</TabsTrigger>
+              <TabsTrigger value="commission" className="data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400 text-base sm:text-base">Commission</TabsTrigger>
+              <TabsTrigger value="documents" className="data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400 text-base sm:text-base">Documents</TabsTrigger>
             </TabsList>
 
             {/* Personal Information Tab */}
@@ -437,7 +438,7 @@ export function StaffModal({ staffId, trigger }: StaffModalProps) {
                       value={formData.commissionDay}
                       onChange={(e) => handleInputChange('commissionDay', parseInt(e.target.value) || 1)}
                     />
-                    <p className="text-sm text-gray-500 mt-1">Appliqué selon la fréquence sélectionnée.</p>
+                    <p className="text-base text-gray-500 mt-1">Appliqué selon la fréquence sélectionnée.</p>
                   </div>
                 </div>
 

@@ -24,6 +24,12 @@ export default function Header() {
     return `/dashboard/${user.role}`;
   };
 
+  const handleLogout = () => {
+    logout()
+    router.refresh();
+    router.push('/auth/login')
+  }
+
   return (
     <header className="sticky top-0 z-50 bg-white/90 dark:bg-gray-950 backdrop-blur-md border-b border-pink-100 dark:border-pink-900 shadow-sm">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -37,42 +43,42 @@ export default function Header() {
           <div className="hidden md:flex items-center space-x-8">
             <Link
               href="/"
-              className={`transition-colors ${isActive('/') ? 'text-pink-500' : 'text-gray-700 dark:text-gray-400 hover:text-pink-500 dark:hover:text-pink-500'
+              className={`transition-colors text-lg ${isActive('/') ? 'text-pink-500' : 'text-gray-700 dark:text-gray-400 hover:text-pink-500 dark:hover:text-pink-500'
                 }`}
             >
               Accueil
             </Link>
             <Link
               href="/catalog"
-              className={`transition-colors ${isActive('/catalog') ? 'text-pink-500' : 'text-gray-700 dark:text-gray-400 hover:text-pink-500 dark:hover:text-pink-500'
+              className={`transition-colors text-lg ${isActive('/catalog') ? 'text-pink-500' : 'text-gray-700 dark:text-gray-400 hover:text-pink-500 dark:hover:text-pink-500'
                 }`}
             >
               Catalogue
             </Link>
             {/* <Link
               href="/services"
-              className={`transition-colors ${isActive('/services') ? 'text-pink-500' : 'text-gray-700 dark:text-gray-400 hover:text-pink-500 dark:hover:text-pink-500'
+              className={`transition-colors text-lg ${isActive('/services') ? 'text-pink-500' : 'text-gray-700 dark:text-gray-400 hover:text-pink-500 dark:hover:text-pink-500'
                 }`}
             >
               Services
             </Link> */}
             <Link
               href="/memberships"
-              className={`transition-colors ${isActive('/memberships') ? 'text-pink-500' : 'text-gray-700 dark:text-gray-400 hover:text-pink-500 dark:hover:text-pink-500'
+              className={`transition-colors text-lg ${isActive('/memberships') ? 'text-pink-500' : 'text-gray-700 dark:text-gray-400 hover:text-pink-500 dark:hover:text-pink-500'
                 }`}
             >
               Abonnements
             </Link>
             <Link
               href="/about"
-              className={`transition-colors ${isActive('/about') ? 'text-pink-500' : 'text-gray-700 dark:text-gray-400 hover:text-pink-500 dark:hover:text-pink-500'
+              className={`transition-colors text-lg ${isActive('/about') ? 'text-pink-500' : 'text-gray-700 dark:text-gray-400 hover:text-pink-500 dark:hover:text-pink-500'
                 }`}
             >
               À Propos
             </Link>
             <Link
               href="/contact"
-              className={`transition-colors ${isActive('/contact') ? 'text-pink-500' : 'text-gray-700 dark:text-gray-400 hover:text-pink-500 dark:hover:text-pink-500'
+              className={`transition-colors text-lg ${isActive('/contact') ? 'text-pink-500' : 'text-gray-700 dark:text-gray-400 hover:text-pink-500 dark:hover:text-pink-500'
                 }`}
             >
               Contact
@@ -90,10 +96,7 @@ export default function Header() {
                   </Button>
                 </Link>
                 <Button
-                  onClick={() => {
-                    logout()
-                    router.refresh();
-                  }}
+                  onClick={handleLogout}
                   variant="ghost"
                   className="text-gray-600 dark:text-gray-400 hover:text-pink-600"
                 >
@@ -121,7 +124,7 @@ export default function Header() {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 rounded-lg hover:bg-pink-50 dark:hover:bg-gray-800 transition-colors"
+            className="md:hidden p-2 rounded-lg hover:bg-pink-50 dark:hover:bg-gray-800 transition-colors text-lg"
           >
             {mobileMenuOpen ? (
               <X className="w-6 h-6 text-gray-700 dark:text-gray-300" />
@@ -142,14 +145,14 @@ export default function Header() {
               <Link
                 href="/"
                 onClick={() => setMobileMenuOpen(false)}
-                className={`px-4 py-2 rounded-lg transition-colors ${isActive('/') ? 'bg-pink-50 dark:bg-pink-900/20 text-pink-500' : 'text-gray-700 dark:text-gray-300 hover:bg-pink-50 dark:hover:bg-gray-800'
+                className={`px-4 py-2 rounded-lg transition-colors text-lg ${isActive('/') ? 'bg-pink-50 dark:bg-pink-900/20 text-pink-500' : 'text-gray-700 dark:text-gray-300 hover:bg-pink-50 dark:hover:bg-gray-800'
                   }`}
               >
                 Accueil
               </Link>
               <Link
                 href="/catalog"
-                className={`px-4 py-2 rounded-lg transition-colors ${isActive('/services') ? 'bg-pink-50 dark:bg-pink-900/20 text-pink-500' : 'text-gray-700 dark:text-gray-300 hover:bg-pink-50 dark:hover:bg-gray-800'
+                className={`px-4 py-2 rounded-lg transition-colors text-lg ${isActive('/services') ? 'bg-pink-50 dark:bg-pink-900/20 text-pink-500' : 'text-gray-700 dark:text-gray-300 hover:bg-pink-50 dark:hover:bg-gray-800'
                   }`}
               >
                 Catalogue
@@ -157,7 +160,7 @@ export default function Header() {
               {/* <Link
                 href="/services"
                 onClick={() => setMobileMenuOpen(false)}
-                className={`px-4 py-2 rounded-lg transition-colors ${isActive('/services') ? 'bg-pink-50 dark:bg-pink-900/20 text-pink-500' : 'text-gray-700 dark:text-gray-300 hover:bg-pink-50 dark:hover:bg-gray-800'
+                className={`px-4 py-2 rounded-lg transition-colors text-lg ${isActive('/services') ? 'bg-pink-50 dark:bg-pink-900/20 text-pink-500' : 'text-gray-700 dark:text-gray-300 hover:bg-pink-50 dark:hover:bg-gray-800'
                   }`}
               >
                 Services
@@ -165,7 +168,7 @@ export default function Header() {
               <Link
                 href="/memberships"
                 onClick={() => setMobileMenuOpen(false)}
-                className={`px-4 py-2 rounded-lg transition-colors ${isActive('/memberships') ? 'bg-pink-50 dark:bg-pink-900/20 text-pink-500' : 'text-gray-700 dark:text-gray-300 hover:bg-pink-50 dark:hover:bg-gray-800'
+                className={`px-4 py-2 rounded-lg transition-colors text-lg ${isActive('/memberships') ? 'bg-pink-50 dark:bg-pink-900/20 text-pink-500' : 'text-gray-700 dark:text-gray-300 hover:bg-pink-50 dark:hover:bg-gray-800'
                   }`}
               >
                 Abonnements
@@ -173,7 +176,7 @@ export default function Header() {
               <Link
                 href="/about"
                 onClick={() => setMobileMenuOpen(false)}
-                className={`px-4 py-2 rounded-lg transition-colors ${isActive('/about') ? 'bg-pink-50 dark:bg-pink-900/20 text-pink-500' : 'text-gray-700 dark:text-gray-300 hover:bg-pink-50 dark:hover:bg-gray-800'
+                className={`px-4 py-2 rounded-lg transition-colors text-lg ${isActive('/about') ? 'bg-pink-50 dark:bg-pink-900/20 text-pink-500' : 'text-gray-700 dark:text-gray-300 hover:bg-pink-50 dark:hover:bg-gray-800'
                   }`}
               >
                 À Propos
@@ -181,7 +184,7 @@ export default function Header() {
               <Link
                 href="/contact"
                 onClick={() => setMobileMenuOpen(false)}
-                className={`px-4 py-2 rounded-lg transition-colors ${isActive('/contact') ? 'bg-pink-50 dark:bg-pink-900/20 text-pink-500' : 'text-gray-700 dark:text-gray-300 hover:bg-pink-50 dark:hover:bg-gray-800'
+                className={`px-4 py-2 rounded-lg transition-colors text-lg ${isActive('/contact') ? 'bg-pink-50 dark:bg-pink-900/20 text-pink-500' : 'text-gray-700 dark:text-gray-300 hover:bg-pink-50 dark:hover:bg-gray-800'
                   }`}
               >
                 Contact

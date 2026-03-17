@@ -82,6 +82,7 @@ export interface RescheduleAppointmentData {
   newTime: string;
   newDate?: Date;
   newStaffId?: string;
+  isPrePaidUsed: boolean
 }
 
 export interface AvailableSlotsParams {

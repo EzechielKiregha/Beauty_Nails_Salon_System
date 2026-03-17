@@ -160,7 +160,7 @@ export default function FAQ() {
 
         {/* Still Have Questions */}
         <Card className="bg-linear-to-br from-pink-500 via-purple-500 to-amber-500 border-0 shadow-2xl rounded-3xl p-6 sm:p-12 text-center text-white mt-12 sm:mt-16">
-          <h2 className="text-2xl  sm:text-3xl mb-3 sm:mb-4">
+          <h2 className="text-2xl  sm:text-3xl font-medium mb-3 sm:mb-4">
             Vous avez d'autres questions ?
           </h2>
           <p className="text-lg sm:text-xl text-pink-100 mb-6 sm:mb-8 max-w-2xl mx-auto">

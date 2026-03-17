@@ -256,7 +256,7 @@ export default function CreateWorkerModal({
               />
             </div>
 
-            <div className="bg-muted rounded-lg p-4 text-sm">
+            <div className="bg-muted rounded-lg p-4 text-base">
               <strong>Note:</strong> Un compte client et employé sera créé automatiquement.
             </div>
           </div>

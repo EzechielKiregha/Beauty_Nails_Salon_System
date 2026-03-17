@@ -52,11 +52,10 @@ export default function Footer() {
               <Instagram className="w-4 h-4" />
             </a>
           </div>
-
         </div>
 
         {/* Bottom */}
-        <div className="border-t border-white/10 mt-8 pt-5 text-center text-sm text-gray-500">
+        <div className="border-t border-white/10 mt-8 pt-5 text-center text-base text-gray-500">
           © 2025 Beauty Nails Salon — Tous droits réservés.
         </div>
 

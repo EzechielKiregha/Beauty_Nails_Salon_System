@@ -72,11 +72,11 @@ export default function TasksManagement() {
                 </Badge>
                 <div className="flex items-center gap-2">
                   {t.status !== 'completed' && (
-                    <Button size="sm" onClick={() => markCompleted(t.id)} className="bg-linear-to-r from-pink-500 to-purple-500 text-white rounded-full h-8 px-4 text-sm ">
+                    <Button size="sm" onClick={() => markCompleted(t.id)} className="bg-linear-to-r from-pink-500 to-purple-500 text-white rounded-full h-8 px-4 text-base ">
                       Compléter
                     </Button>
                   )}
-                  <Button size="sm" variant="destructive" onClick={() => onDelete(t.id)} className="rounded-full h-8 px-4 text-sm  bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 border-0 hover:bg-red-500 hover:text-white">
+                  <Button size="sm" variant="destructive" onClick={() => onDelete(t.id)} className="rounded-full h-8 px-4 text-base  bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 border-0 hover:bg-red-500 hover:text-white">
                     Supprimer
                   </Button>
                 </div>

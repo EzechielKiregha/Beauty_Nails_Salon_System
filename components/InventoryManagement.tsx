@@ -121,7 +121,7 @@ export default function InventoryManagement({ showMock }: { showMock?: boolean }
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <h2 className="text-2xl  sm:text-3xl  text-gray-900 dark:text-gray-100">Gestion de l'Inventaire</h2>
+        <h2 className="text-2xl  sm:text-3xl font-medium  text-gray-900 dark:text-gray-100">Gestion de l'Inventaire</h2>
         <CreateInventoryModal triggerLabel="+ Ajouter Produit" />
         {/* <AddProductModal
           trigger={
@@ -192,11 +192,12 @@ export default function InventoryManagement({ showMock }: { showMock?: boolean }
         </div>
       </Card>
 
+      <p className=" dark:text-pink-400 text-xs sm:text-xs">{'glisser  <--- | --->'}</p>
       <Tabs defaultValue="stock" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-2 lg:grid-cols-6  bg-white dark:bg-gray-950 border border-gray-200 dark:border-pink-900/30 p-1 rounded-xl justify-start sm:justify-center ">
-          <TabsTrigger value="stock" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">Stock</TabsTrigger>
-          <TabsTrigger value="suppliers" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">Fournisseurs</TabsTrigger>
-          <TabsTrigger value="usage" className="rounded-lg px-4 sm:px-8 data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400">Rapport d'Utilisation</TabsTrigger>
+        <TabsList className="w-full bg-white dark:bg-gray-950 border border-gray-200 dark:border-pink-900/30 p-1 rounded-xl flex overflow-x-auto no-scrollbar justify-start sm:justify-center">
+          <TabsTrigger value="stock" className="data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400 text-base sm:text-base">Stock</TabsTrigger>
+          <TabsTrigger value="suppliers" className="data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400 text-base sm:text-base">Fournisseurs</TabsTrigger>
+          <TabsTrigger value="usage" className="data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400 text-base sm:text-base">Rapport d'Utilisation</TabsTrigger>
         </TabsList>
 
         {/* Stock Tab */}
@@ -218,7 +219,7 @@ export default function InventoryManagement({ showMock }: { showMock?: boolean }
                         item.status === 'low' ? 'text-amber-600 dark:text-amber-400' : 'text-green-600 dark:text-green-400'
                       }`} />
                   </div>
-                  <Badge className="text-[10px] sm:text-sm  uppercase tracking-wider bg-white/80 dark:bg-black/20 text-gray-600 dark:text-gray-300 border-0">
+                  <Badge className="text-[10px] sm:text-base  uppercase tracking-wider bg-white/80 dark:bg-black/20 text-gray-600 dark:text-gray-300 border-0">
                     {item.category}
                   </Badge>
                 </div>
@@ -259,11 +260,11 @@ export default function InventoryManagement({ showMock }: { showMock?: boolean }
                 </div>
 
                 <div className="grid grid-cols-1 gap-2 mb-6">
-                  <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                  <div className="flex items-center gap-2 text-base text-gray-600 dark:text-gray-400">
                     <div className="w-1.5 h-1.5 rounded-full bg-gray-400" />
                     Fournisseur: <span className="font-semibold text-gray-800 dark:text-gray-200 ml-1">{item.supplier}</span>
                   </div>
-                  <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                  <div className="flex items-center gap-2 text-base text-gray-600 dark:text-gray-400">
                     <div className="w-1.5 h-1.5 rounded-full bg-gray-400" />
                     Dernier réappro: <span className="font-semibold text-gray-800 dark:text-gray-200 ml-1">{item.lastRestock}</span>
                   </div>
@@ -327,21 +328,21 @@ export default function InventoryManagement({ showMock }: { showMock?: boolean }
                     <div className="w-8 h-8 rounded-lg bg-white dark:bg-gray-950 flex items-center justify-center shadow-sm">
                       <Phone className="w-4 h-4 text-blue-500" />
                     </div>
-                    <p className="text-sm sm:text-lg font-medium text-gray-700 dark:text-gray-300">{supplier.phone}</p>
+                    <p className="text-base sm:text-lg font-medium text-gray-700 dark:text-gray-300">{supplier.phone}</p>
                   </div>
                   <div className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-gray-100 dark:border-gray-700">
                     <div className="w-8 h-8 rounded-lg bg-white dark:bg-gray-950 flex items-center justify-center shadow-sm">
                       <Mail className="w-4 h-4 text-purple-500" />
                     </div>
-                    <p className="text-sm sm:text-lg font-medium text-gray-700 dark:text-gray-300 break-all">{supplier.email}</p>
+                    <p className="text-base sm:text-lg font-medium text-gray-700 dark:text-gray-300 break-all">{supplier.email}</p>
                   </div>
                 </div>
 
                 <div className="mb-8">
-                  <p className="text-sm  text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-3">Produits fournis</p>
+                  <p className="text-base  text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-3">Produits fournis</p>
                   <div className="flex flex-wrap gap-2">
                     {supplier.products.map((product, idx) => (
-                      <Badge key={idx} variant="outline" className="text-[10px] sm:text-sm px-3 py-1 dark:border-gray-700 dark:text-gray-300 bg-white dark:bg-gray-950">
+                      <Badge key={idx} variant="outline" className="text-[10px] sm:text-base px-3 py-1 dark:border-gray-700 dark:text-gray-300 bg-white dark:bg-gray-950">
                         {product}
                       </Badge>
                     ))}
@@ -411,16 +412,16 @@ export default function InventoryManagement({ showMock }: { showMock?: boolean }
               </h4>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 text-center">
                 <div className="p-4 bg-white dark:bg-gray-950 rounded-2xl shadow-sm border border-blue-50 dark:border-blue-900/20">
-                  <p className="text-3xl sm:text-4xl font-black text-gray-900 dark:text-gray-100">116</p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 uppercase  mt-2 tracking-widest">Produits Utilisés</p>
+                  <p className="text-3xl sm:text-4xl font-medium font-black text-gray-900 dark:text-gray-100">116</p>
+                  <p className="text-base text-gray-600 dark:text-gray-400 uppercase  mt-2 tracking-widest">Produits Utilisés</p>
                 </div>
                 <div className="p-4 bg-white dark:bg-gray-950 rounded-2xl shadow-sm border border-blue-50 dark:border-blue-900/20">
-                  <p className="text-2xl sm:text-3xl font-black text-gray-900 dark:text-gray-100">2,15M Fc</p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 uppercase  mt-2 tracking-widest">Valeur Stock</p>
+                  <p className="text-2xl sm:text-3xl font-medium font-black text-gray-900 dark:text-gray-100">2,15M Fc</p>
+                  <p className="text-base text-gray-600 dark:text-gray-400 uppercase  mt-2 tracking-widest">Valeur Stock</p>
                 </div>
                 <div className="p-4 bg-white dark:bg-gray-950 rounded-2xl shadow-sm border border-blue-50 dark:border-blue-900/20">
-                  <p className="text-3xl sm:text-4xl font-black text-green-600 dark:text-green-400">+8%</p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 uppercase  mt-2 tracking-widest">vs Mois Dernier</p>
+                  <p className="text-3xl sm:text-4xl font-medium font-black text-green-600 dark:text-green-400">+8%</p>
+                  <p className="text-base text-gray-600 dark:text-gray-400 uppercase  mt-2 tracking-widest">vs Mois Dernier</p>
                 </div>
               </div>
             </div>
