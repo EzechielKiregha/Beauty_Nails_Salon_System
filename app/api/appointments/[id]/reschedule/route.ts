@@ -61,6 +61,9 @@ export async function PATCH(
       data : {
         prepaymentBalance : {
           decrement : app.price
+        },
+        totalSpent : {
+          decrement : app.price
         }
       }
     })
