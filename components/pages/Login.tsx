@@ -55,7 +55,7 @@ export default function Login() {
           <h1 className="text-2xl sm:text-3xl text-gray-900 dark:text-gray-100 mb-1 sm:mb-2">
             Connexion
           </h1>
-          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300">
+          <p className="text-lg sm:text-base text-gray-600 dark:text-gray-300">
             Accédez à votre espace personnel
           </p>
         </div>
@@ -65,9 +65,9 @@ export default function Login() {
             defaultValue="client"
           >
             <TabsList className="grid w-full grid-cols-3 mb-4 sm:mb-6">
-              <TabsTrigger value="client" className="text-xs sm:text-sm">Client</TabsTrigger>
-              <TabsTrigger value="worker" className="text-xs sm:text-sm">Employée</TabsTrigger>
-              <TabsTrigger value="admin" className="text-xs sm:text-sm">Admin</TabsTrigger>
+              <TabsTrigger value="client" className="text-sm sm:text-lg">Client</TabsTrigger>
+              <TabsTrigger value="worker" className="text-sm sm:text-lg">Employée</TabsTrigger>
+              <TabsTrigger value="admin" className="text-sm sm:text-lg">Admin</TabsTrigger>
             </TabsList>
 
             <TabsContent value="client">
@@ -105,7 +105,7 @@ export default function Login() {
                 </div>
                 <Button
                   type="submit"
-                  className="w-full bg-linear-to-r from-pink-500 to-amber-400 hover:from-pink-600 hover:to-amber-500 text-white rounded-full py-5 sm:py-6 mt-4 sm:mt-6 text-sm sm:text-base"
+                  className="w-full bg-linear-to-r from-pink-500 to-amber-400 hover:from-pink-600 hover:to-amber-500 text-white rounded-full py-5 sm:py-6 mt-4 sm:mt-6 text-lg sm:text-base"
                 >
                   {isPending ? 'Connexion...' : 'Se connecter'}
                 </Button>
@@ -147,7 +147,7 @@ export default function Login() {
                 </div>
                 <Button
                   type="submit"
-                  className="w-full bg-linear-to-r from-purple-500 to-pink-400 hover:from-purple-600 hover:to-pink-500 text-white rounded-full py-5 sm:py-6 mt-4 sm:mt-6 text-sm sm:text-base"
+                  className="w-full bg-linear-to-r from-purple-500 to-pink-400 hover:from-purple-600 hover:to-pink-500 text-white rounded-full py-5 sm:py-6 mt-4 sm:mt-6 text-lg sm:text-base"
                 >
                   {isPending ? 'Connexion...' : 'Se connecter'}
                 </Button>
@@ -189,7 +189,7 @@ export default function Login() {
                 </div>
                 <Button
                   type="submit"
-                  className="w-full bg-linear-to-r from-amber-500 to-orange-400 hover:from-amber-600 hover:to-orange-500 text-white rounded-full py-5 sm:py-6 mt-4 sm:mt-6 text-sm sm:text-base"
+                  className="w-full bg-linear-to-r from-amber-500 to-orange-400 hover:from-amber-600 hover:to-orange-500 text-white rounded-full py-5 sm:py-6 mt-4 sm:mt-6 text-lg sm:text-base"
                 >
                   {isPending ? 'Connexion...' : 'Se connecter'}
                 </Button>
@@ -200,13 +200,13 @@ export default function Login() {
           <div className="mt-4 sm:mt-6 text-center">
             <a
               href="/auth/forgot-password"
-              className="text-xs sm:text-sm text-pink-600 dark:text-pink-400 hover:text-pink-700 dark:hover:text-pink-300"
+              className="text-sm sm:text-lg text-pink-600 dark:text-pink-400 hover:text-pink-700 dark:hover:text-pink-300"
             >
               Mot de passe oublié ?
             </a>
           </div>
         </Card>
-        <p className="text-center mt-4 sm:mt-6 text-sm sm:text-base text-gray-600 dark:text-gray-300">
+        <p className="text-center mt-4 sm:mt-6 text-lg sm:text-base text-gray-600 dark:text-gray-300">
           Vous n'avez pas de compte ?{" "}
           <Link
             href={`/auth/signup${redirect ? "?redirect=appointments" : ""}`}

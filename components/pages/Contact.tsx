@@ -107,12 +107,12 @@ export default function Contact() {
                   href={info.link}
                   target={info.link.startsWith('http') ? '_blank' : undefined}
                   rel={info.link.startsWith('http') ? 'noopener noreferrer' : undefined}
-                  className="text-sm sm:text-base text-gray-600 dark:text-gray-300 hover:text-pink-600 dark:hover:text-pink-400 whitespace-pre-line transition-colors"
+                  className="text-lg sm:text-base text-gray-600 dark:text-gray-300 hover:text-pink-600 dark:hover:text-pink-400 whitespace-pre-line transition-colors"
                 >
                   {info.content}
                 </a>
               ) : (
-                <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300 whitespace-pre-line">{info.content}</p>
+                <p className="text-lg sm:text-base text-gray-600 dark:text-gray-300 whitespace-pre-line">{info.content}</p>
               )}
             </Card>
           ))}
@@ -189,14 +189,14 @@ export default function Contact() {
                     placeholder="Votre message..."
                     value={formData.message}
                     onChange={handleChange}
-                    className="mt-2 rounded-xl dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100 min-h-[150px] text-sm"
+                    className="mt-2 rounded-xl dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100 min-h-[150px] text-lg"
                     required
                   />
                 </div>
 
                 <Button
                   type="submit"
-                  className="w-full bg-linear-to-r from-pink-500 to-amber-400 hover:from-pink-600 hover:to-amber-500 text-white rounded-full py-5 sm:py-6 text-sm sm:text-base"
+                  className="w-full bg-linear-to-r from-pink-500 to-amber-400 hover:from-pink-600 hover:to-amber-500 text-white rounded-full py-5 sm:py-6 text-lg sm:text-base"
                 >
                   Envoyer le message
                 </Button>
@@ -213,11 +213,11 @@ export default function Contact() {
                   <MessageCircle className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
                 </div>
                 <h3 className="text-lg sm:text-xl text-gray-900 dark:text-gray-100 mb-2 sm:mb-3">WhatsApp</h3>
-                <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300 mb-4 sm:mb-6">
+                <p className="text-lg sm:text-base text-gray-600 dark:text-gray-300 mb-4 sm:mb-6">
                   Contactez-nous directement pour une réponse rapide
                 </p>
                 <a href="https://wa.me/243123456789" target="_blank" rel="noopener noreferrer">
-                  <Button className="w-full bg-green-500 hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700 text-white rounded-full py-4 sm:py-5 text-xs sm:text-sm">
+                  <Button className="w-full bg-green-500 hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700 text-white rounded-full py-4 sm:py-5 text-sm sm:text-lg">
                     Ouvrir WhatsApp
                   </Button>
                 </a>
@@ -232,7 +232,7 @@ export default function Contact() {
               </h3>
               <div className="space-y-3 sm:space-y-4">
                 {hours.map((item, index) => (
-                  <div key={index} className="flex justify-between text-xs sm:text-sm">
+                  <div key={index} className="flex justify-between text-sm sm:text-lg">
                     <span className="text-gray-700 dark:text-gray-300">{item.day}</span>
                     <span className={`${item.hours === 'Sur rendez-vous' ? 'text-amber-600 dark:text-amber-400' : 'text-gray-900 dark:text-gray-100'}`}>
                       {item.hours}
@@ -252,10 +252,10 @@ export default function Contact() {
                   rel="noopener noreferrer"
                   className="flex items-center gap-3 p-3 sm:p-4 bg-white dark:bg-gray-800 rounded-xl hover:shadow-md dark:hover:shadow-gray-900/50 transition-shadow"
                 >
-                  <div className="w-10 h-10 rounded-full bg-blue-500 dark:bg-blue-600 flex items-center justify-center text-white text-xs sm:text-sm ">
+                  <div className="w-10 h-10 rounded-full bg-blue-500 dark:bg-blue-600 flex items-center justify-center text-white text-sm sm:text-lg ">
                     F
                   </div>
-                  <span className="text-sm sm:text-base text-gray-700 dark:text-gray-300">Facebook</span>
+                  <span className="text-lg sm:text-base text-gray-700 dark:text-gray-300">Facebook</span>
                 </a>
                 <a
                   href="https://instagram.com"
@@ -263,10 +263,10 @@ export default function Contact() {
                   rel="noopener noreferrer"
                   className="flex items-center gap-3 p-3 sm:p-4 bg-white dark:bg-gray-800 rounded-xl hover:shadow-md dark:hover:shadow-gray-900/50 transition-shadow"
                 >
-                  <div className="w-10 h-10 rounded-full bg-linear-to-br from-purple-500 to-pink-500 dark:from-purple-600 dark:to-pink-600 flex items-center justify-center text-white text-xs sm:text-sm ">
+                  <div className="w-10 h-10 rounded-full bg-linear-to-br from-purple-500 to-pink-500 dark:from-purple-600 dark:to-pink-600 flex items-center justify-center text-white text-sm sm:text-lg ">
                     I
                   </div>
-                  <span className="text-sm sm:text-base text-gray-700 dark:text-gray-300">Instagram</span>
+                  <span className="text-lg sm:text-base text-gray-700 dark:text-gray-300">Instagram</span>
                 </a>
                 <a
                   href="https://twitter.com"
@@ -274,10 +274,10 @@ export default function Contact() {
                   rel="noopener noreferrer"
                   className="flex items-center gap-3 p-3 sm:p-4 bg-white dark:bg-gray-800 rounded-xl hover:shadow-md dark:hover:shadow-gray-900/50 transition-shadow"
                 >
-                  <div className="w-10 h-10 rounded-full bg-blue-400 dark:bg-blue-500 flex items-center justify-center text-white text-xs sm:text-sm ">
+                  <div className="w-10 h-10 rounded-full bg-blue-400 dark:bg-blue-500 flex items-center justify-center text-white text-sm sm:text-lg ">
                     T
                   </div>
-                  <span className="text-sm sm:text-base text-gray-700 dark:text-gray-300">Twitter</span>
+                  <span className="text-lg sm:text-base text-gray-700 dark:text-gray-300">Twitter</span>
                 </a>
               </div>
             </Card>
@@ -300,12 +300,12 @@ export default function Contact() {
                   style={{ border: "1", borderRadius: "1rem", boxShadow: "rgba(0, 0, 0, 0.1) 0px 4px 12px" }}
                   loading="lazy" ></iframe>
                 {/* <MapPin className="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-3 sm:mb-4 text-gray-400 dark:text-gray-600" />
-                <p className="text-sm sm:text-base mb-1">Q. Birere, Comune de Goma, Goma – RDC</p>
+                <p className="text-lg sm:text-base mb-1">Q. Birere, Comune de Goma, Goma – RDC</p>
                 <a
                   href="https://maps.google.com"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-pink-600 dark:text-pink-400 hover:text-pink-700 dark:hover:text-pink-300 text-xs sm:text-sm inline-block transition-colors"
+                  className="text-pink-600 dark:text-pink-400 hover:text-pink-700 dark:hover:text-pink-300 text-sm sm:text-lg inline-block transition-colors"
                 >
                   Voir sur Google Maps →
                 </a> */}

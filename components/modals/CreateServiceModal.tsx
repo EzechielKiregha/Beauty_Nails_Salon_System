@@ -269,7 +269,7 @@ export default function CreateServiceModal({ trigger, service }: { trigger?: Rea
                     onChange={(e) => setOnlineBookable(e.target.checked)}
                     className="rounded border-gray-300 text-purple-600 focus:ring-purple-500"
                   />
-                  <span className="text-sm text-gray-700 dark:text-gray-300">Réservable en ligne</span>
+                  <span className="text-lg text-gray-700 dark:text-gray-300">Réservable en ligne</span>
                 </label>
 
                 <label className="flex items-center space-x-2">
@@ -279,7 +279,7 @@ export default function CreateServiceModal({ trigger, service }: { trigger?: Rea
                     onChange={(e) => setIsPopular(e.target.checked)}
                     className="rounded border-gray-300 text-purple-600 focus:ring-purple-500"
                   />
-                  <span className="text-sm text-gray-700 dark:text-gray-300">Mettre en avant (Populaire)</span>
+                  <span className="text-lg text-gray-700 dark:text-gray-300">Mettre en avant (Populaire)</span>
                 </label>
               </div>
             </div>
@@ -311,7 +311,7 @@ export default function CreateServiceModal({ trigger, service }: { trigger?: Rea
           <>
             <DialogHeader>
               <DialogTitle>Ajouter des add-ons pour "{name}"</DialogTitle>
-              <p className="text-sm text-gray-500 dark:text-gray-400">
+              <p className="text-lg text-gray-500 dark:text-gray-400">
                 Ajoutez des éléments complémentaires à ce service pour augmenter sa valeur
               </p>
             </DialogHeader>

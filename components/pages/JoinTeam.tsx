@@ -124,11 +124,11 @@ export default function JoinTeam() {
             <div className="grid grid-cols-2 gap-4 sm:gap-6">
               <div className="text-center p-4 sm:p-6 bg-pink-50 dark:bg-gray-950 border-b border-pink-100 dark:border-pink-900 rounded-2xl">
                 <div className="text-3xl sm:text-4xl text-pink-600 dark:text-pink-400 mb-1 sm:mb-2">8</div>
-                <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">Membres de l'équipe</div>
+                <div className="text-sm sm:text-lg text-gray-600 dark:text-gray-300">Membres de l'équipe</div>
               </div>
               <div className="text-center p-4 sm:p-6 bg-purple-50 dark:bg-gray-950 border-b border-pink-100 dark:border-pink-900 rounded-2xl">
                 <div className="text-3xl sm:text-4xl text-purple-600 dark:text-purple-400 mb-1 sm:mb-2">5+</div>
-                <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">Années d'expérience</div>
+                <div className="text-sm sm:text-lg text-gray-600 dark:text-gray-300">Années d'expérience</div>
               </div>
             </div>
           </div>
@@ -157,7 +157,7 @@ export default function JoinTeam() {
                   {benefit.icon}
                 </div>
                 <h3 className="text-lg sm:text-xl text-gray-900 dark:text-gray-100 mb-2 sm:mb-3">{benefit.title}</h3>
-                <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300">{benefit.description}</p>
+                <p className="text-lg sm:text-base text-gray-600 dark:text-gray-300">{benefit.description}</p>
               </Card>
             ))}
           </div>
@@ -174,12 +174,12 @@ export default function JoinTeam() {
             {positions.map((position, index) => (
               <Card key={index} className="bg-white dark:bg-gray-950 border-b border-pink-100 dark:border-pink-900 shadow-lg hover:shadow-xl transition-shadow p-6 sm:p-8 rounded-2xl">
                 <h3 className="text-xl sm:text-2xl text-gray-900 dark:text-gray-100 mb-2 sm:mb-3">{position.title}</h3>
-                <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300 mb-4 sm:mb-6">{position.description}</p>
+                <p className="text-lg sm:text-base text-gray-600 dark:text-gray-300 mb-4 sm:mb-6">{position.description}</p>
                 <div className="mb-6">
-                  <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mb-3">Exigences :</p>
+                  <p className="text-sm sm:text-lg text-gray-500 dark:text-gray-400 mb-3">Exigences :</p>
                   <ul className="space-y-2">
                     {position.requirements.map((req, i) => (
-                      <li key={i} className="flex items-start text-sm sm:text-base text-gray-700 dark:text-gray-300">
+                      <li key={i} className="flex items-start text-lg sm:text-base text-gray-700 dark:text-gray-300">
                         <span className="w-1.5 h-1.5 bg-pink-400 dark:bg-pink-500 rounded-full mr-2 mt-1 flex-shrink-0" />
                         {req}
                       </li>
@@ -277,20 +277,20 @@ export default function JoinTeam() {
                     placeholder="Décrivez votre expérience, vos compétences et pourquoi vous souhaitez rejoindre Beauty Nails..."
                     value={formData.message}
                     onChange={handleChange}
-                    className="mt-2 rounded-xl dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100 min-h-[150px] text-sm"
+                    className="mt-2 rounded-xl dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100 min-h-[150px] text-lg"
                     required
                   />
                 </div>
 
                 <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-3 sm:p-4">
-                  <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">
+                  <p className="text-sm sm:text-lg text-gray-600 dark:text-gray-300">
                     📎 Vous pouvez également envoyer votre CV et portfolio par email à <strong>recrutement@beautynails.cd</strong>
                   </p>
                 </div>
 
                 <Button
                   type="submit"
-                  className="w-full bg-linear-to-r from-pink-500 to-amber-400 hover:from-pink-600 hover:to-amber-500 text-white rounded-full py-5 sm:py-6 text-sm sm:text-base"
+                  className="w-full bg-linear-to-r from-pink-500 to-amber-400 hover:from-pink-600 hover:to-amber-500 text-white rounded-full py-5 sm:py-6 text-lg sm:text-base"
                 >
                   Envoyer ma candidature
                 </Button>
@@ -304,39 +304,39 @@ export default function JoinTeam() {
               <h3 className="text-lg sm:text-xl text-gray-900 dark:text-gray-100 mb-3 sm:mb-4">Processus de Recrutement</h3>
               <div className="space-y-3 sm:space-y-4">
                 <div className="flex gap-3 sm:gap-4">
-                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-pink-500 text-white flex items-center justify-center flex-shrink-0 text-xs sm:text-sm">
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-pink-500 text-white flex items-center justify-center flex-shrink-0 text-sm sm:text-lg">
                     1
                   </div>
                   <div>
-                    <p className="text-sm sm:text-base text-gray-900 dark:text-gray-100">Candidature</p>
-                    <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Envoi de votre CV et portfolio</p>
+                    <p className="text-lg sm:text-base text-gray-900 dark:text-gray-100">Candidature</p>
+                    <p className="text-sm sm:text-lg text-gray-600 dark:text-gray-400">Envoi de votre CV et portfolio</p>
                   </div>
                 </div>
                 <div className="flex gap-3 sm:gap-4">
-                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-pink-500 text-white flex items-center justify-center flex-shrink-0 text-xs sm:text-sm">
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-pink-500 text-white flex items-center justify-center flex-shrink-0 text-sm sm:text-lg">
                     2
                   </div>
                   <div>
-                    <p className="text-sm sm:text-base text-gray-900 dark:text-gray-100">Entretien</p>
-                    <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Discussion avec notre équipe</p>
+                    <p className="text-lg sm:text-base text-gray-900 dark:text-gray-100">Entretien</p>
+                    <p className="text-sm sm:text-lg text-gray-600 dark:text-gray-400">Discussion avec notre équipe</p>
                   </div>
                 </div>
                 <div className="flex gap-3 sm:gap-4">
-                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-pink-500 text-white flex items-center justify-center flex-shrink-0 text-xs sm:text-sm">
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-pink-500 text-white flex items-center justify-center flex-shrink-0 text-sm sm:text-lg">
                     3
                   </div>
                   <div>
-                    <p className="text-sm sm:text-base text-gray-900 dark:text-gray-100">Test Pratique</p>
-                    <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Démonstration de vos compétences</p>
+                    <p className="text-lg sm:text-base text-gray-900 dark:text-gray-100">Test Pratique</p>
+                    <p className="text-sm sm:text-lg text-gray-600 dark:text-gray-400">Démonstration de vos compétences</p>
                   </div>
                 </div>
                 <div className="flex gap-3 sm:gap-4">
-                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-pink-500 text-white flex items-center justify-center flex-shrink-0 text-xs sm:text-sm">
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-pink-500 text-white flex items-center justify-center flex-shrink-0 text-sm sm:text-lg">
                     4
                   </div>
                   <div>
-                    <p className="text-sm sm:text-base text-gray-900 dark:text-gray-100">Bienvenue !</p>
-                    <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Intégration dans l'équipe</p>
+                    <p className="text-lg sm:text-base text-gray-900 dark:text-gray-100">Bienvenue !</p>
+                    <p className="text-sm sm:text-lg text-gray-600 dark:text-gray-400">Intégration dans l'équipe</p>
                   </div>
                 </div>
               </div>
@@ -344,13 +344,13 @@ export default function JoinTeam() {
 
             <Card className="bg-linear-to-br from-amber-50 to-orange-50 dark:from-gray-900 dark:to-gray-800 border-b border-pink-100 dark:border-pink-900 shadow-lg p-4 sm:p-6 rounded-2xl">
               <h3 className="text-lg sm:text-xl text-gray-900 dark:text-gray-100 mb-3 sm:mb-4">Questions ?</h3>
-              <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300 mb-3 sm:mb-4">
+              <p className="text-lg sm:text-base text-gray-600 dark:text-gray-300 mb-3 sm:mb-4">
                 Contactez notre responsable RH pour plus d'informations
               </p>
-              <p className="text-xs sm:text-sm text-gray-700 dark:text-gray-300 mb-2">
+              <p className="text-sm sm:text-lg text-gray-700 dark:text-gray-300 mb-2">
                 📧 recrutement@beautynails.cd
               </p>
-              <p className="text-xs sm:text-sm text-gray-700 dark:text-gray-300">
+              <p className="text-sm sm:text-lg text-gray-700 dark:text-gray-300">
                 📞 +243 123 456 789
               </p>
             </Card>

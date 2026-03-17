@@ -357,7 +357,7 @@ export default function Appointments() {
                         <p className="text-gray-900">
                           Au salon
                         </p>
-                        <p className="text-sm text-gray-500">
+                        <p className="text-lg text-gray-500">
                           Avenue de la Paix, Gombe, Kinshasa
                         </p>
                       </div>
@@ -375,7 +375,7 @@ export default function Appointments() {
                         <p className="text-gray-900">
                           À domicile
                         </p>
-                        <p className="text-sm text-gray-500">
+                        <p className="text-lg text-gray-500">
                           +20 000 Fc - Dans la zone de Kinshasa
                         </p>
                       </div>
@@ -437,7 +437,7 @@ export default function Appointments() {
               <div className="space-y-4 mb-6">
                 {selectedService && (
                   <div className="pb-4 border-b border-gray-200">
-                    <p className="text-sm text-gray-500 mb-1">
+                    <p className="text-lg text-gray-500 mb-1">
                       Service
                     </p>
                     <p className="text-gray-900">
@@ -447,13 +447,13 @@ export default function Appointments() {
                 )}
 
                 {/* Reserve link (generated href) */}
-                <div className="mt-2 text-xs text-gray-400">
+                <div className="mt-2 text-sm text-gray-400">
                   <p>Lien de réservation: <span className="break-all">{reserveHref}</span></p>
                 </div>
 
                 {selectedWorker && (
                   <div className="pb-4 border-b border-gray-200">
-                    <p className="text-sm text-gray-500 mb-1">
+                    <p className="text-lg text-gray-500 mb-1">
                       Spécialiste
                     </p>
                     <p className="text-gray-900">
@@ -464,7 +464,7 @@ export default function Appointments() {
 
                 {selectedDate && selectedTime && (
                   <div className="pb-4 border-b border-gray-200">
-                    <p className="text-sm text-gray-500 mb-1">
+                    <p className="text-lg text-gray-500 mb-1">
                       Date et heure
                     </p>
                     <div className="flex items-center text-gray-900">
@@ -483,7 +483,7 @@ export default function Appointments() {
                 )}
 
                 <div className="pb-4 border-b border-gray-200">
-                  <p className="text-sm text-gray-500 mb-1">
+                  <p className="text-lg text-gray-500 mb-1">
                     Lieu
                   </p>
                   <div className="flex items-center text-gray-900">
@@ -503,14 +503,14 @@ export default function Appointments() {
 
                 {addOns.length > 0 && (
                   <div className="pb-4">
-                    <p className="text-sm text-gray-500 mb-2">
+                    <p className="text-lg text-gray-500 mb-2">
                       Options
                     </p>
                     <ul className="space-y-1">
                       {addOns.map((addon) => (
                         <li
                           key={addon}
-                          className="text-sm text-gray-700"
+                          className="text-lg text-gray-700"
                         >
                           • {addon}
                         </li>
@@ -522,13 +522,13 @@ export default function Appointments() {
 
               {!user && (
                 <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-xl">
-                  <p className="text-sm text-amber-800">
+                  <p className="text-lg text-amber-800">
                     Vous devez être connecté(e) pour réserver un
                     rendez-vous
                   </p>
                   <Link
                     href="/auth/login"
-                    className="text-sm text-amber-600 hover:text-amber-700 underline mt-2 inline-block"
+                    className="text-lg text-amber-600 hover:text-amber-700 underline mt-2 inline-block"
                   >
                     Se connecter
                   </Link>
@@ -543,7 +543,7 @@ export default function Appointments() {
                 {isCreating ? "Réservation..." : "Confirmer le rendez-vous"}
               </Button>
 
-              <p className="text-xs text-gray-500 text-center mt-4">
+              <p className="text-sm text-gray-500 text-center mt-4">
                 Vous recevrez une confirmation par email et
                 WhatsApp
               </p>

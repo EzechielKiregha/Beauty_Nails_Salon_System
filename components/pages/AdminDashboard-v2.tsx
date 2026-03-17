@@ -180,7 +180,7 @@ export default function AdminDashboardV2() {
                   <Button variant="outline" size="sm" className="relative dark:border-gray-700 dark:text-gray-200 ">
                     <Bell className="w-5 h-5 " />
                     {unreadCount > 0 && (
-                      <span className="absolute -top-1 -right-1 w-5 h-5 bg-pink-500 text-white text-xs rounded-full flex items-center justify-center ">
+                      <span className="absolute -top-1 -right-1 w-5 h-5 bg-pink-500 text-white text-sm rounded-full flex items-center justify-center ">
                         {unreadCount}
                       </span>
                     )}
@@ -204,7 +204,7 @@ export default function AdminDashboardV2() {
               </div>
               <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 opacity-80 " />
             </div>
-            <p className="text-xs sm:text-sm opacity-90 mb-1 ">Revenus (Période Courante)</p> {/* Updated label */}
+            <p className="text-sm sm:text-lg opacity-90 mb-1 ">Revenus (Période Courante)</p> {/* Updated label */}
             <p className="text-2xl sm:text-3xl  mb-2 ">
               {revenueData?.totalRevenue && revenueData?.totalRevenue > 5000000
                 ?
@@ -212,7 +212,7 @@ export default function AdminDashboardV2() {
                 :
                 revenueData?.totalRevenue} Fc
             </p>
-            <p className="text-xs opacity-80 ">
+            <p className="text-sm opacity-80 ">
               {/* Removed the "today" part as it now reflects the period defined by the hook params */}
               {/* Optionally, you could display the period range here if revenueData.period is available */}
               {revenueData?.period ? `${revenueData.period.from} à ${revenueData.period.to}` : ''}
@@ -226,9 +226,9 @@ export default function AdminDashboardV2() {
                 <Users className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600 dark:text-blue-400 " />
               </div>
             </div>
-            <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mb-1 ">Total Clients</p>
+            <p className="text-sm sm:text-lg text-gray-600 dark:text-gray-300 mb-1 ">Total Clients</p>
             <p className="text-2xl sm:text-3xl  text-gray-900 dark:text-gray-100 ">{stats.totalClients}</p>
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 ">
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-2 ">
               +{stats.newClients} ce mois
             </p>
           </Card>
@@ -240,9 +240,9 @@ export default function AdminDashboardV2() {
                 <Calendar className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600 dark:text-purple-400 " />
               </div>
             </div>
-            <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mb-1 ">Rendez-vous</p>
+            <p className="text-sm sm:text-lg text-gray-600 dark:text-gray-300 mb-1 ">Rendez-vous</p>
             <p className="text-2xl sm:text-3xl  text-gray-900 dark:text-gray-100 ">{stats.todayAppointments}</p>
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 ">
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-2 ">
               {stats.completedAppointments} terminés | {todayAppointments.length} RDV aujourd’hui
             </p>
           </Card>
@@ -255,9 +255,9 @@ export default function AdminDashboardV2() {
               </div>
               <Star className="w-4 h-4 sm:w-5 sm:h-5 opacity-80 " />
             </div>
-            <p className="text-xs sm:text-sm opacity-90 mb-1 ">Personnel Actif</p>
+            <p className="text-sm sm:text-lg opacity-90 mb-1 ">Personnel Actif</p>
             <p className="text-2xl sm:text-3xl  mb-2 ">{stats.activeWorkers}</p>
-            <p className="text-xs opacity-80 ">
+            <p className="text-sm opacity-80 ">
               Note moyenne: {stats.avgRating.toFixed(1)}⭐
             </p>
           </Card>
@@ -271,7 +271,7 @@ export default function AdminDashboardV2() {
                 <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-600 dark:text-green-400 " />
               </div>
               <div>
-                <p className="text-xs text-gray-600 dark:text-gray-300 ">Complétés</p>
+                <p className="text-sm text-gray-600 dark:text-gray-300 ">Complétés</p>
                 <p className="text-lg sm:text-xl  text-gray-900 dark:text-gray-100 ">{stats.completedAppointments}</p>
               </div>
             </div>
@@ -283,7 +283,7 @@ export default function AdminDashboardV2() {
                 <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-600 dark:text-yellow-400 " />
               </div>
               <div>
-                <p className="text-xs text-gray-600 dark:text-gray-300 ">En Attente</p>
+                <p className="text-sm text-gray-600 dark:text-gray-300 ">En Attente</p>
                 <p className="text-lg sm:text-xl  text-gray-900 dark:text-gray-100 ">{stats.pendingAppointments}</p>
               </div>
             </div>
@@ -295,7 +295,7 @@ export default function AdminDashboardV2() {
                 <Package className={`w-4 h-4 sm:w-5 sm:h-5 ${stats.lowStockItems > 0 ? 'text-red-600 dark:text-red-400' : 'text-gray-600 dark:text-gray-400'}`} />
               </div>
               <div>
-                <p className="text-xs text-gray-600 dark:text-gray-300 ">Stock Bas</p>
+                <p className="text-sm text-gray-600 dark:text-gray-300 ">Stock Bas</p>
                 <p className="text-lg sm:text-xl  text-gray-900 dark:text-gray-100 ">{stats.lowStockItems}</p>
               </div>
             </div>
@@ -307,7 +307,7 @@ export default function AdminDashboardV2() {
                 <Activity className="w-4 h-4 sm:w-5 sm:h-5 text-purple-600 dark:text-purple-400 " />
               </div>
               <div>
-                <p className="text-xs text-gray-600 dark:text-gray-300 ">Taux Occ.</p>
+                <p className="text-sm text-gray-600 dark:text-gray-300 ">Taux Occ.</p>
                 <p className="text-lg sm:text-xl  text-gray-900 dark:text-gray-100 ">
                   {stats.todayAppointments > 0
                     ? Math.round((stats.completedAppointments / stats.todayAppointments) * 100)
@@ -505,7 +505,7 @@ export default function AdminDashboardV2() {
                     <Package className="w-5 h-5 text-red-500" />
                     <div>
                       <p className="font-semibold">Stock bas</p>
-                      <p className="text-sm text-gray-600">
+                      <p className="text-lg text-gray-600">
                         {stats.lowStockItems} articles nécessitent un réapprovisionnement
                       </p>
                     </div>
@@ -522,7 +522,7 @@ export default function AdminDashboardV2() {
                     <Clock className="w-5 h-5 text-yellow-500" />
                     <div>
                       <p className="font-semibold">Rendez-vous en attente</p>
-                      <p className="text-sm text-gray-600">
+                      <p className="text-lg text-gray-600">
                         {stats.pendingAppointments} rendez-vous nécessitent une confirmation
                       </p>
                     </div>

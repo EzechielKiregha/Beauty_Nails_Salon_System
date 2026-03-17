@@ -13,7 +13,7 @@ Comprehensive dark mode and mobile responsiveness has been successfully applied 
 - **Open Positions section**: Position cards with dark styling, requirement lists responsive
 - **Application form**: All inputs dark mode `dark:bg-gray-800 dark:border-gray-700`, labels `dark:text-gray-200`
 - **Sidebar**: Recruitment process cards and FAQ cards with dark styling
-- **Buttons**: Responsive sizing `py-5 sm:py-6 text-sm sm:text-base`
+- **Buttons**: Responsive sizing `py-5 sm:py-6 text-lg sm:text-base`
 
 ### ✅ 2. Terms.tsx (152 lines)
 **Status**: FULLY UPDATED
@@ -22,8 +22,8 @@ Comprehensive dark mode and mobile responsiveness has been successfully applied 
 - **All prose content**: 
   - h2 headers: `text-2xl sm:text-3xl text-gray-900 dark:text-gray-100`
   - h3 headers: `text-lg sm:text-xl text-gray-900 dark:text-gray-100`
-  - Paragraphs: `text-sm sm:text-base text-gray-700 dark:text-gray-300`
-  - Lists: `text-sm sm:text-base text-gray-700 dark:text-gray-300 space-y-1 sm:space-y-2`
+  - Paragraphs: `text-lg sm:text-base text-gray-700 dark:text-gray-300`
+  - Lists: `text-lg sm:text-base text-gray-700 dark:text-gray-300 space-y-1 sm:space-y-2`
 - **Card**: Dark styling `dark:bg-gray-950 dark:border-pink-900 dark:prose-invert`
 
 ### ✅ 3. PrivacyPolicy.tsx (109 lines)
@@ -42,12 +42,12 @@ Comprehensive dark mode and mobile responsiveness has been successfully applied 
 - **Header**: Responsive `py-16 sm:py-24`, badge dark mode
 - **Contact Info Cards**: Dark backgrounds `dark:bg-gray-950 dark:border-pink-900`, responsive spacing
   - Icon sizing: `w-5 h-5 sm:w-6 sm:h-6`
-  - Text sizing: `text-sm sm:text-base`
+  - Text sizing: `text-lg sm:text-base`
 - **Contact Form**: 
   - Card: `dark:bg-gray-950 dark:border-pink-900`
   - Inputs: `dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100`
   - Labels: `dark:text-gray-200`
-  - Button: Responsive `py-5 sm:py-6 text-sm sm:text-base`
+  - Button: Responsive `py-5 sm:py-6 text-lg sm:text-base`
 - **Sidebar Cards**:
   - WhatsApp: `dark:from-green-900/20 dark:to-emerald-900/20 dark:border-green-900`
   - Hours: Dark styling with responsive spacing
@@ -65,7 +65,7 @@ Comprehensive dark mode and mobile responsiveness has been successfully applied 
 - **Values Section**:
   - Cards: `dark:bg-gray-950 dark:border-pink-900`
   - Titles: `text-lg sm:text-xl dark:text-gray-100`
-  - Descriptions: `text-sm sm:text-base dark:text-gray-300`
+  - Descriptions: `text-lg sm:text-base dark:text-gray-300`
 - **Team Section**:
   - Team cards: Dark styling with responsive image sizing
   - Info text: Dark color variants, responsive badge spacing
@@ -84,7 +84,7 @@ Comprehensive dark mode and mobile responsiveness has been successfully applied 
   - Premium plan: Dark gradient backgrounds with dark borders
   - Responsive sizing: `p-6 sm:p-10`, `text-2xl sm:text-4xl`
   - Icon boxes: Dark styling `dark:bg-pink-600` and `dark:from-amber-600 dark:to-orange-600`
-  - Buttons: Responsive `py-4 sm:py-6 text-sm sm:text-lg`
+  - Buttons: Responsive `py-4 sm:py-6 text-lg sm:text-lg`
 - **Benefits Comparison Table**:
   - Header: Dark background `dark:from-gray-800 dark:to-gray-700`
   - Rows: Dark styling with alternate row colors `dark:bg-gray-800`
@@ -151,8 +151,8 @@ Regular shadows: Add dark:shadow-gray-900/50 or just dark:shadow-lg
 ```
 Headings: text-3xl sm:text-4xl lg:text-5xl
 Subheadings: text-lg sm:text-xl
-Body: text-sm sm:text-base
-Captions: text-xs sm:text-sm
+Body: text-lg sm:text-base
+Captions: text-xs sm:text-lg
 ```
 
 ### Spacing
@@ -174,7 +174,7 @@ Small: w-4 h-4 sm:w-5 sm:h-5
 ### Button Sizing
 ```
 Padding: py-4 sm:py-5 md:py-6, px-6 sm:px-8
-Text: text-xs sm:text-sm, text-sm sm:text-base, text-base sm:text-lg
+Text: text-xs sm:text-lg, text-lg sm:text-base, text-base sm:text-lg
 Width mobile: w-full sm:w-auto
 ```
 

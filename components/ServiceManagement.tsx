@@ -196,18 +196,18 @@ export default function ServiceManagement({ showMock }: { showMock?: boolean }) 
                             <div className="flex flex-wrap items-center gap-2 mb-3">
                               <p className="font-semibold text-gray-900 dark:text-gray-100">{service.name}</p>
                               {service.isPopular && (
-                                <Badge className="bg-amber-500 dark:bg-amber-600 text-white text-[10px] sm:text-xs">
+                                <Badge className="bg-amber-500 dark:bg-amber-600 text-white text-[10px] sm:text-sm">
                                   Populaire
                                 </Badge>
                               )}
                               {service.onlineBookable && (
-                                <Badge variant="outline" className="text-[10px] sm:text-xs dark:text-gray-300 dark:border-gray-700">
+                                <Badge variant="outline" className="text-[10px] sm:text-sm dark:text-gray-300 dark:border-gray-700">
                                   <Globe className="w-3 h-3 mr-1" />
                                   En ligne
                                 </Badge>
                               )}
                             </div>
-                            <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
+                            <div className="flex items-center gap-4 text-lg text-gray-600 dark:text-gray-400">
                               <span className="flex items-center gap-1 font-medium">
                                 <DollarSign className="w-4 h-4 text-green-500" />
                                 {service.price.toLocaleString()} CDF {/* Format price and add currency */}
@@ -233,38 +233,38 @@ export default function ServiceManagement({ showMock }: { showMock?: boolean }) 
                   <h3 className="text-xl  text-gray-900 dark:text-gray-100 mb-6">Détails du Service</h3>
                   <div className="space-y-5">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Nom du Service</label>
+                      <label className="block text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">Nom du Service</label>
                       <Input value={selectedService.name} readOnly className="rounded-xl bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 dark:text-gray-100 focus:ring-pink-500" />
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Catégorie</label>
+                      <label className="block text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">Catégorie</label>
                       <Input value={selectedService.category} readOnly className="rounded-xl bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 dark:text-gray-100" />
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Prix</label>
+                        <label className="block text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">Prix</label>
                         <Input value={`${selectedService.price.toLocaleString()} CDF`} readOnly className="rounded-xl bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 dark:text-gray-100" />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Durée (min)</label>
+                        <label className="block text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">Durée (min)</label>
                         <Input value={selectedService.duration} readOnly className="rounded-xl bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 dark:text-gray-100" />
                       </div>
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Description</label>
+                      <label className="block text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">Description</label>
                       <Textarea value={selectedService.description} readOnly rows={4} className="rounded-xl bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 dark:text-gray-100" />
                     </div>
 
                     <div className="space-y-3 pt-2">
                       <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700">
-                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Réservable en ligne</span>
+                        <span className="text-lg font-medium text-gray-700 dark:text-gray-300">Réservable en ligne</span>
                         <Switch checked={selectedService.onlineBookable} disabled className="data-[state=checked]:bg-pink-500" />
                       </div>
                       <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700">
-                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Service populaire</span>
+                        <span className="text-lg font-medium text-gray-700 dark:text-gray-300">Service populaire</span>
                         <Switch checked={selectedService.isPopular} disabled className="data-[state=checked]:bg-amber-500" />
                       </div>
                     </div>
@@ -276,9 +276,9 @@ export default function ServiceManagement({ showMock }: { showMock?: boolean }) 
                       {/* Add-Ons List */}
                       <div className="space-y-3">
                         {addOnsLoading ? (
-                          <p className="text-sm text-gray-500 dark:text-gray-400">Chargement des add-ons...</p>
+                          <p className="text-lg text-gray-500 dark:text-gray-400">Chargement des add-ons...</p>
                         ) : addOns.length === 0 ? (
-                          <p className="text-sm text-gray-500 dark:text-gray-400">Aucun add-on pour ce service</p>
+                          <p className="text-lg text-gray-500 dark:text-gray-400">Aucun add-on pour ce service</p>
                         ) : (
                           addOns.map((addOn) => (
                             <div
@@ -287,7 +287,7 @@ export default function ServiceManagement({ showMock }: { showMock?: boolean }) 
                             >
                               <div className="flex-1">
                                 <div className="font-medium text-gray-900 dark:text-gray-100">{addOn.name}</div>
-                                <div className="text-sm text-gray-600 dark:text-gray-400">
+                                <div className="text-lg text-gray-600 dark:text-gray-400">
                                   {addOn.price.toLocaleString()} CDF • {addOn.duration} min
                                 </div>
                               </div>
@@ -306,7 +306,7 @@ export default function ServiceManagement({ showMock }: { showMock?: boolean }) 
                       </div>
                       {/* Add New Add-On Form */}
                       <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700">
-                        <h5 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Ajouter un nouvel add-on</h5>
+                        <h5 className="text-lg font-medium text-gray-700 dark:text-gray-300 mb-3">Ajouter un nouvel add-on</h5>
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                           <Input
                             placeholder="Nom"
@@ -448,15 +448,15 @@ export default function ServiceManagement({ showMock }: { showMock?: boolean }) 
                     </div>
 
                     <h3 className="text-xl  text-gray-900 dark:text-gray-100 mb-2">{pkg.name}</h3>
-                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-6 flex items-center gap-2">
+                    <p className="text-lg text-gray-600 dark:text-gray-400 mb-6 flex items-center gap-2">
                       <Clock className="w-4 h-4 text-pink-400" />
                       Durée de validité: {pkg.updatedAt} {/* Using updatedAt as placeholder for validity period if no specific field exists */}
                     </p>
 
                     <div className="space-y-3 mb-8 bg-gray-50 dark:bg-gray-800/50 p-4 rounded-xl border border-gray-100 dark:border-gray-700">
-                      <p className="text-xs  text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Services inclus</p>
+                      <p className="text-sm  text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Services inclus</p>
                       {(pkg.services || []).map((service, idx) => (
-                        <div key={idx} className="flex items-center gap-3 text-sm text-gray-700 dark:text-gray-300">
+                        <div key={idx} className="flex items-center gap-3 text-lg text-gray-700 dark:text-gray-300">
                           <Sparkles className="w-4 h-4 text-pink-500 shrink-0" />
                           <span>{service.name} ({service.price.toLocaleString()} CDF)</span>
                         </div>
@@ -465,7 +465,7 @@ export default function ServiceManagement({ showMock }: { showMock?: boolean }) 
 
                     <div className="bg-linear-to-r from-green-50 to-emerald-50 dark:from-green-900/10 dark:to-emerald-900/10 p-5 rounded-2xl border border-green-100 dark:border-green-900/30 mb-6">
                       <div className="flex justify-between items-center mb-2">
-                        <span className="text-sm text-gray-500 dark:text-gray-400 line-through font-medium">{regularPriceFromServices > 0 ? regularPriceFromServices.toLocaleString() : 'N/A'} CDF</span>
+                        <span className="text-lg text-gray-500 dark:text-gray-400 line-through font-medium">{regularPriceFromServices > 0 ? regularPriceFromServices.toLocaleString() : 'N/A'} CDF</span>
                         <span className="text-2xl  text-green-600 dark:text-green-400">{pkg.price.toLocaleString()} CDF</span>
                       </div>
                       <Badge className="bg-green-500 dark:bg-green-600 text-white border-0 w-full justify-center py-1.5">
@@ -527,17 +527,17 @@ export default function ServiceManagement({ showMock }: { showMock?: boolean }) 
                           {promo.isActive ? 'Actif' : 'Inactif'}
                         </Badge>
                       </div>
-                      <p className="text-sm text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-950 inline-block px-3 py-1 rounded-lg border border-amber-100 dark:border-amber-900/30">Code: <strong className="text-amber-600 dark:text-amber-400">{promo.code}</strong></p>
+                      <p className="text-lg text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-950 inline-block px-3 py-1 rounded-lg border border-amber-100 dark:border-amber-900/30">Code: <strong className="text-amber-600 dark:text-amber-400">{promo.code}</strong></p>
                     </div>
                     <div className="text-right">
                       <p className="text-3xl font-black text-amber-600 dark:text-amber-400">{promo.value}</p>
-                      <p className="text-[10px] sm:text-xs  text-gray-500 dark:text-gray-400 uppercase tracking-widest">
+                      <p className="text-[10px] sm:text-sm  text-gray-500 dark:text-gray-400 uppercase tracking-widest">
                         {promo.type === 'percentage' ? 'Réduction %' : 'Réduction Fixe'}
                       </p>
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-3 gap-4 text-sm mb-6">
+                  <div className="grid grid-cols-3 gap-4 text-lg mb-6">
                     <div className="p-3 bg-white dark:bg-gray-950 rounded-xl border border-amber-100 dark:border-amber-900/20 text-center">
                       <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase  mb-1">Début</p>
                       <p className="text-gray-900 dark:text-gray-100 font-semibold">{new Date(promo.startDate).toLocaleDateString()}</p>
@@ -585,7 +585,7 @@ export default function ServiceManagement({ showMock }: { showMock?: boolean }) 
               </div>
               <div>
                 <h3 className="text-xl sm:text-2xl  text-gray-900 dark:text-gray-100">Paramètres Réservation en Ligne</h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Configurez les services disponibles pour la réservation en ligne</p>
+                <p className="text-lg text-gray-600 dark:text-gray-400">Configurez les services disponibles pour la réservation en ligne</p>
               </div>
             </div>
 
@@ -594,7 +594,7 @@ export default function ServiceManagement({ showMock }: { showMock?: boolean }) 
                 <div key={service.id} className="flex items-center justify-between p-4 sm:p-5 bg-gray-50 dark:bg-gray-800/50 rounded-2xl border border-gray-100 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-900/50 transition-all">
                   <div>
                     <p className=" text-gray-900 dark:text-gray-100">{service.name}</p>
-                    <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-1">{service.category} • {service.duration} min • {service.price.toLocaleString()} CDF</p>
+                    <p className="text-sm sm:text-lg text-gray-600 dark:text-gray-400 mt-1">{service.category} • {service.duration} min • {service.price.toLocaleString()} CDF</p>
                   </div>
                   <Switch checked={service.onlineBookable} disabled className="data-[state=checked]:bg-blue-500" /> {/* Disabled for display only */}
                 </div>
@@ -608,19 +608,19 @@ export default function ServiceManagement({ showMock }: { showMock?: boolean }) 
               </h4>
               <div className="space-y-4">
                 <div className="flex items-center justify-between p-4 bg-white/50 dark:bg-gray-900/50 rounded-xl backdrop-blur-sm">
-                  <span className="text-sm font-medium text-gray-700 dark:text-gray-200">Demander confirmation avant acceptation</span>
+                  <span className="text-lg font-medium text-gray-700 dark:text-gray-200">Demander confirmation avant acceptation</span>
                   <Switch defaultChecked={true} className="data-[state=checked]:bg-blue-500" />
                 </div>
                 <div className="flex items-center justify-between p-4 bg-white/50 dark:bg-gray-900/50 rounded-xl backdrop-blur-sm">
-                  <span className="text-sm font-medium text-gray-700 dark:text-gray-200">Envoyer rappel automatique 24h avant</span>
+                  <span className="text-lg font-medium text-gray-700 dark:text-gray-200">Envoyer rappel automatique 24h avant</span>
                   <Switch defaultChecked={true} className="data-[state=checked]:bg-blue-500" />
                 </div>
                 <div className="flex items-center justify-between p-4 bg-white/50 dark:bg-gray-900/50 rounded-xl backdrop-blur-sm">
-                  <span className="text-sm font-medium text-gray-700 dark:text-gray-200">Permettre annulation en ligne</span>
+                  <span className="text-lg font-medium text-gray-700 dark:text-gray-200">Permettre annulation en ligne</span>
                   <Switch defaultChecked={true} className="data-[state=checked]:bg-blue-500" />
                 </div>
                 <div className="flex items-center justify-between p-4 bg-white/50 dark:bg-gray-900/50 rounded-xl backdrop-blur-sm">
-                  <span className="text-sm font-medium text-gray-700 dark:text-gray-200">Afficher disponibilité en temps réel</span>
+                  <span className="text-lg font-medium text-gray-700 dark:text-gray-200">Afficher disponibilité en temps réel</span>
                   <Switch defaultChecked={true} className="data-[state=checked]:bg-blue-500" />
                 </div>
               </div>

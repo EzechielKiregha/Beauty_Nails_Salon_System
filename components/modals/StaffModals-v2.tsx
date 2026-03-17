@@ -254,11 +254,11 @@ export function StaffModal({ staffId, trigger }: StaffModalProps) {
                   </Avatar>
                   <div className="flex-1">
                     <h3 className="font-medium text-lg">{workerData.user?.name}</h3>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">{workerData.user?.email}</p>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">{workerData.user?.phone}</p>
+                    <p className="text-lg text-gray-500 dark:text-gray-400">{workerData.user?.email}</p>
+                    <p className="text-lg text-gray-500 dark:text-gray-400">{workerData.user?.phone}</p>
                     <div className="flex items-center gap-1 mt-1">
                       <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                      <span className="text-sm">{workerData.rating.toFixed(1)} ({workerData.totalReviews} avis)</span>
+                      <span className="text-lg">{workerData.rating.toFixed(1)} ({workerData.totalReviews} avis)</span>
                     </div>
                   </div>
                 </div>
@@ -370,7 +370,7 @@ export function StaffModal({ staffId, trigger }: StaffModalProps) {
               <div className="space-y-6">
                 <Card className="bg-muted p-4">
                   <h3 className="font-medium mb-2">Résumé Actuel</h3>
-                  <div className="space-y-1 text-sm">
+                  <div className="space-y-1 text-lg">
                     <div className="flex justify-between">
                       <span>Taux de base:</span>
                       <span>{workerData.commissionRate}%</span>
@@ -437,7 +437,7 @@ export function StaffModal({ staffId, trigger }: StaffModalProps) {
                       value={formData.commissionDay}
                       onChange={(e) => handleInputChange('commissionDay', parseInt(e.target.value) || 1)}
                     />
-                    <p className="text-xs text-gray-500 mt-1">Appliqué selon la fréquence sélectionnée.</p>
+                    <p className="text-sm text-gray-500 mt-1">Appliqué selon la fréquence sélectionnée.</p>
                   </div>
                 </div>
 
@@ -481,7 +481,7 @@ export function StaffModal({ staffId, trigger }: StaffModalProps) {
                         <FileText className="h-8 w-8 text-blue-500" />
                         <div>
                           <h3 className="font-medium">Rapport de Commission</h3>
-                          <p className="text-sm text-muted-foreground">Détail des commissions gagnées</p>
+                          <p className="text-lg text-muted-foreground">Détail des commissions gagnées</p>
                         </div>
                       </div>
                       <Button onClick={() => handleDownload('commission-report', 'current')}>
@@ -499,7 +499,7 @@ export function StaffModal({ staffId, trigger }: StaffModalProps) {
                         <FileText className="h-8 w-8 text-green-500" />
                         <div>
                           <h3 className="font-medium">Historique des Paiements</h3>
-                          <p className="text-sm text-muted-foreground">Historique des paiements reçus</p>
+                          <p className="text-lg text-muted-foreground">Historique des paiements reçus</p>
                         </div>
                       </div>
                       <Button onClick={() => handleDownload('payment-history')}>
@@ -517,7 +517,7 @@ export function StaffModal({ staffId, trigger }: StaffModalProps) {
                         <FileText className="h-8 w-8 text-purple-500" />
                         <div>
                           <h3 className="font-medium">Relevé de Gains</h3>
-                          <p className="text-sm text-muted-foreground">Synthèse des gains mensuels</p>
+                          <p className="text-lg text-muted-foreground">Synthèse des gains mensuels</p>
                         </div>
                       </div>
                       <Button onClick={() => handleDownload('earnings-statement', 'current')}>

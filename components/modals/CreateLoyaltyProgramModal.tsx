@@ -109,13 +109,13 @@ export function CreateLoyaltyProgramModal({ trigger }: { trigger: React.ReactNod
                       type="number"
                       value={reward.points}
                       onChange={(e) => handleRewardChange(index, 'points', parseInt(e.target.value) || 0)}
-                      className="text-sm"
+                      className="text-lg"
                     />
                     <Input
                       placeholder="Description récompense"
                       value={reward.reward}
                       onChange={(e) => handleRewardChange(index, 'reward', e.target.value)}
-                      className="text-sm"
+                      className="text-lg"
                     />
                   </div>
                   <Button

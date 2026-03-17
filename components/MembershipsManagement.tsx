@@ -319,15 +319,15 @@ export default function MembershipsManagement() {
               </div>
 
               <div className="space-y-3 mb-4">
-                <div className="flex justify-between text-sm">
+                <div className="flex justify-between text-lg">
                   <span className="text-gray-600 dark:text-gray-400">Prix:</span>
                   <span className="font-medium">{membership.price.toLocaleString()} CDF</span>
                 </div>
-                <div className="flex justify-between text-sm">
+                <div className="flex justify-between text-lg">
                   <span className="text-gray-600 dark:text-gray-400">Durée:</span>
                   <span className="font-medium">{membership.duration} jours</span>
                 </div>
-                <div className="flex justify-between text-sm">
+                <div className="flex justify-between text-lg">
                   <span className="text-gray-600 dark:text-gray-400">Remise:</span>
                   <span className="font-medium">{membership.discount}%</span>
                 </div>

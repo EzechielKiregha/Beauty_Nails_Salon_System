@@ -110,15 +110,15 @@ export default function About() {
             <div className="grid grid-cols-3 gap-4 sm:gap-6">
               <div className="text-center">
                 <div className="text-3xl sm:text-4xl text-pink-600 dark:text-pink-400 mb-2">5+</div>
-                <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Années d'expérience</div>
+                <div className="text-sm sm:text-lg text-gray-600 dark:text-gray-400">Années d'expérience</div>
               </div>
               <div className="text-center">
                 <div className="text-3xl sm:text-4xl text-pink-600 dark:text-pink-400 mb-2">2000+</div>
-                <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Clientes heureuses</div>
+                <div className="text-sm sm:text-lg text-gray-600 dark:text-gray-400">Clientes heureuses</div>
               </div>
               <div className="text-center">
                 <div className="text-3xl sm:text-4xl text-pink-600 dark:text-pink-400 mb-2">4.9</div>
-                <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Note moyenne</div>
+                <div className="text-sm sm:text-lg text-gray-600 dark:text-gray-400">Note moyenne</div>
               </div>
             </div>
           </div>
@@ -152,7 +152,7 @@ export default function About() {
                   {value.icon}
                 </div>
                 <h3 className="text-lg sm:text-xl text-gray-900 dark:text-gray-100 mb-2 sm:mb-3">{value.title}</h3>
-                <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300">{value.description}</p>
+                <p className="text-lg sm:text-base text-gray-600 dark:text-gray-300">{value.description}</p>
               </Card>
             ))}
           </div>
@@ -182,18 +182,18 @@ export default function About() {
                   <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent dark:from-black/80" />
                   <div className="absolute bottom-3 sm:bottom-4 left-4 right-4 text-white">
                     <h3 className="text-lg sm:text-xl mb-1">{member.name}</h3>
-                    <p className="text-xs sm:text-sm text-pink-200">{member.role}</p>
+                    <p className="text-sm sm:text-lg text-pink-200">{member.role}</p>
                   </div>
                 </div>
                 <div className="p-4 sm:p-6">
                   <div className="flex items-center gap-2 mb-3 sm:mb-4">
                     <Award className="w-4 h-4 text-amber-500" />
-                    <span className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">{member.experience} d'expérience</span>
+                    <span className="text-sm sm:text-lg text-gray-600 dark:text-gray-400">{member.experience} d'expérience</span>
                   </div>
                   <div className="space-y-2">
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">Spécialités :</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">Spécialités :</p>
                     {member.specialties.map((specialty, i) => (
-                      <Badge key={i} variant="outline" className="mr-2 text-xs dark:border-gray-700 dark:text-gray-300">
+                      <Badge key={i} variant="outline" className="mr-2 text-sm dark:border-gray-700 dark:text-gray-300">
                         {specialty}
                       </Badge>
                     ))}
@@ -204,7 +204,7 @@ export default function About() {
                         <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
                       ))}
                     </div>
-                    <span className="ml-2 text-xs sm:text-sm text-gray-600 dark:text-gray-400">4.9/5</span>
+                    <span className="ml-2 text-sm sm:text-lg text-gray-600 dark:text-gray-400">4.9/5</span>
                   </div>
                 </div>
               </Card>
@@ -222,33 +222,33 @@ export default function About() {
               <div className="space-y-3 sm:space-y-4">
                 <div className="flex items-start">
                   <div className="w-6 h-6 rounded-full bg-pink-500 dark:bg-pink-600 flex items-center justify-center flex-shrink-0 mt-1">
-                    <span className="text-white text-xs">✓</span>
+                    <span className="text-white text-sm">✓</span>
                   </div>
-                  <p className="ml-3 text-sm sm:text-base text-gray-700 dark:text-gray-300">
+                  <p className="ml-3 text-lg sm:text-base text-gray-700 dark:text-gray-300">
                     <strong>Hygiène irréprochable :</strong> Stérilisation complète du matériel après chaque utilisation
                   </p>
                 </div>
                 <div className="flex items-start">
                   <div className="w-6 h-6 rounded-full bg-pink-500 dark:bg-pink-600 flex items-center justify-center flex-shrink-0 mt-1">
-                    <span className="text-white text-xs">✓</span>
+                    <span className="text-white text-sm">✓</span>
                   </div>
-                  <p className="ml-3 text-sm sm:text-base text-gray-700 dark:text-gray-300">
+                  <p className="ml-3 text-lg sm:text-base text-gray-700 dark:text-gray-300">
                     <strong>Produits de qualité :</strong> Nous utilisons uniquement des marques reconnues et testées
                   </p>
                 </div>
                 <div className="flex items-start">
                   <div className="w-6 h-6 rounded-full bg-pink-500 dark:bg-pink-600 flex items-center justify-center flex-shrink-0 mt-1">
-                    <span className="text-white text-xs">✓</span>
+                    <span className="text-white text-sm">✓</span>
                   </div>
-                  <p className="ml-3 text-sm sm:text-base text-gray-700 dark:text-gray-300">
+                  <p className="ml-3 text-lg sm:text-base text-gray-700 dark:text-gray-300">
                     <strong>Formation continue :</strong> Notre équipe se forme régulièrement aux nouvelles techniques
                   </p>
                 </div>
                 <div className="flex items-start">
                   <div className="w-6 h-6 rounded-full bg-pink-500 dark:bg-pink-600 flex items-center justify-center flex-shrink-0 mt-1">
-                    <span className="text-white text-xs">✓</span>
+                    <span className="text-white text-sm">✓</span>
                   </div>
-                  <p className="ml-3 text-sm sm:text-base text-gray-700 dark:text-gray-300">
+                  <p className="ml-3 text-lg sm:text-base text-gray-700 dark:text-gray-300">
                     <strong>Satisfaction garantie :</strong> Votre bonheur est notre priorité absolue
                   </p>
                 </div>
@@ -258,19 +258,19 @@ export default function About() {
             <div className="grid grid-cols-2 gap-4 sm:gap-6">
               <Card className="bg-white dark:bg-gray-700 border-b border-pink-100 dark:border-pink-900 shadow-lg p-4 sm:p-6 rounded-2xl text-center">
                 <div className="text-3xl sm:text-4xl text-pink-500 dark:text-pink-400 mb-2">100%</div>
-                <p className="text-xs sm:text-sm text-gray-700 dark:text-gray-300">Produits premium</p>
+                <p className="text-sm sm:text-lg text-gray-700 dark:text-gray-300">Produits premium</p>
               </Card>
               <Card className="bg-white dark:bg-gray-700 border-b border-pink-100 dark:border-pink-900 shadow-lg p-4 sm:p-6 rounded-2xl text-center">
                 <div className="text-3xl sm:text-4xl text-purple-500 dark:text-purple-400 mb-2">247</div>
-                <p className="text-xs sm:text-sm text-gray-700 dark:text-gray-300">Avis 5 étoiles</p>
+                <p className="text-sm sm:text-lg text-gray-700 dark:text-gray-300">Avis 5 étoiles</p>
               </Card>
               <Card className="bg-white dark:bg-gray-700 border-b border-pink-100 dark:border-pink-900 shadow-lg p-4 sm:p-6 rounded-2xl text-center">
                 <div className="text-3xl sm:text-4xl text-amber-500 dark:text-amber-400 mb-2">98%</div>
-                <p className="text-xs sm:text-sm text-gray-700 dark:text-gray-300">Clientes fidèles</p>
+                <p className="text-sm sm:text-lg text-gray-700 dark:text-gray-300">Clientes fidèles</p>
               </Card>
               <Card className="bg-white dark:bg-gray-700 border-b border-pink-100 dark:border-pink-900 shadow-lg p-4 sm:p-6 rounded-2xl text-center">
                 <div className="text-3xl sm:text-4xl text-green-500 dark:text-green-400 mb-2">24/7</div>
-                <p className="text-xs sm:text-sm text-gray-700 dark:text-gray-300">Support client</p>
+                <p className="text-sm sm:text-lg text-gray-700 dark:text-gray-300">Support client</p>
               </Card>
             </div>
           </div>
@@ -283,12 +283,12 @@ export default function About() {
           </h2>
           <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center">
             <Link href="/appointments">
-              <Button size="lg" className="bg-linear-to-r from-pink-500 to-amber-400 hover:from-pink-600 hover:to-amber-500 text-white rounded-full px-6 sm:px-8 py-5 sm:py-6 text-sm sm:text-base w-full sm:w-auto">
+              <Button size="lg" className="bg-linear-to-r from-pink-500 to-amber-400 hover:from-pink-600 hover:to-amber-500 text-white rounded-full px-6 sm:px-8 py-5 sm:py-6 text-lg sm:text-base w-full sm:w-auto">
                 Réserver un rendez-vous
               </Button>
             </Link>
             <Link href="/contact">
-              <Button size="lg" variant="outline" className="border-pink-200 dark:border-pink-900 text-pink-600 dark:text-pink-400 hover:bg-pink-50 dark:hover:bg-gray-800 rounded-full px-6 sm:px-8 py-5 sm:py-6 text-sm sm:text-base w-full sm:w-auto">
+              <Button size="lg" variant="outline" className="border-pink-200 dark:border-pink-900 text-pink-600 dark:text-pink-400 hover:bg-pink-50 dark:hover:bg-gray-800 rounded-full px-6 sm:px-8 py-5 sm:py-6 text-lg sm:text-base w-full sm:w-auto">
                 Nous contacter
               </Button>
             </Link>

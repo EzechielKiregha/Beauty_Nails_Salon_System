@@ -87,14 +87,14 @@ export function AddProductModal({ trigger }: AddProductModalProps) {
             <div className="flex justify-center mb-4">
               <div className="w-40 h-40 sm:w-48 sm:h-48 bg-gray-100 rounded-xl border-2 border-dashed border-gray-300 flex flex-col items-center justify-center cursor-pointer hover:bg-gray-50 hover:border-pink-300 transition-colors">
                 <ImageIcon className="w-10 h-10 sm:w-12 sm:h-12 text-gray-400" />
-                <span className="text-sm sm:text-base text-gray-500 mt-2">Ajouter Photo</span>
+                <span className="text-lg sm:text-base text-gray-500 mt-2">Ajouter Photo</span>
               </div>
             </div>
 
             {/* Mobile-First Form Layout */}
             <div className="grid grid-cols-1 gap-4">
               <div className="space-y-2">
-                <Label className="text-sm sm:text-base">Nom du produit</Label>
+                <Label className="text-lg sm:text-base">Nom du produit</Label>
                 <Input
                   placeholder="Ex: Vernis Gel OPI Rouge"
                   value={name}
@@ -104,7 +104,7 @@ export function AddProductModal({ trigger }: AddProductModalProps) {
               </div>
 
               <div className="space-y-2">
-                <Label className="text-sm sm:text-base">Code-barres (SKU)</Label>
+                <Label className="text-lg sm:text-base">Code-barres (SKU)</Label>
                 <div className="relative">
                   <Input
                     placeholder="SCAN-12345"
@@ -119,7 +119,7 @@ export function AddProductModal({ trigger }: AddProductModalProps) {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label className="text-sm sm:text-base">Catégorie</Label>
+                <Label className="text-lg sm:text-base">Catégorie</Label>
                 <Select value={category} onValueChange={setCategory}>
                   <SelectTrigger className="h-12">
                     <SelectValue placeholder="Sélectionner" />
@@ -135,7 +135,7 @@ export function AddProductModal({ trigger }: AddProductModalProps) {
               </div>
 
               <div className="space-y-2">
-                <Label className="text-sm sm:text-base">Unité</Label>
+                <Label className="text-lg sm:text-base">Unité</Label>
                 <Select value={unit} onValueChange={setUnit}>
                   <SelectTrigger className="h-12">
                     <SelectValue placeholder="Sélectionner" />
@@ -152,7 +152,7 @@ export function AddProductModal({ trigger }: AddProductModalProps) {
             </div>
 
             <div className="space-y-2">
-              <Label className="text-sm sm:text-base">Coût d'achat</Label>
+              <Label className="text-lg sm:text-base">Coût d'achat</Label>
               <div className="relative">
                 <Input
                   type="number"
@@ -161,12 +161,12 @@ export function AddProductModal({ trigger }: AddProductModalProps) {
                   onChange={(e) => setCost(e.target.value === '' ? '' : Number(e.target.value))}
                   className="pl-10 h-12 text-base"
                 />
-                <span className="absolute left-3 top-3.5 text-sm text-gray-500">CDF</span>
+                <span className="absolute left-3 top-3.5 text-lg text-gray-500">CDF</span>
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label className="text-sm sm:text-base">Description</Label>
+              <Label className="text-lg sm:text-base">Description</Label>
               <Textarea
                 placeholder="Détails, usage, contenance..."
                 value={description}
@@ -179,14 +179,14 @@ export function AddProductModal({ trigger }: AddProductModalProps) {
           <TabsContent value="inventory" className="space-y-4 pt-4">
             <div className="bg-orange-50 p-3 rounded-lg border border-orange-100 flex items-start gap-3">
               <AlertTriangle className="w-5 h-5 text-orange-500 mt-0.5 flex-shrink-0" />
-              <div className="text-sm text-orange-800">
+              <div className="text-lg text-orange-800">
                 Définissez le seuil d'alerte pour recevoir des notifications automatiques lorsque le stock est bas.
               </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label className="text-sm sm:text-base">Stock Initial</Label>
+                <Label className="text-lg sm:text-base">Stock Initial</Label>
                 <Input
                   type="number"
                   placeholder="0"
@@ -197,7 +197,7 @@ export function AddProductModal({ trigger }: AddProductModalProps) {
               </div>
 
               <div className="space-y-2">
-                <Label className="text-sm sm:text-base">Seuil d'alerte (Min)</Label>
+                <Label className="text-lg sm:text-base">Seuil d'alerte (Min)</Label>
                 <Input
                   type="number"
                   placeholder="10"
@@ -210,7 +210,7 @@ export function AddProductModal({ trigger }: AddProductModalProps) {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label className="text-sm sm:text-base">Stock Maximum</Label>
+                <Label className="text-lg sm:text-base">Stock Maximum</Label>
                 <Input
                   type="number"
                   placeholder="100"
@@ -221,7 +221,7 @@ export function AddProductModal({ trigger }: AddProductModalProps) {
               </div>
 
               <div className="space-y-2">
-                <Label className="text-sm sm:text-base">Fournisseur</Label>
+                <Label className="text-lg sm:text-base">Fournisseur</Label>
                 <Input
                   placeholder="Ex: Beauty Supplies DRC"
                   value={supplier}
@@ -300,14 +300,14 @@ export function AdjustStockModal({ productName, currentStock, trigger }: AdjustS
           <DialogTitle className="text-lg sm:text-xl font-bold text-gray-900">
             Ajustement de Stock
           </DialogTitle>
-          <p className="text-sm text-gray-500 mt-1">
+          <p className="text-lg text-gray-500 mt-1">
             {productName || 'Produit'} • Stock actuel: {currentStock || 0}
           </p>
         </DialogHeader>
 
         <div className="space-y-4">
           <div className="space-y-2">
-            <Label className="text-sm sm:text-base">Type d'ajustement</Label>
+            <Label className="text-lg sm:text-base">Type d'ajustement</Label>
             <Select value={reason} onValueChange={setReason}>
               <SelectTrigger className="h-12">
                 <SelectValue />
@@ -324,7 +324,7 @@ export function AdjustStockModal({ productName, currentStock, trigger }: AdjustS
           </div>
 
           <div className="space-y-2">
-            <Label className="text-sm sm:text-base">
+            <Label className="text-lg sm:text-base">
               Quantité à {['damage', 'usage', 'correction_neg'].includes(reason) ? 'retirer' : 'ajouter'}
             </Label>
             <Input
@@ -340,7 +340,7 @@ export function AdjustStockModal({ productName, currentStock, trigger }: AdjustS
           </div>
 
           <div className="space-y-2">
-            <Label className="text-sm sm:text-base">Note / Référence</Label>
+            <Label className="text-lg sm:text-base">Note / Référence</Label>
             <Textarea
               placeholder="Numéro de BL ou explication..."
               className="h-24 resize-none text-base"
@@ -413,14 +413,14 @@ export function OrderModal({ productName, supplierName, trigger }: OrderModalPro
           <DialogTitle className="text-lg sm:text-xl font-bold text-gray-900">
             Nouvelle Commande Fournisseur
           </DialogTitle>
-          <p className="text-sm text-gray-500 mt-1">
+          <p className="text-lg text-gray-500 mt-1">
             {supplierName || 'Fournisseur'} • Fournisseur Principal
           </p>
         </DialogHeader>
 
         <div className="space-y-4">
           <div className="space-y-2">
-            <Label className="text-sm sm:text-base">Produit à commander</Label>
+            <Label className="text-lg sm:text-base">Produit à commander</Label>
             <Input
               defaultValue={productName}
               placeholder="Nom du produit"
@@ -431,7 +431,7 @@ export function OrderModal({ productName, supplierName, trigger }: OrderModalPro
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label className="text-sm sm:text-base">Quantité</Label>
+              <Label className="text-lg sm:text-base">Quantité</Label>
               <Input
                 type="number"
                 min="1"
@@ -442,7 +442,7 @@ export function OrderModal({ productName, supplierName, trigger }: OrderModalPro
             </div>
 
             <div className="space-y-2">
-              <Label className="text-sm sm:text-base">Prix Unitaire Est.</Label>
+              <Label className="text-lg sm:text-base">Prix Unitaire Est.</Label>
               <div className="relative">
                 <Input
                   type="number"
@@ -451,13 +451,13 @@ export function OrderModal({ productName, supplierName, trigger }: OrderModalPro
                   onChange={(e) => setUnitPrice(e.target.value === '' ? '' : Number(e.target.value))}
                   className="pr-10 h-12 text-base"
                 />
-                <span className="absolute right-3 top-3 text-xs sm:text-sm text-gray-500">CDF</span>
+                <span className="absolute right-3 top-3 text-sm sm:text-lg text-gray-500">CDF</span>
               </div>
             </div>
           </div>
 
           <div className="flex justify-between items-center bg-gray-900 text-white p-3 rounded-lg">
-            <span className="text-sm sm:text-base">Total Estimé</span>
+            <span className="text-lg sm:text-base">Total Estimé</span>
             <span className="text-lg sm:text-xl font-bold">{total.toLocaleString()} CDF</span>
           </div>
         </div>

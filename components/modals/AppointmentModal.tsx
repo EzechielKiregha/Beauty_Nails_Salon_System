@@ -551,7 +551,7 @@ export function AppointmentModal({ open, onOpenChange, appointment, trigger, cli
                         disabled={!isAvailable}
                         onClick={() => setSelectedTime(slot.time)}
                         className={cn(
-                          "px-2 py-2 rounded-xl border transition-all text-sm",
+                          "px-2 py-2 rounded-xl border transition-all text-lg",
                           selectedTime === slot.time
                             ? "border-pink-500 bg-pink-50 text-pink-600"
                             : isAvailable
@@ -570,7 +570,7 @@ export function AppointmentModal({ open, onOpenChange, appointment, trigger, cli
                         <button
                           key={time}
                           onClick={() => setSelectedTime(time)}
-                          className={`px-1 sm:px-2 py-2 rounded-xl border transition-all text-sm sm:text-base ${selectedTime === time
+                          className={`px-1 sm:px-2 py-2 rounded-xl border transition-all text-lg sm:text-base ${selectedTime === time
                             ? "border-pink-500 bg-pink-50 dark:bg-pink-900 text-pink-600 dark:text-pink-200"
                             : "border-gray-200 dark:border-gray-700 hover:border-pink-300 dark:hover:border-pink-600 text-gray-700 dark:text-gray-300"
                             }`}
@@ -601,7 +601,7 @@ export function AppointmentModal({ open, onOpenChange, appointment, trigger, cli
                         <p className="text-gray-900 dark:text-gray-100 font-medium">
                           Au salon
                         </p>
-                        <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
+                        <p className="text-sm sm:text-lg text-gray-500 dark:text-gray-400">
                           Q. HIMBI, C. de Goma, Ville de Goma
                         </p>
                       </div>
@@ -619,7 +619,7 @@ export function AppointmentModal({ open, onOpenChange, appointment, trigger, cli
                         <p className="text-gray-900 dark:text-gray-100 font-medium">
                           À domicile
                         </p>
-                        <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
+                        <p className="text-sm sm:text-lg text-gray-500 dark:text-gray-400">
                           +20 000 Fc - Dans la zone de Goma
                         </p>
                       </div>
@@ -655,7 +655,7 @@ export function AppointmentModal({ open, onOpenChange, appointment, trigger, cli
                       onChange={(e) => setDiscountCode(e.target.value)}
                     />
                   </div>
-                  <Card className="p-4 space-y-2 text-sm">
+                  <Card className="p-4 space-y-2 text-lg">
                     <div className="flex justify-between">
                       <span>Sous-total</span>
                       <span>{subtotal.toLocaleString()} Fc</span>
@@ -726,15 +726,15 @@ export function AppointmentModal({ open, onOpenChange, appointment, trigger, cli
                     <div className="grid grid-cols-3 gap-2">
                       <Button type="button" onClick={() => setPaymentMethod("cash")} variant="outline" className={`flex flex-col gap-1 h-auto py-3 border ${paymentMethod === "cash" ? " border-green-500 dark:border-green-500 bg-green-50" : " border-green-200 bg-green-50"}`}>
                         <Banknote className="w-5 h-5 text-green-600" />
-                        <span className="text-xs">Espèces</span>
+                        <span className="text-sm">Espèces</span>
                       </Button>
                       <Button type="button" onClick={() => setPaymentMethod("mobile")} variant="outline" className={`flex flex-col gap-1 h-auto py-3 border ${paymentMethod === "mobile" ? " border-pink-500 dark:border-pink-500 bg-pink-50" : " border-pink-200 bg-pink-50"}`}>
                         <CreditCard className="w-5 h-5 text-pink-600" />
-                        <span className="text-xs">Mobile Money</span>
+                        <span className="text-sm">Mobile Money</span>
                       </Button>
                       <Button type="button" onClick={() => setPaymentMethod("card")} variant="outline" className={`flex flex-col gap-1 h-auto py-3 border ${paymentMethod === "card" ? " border-blue-500 dark:border-blue-500 bg-blue-50" : " border-blue-200 bg-blue-50"}`}>
                         <CreditCard className="w-5 h-5 text-blue-600" />
-                        <span className="text-xs">Carte</span>
+                        <span className="text-sm">Carte</span>
                       </Button>
                     </div>
                   </div>

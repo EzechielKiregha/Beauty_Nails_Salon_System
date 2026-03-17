@@ -40,7 +40,7 @@ const AddOnModal = ({
         <div className="sticky top-0 z-10 flex items-center justify-between p-6 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
           <div>
             <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">{service.name}</h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400">{service.description}</p>
+            <p className="text-lg text-gray-600 dark:text-gray-400">{service.description}</p>
           </div>
           <button
             onClick={onClose}
@@ -53,7 +53,7 @@ const AddOnModal = ({
         {/* Service Info */}
         <div className="p-6 border-b border-gray-200 dark:border-gray-700">
           <div className="flex justify-between items-center mb-4">
-            <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
+            <div className="flex items-center gap-4 text-lg text-gray-600 dark:text-gray-400">
               <span className="flex items-center gap-1">
                 <Clock className="w-4 h-4 text-blue-500" />
                 {service.duration} min
@@ -95,7 +95,7 @@ const AddOnModal = ({
                 >
                   <div className="flex-1">
                     <div className="font-medium text-gray-900 dark:text-gray-100">{addOn.name}</div>
-                    <div className="text-sm text-gray-600 dark:text-gray-400">
+                    <div className="text-lg text-gray-600 dark:text-gray-400">
                       +{addOn.price.toLocaleString()} CDF • +{addOn.duration} min
                     </div>
                   </div>
@@ -226,14 +226,14 @@ export default function CatalogPage() {
                         <div className="flex justify-between items-start mb-4">
                           <div>
                             <h4 className="text-xl  text-gray-900 dark:text-gray-100">{service.name}</h4>
-                            <p className="text-gray-600 dark:text-gray-400 text-sm line-clamp-2">{service.description}</p>
+                            <p className="text-gray-600 dark:text-gray-400 text-lg line-clamp-2">{service.description}</p>
                           </div>
                           <Badge className="bg-green-500 dark:bg-green-600 text-white">
                             {service.price.toLocaleString()} CDF
                           </Badge>
                         </div>
 
-                        <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400 mb-4">
+                        <div className="flex items-center gap-4 text-lg text-gray-600 dark:text-gray-400 mb-4">
                           <span className="flex items-center gap-1">
                             <Clock className="w-4 h-4 text-blue-500" />
                             {service.duration} min
@@ -275,9 +275,9 @@ export default function CatalogPage() {
                       <Badge className="absolute top-2 right-2 bg-white text-gray-900 hover:bg-white">{product.currentStock} en stock</Badge>
                     </div>
                     <div className="p-4">
-                      <p className="text-xs text-amber-600  uppercase tracking-wider mb-1">{product.name}</p>
+                      <p className="text-sm text-amber-600  uppercase tracking-wider mb-1">{product.name}</p>
                       <h3 className=" text-gray-900 mb-1">{product.name}</h3>
-                      <p className="text-gray-500 text-sm mb-3">{product.category}</p>
+                      <p className="text-gray-500 text-lg mb-3">{product.category}</p>
                       <div className="flex items-center justify-between">
                         <span className=" text-lg">{product.cost.toLocaleString()} CDF</span>
                         <Button variant="ghost" size="icon" className="rounded-full hover:bg-amber-50 text-gray-400 hover:text-amber-600">
@@ -308,27 +308,27 @@ export default function CatalogPage() {
                       </div>
 
                       <h3 className="text-xl  text-gray-900 dark:text-gray-100 mb-2">{pkg.name}</h3>
-                      {/* <p className="text-sm text-gray-600 dark:text-gray-400 mb-6 flex items-center gap-2">
+                      {/* <p className="text-lg text-gray-600 dark:text-gray-400 mb-6 flex items-center gap-2">
                         <Clock className="w-4 h-4 text-pink-400" />
                         Durée: {pkg || 'N/A'}
                       </p> */}
 
                       <div className="space-y-3 mb-8 bg-gray-50 dark:bg-gray-800/50 p-4 rounded-xl border border-gray-100 dark:border-gray-700">
-                        <p className="text-xs  text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Services inclus</p>
+                        <p className="text-sm  text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Services inclus</p>
                         {pkg.services?.slice(0, 3).map((service, idx) => ( // Show first 3 services
-                          <div key={idx} className="flex items-center gap-3 text-sm text-gray-700 dark:text-gray-300">
+                          <div key={idx} className="flex items-center gap-3 text-lg text-gray-700 dark:text-gray-300">
                             <Sparkles className="w-4 h-4 text-pink-500 shrink-0" />
                             <span>{service.name}</span>
                           </div>
                         ))}
                         {pkg.services && pkg.services.length > 3 && (
-                          <p className="text-xs text-gray-500 dark:text-gray-400">+ {pkg.services.length - 3} autres</p>
+                          <p className="text-sm text-gray-500 dark:text-gray-400">+ {pkg.services.length - 3} autres</p>
                         )}
                       </div>
 
                       <div className="bg-linear-to-r from-green-50 to-emerald-50 dark:from-green-900/10 dark:to-emerald-900/10 p-5 rounded-2xl border border-green-100 dark:border-green-900/30 mb-6">
                         <div className="flex justify-between items-center mb-2">
-                          <span className="text-sm text-gray-500 dark:text-gray-400 line-through font-medium">{regularPrice > 0 ? regularPrice.toLocaleString() : 'N/A'} CDF</span>
+                          <span className="text-lg text-gray-500 dark:text-gray-400 line-through font-medium">{regularPrice > 0 ? regularPrice.toLocaleString() : 'N/A'} CDF</span>
                           <span className="text-2xl  text-green-600 dark:text-green-400">{pkg.price.toLocaleString()} CDF</span>
                         </div>
                         <Badge className="bg-green-500 dark:bg-green-600 text-white border-0 w-full justify-center py-1.5">
@@ -362,17 +362,17 @@ export default function CatalogPage() {
                             {promo.isActive ? 'Actif' : 'Inactif'}
                           </Badge>
                         </div>
-                        <p className="text-sm text-gray-600 dark:text-gray-300 bg-white dark:bg-gray-900 inline-block px-3 py-1 rounded-lg border border-amber-100 dark:border-amber-900/30">Code: <strong className="text-amber-600 dark:text-amber-400">{promo.code}</strong></p>
+                        <p className="text-lg text-gray-600 dark:text-gray-300 bg-white dark:bg-gray-900 inline-block px-3 py-1 rounded-lg border border-amber-100 dark:border-amber-900/30">Code: <strong className="text-amber-600 dark:text-amber-400">{promo.code}</strong></p>
                       </div>
                       <div className="text-right">
                         <p className="text-3xl font-black text-amber-600 dark:text-amber-400">{promo.value}</p>
-                        <p className="text-[10px] sm:text-xs  text-gray-500 dark:text-gray-400 uppercase tracking-widest">
+                        <p className="text-[10px] sm:text-sm  text-gray-500 dark:text-gray-400 uppercase tracking-widest">
                           {promo.type === 'percentage' ? 'Réduction %' : 'Réduction Fixe'}
                         </p>
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4 text-sm mb-6">
+                    <div className="grid grid-cols-2 gap-4 text-lg mb-6">
                       <div className="p-3 bg-white dark:bg-gray-900 rounded-xl border border-amber-100 dark:border-amber-900/30 text-center">
                         <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase  mb-1">Début</p>
                         <p className="text-gray-900 dark:text-gray-100 font-semibold">{new Date(promo.startDate).toLocaleDateString()}</p>
@@ -417,21 +417,21 @@ export default function CatalogPage() {
 
                   <div className="space-y-4">
                     <Card className="bg-linear-to-br from-purple-50 to-pink-50 dark:from-gray-800 dark:to-gray-800/50 border border-purple-100 dark:border-purple-900/30 p-4 sm:p-5 rounded-2xl">
-                      <p className="text-[10px] sm:text-xs  text-purple-600 dark:text-purple-400 uppercase tracking-widest mb-1">Points par dépense</p>
+                      <p className="text-[10px] sm:text-sm  text-purple-600 dark:text-purple-400 uppercase tracking-widest mb-1">Points par dépense</p>
                       <p className="text-base sm:text-2xl font-black text-gray-900 dark:text-gray-100">
                         {loyaltyRules.pointsPerSpend} point / 1 000 Fc dépensé
                       </p>
                     </Card>
 
                     <Card className="bg-linear-to-br from-blue-50 to-cyan-50 dark:from-gray-800 dark:to-gray-800/50 border border-blue-100 dark:border-blue-900/30 p-4 sm:p-5 rounded-2xl">
-                      <p className="text-[10px] sm:text-xs  text-blue-600 dark:text-blue-400 uppercase tracking-widest mb-1">Récompense par visites</p>
+                      <p className="text-[10px] sm:text-sm  text-blue-600 dark:text-blue-400 uppercase tracking-widest mb-1">Récompense par visites</p>
                       <p className="text-base sm:text-2xl font-black text-gray-900 dark:text-gray-100">
                         Service gratuit après {loyaltyRules.appointmentsForReward} rendez-vous
                       </p>
                     </Card>
 
                     <Card className="bg-linear-to-br from-green-50 to-emerald-50 dark:from-gray-800 dark:to-gray-800/50 border border-green-100 dark:border-green-900/30 p-4 sm:p-5 rounded-2xl">
-                      <p className="text-[10px] sm:text-xs  text-green-600 dark:text-green-400 uppercase tracking-widest mb-1">Récompense par parrainages</p>
+                      <p className="text-[10px] sm:text-sm  text-green-600 dark:text-green-400 uppercase tracking-widest mb-1">Récompense par parrainages</p>
                       <p className="text-base sm:text-2xl font-black text-gray-900 dark:text-gray-100">
                         Service gratuit après {loyaltyRules.referralsForReward} parrainages
                       </p>
@@ -453,12 +453,12 @@ export default function CatalogPage() {
                         <div className="flex items-center justify-between gap-4">
                           <div>
                             <p className="text-base sm:text-lg  text-gray-900 dark:text-gray-100 mb-1">{reward.reward}</p>
-                            <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 flex items-center gap-1">
+                            <p className="text-sm sm:text-lg text-gray-600 dark:text-gray-400 flex items-center gap-1">
                               <Target className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-amber-500" />
                               {reward.points} points requis
                             </p>
                           </div>
-                          <Badge className="bg-amber-500 dark:bg-amber-600 text-white border-0 font-black px-3 sm:px-4 py-1 sm:py-1.5 rounded-full shadow-lg shadow-amber-500/20 text-[10px] sm:text-xs">
+                          <Badge className="bg-amber-500 dark:bg-amber-600 text-white border-0 font-black px-3 sm:px-4 py-1 sm:py-1.5 rounded-full shadow-lg shadow-amber-500/20 text-[10px] sm:text-sm">
                             {reward.points} PTS
                           </Badge>
                         </div>

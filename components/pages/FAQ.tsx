@@ -145,10 +145,10 @@ export default function FAQ() {
                     value={`${categoryIndex}-${index}`}
                     className="bg-white dark:bg-gray-950 border-0 border-b border-pink-100 dark:border-pink-900 shadow-md dark:shadow-gray-900/50 rounded-2xl px-4 sm:px-6"
                   >
-                    <AccordionTrigger className="text-left text-sm sm:text-base text-gray-900 dark:text-gray-100 hover:text-pink-600 dark:hover:text-pink-400 py-4 sm:py-6">
+                    <AccordionTrigger className="text-left text-lg sm:text-base text-gray-900 dark:text-gray-100 hover:text-pink-600 dark:hover:text-pink-400 py-4 sm:py-6">
                       {item.question}
                     </AccordionTrigger>
-                    <AccordionContent className="text-sm sm:text-base text-gray-600 dark:text-gray-300 pb-4 sm:pb-6">
+                    <AccordionContent className="text-lg sm:text-base text-gray-600 dark:text-gray-300 pb-4 sm:pb-6">
                       {item.answer}
                     </AccordionContent>
                   </AccordionItem>

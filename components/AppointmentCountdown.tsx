@@ -50,7 +50,7 @@ export default function AppointmentCountdown({
           : "bg-pink-50 border-pink-200 text-pink-600 dark:bg-pink-950 dark:border-pink-900"
         }`}
     >
-      <p className="text-xs uppercase tracking-wide opacity-70">
+      <p className="text-sm uppercase tracking-wide opacity-70">
         {missed ? "Manqué depuis" : "Temps restant"}
       </p>
 

@@ -97,7 +97,7 @@ export function ClientModal({ trigger, client, edit }: ClientModalProps) {
 
         <div className="grid grid-cols-1 gap-4 py-4">
           <div className="space-y-3">
-            <Label className="text-sm sm:text-base">Nom Complet</Label>
+            <Label className="text-lg sm:text-base">Nom Complet</Label>
             <Input
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -107,7 +107,7 @@ export function ClientModal({ trigger, client, edit }: ClientModalProps) {
           </div>
 
           <div className="space-y-3">
-            <Label className="text-sm sm:text-base">Téléphone</Label>
+            <Label className="text-lg sm:text-base">Téléphone</Label>
             <Input
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
@@ -117,7 +117,7 @@ export function ClientModal({ trigger, client, edit }: ClientModalProps) {
           </div>
 
           <div className="space-y-3">
-            <Label className="text-sm sm:text-base">Email</Label>
+            <Label className="text-lg sm:text-base">Email</Label>
             <Input
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -127,7 +127,7 @@ export function ClientModal({ trigger, client, edit }: ClientModalProps) {
           </div>
 
           <div className="space-y-3">
-            <Label className="text-sm sm:text-base">Mot de passe</Label>
+            <Label className="text-lg sm:text-base">Mot de passe</Label>
             <Input
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -138,7 +138,7 @@ export function ClientModal({ trigger, client, edit }: ClientModalProps) {
           </div>
 
           <div className="space-y-3">
-            <Label className="text-sm sm:text-base">Tier</Label>
+            <Label className="text-lg sm:text-base">Tier</Label>
             <Select onValueChange={(v) => setTier(v as any)} value={tier}>
               <SelectTrigger className="h-11">
                 <SelectValue placeholder="Sélectionner" />
@@ -152,7 +152,7 @@ export function ClientModal({ trigger, client, edit }: ClientModalProps) {
           </div>
 
           <div className="space-y-3">
-            <Label className="text-sm sm:text-base">Date de Naissance</Label>
+            <Label className="text-lg sm:text-base">Date de Naissance</Label>
             <Input
               value={birthday}
               onChange={(e) => setBirthday(e.target.value)}
@@ -162,7 +162,7 @@ export function ClientModal({ trigger, client, edit }: ClientModalProps) {
           </div>
 
           <div className="space-y-3">
-            <Label className="text-sm sm:text-base">Adresse</Label>
+            <Label className="text-lg sm:text-base">Adresse</Label>
             <Input
               value={address}
               onChange={(e) => setAddress(e.target.value)}
@@ -171,7 +171,7 @@ export function ClientModal({ trigger, client, edit }: ClientModalProps) {
           </div>
 
           <div className="space-y-3">
-            <Label className="text-sm sm:text-base">Allergies</Label>
+            <Label className="text-lg sm:text-base">Allergies</Label>
             <Input
               value={allergies}
               onChange={(e) => setAllergies(e.target.value)}
@@ -181,7 +181,7 @@ export function ClientModal({ trigger, client, edit }: ClientModalProps) {
           </div>
 
           <div className="space-y-3">
-            <Label className="text-sm sm:text-base">Services favoris (virgule séparés)</Label>
+            <Label className="text-lg sm:text-base">Services favoris (virgule séparés)</Label>
             <Input
               value={favoriteServices}
               onChange={(e) => setFavoriteServices(e.target.value)}
@@ -191,7 +191,7 @@ export function ClientModal({ trigger, client, edit }: ClientModalProps) {
           </div>
 
           <div className="space-y-3">
-            <Label className="text-sm sm:text-base">Solde prépaiement</Label>
+            <Label className="text-lg sm:text-base">Solde prépaiement</Label>
             <Input
               type="number"
               value={prepaymentBalance === '' ? '' : String(prepaymentBalance)}
@@ -201,7 +201,7 @@ export function ClientModal({ trigger, client, edit }: ClientModalProps) {
           </div>
 
           <div className="space-y-3">
-            <Label className="text-sm sm:text-base">Solde carte cadeau</Label>
+            <Label className="text-lg sm:text-base">Solde carte cadeau</Label>
             <Input
               type="number"
               value={giftCardBalance === '' ? '' : String(giftCardBalance)}
@@ -211,7 +211,7 @@ export function ClientModal({ trigger, client, edit }: ClientModalProps) {
           </div>
 
           <div className="space-y-3">
-            <Label className="text-sm sm:text-base">Parrainages</Label>
+            <Label className="text-lg sm:text-base">Parrainages</Label>
             <Input
               type="number"
               value={referrals === '' ? '' : String(referrals)}
@@ -221,7 +221,7 @@ export function ClientModal({ trigger, client, edit }: ClientModalProps) {
           </div>
 
           <div className="space-y-3">
-            <Label className="text-sm sm:text-base">Notes (Préférences)</Label>
+            <Label className="text-lg sm:text-base">Notes (Préférences)</Label>
             <Textarea
               value={notes}
               onChange={(e) => setNotes(e.target.value)}

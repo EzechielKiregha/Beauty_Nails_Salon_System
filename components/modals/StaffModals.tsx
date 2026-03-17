@@ -131,7 +131,7 @@ export function EditScheduleModal({
           <DialogTitle className="flex justify-between items-center">
             <span className="text-gray-900 dark:text-gray-100">Modifier Planning - {staffName || "Employée"}</span>
 
-            <Button variant="outline" size="sm" className="gap-2 text-xs dark:border-pink-900 dark:text-pink-300 dark:hover:border-pink-400">
+            <Button variant="outline" size="sm" className="gap-2 text-sm dark:border-pink-900 dark:text-pink-300 dark:hover:border-pink-400">
               <Copy className="w-3 h-3" /> Copier semaine précédente
             </Button>
           </DialogTitle>
@@ -140,7 +140,7 @@ export function EditScheduleModal({
         {/* ---------------- TABLE ---------------- */}
         <div className="py-4 space-y-4">
           <div className="grid grid-cols-1 gap-2">
-            <div className="grid grid-cols-12 gap-2 text-sm font-medium text-muted-foreground mb-2 px-3 dark:text-gray-300">
+            <div className="grid grid-cols-12 gap-2 text-lg font-medium text-muted-foreground mb-2 px-3 dark:text-gray-300">
               <div className="col-span-3">Jour</div>
               <div className="col-span-4">Début</div>
               <div className="col-span-4">Fin</div>
@@ -171,7 +171,7 @@ export function EditScheduleModal({
                         updateDay(day.idx, { startTime: e.target.value })
                       }
                       onBlur={() => saveDay(day.idx)}
-                      className="h-8 text-xs bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 focus:border-pink-500 dark:focus:border-pink-400"
+                      className="h-8 text-sm bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 focus:border-pink-500 dark:focus:border-pink-400"
                     />
                   </div>
 
@@ -185,7 +185,7 @@ export function EditScheduleModal({
                         updateDay(day.idx, { endTime: e.target.value })
                       }
                       onBlur={() => saveDay(day.idx)}
-                      className="h-8 text-xs bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 focus:border-pink-500 dark:focus:border-pink-400"
+                      className="h-8 text-sm bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 focus:border-pink-500 dark:focus:border-pink-400"
                     />
                   </div>
 
@@ -332,7 +332,7 @@ export function StaffProfileModal({ staff, trigger }: StaffProfileModalProps) {
 
               <div className="space-y-2">
                 <Label className="text-left block font-semibold text-gray-900 dark:text-gray-100">Biographie</Label>
-                <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-3 rounded-lg text-left">
+                <p className="text-lg text-gray-600 dark:text-gray-400 leading-relaxed bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-3 rounded-lg text-left">
                   Spécialiste en onglerie avec plus de 5 ans d'expérience.
                   Experte en Nail Art et soins des mains. Appréciée pour sa douceur et sa créativité.
                   Parle Français et Lingala couramment.
@@ -361,19 +361,19 @@ export function StaffProfileModal({ staff, trigger }: StaffProfileModalProps) {
                 <TabsList className="w-full justify-start border-b rounded-none h-auto p-0 bg-transparent flex-wrap dark:border-gray-700">
                   <TabsTrigger
                     value="performance"
-                    className="rounded-lg px-4 py-2 mb-2 sm:mb-0 sm:mr-2 text-sm data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 data-[state=active]:text-pink-700 dark:data-[state=active]:text-pink-400"
+                    className="rounded-lg px-4 py-2 mb-2 sm:mb-0 sm:mr-2 text-lg data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 data-[state=active]:text-pink-700 dark:data-[state=active]:text-pink-400"
                   >
                     Performance
                   </TabsTrigger>
                   <TabsTrigger
                     value="commission"
-                    className="rounded-lg px-4 py-2 mb-2 sm:mb-0 sm:mr-2 text-sm data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 data-[state=active]:text-pink-700 dark:data-[state=active]:text-pink-400"
+                    className="rounded-lg px-4 py-2 mb-2 sm:mb-0 sm:mr-2 text-lg data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 data-[state=active]:text-pink-700 dark:data-[state=active]:text-pink-400"
                   >
                     Commission
                   </TabsTrigger>
                   <TabsTrigger
                     value="documents"
-                    className="rounded-lg px-4 py-2 mb-2 sm:mb-0 sm:mr-2 text-sm data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 data-[state=active]:text-pink-700 dark:data-[state=active]:text-pink-400"
+                    className="rounded-lg px-4 py-2 mb-2 sm:mb-0 sm:mr-2 text-lg data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 data-[state=active]:text-pink-700 dark:data-[state=active]:text-pink-400"
                   >
                     Documents
                   </TabsTrigger>
@@ -397,22 +397,22 @@ export function StaffProfileModal({ staff, trigger }: StaffProfileModalProps) {
                     <Card className="hover:shadow-lg transition-shadow border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950 p-3">
                       <CalendarIcon className="w-5 h-5 text-blue-600 dark:text-blue-400 mb-2" />
                       <p className="text-xl font-bold text-gray-900 dark:text-gray-100">{staff?.appointmentsCount}</p>
-                      <p className="text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wider">RDV ce mois</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400 uppercase tracking-wider">RDV ce mois</p>
                     </Card>
                     <Card className="hover:shadow-lg transition-shadow border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950 p-3">
                       <DollarSign className="w-5 h-5 text-green-600 dark:text-green-400 mb-2" />
                       <p className="text-lg font-bold text-gray-900 dark:text-gray-100">{staff?.revenue}</p>
-                      <p className="text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wider">Revenus</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400 uppercase tracking-wider">Revenus</p>
                     </Card>
                     <Card className="hover:shadow-lg transition-shadow border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950 p-3">
                       <TrendingUp className="w-5 h-5 text-purple-600 dark:text-purple-400 mb-2" />
                       <p className="text-xl font-bold text-gray-900 dark:text-gray-100">{staff?.clientRetention}</p>
-                      <p className="text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wider">Rétention</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400 uppercase tracking-wider">Rétention</p>
                     </Card>
                     <Card className="hover:shadow-lg transition-shadow border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950 p-3">
                       <Award className="w-5 h-5 text-amber-600 dark:text-amber-400 mb-2" />
                       <p className="text-xl font-bold text-gray-900 dark:text-gray-100">{staff?.upsellRate}</p>
-                      <p className="text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wider">Taux Vente+</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400 uppercase tracking-wider">Taux Vente+</p>
                     </Card>
                   </div>
 
@@ -470,29 +470,29 @@ export function StaffProfileModal({ staff, trigger }: StaffProfileModalProps) {
 
                     {selectedMonth && getCommissionForMonth(selectedMonth) && (
                       <Card className="hover:shadow-lg transition-shadow border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950 p-4">
-                        <h5 className="text-sm mb-3 flex items-center gap-2 text-gray-900 dark:text-gray-100">
+                        <h5 className="text-lg mb-3 flex items-center gap-2 text-gray-900 dark:text-gray-100">
                           <span className="w-2 h-2 rounded-full bg-green-500"></span>
                           Ce Mois ({allMonths.find((m) => m.value === selectedMonth)?.label} - {getCommissionForMonth(selectedMonth)?.status === "paid" ? "Payé" : "En attente"})
                         </h5>
                         <div className="space-y-3">
                           <div className="flex justify-between items-center">
-                            <span className="text-sm text-gray-700 dark:text-gray-300">Revenus générés</span>
+                            <span className="text-lg text-gray-700 dark:text-gray-300">Revenus générés</span>
                             <span className="font-medium text-gray-900 dark:text-gray-100">{totalRevenue.toLocaleString()}</span>
                           </div>
                           <div className="flex justify-between items-center">
-                            <span className="text-sm text-gray-700 dark:text-gray-300">Taux commission</span>
+                            <span className="text-lg text-gray-700 dark:text-gray-300">Taux commission</span>
                             <span className="font-medium text-gray-900 dark:text-gray-100">{commissionRate.toLocaleString()}%</span>
                           </div>
                           <div className="flex justify-between items-center">
-                            <span className="text-sm text-gray-700 dark:text-gray-300">Business revenue</span>
+                            <span className="text-lg text-gray-700 dark:text-gray-300">Business revenue</span>
                             <span className="font-medium text-gray-900 dark:text-gray-100">{employerShare}</span>
                           </div>
                           <div className="flex justify-between items-center">
-                            <span className="text-sm text-gray-700 dark:text-gray-300">Materials reserve</span>
+                            <span className="text-lg text-gray-700 dark:text-gray-300">Materials reserve</span>
                             <span className="font-medium text-gray-900 dark:text-gray-100">{materielShare}</span>
                           </div>
                           <div className="flex justify-between items-center">
-                            <span className="text-sm text-gray-700 dark:text-gray-300">Operational costs</span>
+                            <span className="text-lg text-gray-700 dark:text-gray-300">Operational costs</span>
                             <span className="font-medium text-gray-900 dark:text-gray-100">{operationalCosts}</span>
                           </div>
 
@@ -535,7 +535,7 @@ export function StaffProfileModal({ staff, trigger }: StaffProfileModalProps) {
                           </div>
                           <div>
                             <p className="font-medium text-gray-900 dark:text-gray-100">{doc}</p>
-                            <p className="text-xs text-gray-500 dark:text-gray-400">Ajouté le 12 Jan 2023</p>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">Ajouté le 12 Jan 2023</p>
                           </div>
                         </div>
                         <Button variant="ghost" size="icon" className="text-gray-400 dark:text-gray-400 group-hover:text-pink-600 dark:group-hover:text-pink-400">
@@ -784,7 +784,7 @@ export function PayrollModal({ staffName, staff, period, trigger }: PayrollModal
         <div className="py-4 space-y-4">
           <div className="grid grid-cols-1 gap-3">
             <div className="space-y-2">
-              <Label className="text-sm text-gray-700 dark:text-gray-300">Employé(e)</Label>
+              <Label className="text-lg text-gray-700 dark:text-gray-300">Employé(e)</Label>
               <Input
                 value={staffName || staff?.user?.name || 'Employé(e)'}
                 disabled
@@ -793,7 +793,7 @@ export function PayrollModal({ staffName, staff, period, trigger }: PayrollModal
             </div>
 
             <div className="space-y-2">
-              <Label className="text-sm text-gray-700 dark:text-gray-300">Période ({workerProfile?.commissionFrequency || 'période'})</Label>
+              <Label className="text-lg text-gray-700 dark:text-gray-300">Période ({workerProfile?.commissionFrequency || 'période'})</Label>
               <Select value={localPeriod} onValueChange={setLocalPeriod}>
                 <SelectTrigger>
                   <SelectValue placeholder="Sélectionnez une période" />
@@ -816,9 +816,9 @@ export function PayrollModal({ staffName, staff, period, trigger }: PayrollModal
 
             <div className="space-y-3">
               <div className="flex justify-between items-center">
-                <Label className="text-gray-600 dark:text-gray-400 text-sm">Revenu Généré</Label>
+                <Label className="text-gray-600 dark:text-gray-400 text-lg">Revenu Généré</Label>
                 <div className="flex items-center">
-                  <span className="text-sm text-gray-500 dark:text-gray-400 mr-1">Fc</span>
+                  <span className="text-lg text-gray-500 dark:text-gray-400 mr-1">Fc</span>
                   <Input
                     type="number"
                     value={totalRevenue}
@@ -830,7 +830,7 @@ export function PayrollModal({ staffName, staff, period, trigger }: PayrollModal
               </div>
 
               <div className="flex justify-between items-center">
-                <Label className="text-gray-600 dark:text-gray-400 text-sm">Nb. Rendez-vous</Label>
+                <Label className="text-gray-600 dark:text-gray-400 text-lg">Nb. Rendez-vous</Label>
                 <Input
                   type="number"
                   value={appointmentsCount}
@@ -841,7 +841,7 @@ export function PayrollModal({ staffName, staff, period, trigger }: PayrollModal
               </div>
 
               <div className="flex justify-between items-center">
-                <Label className="text-gray-600 dark:text-gray-400 text-sm">Taux de Commission</Label>
+                <Label className="text-gray-600 dark:text-gray-400 text-lg">Taux de Commission</Label>
                 <div className="flex items-center">
                   <Input
                     type="number"
@@ -854,9 +854,9 @@ export function PayrollModal({ staffName, staff, period, trigger }: PayrollModal
               </div>
 
               <div className="flex justify-between items-center">
-                <Label className="text-gray-600 dark:text-gray-400 text-sm">Commission (Calculée)</Label>
+                <Label className="text-gray-600 dark:text-gray-400 text-lg">Commission (Calculée)</Label>
                 <div className="flex items-center">
-                  <span className="text-sm text-gray-500 dark:text-gray-400 mr-1">Fc</span>
+                  <span className="text-lg text-gray-500 dark:text-gray-400 mr-1">Fc</span>
                   <Input
                     value={commissionAmount.toFixed(2)}
                     disabled
@@ -867,9 +867,9 @@ export function PayrollModal({ staffName, staff, period, trigger }: PayrollModal
 
               {isAdmin && (
                 <div className="flex justify-between items-center">
-                  <Label className="text-blue-600 dark:text-blue-400 text-sm">Part Administrateur</Label>
+                  <Label className="text-blue-600 dark:text-blue-400 text-lg">Part Administrateur</Label>
                   <div className="flex items-center">
-                    <span className="text-sm text-gray-500 dark:text-gray-400 mr-1">Fc</span>
+                    <span className="text-lg text-gray-500 dark:text-gray-400 mr-1">Fc</span>
                     <Input
                       value={employerShare.toFixed(2)}
                       disabled

@@ -399,8 +399,8 @@ export default function AppointmentsV3() {
                       {service.price.toLocaleString()} CDF
                     </Badge>
                   </div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 truncate">{service.description}</p>
-                  <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">{service.duration} min</p>
+                  <p className="text-lg text-gray-600 dark:text-gray-400 truncate">{service.description}</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-500 mt-1">{service.duration} min</p>
                 </Card>
               ))}
             </div>
@@ -439,7 +439,7 @@ export default function AppointmentsV3() {
                       <div className="flex justify-between items-start">
                         <div>
                           <h4 className="font-medium text-gray-900 dark:text-gray-100">{addOn.name}</h4>
-                          <p className="text-sm text-gray-600 dark:text-gray-400">
+                          <p className="text-lg text-gray-600 dark:text-gray-400">
                             +{addOn.price.toLocaleString()} CDF • +{addOn.duration} min
                           </p>
                         </div>
@@ -452,12 +452,12 @@ export default function AppointmentsV3() {
 
                       {!isActive && (
                         <div className="mt-3">
-                          <Label className="text-sm text-gray-600 dark:text-gray-400">
+                          <Label className="text-lg text-gray-600 dark:text-gray-400">
                             Confirmez que vous avez votre propre {addOn.name.toLowerCase()}
                           </Label>
                           <Input
                             placeholder={`Ex: J'ai mon propre ${addOn.name.toLowerCase()}`}
-                            className="mt-1 text-sm"
+                            className="mt-1 text-lg"
                             disabled
                           />
                         </div>
@@ -503,7 +503,7 @@ export default function AppointmentsV3() {
                     </div>
                     <div>
                       <h4 className="font-medium text-gray-900 dark:text-gray-100">{worker.user.name}</h4>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">{worker.position}</p>
+                      <p className="text-lg text-gray-600 dark:text-gray-400">{worker.position}</p>
                     </div>
                   </div>
                 </Card>
@@ -597,7 +597,7 @@ export default function AppointmentsV3() {
                       <p className="text-gray-900 dark:text-gray-100 font-medium">
                         Au salon
                       </p>
-                      <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
+                      <p className="text-sm sm:text-lg text-gray-500 dark:text-gray-400">
                         Quartier HIMBI, Commune de Goma, Ville de Goma
                       </p>
                     </div>
@@ -615,7 +615,7 @@ export default function AppointmentsV3() {
                       <p className="text-gray-900 dark:text-gray-100 font-medium">
                         À domicile
                       </p>
-                      <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
+                      <p className="text-sm sm:text-lg text-gray-500 dark:text-gray-400">
                         +20 000 Fc - Dans la zone de Goma
                       </p>
                     </div>
@@ -628,14 +628,14 @@ export default function AppointmentsV3() {
 
         {!user && (
           <div className="mb-6 p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl">
-            <p className="text-xs sm:text-sm text-amber-800 dark:text-amber-200">
+            <p className="text-sm sm:text-lg text-amber-800 dark:text-amber-200">
               Vous devez être connecté(e) pour réserver un
               rendez-vous
             </p>
             <Button
               variant="link"
               onClick={handleRequireAuth}
-              className="text-xs sm:text-sm text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 underline mt-2 inline-block"
+              className="text-sm sm:text-lg text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 underline mt-2 inline-block"
             >
               Se connecter
             </Button>
@@ -649,7 +649,7 @@ export default function AppointmentsV3() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Code de Réduction</label>
+                <label className="block text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">Code de Réduction</label>
                 <input
                   type="text"
 
@@ -660,7 +660,7 @@ export default function AppointmentsV3() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Pourboire</label>
+                <label className="block text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">Pourboire</label>
                 <input
                   type="number"
                   value={tip}
@@ -672,7 +672,7 @@ export default function AppointmentsV3() {
             </div>
 
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Méthode de Paiement</label>
+              <label className="block text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">Méthode de Paiement</label>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                 {["mobile", "card", "cash"].map((method) => (
                   <button
@@ -710,16 +710,16 @@ export default function AppointmentsV3() {
                   <button
                     type="button"
                     onClick={() => setIsPaid(true)}
-                    className="flex flex-row gap-2 text-sm px-3 py-1.5 rounded-lg border border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+                    className="flex flex-row gap-2 text-lg px-3 py-1.5 rounded-lg border border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 transition"
                   >
                     <RefreshCcw className='h-5 w-5' /> Rafraîchir
                   </button>
                 </div>
 
-                <div className="space-y-4 text-sm text-gray-700 dark:text-gray-300">
+                <div className="space-y-4 text-lg text-gray-700 dark:text-gray-300">
 
                   <div>
-                    <p className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                    <p className="text-sm uppercase tracking-wide text-gray-500 dark:text-gray-400">
                       Numéro à payer
                     </p>
                     <p className="text-xl font-semibold tracking-wide mt-1">
@@ -729,19 +729,19 @@ export default function AppointmentsV3() {
 
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">Nom</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">Nom</p>
                       <p className="font-medium">Therese Zawadi</p>
                     </div>
 
                     <div>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">MoMoPay</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">MoMoPay</p>
                       <p className="font-medium">66666 (TIGer-6)</p>
                     </div>
                   </div>
 
                   {/* Payer Phone Field */}
                   <div className="pt-4 border-t border-gray-200 dark:border-gray-800">
-                    <label className="block text-xs mb-1 text-gray-500 dark:text-gray-400">
+                    <label className="block text-sm mb-1 text-gray-500 dark:text-gray-400">
                       Numéro utilisé pour le paiement
                     </label>
                     <input
@@ -757,7 +757,7 @@ export default function AppointmentsV3() {
                   <div className="pt-4">
                     {isPaid ? (
                       <div className="flex justify-between items-center rounded-lg bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 px-4 py-3">
-                        <span className="text-green-700 dark:text-green-400 text-sm font-medium">
+                        <span className="text-green-700 dark:text-green-400 text-lg font-medium">
                           Paiement confirmé
                         </span>
                         <span className="font-bold text-green-600 dark:text-green-400">
@@ -765,7 +765,7 @@ export default function AppointmentsV3() {
                         </span>
                       </div>
                     ) : (
-                      <div className="text-sm text-gray-500 dark:text-gray-400">
+                      <div className="text-lg text-gray-500 dark:text-gray-400">
                         En attente de confirmation...
                       </div>
                     )}
@@ -783,10 +783,10 @@ export default function AppointmentsV3() {
                   🏦 Virement Bancaire
                 </h3>
 
-                <div className="space-y-4 text-sm text-gray-700 dark:text-gray-300">
+                <div className="space-y-4 text-lg text-gray-700 dark:text-gray-300">
 
                   <div>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
                       Banque
                     </p>
                     <p className="font-medium">
@@ -795,7 +795,7 @@ export default function AppointmentsV3() {
                   </div>
 
                   <div>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
                       Numéro de compte
                     </p>
                     <p className="text-xl font-semibold tracking-wide">
@@ -804,7 +804,7 @@ export default function AppointmentsV3() {
                   </div>
 
                   <div>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
                       Nom du compte
                     </p>
                     <p className="font-medium">
@@ -812,7 +812,7 @@ export default function AppointmentsV3() {
                     </p>
                   </div>
 
-                  <div className="pt-4 border-t border-gray-200 dark:border-gray-800 text-xs text-gray-500 dark:text-gray-400">
+                  <div className="pt-4 border-t border-gray-200 dark:border-gray-800 text-sm text-gray-500 dark:text-gray-400">
                     Après le virement, veuillez confirmer le paiement pour finaliser la réservation.
                   </div>
 
@@ -837,7 +837,7 @@ export default function AppointmentsV3() {
                 <h3 className="text-lg font-semibold tracking-wide">
                   Récapitulatif du Paiement
                 </h3>
-                <p className="text-sm text-indigo-200">
+                <p className="text-lg text-indigo-200">
                   Vérifiez les détails avant confirmation
                 </p>
               </div>
@@ -846,7 +846,7 @@ export default function AppointmentsV3() {
               <div className="h-px bg-white/20"></div>
 
               {/* Amounts */}
-              <div className="space-y-3 text-sm">
+              <div className="space-y-3 text-lg">
 
                 <div className="flex justify-between text-indigo-100">
                   <span>Sous-total</span>
@@ -894,7 +894,7 @@ export default function AppointmentsV3() {
                   </span>
                 </div>
 
-                <p className="text-xs text-indigo-300 mt-1">
+                <p className="text-sm text-indigo-300 mt-1">
                   Paiement via {selectedMethod}
                 </p>
 

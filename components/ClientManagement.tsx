@@ -152,7 +152,7 @@ export default function ClientManagement({ showMock }: { showMock?: boolean }) {
             placeholder="Rechercher par nom ou téléphone..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-12 py-5 sm:py-6 rounded-xl border-gray-200 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100 dark:placeholder:text-gray-500 text-sm sm:text-base"
+            className="pl-12 py-5 sm:py-6 rounded-xl border-gray-200 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100 dark:placeholder:text-gray-500 text-lg sm:text-base"
           />
         </div>
       </Card>
@@ -175,22 +175,22 @@ export default function ClientManagement({ showMock }: { showMock?: boolean }) {
                   }`}
               >
                 <div className="flex items-center justify-between mb-2">
-                  <p className="text-gray-900 dark:text-gray-100  text-sm sm:text-base">{client.name}</p>
+                  <p className="text-gray-900 dark:text-gray-100  text-lg sm:text-base">{client.name}</p>
                   <Badge className={`${client.membershipStatus === 'VIP' ? 'bg-amber-500' :
                     client.membershipStatus === 'Premium' ? 'bg-purple-500' : 'bg-gray-500'
-                    } text-white text-[10px] sm:text-xs border-0`}>
+                    } text-white text-[10px] sm:text-sm border-0`}>
                     {client.membershipStatus}
                   </Badge>
                 </div>
-                <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 flex items-center gap-2">
+                <p className="text-sm sm:text-lg text-gray-600 dark:text-gray-400 flex items-center gap-2">
                   <Phone className="w-3.5 h-3.5 text-pink-500" />
                   {client.phone}
                 </p>
                 <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
-                  <p className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-500 font-medium">
+                  <p className="text-[10px] sm:text-sm text-gray-500 dark:text-gray-500 font-medium">
                     {client.totalAppointments} visites
                   </p>
-                  <p className="text-[10px] sm:text-xs text-pink-600 dark:text-pink-400 ">
+                  <p className="text-[10px] sm:text-sm text-pink-600 dark:text-pink-400 ">
                     {client.loyaltyPoints} pts
                   </p>
                 </div>
@@ -233,7 +233,7 @@ export default function ClientManagement({ showMock }: { showMock?: boolean }) {
                     <AppointmentModal
                       client={selectedClient}
                       trigger={
-                        <Button className="bg-linear-to-r from-pink-500 to-purple-500 text-white rounded-full py-5 px-6 shadow-lg shadow-pink-500/20  transition-all text-sm">
+                        <Button className="bg-linear-to-r from-pink-500 to-purple-500 text-white rounded-full py-5 px-6 shadow-lg shadow-pink-500/20  transition-all text-lg">
                           <Plus className="w-5 h-5 mr-3" />
                           Prendre RDV
                         </Button>
@@ -243,7 +243,7 @@ export default function ClientManagement({ showMock }: { showMock?: boolean }) {
                       <ClientModal
                         client={selectedClient}
                         trigger={
-                          <Button variant="outline" className="rounded-full py-5 px-6 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300  transition-all text-sm">
+                          <Button variant="outline" className="rounded-full py-5 px-6 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300  transition-all text-lg">
                             Modifier
                           </Button>
                         } />}
@@ -253,27 +253,27 @@ export default function ClientManagement({ showMock }: { showMock?: boolean }) {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-4">
-                    <h4 className="text-xs sm:text-sm font-black text-gray-400 dark:text-gray-500 uppercase tracking-[0.2em]">Informations de Contact</h4>
+                    <h4 className="text-sm sm:text-lg font-black text-gray-400 dark:text-gray-500 uppercase tracking-[0.2em]">Informations de Contact</h4>
                     <div className="space-y-3 p-5 bg-gray-50 dark:bg-gray-800/50 rounded-2xl border border-gray-100 dark:border-gray-700">
-                      <p className="flex items-center gap-3 text-sm sm:text-base text-gray-700 dark:text-gray-300">
+                      <p className="flex items-center gap-3 text-lg sm:text-base text-gray-700 dark:text-gray-300">
                         <div className="w-8 h-8 rounded-lg bg-white dark:bg-gray-800 flex items-center justify-center shadow-sm">
                           <Phone className="w-4 h-4 text-pink-500" />
                         </div>
                         {selectedClient.phone}
                       </p>
-                      <p className="flex items-center gap-3 text-sm sm:text-base text-gray-700 dark:text-gray-300">
+                      <p className="flex items-center gap-3 text-lg sm:text-base text-gray-700 dark:text-gray-300">
                         <div className="w-8 h-8 rounded-lg bg-white dark:bg-gray-800 flex items-center justify-center shadow-sm">
                           <Mail className="w-4 h-4 text-pink-500" />
                         </div>
                         {selectedClient.email}
                       </p>
-                      <p className="flex items-center gap-3 text-sm sm:text-base text-gray-700 dark:text-gray-300">
+                      <p className="flex items-center gap-3 text-lg sm:text-base text-gray-700 dark:text-gray-300">
                         <div className="w-8 h-8 rounded-lg bg-white dark:bg-gray-800 flex items-center justify-center shadow-sm">
                           <Cake className="w-4 h-4 text-pink-500" />
                         </div>
                         {selectedClient.birthday}
                       </p>
-                      <p className="flex items-center gap-3 text-sm sm:text-base text-gray-700 dark:text-gray-300">
+                      <p className="flex items-center gap-3 text-lg sm:text-base text-gray-700 dark:text-gray-300">
                         <div className="w-8 h-8 rounded-lg bg-white dark:bg-gray-800 flex items-center justify-center shadow-sm">
                           <MapPin className="w-4 h-4 text-pink-500" />
                         </div>
@@ -283,16 +283,16 @@ export default function ClientManagement({ showMock }: { showMock?: boolean }) {
                   </div>
 
                   <div className="space-y-4">
-                    <h4 className="text-xs sm:text-sm font-black text-gray-400 dark:text-gray-500 uppercase tracking-[0.2em]">Notes & Préférences</h4>
+                    <h4 className="text-sm sm:text-lg font-black text-gray-400 dark:text-gray-500 uppercase tracking-[0.2em]">Notes & Préférences</h4>
                     <div className="space-y-4">
                       <div className="p-5 bg-purple-50 dark:bg-purple-900/10 rounded-2xl border border-purple-100 dark:border-purple-900/30">
                         <p className="text-[10px] font-black text-purple-600 dark:text-purple-400 uppercase tracking-widest mb-2">Préférences</p>
-                        <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed font-medium">{selectedClient.preferences}</p>
+                        <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed font-medium">{selectedClient.preferences}</p>
                       </div>
                       <div className="p-5 bg-red-50 dark:bg-red-900/10 rounded-2xl border border-red-100 dark:border-red-900/30">
                         <p className="text-[10px] font-black text-red-600 dark:text-red-400 uppercase tracking-widest mb-2">Allergies / Notes</p>
-                        <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed font-medium">{selectedClient.allergies}</p>
-                        <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed font-normal">{selectedClient.notes}</p>
+                        <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed font-medium">{selectedClient.allergies}</p>
+                        <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed font-normal">{selectedClient.notes}</p>
                       </div>
                     </div>
                   </div>
@@ -324,7 +324,7 @@ export default function ClientManagement({ showMock }: { showMock?: boolean }) {
 
                 {selectedClient && (
                   <Card className="p-6 bg-linear-to-br from-purple-50 to-pink-50 dark:from-purple-900/10 dark:to-pink-900/10 border border-purple-100 dark:border-purple-900/30 rounded-3xl">
-                    <h4 className="text-sm font-black text-gray-900 dark:text-gray-100 mb-4 uppercase tracking-widest flex items-center gap-2">
+                    <h4 className="text-lg font-black text-gray-900 dark:text-gray-100 mb-4 uppercase tracking-widest flex items-center gap-2">
                       <DollarSign className="w-4 h-4 text-purple-500" />
                       Abonnement
                     </h4>
@@ -333,10 +333,10 @@ export default function ClientManagement({ showMock }: { showMock?: boolean }) {
                 )}
 
                 <div className="p-6 bg-pink-50 dark:bg-pink-900/10 rounded-3xl border border-pink-100 dark:border-pink-900/30">
-                  <h4 className="text-xs font-black text-pink-600 dark:text-pink-400 uppercase tracking-[0.2em] mb-4">Services Favoris</h4>
+                  <h4 className="text-sm font-black text-pink-600 dark:text-pink-400 uppercase tracking-[0.2em] mb-4">Services Favoris</h4>
                   <div className="flex flex-wrap gap-2">
                     {selectedClient.favoriteServices.map((service: any, idx: any) => (
-                      <Badge key={idx} className="bg-white dark:bg-gray-800 hover:bg-pink-50 dark:hover:bg-pink-900/20 text-pink-600 dark:text-pink-400 border border-pink-100 dark:border-pink-900/50 py-2 px-4 text-xs  rounded-full transition-all">
+                      <Badge key={idx} className="bg-white dark:bg-gray-800 hover:bg-pink-50 dark:hover:bg-pink-900/20 text-pink-600 dark:text-pink-400 border border-pink-100 dark:border-pink-900/50 py-2 px-4 text-sm  rounded-full transition-all">
                         {service}
                       </Badge>
                     ))}
@@ -351,7 +351,7 @@ export default function ClientManagement({ showMock }: { showMock?: boolean }) {
                     <Calendar className="w-5 h-5 text-pink-500" />
                     Historique des Visites
                   </h4>
-                  <Button variant="outline" size="sm" className="rounded-full text-xs  dark:border-gray-700">Exporter PDF</Button>
+                  <Button variant="outline" size="sm" className="rounded-full text-sm  dark:border-gray-700">Exporter PDF</Button>
                 </div>
                 <div className="space-y-3">
                   {appointmentHistory.map((apt, idx) => (
@@ -361,12 +361,12 @@ export default function ClientManagement({ showMock }: { showMock?: boolean }) {
                           <Calendar className="w-5 h-5 text-pink-500" />
                         </div>
                         <div>
-                          <p className="text-sm sm:text-base text-gray-900 dark:text-gray-100 ">{apt.service.name}</p>
-                          <p className="text-xs text-gray-500 dark:text-gray-400">avec {apt.worker.name} • {apt.date}</p>
+                          <p className="text-lg sm:text-base text-gray-900 dark:text-gray-100 ">{apt.service.name}</p>
+                          <p className="text-sm text-gray-500 dark:text-gray-400">avec {apt.worker.name} • {apt.date}</p>
                         </div>
                       </div>
                       <div className="flex items-center justify-between w-full sm:w-auto gap-4">
-                        <p className="text-sm sm:text-base font-black text-gray-900 dark:text-gray-100">{apt.price}</p>
+                        <p className="text-lg sm:text-base font-black text-gray-900 dark:text-gray-100">{apt.price}</p>
                         <Badge className="bg-green-500/10 text-green-600 dark:text-green-400 border-green-200 dark:border-green-900/30 px-3 py-1 text-[10px] ">
                           {apt.status}
                         </Badge>
@@ -397,8 +397,8 @@ export default function ClientManagement({ showMock }: { showMock?: boolean }) {
                               <Gift className="w-5 h-5 text-purple-500" />}
                         </div>
                         <div>
-                          <p className="text-sm sm:text-base text-gray-900 dark:text-gray-100 ">{notif.message}</p>
-                          <p className="text-xs text-gray-500 dark:text-gray-400">{notif.type} • {notif.createdAt}</p>
+                          <p className="text-lg sm:text-base text-gray-900 dark:text-gray-100 ">{notif.message}</p>
+                          <p className="text-sm text-gray-500 dark:text-gray-400">{notif.type} • {notif.createdAt}</p>
                         </div>
                       </div>
                       <Badge variant="outline" className="border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 px-3 py-1 text-[10px] ">
@@ -418,7 +418,7 @@ export default function ClientManagement({ showMock }: { showMock?: boolean }) {
                         <CreditCard className="w-6 h-6 text-green-600" />
                       </div>
                       <div>
-                        <p className="text-xs font-black text-green-600 dark:text-green-400 uppercase tracking-widest">Solde Prépayé</p>
+                        <p className="text-sm font-black text-green-600 dark:text-green-400 uppercase tracking-widest">Solde Prépayé</p>
                         <p className="text-2xl font-black text-gray-900 dark:text-gray-100">{selectedClient.prepaymentBalance}</p>
                       </div>
                     </div>
@@ -432,7 +432,7 @@ export default function ClientManagement({ showMock }: { showMock?: boolean }) {
                         <Gift className="w-6 h-6 text-purple-600" />
                       </div>
                       <div>
-                        <p className="text-xs font-black text-purple-600 dark:text-purple-400 uppercase tracking-widest">Carte Cadeau</p>
+                        <p className="text-sm font-black text-purple-600 dark:text-purple-400 uppercase tracking-widest">Carte Cadeau</p>
                         <p className="text-2xl font-black text-gray-900 dark:text-gray-100">{selectedClient.giftCardBalance}</p>
                       </div>
                     </div>
@@ -443,13 +443,13 @@ export default function ClientManagement({ showMock }: { showMock?: boolean }) {
                 </div>
 
                 <Card className="p-6 bg-linear-to-br from-amber-50 to-orange-50 dark:from-amber-900/10 dark:to-orange-900/10 border-amber-100 dark:border-amber-900/30 rounded-3xl">
-                  <h4 className="text-sm font-black text-gray-900 dark:text-gray-100 mb-4 uppercase tracking-widest flex items-center gap-2">
+                  <h4 className="text-lg font-black text-gray-900 dark:text-gray-100 mb-4 uppercase tracking-widest flex items-center gap-2">
                     <Award className="w-4 h-4 text-amber-500" />
                     Programme de Fidélité
                   </h4>
                   <div className="space-y-4">
                     <div className="flex justify-between items-center">
-                      <span className="text-xs text-gray-700 dark:text-gray-400 font-medium">Points actuels</span>
+                      <span className="text-sm text-gray-700 dark:text-gray-400 font-medium">Points actuels</span>
                       <span className="text-2xl text-gray-900 dark:text-gray-100 font-black">{selectedClient.loyaltyPoints} pts</span>
                     </div>
                     <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
@@ -458,7 +458,7 @@ export default function ClientManagement({ showMock }: { showMock?: boolean }) {
                         style={{ width: `${(selectedClient.loyaltyPoints / 500) * 100}%` }}
                       />
                     </div>
-                    <p className="text-xs text-gray-600 dark:text-gray-400 italic">
+                    <p className="text-sm text-gray-600 dark:text-gray-400 italic">
                       Encore {500 - selectedClient.loyaltyPoints} points pour votre prochaine récompense !
                     </p>
                   </div>
@@ -473,7 +473,7 @@ export default function ClientManagement({ showMock }: { showMock?: boolean }) {
                 <Search className="w-10 h-10 text-gray-300 dark:text-gray-700" />
               </div>
               <p className="text-xl  text-gray-900 dark:text-gray-100 mb-2">Sélectionnez une cliente</p>
-              <p className="text-sm text-gray-500 dark:text-gray-400">Consultez son profil complet, son historique et ses finances</p>
+              <p className="text-lg text-gray-500 dark:text-gray-400">Consultez son profil complet, son historique et ses finances</p>
             </div>
           </Card>
         )}

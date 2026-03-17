@@ -146,14 +146,14 @@ export default function Testimonials() {
                 </div>
               </div>
               <p className="text-xl sm:text-2xl text-gray-700 dark:text-gray-200 mb-1 sm:mb-2">Note moyenne</p>
-              <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400">Basée sur {stats.totalReviews} avis vérifiés</p>
+              <p className="text-lg sm:text-base text-gray-600 dark:text-gray-400">Basée sur {stats.totalReviews} avis vérifiés</p>
               <a
                 href="https://www.trustpilot.com"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-block mt-4 sm:mt-6"
               >
-                <Button variant="outline" className="border-pink-200 dark:border-pink-800 text-pink-600 dark:text-pink-400 hover:bg-pink-50 dark:hover:bg-pink-900/20 rounded-full text-sm sm:text-base">
+                <Button variant="outline" className="border-pink-200 dark:border-pink-800 text-pink-600 dark:text-pink-400 hover:bg-pink-50 dark:hover:bg-pink-900/20 rounded-full text-lg sm:text-base">
                   Voir sur Trustpilot
                 </Button>
               </a>
@@ -165,14 +165,14 @@ export default function Testimonials() {
                 const percentage = (count / stats.totalReviews) * 100;
                 return (
                   <div key={stars} className="flex items-center gap-3 sm:gap-4">
-                    <span className="text-xs sm:text-sm text-gray-700 dark:text-gray-300 w-12">{stars} étoile{stars > 1 ? 's' : ''}</span>
+                    <span className="text-sm sm:text-lg text-gray-700 dark:text-gray-300 w-12">{stars} étoile{stars > 1 ? 's' : ''}</span>
                     <div className="flex-1 h-2 sm:h-3 bg-white dark:bg-gray-700 rounded-full overflow-hidden">
                       <div
                         className="h-full bg-linear-to-r from-amber-400 to-orange-400 rounded-full"
                         style={{ width: `${percentage}%` }}
                       />
                     </div>
-                    <span className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 w-8 text-right">{count}</span>
+                    <span className="text-sm sm:text-lg text-gray-600 dark:text-gray-400 w-8 text-right">{count}</span>
                   </div>
                 );
               })}
@@ -195,22 +195,22 @@ export default function Testimonials() {
                   ))}
                 </div>
                 {testimonial.verified && (
-                  <Badge className="bg-green-500 text-white text-xs px-2 py-0.5">Vérifié</Badge>
+                  <Badge className="bg-green-500 text-white text-sm px-2 py-0.5">Vérifié</Badge>
                 )}
               </div>
 
               <div className="relative mb-3 sm:mb-4">
                 <Quote className="w-6 h-6 sm:w-8 sm:h-8 text-pink-200 dark:text-pink-900 absolute -top-1 sm:-top-2 -left-1 sm:-left-2" />
-                <p className="text-sm sm:text-base text-gray-700 dark:text-gray-300 pl-4 sm:pl-6">{testimonial.text}</p>
+                <p className="text-lg sm:text-base text-gray-700 dark:text-gray-300 pl-4 sm:pl-6">{testimonial.text}</p>
               </div>
 
               <div className="border-t border-gray-100 dark:border-gray-800 pt-3 sm:pt-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm sm:text-base text-gray-900 dark:text-gray-100">{testimonial.name}</p>
-                    <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">{testimonial.service}</p>
+                    <p className="text-lg sm:text-base text-gray-900 dark:text-gray-100">{testimonial.name}</p>
+                    <p className="text-sm sm:text-lg text-gray-500 dark:text-gray-400">{testimonial.service}</p>
                   </div>
-                  <span className="text-xs text-gray-400 dark:text-gray-600">{testimonial.date}</span>
+                  <span className="text-sm text-gray-400 dark:text-gray-600">{testimonial.date}</span>
                 </div>
               </div>
             </Card>
@@ -227,12 +227,12 @@ export default function Testimonials() {
           </p>
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
             <Link href="/appointments">
-              <Button size="lg" className="w-full sm:w-auto bg-white text-pink-600 hover:bg-gray-100 rounded-full px-6 sm:px-8 py-5 sm:py-6 text-sm sm:text-base">
+              <Button size="lg" className="w-full sm:w-auto bg-white text-pink-600 hover:bg-gray-100 rounded-full px-6 sm:px-8 py-5 sm:py-6 text-lg sm:text-base">
                 Réserver maintenant
               </Button>
             </Link>
             <Link href="/services">
-              <Button size="lg" variant="outline" className="w-full sm:w-auto border-2 border-white text-white hover:bg-white/10 rounded-full px-6 sm:px-8 py-5 sm:py-6 text-sm sm:text-base">
+              <Button size="lg" variant="outline" className="w-full sm:w-auto border-2 border-white text-white hover:bg-white/10 rounded-full px-6 sm:px-8 py-5 sm:py-6 text-lg sm:text-base">
                 Voir nos services
               </Button>
             </Link>

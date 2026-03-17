@@ -25,7 +25,7 @@ export default function MembershipsPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="inline-flex items-center gap-2 bg-pink-100 dark:bg-pink-900/30 text-pink-600 dark:text-pink-400 px-4 py-2 rounded-full mb-4">
             <Award className="w-4 h-4" />
-            <span className="text-sm ">Abonnements Premium</span>
+            <span className="text-lg ">Abonnements Premium</span>
           </div>
           <h1 className="text-4xl sm:text-5xl md:text-6xl text-gray-900 dark:text-gray-100 mb-6">
             Rejoignez notre cercle de clientes privilégiées
@@ -65,7 +65,7 @@ export default function MembershipsPage() {
                   {/* Popular Badge for second item (example logic) */}
                   {index === 1 && (
                     <div className="absolute top-0 right-0 bg-linear-to-r from-amber-500 to-orange-500 dark:from-amber-600 dark:to-orange-600 text-white px-6 py-2 rounded-bl-3xl z-10">
-                      <span className="flex items-center text-sm ">
+                      <span className="flex items-center text-lg ">
                         <Star className="w-4 h-4 mr-1" />
                         Populaire
                       </span>
@@ -88,7 +88,7 @@ export default function MembershipsPage() {
                       {membership.benefits.map((benefit: any, idx: any) => (
                         <li key={idx} className="flex items-start">
                           <div className="w-6 h-6 rounded-full bg-pink-500 dark:bg-pink-600 flex items-center justify-center mr-3 shrink-0">
-                            <span className="text-white text-xs ">✓</span>
+                            <span className="text-white text-sm ">✓</span>
                           </div>
                           <span className="text-gray-700 dark:text-gray-300">{benefit}</span>
                         </li>

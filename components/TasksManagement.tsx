@@ -42,7 +42,7 @@ export default function TasksManagement() {
         </div>
       ) : tasks.length === 0 ? (
         <div className="text-center py-12 bg-gray-50 dark:bg-gray-800/50 rounded-2xl border border-dashed border-gray-200 dark:border-gray-700">
-          <p className="text-sm text-gray-500 dark:text-gray-400">Aucune tâche trouvée.</p>
+          <p className="text-lg text-gray-500 dark:text-gray-400">Aucune tâche trouvée.</p>
         </div>
       ) : (
         <ul className="space-y-4">
@@ -55,7 +55,7 @@ export default function TasksManagement() {
                     {t.priority}
                   </Badge>
                 </div>
-                <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{t.description || '-'}</p>
+                <p className="text-lg text-gray-600 dark:text-gray-400 leading-relaxed">{t.description || '-'}</p>
                 <div className="flex flex-wrap items-center gap-3 mt-4 text-[11px] text-gray-500 dark:text-gray-500 font-medium">
                   <span className="flex items-center gap-1.5 px-2 py-1 bg-white dark:bg-gray-950 rounded-lg border border-gray-100 dark:border-gray-800">
                     Assigné: <span className="text-gray-700 dark:text-gray-300 ">{t.assignedTo?.user?.name || '—'}</span>
@@ -72,11 +72,11 @@ export default function TasksManagement() {
                 </Badge>
                 <div className="flex items-center gap-2">
                   {t.status !== 'completed' && (
-                    <Button size="sm" onClick={() => markCompleted(t.id)} className="bg-linear-to-r from-pink-500 to-purple-500 text-white rounded-full h-8 px-4 text-xs ">
+                    <Button size="sm" onClick={() => markCompleted(t.id)} className="bg-linear-to-r from-pink-500 to-purple-500 text-white rounded-full h-8 px-4 text-sm ">
                       Compléter
                     </Button>
                   )}
-                  <Button size="sm" variant="destructive" onClick={() => onDelete(t.id)} className="rounded-full h-8 px-4 text-xs  bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 border-0 hover:bg-red-500 hover:text-white">
+                  <Button size="sm" variant="destructive" onClick={() => onDelete(t.id)} className="rounded-full h-8 px-4 text-sm  bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 border-0 hover:bg-red-500 hover:text-white">
                     Supprimer
                   </Button>
                 </div>

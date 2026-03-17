@@ -134,7 +134,7 @@ export default function CreateWorkerModal({
 
           {/* Personal Info */}
           <div className="space-y-4">
-            <h3 className="text-sm font-semibold text-muted-foreground">
+            <h3 className="text-lg font-semibold text-muted-foreground">
               Informations personnelles
             </h3>
 
@@ -178,7 +178,7 @@ export default function CreateWorkerModal({
 
           {/* Professional */}
           <div className="space-y-4">
-            <h3 className="text-sm font-semibold text-muted-foreground">
+            <h3 className="text-lg font-semibold text-muted-foreground">
               Professionnel
             </h3>
 
@@ -213,7 +213,7 @@ export default function CreateWorkerModal({
                       checked={specialties.includes(category)}
                       onCheckedChange={() => toggleSpecialty(category)}
                     />
-                    <Label htmlFor={category} className="text-sm">
+                    <Label htmlFor={category} className="text-lg">
                       {category}
                     </Label>
                   </div>
@@ -243,7 +243,7 @@ export default function CreateWorkerModal({
 
           {/* Working Hours */}
           <div className="space-y-4">
-            <h3 className="text-sm font-semibold text-muted-foreground">
+            <h3 className="text-lg font-semibold text-muted-foreground">
               Horaires
             </h3>
 
@@ -256,7 +256,7 @@ export default function CreateWorkerModal({
               />
             </div>
 
-            <div className="bg-muted rounded-lg p-4 text-xs">
+            <div className="bg-muted rounded-lg p-4 text-sm">
               <strong>Note:</strong> Un compte client et employé sera créé automatiquement.
             </div>
           </div>

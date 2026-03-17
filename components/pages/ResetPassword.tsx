@@ -51,12 +51,12 @@ export default function ResetPasswordComponent() {
       <Card className="w-full max-w-md p-6 sm:p-8 bg-white dark:bg-gray-950 shadow-xl rounded-2xl border border-pink-100 dark:border-pink-900/30">
         <div className="text-center mb-6 sm:mb-8">
           <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">Réinitialiser votre mot de passe</h1>
-          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400">Entrez votre nouveau mot de passe</p>
+          <p className="text-lg sm:text-base text-gray-600 dark:text-gray-400">Entrez votre nouveau mot de passe</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
           <div>
-            <Label htmlFor="password" className="text-xs sm:text-sm text-gray-700 dark:text-gray-300">Nouveau mot de passe</Label>
+            <Label htmlFor="password" className="text-sm sm:text-lg text-gray-700 dark:text-gray-300">Nouveau mot de passe</Label>
             <Input
               id="password"
               type="password"
@@ -69,7 +69,7 @@ export default function ResetPasswordComponent() {
           </div>
 
           <div>
-            <Label htmlFor="confirmPassword" className="text-xs sm:text-sm text-gray-700 dark:text-gray-300">Confirmer le mot de passe</Label>
+            <Label htmlFor="confirmPassword" className="text-sm sm:text-lg text-gray-700 dark:text-gray-300">Confirmer le mot de passe</Label>
             <Input
               id="confirmPassword"
               type="password"
@@ -93,7 +93,7 @@ export default function ResetPasswordComponent() {
         <div className="mt-6 text-center">
           <button
             onClick={() => router.push('/auth/login')}
-            className="text-xs sm:text-sm text-purple-600 dark:text-purple-400 hover:underline flex items-center justify-center gap-1"
+            className="text-sm sm:text-lg text-purple-600 dark:text-purple-400 hover:underline flex items-center justify-center gap-1"
           >
             <ArrowLeft className="w-4 h-4" />
             Retour à la connexion

@@ -262,7 +262,7 @@ export default function SystemSettings() {
                 <div className="flex items-center justify-between">
                   <div>
                     <Label className="text-gray-900 dark:text-gray-100">SMS Notifications</Label>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">Envoyer des notifications SMS aux clients</p>
+                    <p className="text-lg text-gray-600 dark:text-gray-400">Envoyer des notifications SMS aux clients</p>
                   </div>
                   <Switch
                     checked={notificationSettings.smsNotifications}
@@ -273,7 +273,7 @@ export default function SystemSettings() {
                 <div className="flex items-center justify-between">
                   <div>
                     <Label className="text-gray-900 dark:text-gray-100">Email Notifications</Label>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">Envoyer des notifications par email</p>
+                    <p className="text-lg text-gray-600 dark:text-gray-400">Envoyer des notifications par email</p>
                   </div>
                   <Switch
                     checked={notificationSettings.emailNotifications}
@@ -284,7 +284,7 @@ export default function SystemSettings() {
                 <div className="flex items-center justify-between">
                   <div>
                     <Label className="text-gray-900 dark:text-gray-100">Rappels Automatiques</Label>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">Envoyer des rappels automatiques avant les rendez-vous</p>
+                    <p className="text-lg text-gray-600 dark:text-gray-400">Envoyer des rappels automatiques avant les rendez-vous</p>
                   </div>
                   <Switch
                     checked={notificationSettings.autoReminders}
@@ -302,7 +302,7 @@ export default function SystemSettings() {
                 <div className="flex items-center justify-between">
                   <div>
                     <Label className="text-gray-900 dark:text-gray-100">Réservations en Ligne</Label>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">Autoriser les clients à réserver en ligne</p>
+                    <p className="text-lg text-gray-600 dark:text-gray-400">Autoriser les clients à réserver en ligne</p>
                   </div>
                   <Switch
                     checked={bookingSettings.onlineBooking}
@@ -313,7 +313,7 @@ export default function SystemSettings() {
                 <div className="flex items-center justify-between">
                   <div>
                     <Label className="text-gray-900 dark:text-gray-100">Confirmation Requise</Label>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">Exiger une confirmation manuelle des réservations</p>
+                    <p className="text-lg text-gray-600 dark:text-gray-400">Exiger une confirmation manuelle des réservations</p>
                   </div>
                   <Switch
                     checked={bookingSettings.requireConfirmation}
@@ -331,7 +331,7 @@ export default function SystemSettings() {
                 <div className="flex items-center justify-between">
                   <div>
                     <Label className="text-gray-900 dark:text-gray-100">Mode Maintenance</Label>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">Mettre le site en mode maintenance</p>
+                    <p className="text-lg text-gray-600 dark:text-gray-400">Mettre le site en mode maintenance</p>
                   </div>
                   <Switch
                     checked={systemSettings?.maintenanceMode || false}
@@ -342,7 +342,7 @@ export default function SystemSettings() {
                 <div className="flex items-center justify-between">
                   <div>
                     <Label className="text-gray-900 dark:text-gray-100">Historique des Rendez-vous</Label>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">Afficher les anciens rendez-vous</p>
+                    <p className="text-lg text-gray-600 dark:text-gray-400">Afficher les anciens rendez-vous</p>
                   </div>
                   <Switch
                     checked={systemSettings?.showPastAppointments || true}

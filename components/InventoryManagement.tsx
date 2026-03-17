@@ -141,7 +141,7 @@ export default function InventoryManagement({ showMock }: { showMock?: boolean }
             </div>
             <div className="flex-1">
               <h3 className="text-lg sm:text-xl  text-gray-900 dark:text-gray-100 mb-2">Alertes Stock</h3>
-              <p className="text-gray-700 dark:text-gray-300 mb-4 text-sm sm:text-base">
+              <p className="text-gray-700 dark:text-gray-300 mb-4 text-lg sm:text-base">
                 {alertItems.length} produit(s) nécessite(nt) un réapprovisionnement immédiat
               </p>
               <div className="flex flex-wrap gap-2">
@@ -218,7 +218,7 @@ export default function InventoryManagement({ showMock }: { showMock?: boolean }
                         item.status === 'low' ? 'text-amber-600 dark:text-amber-400' : 'text-green-600 dark:text-green-400'
                       }`} />
                   </div>
-                  <Badge className="text-[10px] sm:text-xs  uppercase tracking-wider bg-white/80 dark:bg-black/20 text-gray-600 dark:text-gray-300 border-0">
+                  <Badge className="text-[10px] sm:text-sm  uppercase tracking-wider bg-white/80 dark:bg-black/20 text-gray-600 dark:text-gray-300 border-0">
                     {item.category}
                   </Badge>
                 </div>
@@ -226,23 +226,23 @@ export default function InventoryManagement({ showMock }: { showMock?: boolean }
                 <h3 className="text-lg  text-gray-900 dark:text-gray-100 mb-4">{item.name}</h3>
 
                 <div className="space-y-3 mb-6 p-4 bg-white/50 dark:bg-black/10 rounded-xl">
-                  <div className="flex justify-between items-center text-sm">
+                  <div className="flex justify-between items-center text-lg">
                     <span className="text-gray-600 dark:text-gray-400">Stock actuel:</span>
                     <span className=" text-gray-900 dark:text-gray-100">
                       {item.stock} {item.unit}
                     </span>
                   </div>
-                  <div className="flex justify-between items-center text-sm">
+                  <div className="flex justify-between items-center text-lg">
                     <span className="text-gray-600 dark:text-gray-400">Stock minimum:</span>
                     <span className=" text-gray-900 dark:text-gray-100">
                       {item.minStock} {item.unit}
                     </span>
                   </div>
-                  <div className="flex justify-between items-center text-sm">
+                  <div className="flex justify-between items-center text-lg">
                     <span className="text-gray-600 dark:text-gray-400">Prix unitaire:</span>
                     <span className=" text-gray-900 dark:text-gray-100">{item.cost}</span>
                   </div>
-                  <div className="flex justify-between items-center text-sm">
+                  <div className="flex justify-between items-center text-lg">
                     <span className="text-gray-600 dark:text-gray-400">Utilisation:</span>
                     <span className=" text-gray-900 dark:text-gray-100">{item.usageRate}</span>
                   </div>
@@ -259,11 +259,11 @@ export default function InventoryManagement({ showMock }: { showMock?: boolean }
                 </div>
 
                 <div className="grid grid-cols-1 gap-2 mb-6">
-                  <div className="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-400">
+                  <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
                     <div className="w-1.5 h-1.5 rounded-full bg-gray-400" />
                     Fournisseur: <span className="font-semibold text-gray-800 dark:text-gray-200 ml-1">{item.supplier}</span>
                   </div>
-                  <div className="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-400">
+                  <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
                     <div className="w-1.5 h-1.5 rounded-full bg-gray-400" />
                     Dernier réappro: <span className="font-semibold text-gray-800 dark:text-gray-200 ml-1">{item.lastRestock}</span>
                   </div>
@@ -310,7 +310,7 @@ export default function InventoryManagement({ showMock }: { showMock?: boolean }
                     </div>
                     <div>
                       <h3 className="text-xl  text-gray-900 dark:text-gray-100 mb-1">{supplier.name}</h3>
-                      <p className="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-1">
+                      <p className="text-lg text-gray-600 dark:text-gray-400 flex items-center gap-1">
                         <Users className="w-3.5 h-3.5" />
                         Contact: {supplier.contact}
                       </p>
@@ -327,21 +327,21 @@ export default function InventoryManagement({ showMock }: { showMock?: boolean }
                     <div className="w-8 h-8 rounded-lg bg-white dark:bg-gray-950 flex items-center justify-center shadow-sm">
                       <Phone className="w-4 h-4 text-blue-500" />
                     </div>
-                    <p className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">{supplier.phone}</p>
+                    <p className="text-sm sm:text-lg font-medium text-gray-700 dark:text-gray-300">{supplier.phone}</p>
                   </div>
                   <div className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-gray-100 dark:border-gray-700">
                     <div className="w-8 h-8 rounded-lg bg-white dark:bg-gray-950 flex items-center justify-center shadow-sm">
                       <Mail className="w-4 h-4 text-purple-500" />
                     </div>
-                    <p className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 break-all">{supplier.email}</p>
+                    <p className="text-sm sm:text-lg font-medium text-gray-700 dark:text-gray-300 break-all">{supplier.email}</p>
                   </div>
                 </div>
 
                 <div className="mb-8">
-                  <p className="text-xs  text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-3">Produits fournis</p>
+                  <p className="text-sm  text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-3">Produits fournis</p>
                   <div className="flex flex-wrap gap-2">
                     {supplier.products.map((product, idx) => (
-                      <Badge key={idx} variant="outline" className="text-[10px] sm:text-xs px-3 py-1 dark:border-gray-700 dark:text-gray-300 bg-white dark:bg-gray-950">
+                      <Badge key={idx} variant="outline" className="text-[10px] sm:text-sm px-3 py-1 dark:border-gray-700 dark:text-gray-300 bg-white dark:bg-gray-950">
                         {product}
                       </Badge>
                     ))}
@@ -380,7 +380,7 @@ export default function InventoryManagement({ showMock }: { showMock?: boolean }
                 <div key={idx} className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-5 bg-gray-50 dark:bg-gray-800/50 rounded-2xl border border-gray-100 dark:border-gray-700 hover:shadow-md transition-all gap-4">
                   <div className="flex-1">
                     <p className="text-lg  text-gray-900 dark:text-gray-100 mb-1">{report.item}</p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-2">
+                    <p className="text-lg text-gray-600 dark:text-gray-400 flex items-center gap-2">
                       <Package className="w-4 h-4" />
                       <span className="font-semibold text-pink-500">{report.used} unités</span> utilisées ce mois
                     </p>
@@ -412,15 +412,15 @@ export default function InventoryManagement({ showMock }: { showMock?: boolean }
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 text-center">
                 <div className="p-4 bg-white dark:bg-gray-950 rounded-2xl shadow-sm border border-blue-50 dark:border-blue-900/20">
                   <p className="text-3xl sm:text-4xl font-black text-gray-900 dark:text-gray-100">116</p>
-                  <p className="text-xs text-gray-600 dark:text-gray-400 uppercase  mt-2 tracking-widest">Produits Utilisés</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 uppercase  mt-2 tracking-widest">Produits Utilisés</p>
                 </div>
                 <div className="p-4 bg-white dark:bg-gray-950 rounded-2xl shadow-sm border border-blue-50 dark:border-blue-900/20">
                   <p className="text-2xl sm:text-3xl font-black text-gray-900 dark:text-gray-100">2,15M Fc</p>
-                  <p className="text-xs text-gray-600 dark:text-gray-400 uppercase  mt-2 tracking-widest">Valeur Stock</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 uppercase  mt-2 tracking-widest">Valeur Stock</p>
                 </div>
                 <div className="p-4 bg-white dark:bg-gray-950 rounded-2xl shadow-sm border border-blue-50 dark:border-blue-900/20">
                   <p className="text-3xl sm:text-4xl font-black text-green-600 dark:text-green-400">+8%</p>
-                  <p className="text-xs text-gray-600 dark:text-gray-400 uppercase  mt-2 tracking-widest">vs Mois Dernier</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 uppercase  mt-2 tracking-widest">vs Mois Dernier</p>
                 </div>
               </div>
             </div>

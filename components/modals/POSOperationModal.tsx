@@ -98,7 +98,7 @@ export default function POSOperationModal({ triggerLabel = "Opération POS" }: {
           {/* Client Information - Mobile Optimized */}
           <div className="grid grid-cols-1 gap-2">
             <div>
-              <Label htmlFor="pos-appointment" className="text-sm">ID Rendez-vous (optionnel)</Label>
+              <Label htmlFor="pos-appointment" className="text-lg">ID Rendez-vous (optionnel)</Label>
               <Input
                 id="pos-appointment"
                 value={appointmentId}
@@ -107,7 +107,7 @@ export default function POSOperationModal({ triggerLabel = "Opération POS" }: {
               />
             </div>
             <div>
-              <Label htmlFor="pos-client" className="text-sm">Client ID (optionnel)</Label>
+              <Label htmlFor="pos-client" className="text-lg">Client ID (optionnel)</Label>
               <Input
                 id="pos-client"
                 value={clientId}
@@ -120,7 +120,7 @@ export default function POSOperationModal({ triggerLabel = "Opération POS" }: {
           {/* Item Entry - Mobile Optimized */}
           <div className="grid grid-cols-1 gap-2">
             <div>
-              <Label htmlFor="pos-item-service" className="text-sm">ID Service/Produit</Label>
+              <Label htmlFor="pos-item-service" className="text-lg">ID Service/Produit</Label>
               <Input
                 id="pos-item-service"
                 value={itemServiceId}
@@ -131,7 +131,7 @@ export default function POSOperationModal({ triggerLabel = "Opération POS" }: {
             </div>
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <Label htmlFor="pos-item-price" className="text-sm">Prix</Label>
+                <Label htmlFor="pos-item-price" className="text-lg">Prix</Label>
                 <Input
                   id="pos-item-price"
                   type="number"
@@ -141,7 +141,7 @@ export default function POSOperationModal({ triggerLabel = "Opération POS" }: {
                 />
               </div>
               <div>
-                <Label htmlFor="pos-item-qty" className="text-sm">Quantité</Label>
+                <Label htmlFor="pos-item-qty" className="text-lg">Quantité</Label>
                 <Input
                   id="pos-item-qty"
                   type="number"
@@ -157,7 +157,7 @@ export default function POSOperationModal({ triggerLabel = "Opération POS" }: {
             <Button size="default" className="w-full sm:w-auto" onClick={addItem}>
               Ajouter article
             </Button>
-            <span className="text-sm text-gray-500 self-center">
+            <span className="text-lg text-gray-500 self-center">
               {items.length} article(s) ajoutés
             </span>
           </div>
@@ -168,7 +168,7 @@ export default function POSOperationModal({ triggerLabel = "Opération POS" }: {
                 <div key={idx} className="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
                   <div>
                     <p className="font-medium text-base">{it.serviceId}</p>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-lg text-gray-600">
                       {it.quantity} × {it.price.toLocaleString()} Fc
                     </p>
                   </div>
@@ -188,7 +188,7 @@ export default function POSOperationModal({ triggerLabel = "Opération POS" }: {
           {/* Payment Details - Mobile Optimized */}
           <div className="grid grid-cols-1 gap-2">
             <div>
-              <Label htmlFor="pos-method" className="text-sm">Méthode</Label>
+              <Label htmlFor="pos-method" className="text-lg">Méthode</Label>
               <select
                 id="pos-method"
                 className="w-full rounded-md border px-3 py-2.5 text-base"
@@ -203,7 +203,7 @@ export default function POSOperationModal({ triggerLabel = "Opération POS" }: {
             </div>
 
             <div>
-              <Label htmlFor="pos-discount" className="text-sm">Code promo (optionnel)</Label>
+              <Label htmlFor="pos-discount" className="text-lg">Code promo (optionnel)</Label>
               <Input
                 id="pos-discount"
                 value={discountCode}
@@ -214,7 +214,7 @@ export default function POSOperationModal({ triggerLabel = "Opération POS" }: {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               <div>
-                <Label htmlFor="pos-loyalty" className="text-sm">Points fidélité (optionnel)</Label>
+                <Label htmlFor="pos-loyalty" className="text-lg">Points fidélité (optionnel)</Label>
                 <Input
                   id="pos-loyalty"
                   type="number"
@@ -224,7 +224,7 @@ export default function POSOperationModal({ triggerLabel = "Opération POS" }: {
                 />
               </div>
               <div>
-                <Label htmlFor="pos-tip" className="text-sm">Pourboire (optionnel)</Label>
+                <Label htmlFor="pos-tip" className="text-lg">Pourboire (optionnel)</Label>
                 <Input
                   id="pos-tip"
                   type="number"

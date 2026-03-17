@@ -367,7 +367,7 @@ export default function ClientDashboardV2() {
                     <Bell className="w-5 h-5" />
 
                     {unreadCount > 0 && (
-                      <span className="absolute -top-1 -right-1 w-5 h-5 bg-pink-500 text-white text-xs rounded-full flex items-center justify-center">
+                      <span className="absolute -top-1 -right-1 w-5 h-5 bg-pink-500 text-white text-sm rounded-full flex items-center justify-center">
                         {unreadCount}
                       </span>
                     )}
@@ -380,7 +380,7 @@ export default function ClientDashboardV2() {
                     <h2 className="text-2xl mb-1 dark:text-gray-100">Notifications</h2>
 
                     <div className="flex items-center justify-between">
-                      <p className="text-sm text-gray-900 dark:text-gray-300">
+                      <p className="text-lg text-gray-900 dark:text-gray-300">
                         {unreadCount} non lues
                       </p>
 
@@ -427,15 +427,15 @@ export default function ClientDashboardV2() {
                               {getNotificationIcon(notification.type)}
 
                               <div className="flex-1">
-                                <h3 className="font-semibold text-sm mb-1">
+                                <h3 className="font-semibold text-lg mb-1">
                                   {notification.title}
                                 </h3>
 
-                                <p className="text-sm text-gray-900 dark:text-gray-100 mb-1">
+                                <p className="text-lg text-gray-900 dark:text-gray-100 mb-1">
                                   {notification.message}
                                 </p>
 
-                                <p className="text-xs text-gray-500">
+                                <p className="text-sm text-gray-500">
                                   {formatDate(notification.createdAt)}
                                 </p>
                               </div>
@@ -482,11 +482,11 @@ export default function ClientDashboardV2() {
               </div>
 
               <div>
-                <p className="text-sm opacity-90">Points de fidélité</p>
+                <p className="text-lg opacity-90">Points de fidélité</p>
 
                 <p className="text-2xl sm:text-3xl mt-1">{loyaltyPoints}</p>
 
-                <Badge className="bg-white/20 hover:bg-white/30 text-white border-0 mt-2 text-xs">
+                <Badge className="bg-white/20 hover:bg-white/30 text-white border-0 mt-2 text-sm">
                   {loyaltyTier}
                 </Badge>
               </div>
@@ -502,7 +502,7 @@ export default function ClientDashboardV2() {
               </div>
 
               <div>
-                <p className="text-sm text-gray-900 dark:text-gray-300">
+                <p className="text-lg text-gray-900 dark:text-gray-300">
                   Rendez-vous
                 </p>
 
@@ -510,7 +510,7 @@ export default function ClientDashboardV2() {
                   {completedAppointments}
                 </p>
 
-                <p className="text-xs text-gray-500 dark:text-gray-400">
+                <p className="text-sm text-gray-500 dark:text-gray-400">
                   {upcomingAppointments.length} à venir
                 </p>
               </div>
@@ -526,7 +526,7 @@ export default function ClientDashboardV2() {
               </div>
 
               <div>
-                <p className="text-sm text-gray-900 dark:text-gray-300">
+                <p className="text-lg text-gray-900 dark:text-gray-300">
                   Parrainages
                 </p>
 
@@ -534,7 +534,7 @@ export default function ClientDashboardV2() {
                   {referrals?.length}
                 </p>
 
-                <p className="text-xs text-gray-500 dark:text-gray-400">
+                <p className="text-sm text-gray-500 dark:text-gray-400">
                   {nextFreeReferral} pour service gratuit
                 </p>
               </div>
@@ -550,7 +550,7 @@ export default function ClientDashboardV2() {
               </div>
 
               <div>
-                <p className="text-sm text-gray-900 dark:text-gray-300">
+                <p className="text-lg text-gray-900 dark:text-gray-300">
                   Service gratuit dans
                 </p>
 
@@ -558,7 +558,7 @@ export default function ClientDashboardV2() {
                   {nextFreeService}
                 </p>
 
-                <p className="text-xs text-gray-500 dark:text-gray-400">
+                <p className="text-sm text-gray-500 dark:text-gray-400">
                   rendez-vous
                 </p>
               </div>
@@ -577,7 +577,7 @@ export default function ClientDashboardV2() {
               <p className="text-xl font-black text-gray-900 dark:text-gray-100">
                 {selectedClient?.totalAppointments}
               </p>
-              <p className="text-xs text-gray-500 uppercase tracking-tight">
+              <p className="text-sm text-gray-500 uppercase tracking-tight">
                 Tous les rendez-vous
               </p>
             </div>
@@ -587,7 +587,7 @@ export default function ClientDashboardV2() {
               <p className="text-xl font-black text-gray-900 dark:text-gray-100 truncate">
                 {selectedClient?.totalSpent}
               </p>
-              <p className="text-xs text-gray-500 uppercase tracking-tight">
+              <p className="text-sm text-gray-500 uppercase tracking-tight">
                 Dépensé
               </p>
             </div>
@@ -597,7 +597,7 @@ export default function ClientDashboardV2() {
               <p className="text-xl font-black text-gray-900 dark:text-gray-100">
                 {selectedClient?.giftCardBalance}
               </p>
-              <p className="text-xs text-gray-500 uppercase tracking-tight">
+              <p className="text-sm text-gray-500 uppercase tracking-tight">
                 Carte cadeau
               </p>
             </div>
@@ -607,7 +607,7 @@ export default function ClientDashboardV2() {
               <p className="text-xl font-black text-gray-900 dark:text-gray-100">
                 {selectedClient?.prepaymentBalance}
               </p>
-              <p className="text-xs text-gray-500 uppercase tracking-tight">
+              <p className="text-sm text-gray-500 uppercase tracking-tight">
                 Prépayé
               </p>
             </div>
@@ -678,7 +678,7 @@ export default function ClientDashboardV2() {
                               {getStatusBadge(appointment.status)}
                             </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm text-gray-900 dark:text-gray-100">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-lg text-gray-900 dark:text-gray-100">
                               <div className="flex items-center gap-2">
                                 <CalendarIcon className="w-4 h-4 text-pink-500" />
                                 <span>{formatDate(appointment.date)}</span>
@@ -705,7 +705,7 @@ export default function ClientDashboardV2() {
 
                             {appointment.notes && (
                               <div className="mt-3 p-3 bg-purple-50 rounded-lg">
-                                <p className="text-sm text-gray-700">
+                                <p className="text-lg text-gray-700">
                                   <MessageSquare className="w-4 h-4 inline mr-2" />
                                   {appointment.notes}
                                 </p>
@@ -758,7 +758,7 @@ export default function ClientDashboardV2() {
 
                                 <PopoverContent className="w-[320px] space-y-4">
 
-                                  <p className="text-sm text-gray-600 dark:text-gray-300">
+                                  <p className="text-lg text-gray-600 dark:text-gray-300">
                                     Ce rendez-vous a été manqué. Reprogrammez une nouvelle date.
                                   </p>
 
@@ -867,7 +867,7 @@ export default function ClientDashboardV2() {
                           </h3>
                           {getStatusBadge(appointment.status)}
                         </div>
-                        <div className="flex items-center gap-4 text-sm text-gray-900 dark:text-gray-100">
+                        <div className="flex items-center gap-4 text-lg text-gray-900 dark:text-gray-100">
                           <span>{formatDate(appointment.date)}</span>
                           <span>•</span>
                           <span>{appointment.worker?.user?.name}</span>
@@ -915,7 +915,7 @@ export default function ClientDashboardV2() {
                 </h3>
                 <div className="flex items-center gap-3 mb-4 flex-col">
                   <div className="flex-1 p-4 bg-background rounded-lg border-2 border-dashed border-pink-300">
-                    <p className="text-sm lg:text-3xl text-center text-pink-600 tracking-wider">
+                    <p className="text-lg lg:text-3xl text-center text-pink-600 tracking-wider">
                       {referralCode ? "https://beauty-nails.vercel.app/auth/signup?ref=" + referralCode.toLocaleLowerCase() : "Chargement..."}
                     </p>
                   </div>
@@ -934,13 +934,13 @@ export default function ClientDashboardV2() {
                     <p className="text-2xl  text-pink-600">
                       {referrals?.length || 0}
                     </p>
-                    <p className="text-sm text-gray-900 dark:text-gray-100">Parrainages réussis</p>
+                    <p className="text-lg text-gray-900 dark:text-gray-100">Parrainages réussis</p>
                   </div>
                   <div className="p-4 bg-white dark:bg-gray-800 rounded-lg">
                     <p className="text-2xl  text-purple-600">
                       {nextFreeReferral}
                     </p>
-                    <p className="text-sm text-gray-900 dark:text-gray-100">
+                    <p className="text-lg text-gray-900 dark:text-gray-100">
                       Restants pour service gratuit
                     </p>
                   </div>
@@ -953,7 +953,7 @@ export default function ClientDashboardV2() {
                     Historique des Parrainages
                   </h3>
 
-                  <p className="text-sm">
+                  <p className="text-lg">
                     referred by{" "}
                   </p>
                   <h3 className="text-pink-500 fontbold text-lg">
@@ -971,16 +971,16 @@ export default function ClientDashboardV2() {
                 </div>
 
                 {isLoading ? (
-                  <p className="text-sm text-muted-foreground">Chargement...</p>
+                  <p className="text-lg text-muted-foreground">Chargement...</p>
                 ) : referralList.length === 0 ? (
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-lg text-muted-foreground">
                     Aucun parrainage pour le moment.
                   </p>
                 ) : (
                   <div className="rounded-xl border overflow-hidden">
                     <div className="max-h-[400px] overflow-y-auto">
 
-                      <table className="w-full text-sm">
+                      <table className="w-full text-lg">
                         <thead className="bg-muted sticky top-0 z-10">
                           <tr>
                             <th className="text-left p-3">Nom</th>
@@ -1016,7 +1016,7 @@ export default function ClientDashboardV2() {
 
                               <td className="p-3">
                                 <span
-                                  className={`px-3 py-1 text-xs rounded-full ${ref.status === "completed"
+                                  className={`px-3 py-1 text-sm rounded-full ${ref.status === "completed"
                                     ? "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400"
                                     : ref.status === "pending"
                                       ? "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-400"
@@ -1029,11 +1029,11 @@ export default function ClientDashboardV2() {
 
                               <td className="p-3">
                                 {ref.rewardGranted ? (
-                                  <span className="text-green-600 dark:text-green-400 text-xs font-medium">
+                                  <span className="text-green-600 dark:text-green-400 text-sm font-medium">
                                     ✔ Accordée
                                   </span>
                                 ) : (
-                                  <span className="text-muted-foreground text-xs">
+                                  <span className="text-muted-foreground text-sm">
                                     —
                                   </span>
                                 )}
@@ -1059,7 +1059,7 @@ export default function ClientDashboardV2() {
                       </span>
                     </div>
                     <h4 className="font-semibold mb-2">Partagez</h4>
-                    <p className="text-sm text-gray-900 dark:text-gray-100">
+                    <p className="text-lg text-gray-900 dark:text-gray-100">
                       Partagez votre code avec vos amis
                     </p>
                   </div>
@@ -1070,7 +1070,7 @@ export default function ClientDashboardV2() {
                       </span>
                     </div>
                     <h4 className="font-semibold mb-2">Ils s'inscrivent</h4>
-                    <p className="text-sm text-gray-900 dark:text-gray-100">
+                    <p className="text-lg text-gray-900 dark:text-gray-100">
                       Vos amis utilisent votre code à l'inscription
                     </p>
                   </div>
@@ -1081,7 +1081,7 @@ export default function ClientDashboardV2() {
                       </span>
                     </div>
                     <h4 className="font-semibold mb-2">Gagnez des points</h4>
-                    <p className="text-sm text-gray-900 dark:text-gray-100">
+                    <p className="text-lg text-gray-900 dark:text-gray-100">
                       Recevez des points à chaque parrainage réussi
                     </p>
                   </div>
@@ -1113,13 +1113,13 @@ export default function ClientDashboardV2() {
                       </div>
                     </div>
                     <Card className="p-6 bg-linear-to-br from-amber-50 to-orange-50 dark:from-amber-900/10 dark:to-orange-900/10 border-amber-100 dark:border-amber-900/30 rounded-3xl">
-                      {/* <h4 className="text-sm font-black text-gray-900 dark:text-gray-100 mb-4 uppercase tracking-widest flex items-center gap-2">
+                      {/* <h4 className="text-lg font-black text-gray-900 dark:text-gray-100 mb-4 uppercase tracking-widest flex items-center gap-2">
                       <Award className="w-4 h-4 text-amber-500" />
                       Programme de Fidélité
                     </h4> */}
                       <div className="space-y-4">
                         <div className="flex justify-between items-center">
-                          <span className="text-xs text-gray-700 dark:text-gray-400 font-medium">Points actuels</span>
+                          <span className="text-sm text-gray-700 dark:text-gray-400 font-medium">Points actuels</span>
                           <span className="text-2xl text-gray-900 dark:text-gray-100 font-black">{selectedClient?.loyaltyPoints || 0} pts</span>
                         </div>
                         <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
@@ -1128,7 +1128,7 @@ export default function ClientDashboardV2() {
                             style={{ width: `${(selectedClient?.loyaltyPoints / 500) * 100}%` }}
                           />
                         </div>
-                        <p className="text-xs text-gray-600 dark:text-gray-400 italic">
+                        <p className="text-sm text-gray-600 dark:text-gray-400 italic">
                           Encore {500 - (selectedClient?.loyaltyPoints || 0)} points pour votre prochaine récompense !
                         </p>
                       </div>
@@ -1192,7 +1192,7 @@ export default function ClientDashboardV2() {
                         </div>
                         <div>
                           <p className="font-medium">{transaction.description}</p>
-                          <p className="text-sm text-gray-500">
+                          <p className="text-lg text-gray-500">
                             {formatDate(transaction.createdAt)}
                           </p>
                         </div>
@@ -1249,27 +1249,27 @@ export default function ClientDashboardV2() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="space-y-4">
-                        <h4 className="text-xs sm:text-sm font-black text-gray-400 dark:text-gray-500 uppercase tracking-[0.2em]">Informations de Contact</h4>
+                        <h4 className="text-sm sm:text-lg font-black text-gray-400 dark:text-gray-500 uppercase tracking-[0.2em]">Informations de Contact</h4>
                         <div className="space-y-3 p-5 bg-gray-50 dark:bg-gray-800/50 rounded-2xl border border-gray-100 dark:border-gray-700">
-                          <p className="flex items-center gap-3 text-sm sm:text-base text-gray-700 dark:text-gray-300">
+                          <p className="flex items-center gap-3 text-lg sm:text-base text-gray-700 dark:text-gray-300">
                             <div className="w-8 h-8 rounded-lg bg-white dark:bg-gray-800 flex items-center justify-center shadow-sm">
                               <Phone className="w-4 h-4 text-pink-500" />
                             </div>
                             {selectedClient.phone}
                           </p>
-                          <p className="flex items-center gap-3 text-sm sm:text-base text-gray-700 dark:text-gray-300">
+                          <p className="flex items-center gap-3 text-lg sm:text-base text-gray-700 dark:text-gray-300">
                             <div className="w-8 h-8 rounded-lg bg-white dark:bg-gray-800 flex items-center justify-center shadow-sm">
                               <Mail className="w-4 h-4 text-pink-500" />
                             </div>
                             {selectedClient.email}
                           </p>
-                          <p className="flex items-center gap-3 text-sm sm:text-base text-gray-700 dark:text-gray-300">
+                          <p className="flex items-center gap-3 text-lg sm:text-base text-gray-700 dark:text-gray-300">
                             <div className="w-8 h-8 rounded-lg bg-white dark:bg-gray-800 flex items-center justify-center shadow-sm">
                               <Cake className="w-4 h-4 text-pink-500" />
                             </div>
                             {selectedClient.birthday}
                           </p>
-                          <p className="flex items-center gap-3 text-sm sm:text-base text-gray-700 dark:text-gray-300">
+                          <p className="flex items-center gap-3 text-lg sm:text-base text-gray-700 dark:text-gray-300">
                             <div className="w-8 h-8 rounded-lg bg-white dark:bg-gray-800 flex items-center justify-center shadow-sm">
                               <MapPin className="w-4 h-4 text-pink-500" />
                             </div>
@@ -1279,16 +1279,16 @@ export default function ClientDashboardV2() {
                       </div>
 
                       <div className="space-y-4">
-                        <h4 className="text-xs sm:text-sm font-black text-gray-400 dark:text-gray-500 uppercase tracking-[0.2em]">Notes & Préférences</h4>
+                        <h4 className="text-sm sm:text-lg font-black text-gray-400 dark:text-gray-500 uppercase tracking-[0.2em]">Notes & Préférences</h4>
                         <div className="space-y-4">
                           <div className="p-5 bg-purple-50 dark:bg-purple-900/10 rounded-2xl border border-purple-100 dark:border-purple-900/30">
                             <p className="text-[10px] font-black text-purple-600 dark:text-purple-400 uppercase tracking-widest mb-2">Préférences</p>
-                            <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed font-medium">{selectedClient.preferences}</p>
+                            <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed font-medium">{selectedClient.preferences}</p>
                           </div>
                           <div className="p-5 bg-red-50 dark:bg-red-900/10 rounded-2xl border border-red-100 dark:border-red-900/30">
                             <p className="text-[10px] font-black text-red-600 dark:text-red-400 uppercase tracking-widest mb-2">Allergies / Notes</p>
-                            <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed font-medium">{selectedClient?.allergies}</p>
-                            <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed font-normal">{selectedClient?.preferences}</p>
+                            <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed font-medium">{selectedClient?.allergies}</p>
+                            <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed font-normal">{selectedClient?.preferences}</p>
                           </div>
                         </div>
                       </div>
@@ -1296,7 +1296,7 @@ export default function ClientDashboardV2() {
 
                     {/* {selectedClient && (
                       <Card className="p-6 bg-linear-to-br from-purple-50 to-pink-50 dark:from-purple-900/10 dark:to-pink-900/10 border border-purple-100 dark:border-purple-900/30 rounded-3xl">
-                        <h4 className="text-sm font-black text-gray-900 dark:text-gray-100 mb-4 uppercase tracking-widest flex items-center gap-2">
+                        <h4 className="text-lg font-black text-gray-900 dark:text-gray-100 mb-4 uppercase tracking-widest flex items-center gap-2">
                           <DollarSign className="w-4 h-4 text-purple-500" />
                           Abonnement
                         </h4>
@@ -1305,10 +1305,10 @@ export default function ClientDashboardV2() {
                     )} */}
 
                     <div className="p-6 bg-pink-50 dark:bg-pink-900/10 rounded-3xl border border-pink-100 dark:border-pink-900/30">
-                      <h4 className="text-xs font-black text-pink-600 dark:text-pink-400 uppercase tracking-[0.2em] mb-4">Services Favoris</h4>
+                      <h4 className="text-sm font-black text-pink-600 dark:text-pink-400 uppercase tracking-[0.2em] mb-4">Services Favoris</h4>
                       <div className="flex flex-wrap gap-2">
                         {selectedClient?.favoriteServices?.map((service: any, idx: any) => (
-                          <Badge key={idx} className="bg-white dark:bg-gray-800 hover:bg-pink-50 dark:hover:bg-pink-900/20 text-pink-600 dark:text-pink-400 border border-pink-100 dark:border-pink-900/50 py-2 px-4 text-xs  rounded-full transition-all">
+                          <Badge key={idx} className="bg-white dark:bg-gray-800 hover:bg-pink-50 dark:hover:bg-pink-900/20 text-pink-600 dark:text-pink-400 border border-pink-100 dark:border-pink-900/50 py-2 px-4 text-sm  rounded-full transition-all">
                             {service}
                           </Badge>
                         ))}
@@ -1325,7 +1325,7 @@ export default function ClientDashboardV2() {
                       <CalendarIcon className="w-5 h-5 text-pink-500" />
                       Historique des Visites
                     </h4>
-                    <Button variant="outline" size="sm" className="rounded-full text-xs  dark:border-gray-700">Exporter PDF</Button>
+                    <Button variant="outline" size="sm" className="rounded-full text-sm  dark:border-gray-700">Exporter PDF</Button>
                   </div>
                   <div className="space-y-3">
                     {appointmentHistory.map((apt, idx) => (
@@ -1335,12 +1335,12 @@ export default function ClientDashboardV2() {
                             <CalendarIcon className="w-5 h-5 text-pink-500" />
                           </div>
                           <div>
-                            <p className="text-sm sm:text-base text-gray-900 dark:text-gray-100 ">{apt.service.name}</p>
-                            <p className="text-xs text-gray-500 dark:text-gray-400">avec {apt.worker.name} • {apt.date}</p>
+                            <p className="text-lg sm:text-base text-gray-900 dark:text-gray-100 ">{apt.service.name}</p>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">avec {apt.worker.name} • {apt.date}</p>
                           </div>
                         </div>
                         <div className="flex items-center justify-between w-full sm:w-auto gap-4">
-                          <p className="text-sm sm:text-base font-black text-gray-900 dark:text-gray-100">{apt.price}</p>
+                          <p className="text-lg sm:text-base font-black text-gray-900 dark:text-gray-100">{apt.price}</p>
                           <Badge className={`bg-green-500/10 ${apt.status === 'completed' ? 'text-green-600 dark:text-green-400 border-green-200 dark:border-green-900/30' : apt.status === 'cancelled' ? 'text-red-600 dark:text-red-400 border-red-200 dark:border-red-900/30' : ''} px-3 py-1 text-[10px] `}>
                             {apt.status}
                           </Badge>
@@ -1371,8 +1371,8 @@ export default function ClientDashboardV2() {
                                 <Gift className="w-5 h-5 text-purple-500" />}
                           </div>
                           <div>
-                            <p className="text-sm sm:text-base text-gray-900 dark:text-gray-100 ">{notif.message}</p>
-                            <p className="text-xs text-gray-500 dark:text-gray-400">{notif.type} • {notif.createdAt}</p>
+                            <p className="text-lg sm:text-base text-gray-900 dark:text-gray-100 ">{notif.message}</p>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">{notif.type} • {notif.createdAt}</p>
                           </div>
                         </div>
                         <Badge variant="outline" className="border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 px-3 py-1 text-[10px] ">
@@ -1392,7 +1392,7 @@ export default function ClientDashboardV2() {
                           <CreditCard className="w-6 h-6 text-green-600" />
                         </div>
                         <div>
-                          <p className="text-xs font-black text-green-600 dark:text-green-400 uppercase tracking-widest">Solde Prépayé</p>
+                          <p className="text-sm font-black text-green-600 dark:text-green-400 uppercase tracking-widest">Solde Prépayé</p>
                           <p className="text-2xl font-black text-gray-900 dark:text-gray-100">{selectedClient?.prepaymentBalance}</p>
                         </div>
                       </div>
@@ -1406,7 +1406,7 @@ export default function ClientDashboardV2() {
                           <Gift className="w-6 h-6 text-purple-600" />
                         </div>
                         <div>
-                          <p className="text-xs font-black text-purple-600 dark:text-purple-400 uppercase tracking-widest">Carte Cadeau</p>
+                          <p className="text-sm font-black text-purple-600 dark:text-purple-400 uppercase tracking-widest">Carte Cadeau</p>
                           <p className="text-2xl font-black text-gray-900 dark:text-gray-100">{selectedClient?.giftCardBalance}</p>
                         </div>
                       </div>
@@ -1438,7 +1438,7 @@ export default function ClientDashboardV2() {
             <div className="py-4">
               <div className="p-4 bg-white dark:bg-gray-800 rounded-lg space-y-2">
                 <p className="font-semibold">{selectedAppointment.service?.name}</p>
-                <p className="text-sm text-gray-900 dark:text-gray-100">
+                <p className="text-lg text-gray-900 dark:text-gray-100">
                   {formatDate(selectedAppointment.date)} à {selectedAppointment.time}
                 </p>
               </div>
@@ -1475,7 +1475,7 @@ export default function ClientDashboardV2() {
           <div className="space-y-4 py-4">
             {/* Star Rating */}
             <div>
-              <label className="text-sm font-medium mb-2 block">Note</label>
+              <label className="text-lg font-medium mb-2 block">Note</label>
               <div className="flex gap-2">
                 {[1, 2, 3, 4, 5].map((star) => (
                   <button
@@ -1496,7 +1496,7 @@ export default function ClientDashboardV2() {
 
             {/* Review Text */}
             <div>
-              <label className="text-sm font-medium mb-2 block">
+              <label className="text-lg font-medium mb-2 block">
                 Commentaire (optionnel)
               </label>
               <Textarea

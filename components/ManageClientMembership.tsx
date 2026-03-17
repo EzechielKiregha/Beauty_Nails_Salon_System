@@ -56,7 +56,7 @@ export default function ManageClientMembership({ clientId }: ManageClientMembers
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
               Aucun abonnement actif
             </h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+            <p className="text-lg text-gray-600 dark:text-gray-400 mt-1">
               Sélectionnez un abonnement premium pour ce client.
             </p>
           </div>
@@ -69,7 +69,7 @@ export default function ManageClientMembership({ clientId }: ManageClientMembers
                   <SelectValue placeholder="Choisir un abonnement" />
                 </SelectTrigger>
 
-                <SelectContent className="flex-1 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-4 py-2 text-sm">
+                <SelectContent className="flex-1 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-4 py-2 text-lg">
                   {memberships
                     .filter(m => m.isActive)
                     .map(m => (
@@ -87,7 +87,7 @@ export default function ManageClientMembership({ clientId }: ManageClientMembers
             {/* <select
               value={selectedMembershipId}
               onChange={(e) => setSelectedMembershipId(e.target.value)}
-              className="flex-1 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-4 py-2 text-sm"
+              className="flex-1 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-4 py-2 text-lg"
             >
               <option value="">Choisir un abonnement</option>
               {memberships
@@ -109,7 +109,7 @@ export default function ManageClientMembership({ clientId }: ManageClientMembers
 
           </div>
 
-          <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+          <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
             <input
               id="autoRenew"
               type="checkbox"
@@ -136,7 +136,7 @@ export default function ManageClientMembership({ clientId }: ManageClientMembers
                 <h3 className="text-xl font-semibold tracking-wide">
                   {activePurchase.membership?.name || "Abonnement"}
                 </h3>
-                <p className="text-sm text-purple-100 mt-1">
+                <p className="text-lg text-purple-100 mt-1">
                   {new Date(activePurchase.startDate).toLocaleDateString()} →
                   {" "}
                   {new Date(activePurchase.endDate).toLocaleDateString()}
@@ -144,7 +144,7 @@ export default function ManageClientMembership({ clientId }: ManageClientMembers
               </div>
 
               <Badge
-                className={`px-3 py-1 text-xs font-medium rounded-full ${activePurchase.status === "active"
+                className={`px-3 py-1 text-sm font-medium rounded-full ${activePurchase.status === "active"
                   ? "bg-green-500/20 text-green-200 border border-green-300/30"
                   : activePurchase.status === "expired"
                     ? "bg-yellow-500/20 text-yellow-200 border border-yellow-300/30"
@@ -163,7 +163,7 @@ export default function ManageClientMembership({ clientId }: ManageClientMembers
             <div className="h-px bg-white/20"></div>
 
             {/* Auto Renew */}
-            <div className="flex justify-between text-sm">
+            <div className="flex justify-between text-lg">
               <span className="text-purple-200">Auto-renouvellement</span>
               <span className="font-medium">
                 {activePurchase.autoRenew ? "Activé" : "Désactivé"}
@@ -197,7 +197,7 @@ export default function ManageClientMembership({ clientId }: ManageClientMembers
                     <SelectValue placeholder="Choisir un abonnement" className="text-gray-400" />
                   </SelectTrigger>
 
-                  <SelectContent className="flex-1 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-4 py-2 text-sm">
+                  <SelectContent className="flex-1 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-4 py-2 text-lg">
                     {memberships
                       .filter(m => m.isActive)
                       .map(m => (

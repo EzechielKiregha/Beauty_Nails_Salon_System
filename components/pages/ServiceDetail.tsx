@@ -134,10 +134,10 @@ export default function ServiceDetail() {
                       <p className="text-gray-600 dark:text-gray-300 mb-4">{service.description}</p>
                       {service.addOns && service.addOns.length > 0 && (
                         <div>
-                          <p className="text-sm text-gray-500 dark:text-gray-400 mb-2 font-medium">Options supplémentaires :</p>
+                          <p className="text-lg text-gray-500 dark:text-gray-400 mb-2 font-medium">Options supplémentaires :</p>
                           <ul className="space-y-1">
                             {service.addOns.map((addon, i) => (
-                              <li key={i} className="text-sm text-gray-600 dark:text-gray-300 flex items-center">
+                              <li key={i} className="text-lg text-gray-600 dark:text-gray-300 flex items-center">
                                 <span className="w-1.5 h-1.5 bg-pink-400 rounded-full mr-2" />
                                 {addon.name} ({addon.price.toLocaleString()} Fc)
                               </li>
@@ -184,28 +184,28 @@ export default function ServiceDetail() {
                 <Star className="w-8 h-8 text-white" />
               </div>
               <h3 className="text-lg text-gray-900 dark:text-gray-100 mb-2">Expertes Qualifiées</h3>
-              <p className="text-gray-600 dark:text-gray-300 text-sm">Techniciennes certifiées et expérimentées</p>
+              <p className="text-gray-600 dark:text-gray-300 text-lg">Techniciennes certifiées et expérimentées</p>
             </div>
             <div className="text-center">
               <div className="w-16 h-16 rounded-full bg-linear-to-br from-purple-400 to-pink-400 flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl">✨</span>
               </div>
               <h3 className="text-lg text-gray-900 dark:text-gray-100 mb-2">Produits Premium</h3>
-              <p className="text-gray-600 dark:text-gray-300 text-sm">Marques reconnues et de qualité</p>
+              <p className="text-gray-600 dark:text-gray-300 text-lg">Marques reconnues et de qualité</p>
             </div>
             <div className="text-center">
               <div className="w-16 h-16 rounded-full bg-linear-to-br from-amber-400 to-orange-400 flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl">🏆</span>
               </div>
               <h3 className="text-lg text-gray-900 dark:text-gray-100 mb-2">Hygiène Stricte</h3>
-              <p className="text-gray-600 dark:text-gray-300 text-sm">Stérilisation et protocoles sanitaires</p>
+              <p className="text-gray-600 dark:text-gray-300 text-lg">Stérilisation et protocoles sanitaires</p>
             </div>
             <div className="text-center">
               <div className="w-16 h-16 rounded-full bg-linear-to-br from-rose-400 to-pink-400 flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl">💝</span>
               </div>
               <h3 className="text-lg text-gray-900 dark:text-gray-100 mb-2">Ambiance Luxueuse</h3>
-              <p className="text-gray-600 dark:text-gray-300 text-sm">Cadre élégant et relaxant</p>
+              <p className="text-gray-600 dark:text-gray-300 text-lg">Cadre élégant et relaxant</p>
             </div>
           </div>
         </div>

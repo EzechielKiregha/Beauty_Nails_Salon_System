@@ -18,13 +18,13 @@ export default function Footer() {
               height={50}
               priority
             />
-            <p className="text-gray-400 mt-3 text-sm leading-relaxed">
+            <p className="text-gray-400 mt-3 text-lg leading-relaxed">
               La beauté commence au bout des doigts.
             </p>
           </div>
 
           {/* Contact */}
-          <div className="space-y-3 text-sm text-gray-300 text-center">
+          <div className="space-y-3 text-lg text-gray-300 text-center">
             <div className="flex items-center justify-center space-x-2">
               <MapPin className="w-4 h-4 text-pink-400" />
               <span>Q. Birere, Goma – RDC</span>
@@ -56,7 +56,7 @@ export default function Footer() {
         </div>
 
         {/* Bottom */}
-        <div className="border-t border-white/10 mt-8 pt-5 text-center text-xs text-gray-500">
+        <div className="border-t border-white/10 mt-8 pt-5 text-center text-sm text-gray-500">
           © 2025 Beauty Nails Salon — Tous droits réservés.
         </div>
 

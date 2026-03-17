@@ -180,7 +180,7 @@ export default function Home() {
 
             {/* Service */}
             <div className="w-full">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+              <label className="block text-lg font-medium text-gray-700 dark:text-gray-200 mb-2">
                 Service
               </label>
               <Select value={selectedService?.id ?? ''} onValueChange={(value) => {
@@ -203,7 +203,7 @@ export default function Home() {
 
             {/* Date */}
             <div className="w-full">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+              <label className="block text-lg font-medium text-gray-700 dark:text-gray-200 mb-2">
                 Date
               </label>
               <Popover>
@@ -230,7 +230,7 @@ export default function Home() {
 
             {/* Heure */}
             <div className="w-full">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+              <label className="block text-lg font-medium text-gray-700 dark:text-gray-200 mb-2">
                 Heure
               </label>
               <Select value={selectedTime} onValueChange={setSelectedTime}>
@@ -339,7 +339,7 @@ export default function Home() {
                   {/* Popular Badge for second item (example logic) */}
                   {index === 1 && (
                     <div className="absolute top-0 right-0 bg-linear-to-r from-amber-500 to-orange-500 dark:from-amber-600 dark:to-orange-600 text-white px-6 py-2 rounded-bl-3xl z-10">
-                      <span className="flex items-center text-sm ">
+                      <span className="flex items-center text-lg ">
                         <Star className="w-4 h-4 mr-1" />
                         Populaire
                       </span>
@@ -362,7 +362,7 @@ export default function Home() {
                       {membership.benefits.map((benefit: any, idx: any) => (
                         <li key={idx} className="flex items-start">
                           <div className="w-6 h-6 rounded-full bg-pink-500 dark:bg-pink-600 flex items-center justify-center mr-3 shrink-0">
-                            <span className="text-white text-xs ">✓</span>
+                            <span className="text-white text-sm ">✓</span>
                           </div>
                           <span className="text-gray-700 dark:text-gray-300">{benefit}</span>
                         </li>
@@ -417,7 +417,7 @@ export default function Home() {
                       <Star key={i} className="w-5 h-5 fill-amber-400 text-amber-400" />
                     ))}
                   </div>
-                  <span className="text-sm text-gray-500 dark:text-gray-400">{testimonial.date}</span>
+                  <span className="text-lg text-gray-500 dark:text-gray-400">{testimonial.date}</span>
                 </div>
                 <p className="text-gray-700 dark:text-gray-300 mb-4">{testimonial.text}</p>
                 <div className="flex items-center">
@@ -426,7 +426,7 @@ export default function Home() {
                   </div>
                   <div className="ml-3">
                     <p className="text-gray-600 dark:text-gray-300">{testimonial.name}</p>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">Cliente vérifiée</p>
+                    <p className="text-lg text-gray-500 dark:text-gray-400">Cliente vérifiée</p>
                   </div>
                 </div>
               </Card>

@@ -136,7 +136,7 @@ export default function Header() {
           <div className="md:hidden py-4 border-t border-pink-100 dark:border-pink-900">
             <div className="flex flex-col space-y-4">
               <div className="px-4 py-2 flex justify-between items-center">
-                <span className="text-sm text-gray-600 dark:text-gray-400">Thème</span>
+                <span className="text-lg text-gray-600 dark:text-gray-400">Thème</span>
                 <ModeToggle />
               </div>
               <Link

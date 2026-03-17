@@ -58,7 +58,7 @@ export default function NotificationCenter() {
             size="sm"
             variant="ghost"
             onClick={() => markAllAsRead()}
-            className="mt-6 text-sm font-semibold text-pink-500 hover:text-pink-600 hover:bg-pink-50 dark:hover:bg-pink-900/20"
+            className="mt-6 text-lg font-semibold text-pink-500 hover:text-pink-600 hover:bg-pink-50 dark:hover:bg-pink-900/20"
           >
             Tout marquer lu
           </Button>
@@ -92,8 +92,8 @@ export default function NotificationCenter() {
                     <div className="flex gap-3">
                       {getNotificationIcon(notification.type)}
                       <div className="flex-1">
-                        <h3 className="font-semibold text-sm mb-1">{notification.title}</h3>
-                        <p className="text-sm text-gray-600 dark:text-gray-300">{notification.message}</p>
+                        <h3 className="font-semibold text-lg mb-1">{notification.title}</h3>
+                        <p className="text-lg text-gray-600 dark:text-gray-300">{notification.message}</p>
                       </div>
                     </div>
                   </div>
@@ -107,7 +107,7 @@ export default function NotificationCenter() {
       {/* Quick Actions */}
       {unreadCount > 0 && (
         <div className="pt-6 border-t border-gray-100 dark:border-pink-900/30">
-          <p className="text-xs  text-gray-500 dark:text-gray-400 uppercase tracking-widest">Actions Rapides</p>
+          <p className="text-sm  text-gray-500 dark:text-gray-400 uppercase tracking-widest">Actions Rapides</p>
           <div className="grid grid-cols-2 gap-3">
             <Button size="sm" variant="outline" className="rounded-full py-2 border-pink-100 dark:border-pink-900 dark:text-gray-300 dark:hover:bg-pink-900/20">
               <MessageSquare className="w-3.5 h-3.5 mr-2 text-pink-500" />
@@ -125,9 +125,9 @@ export default function NotificationCenter() {
       <Card className="bg-linear-to-br from-red-50 to-orange-50 dark:from-red-900/10 dark:to-orange-900/10 border border-red-100 dark:border-red-900/30 p-4 rounded-xl">
         <div className="flex items-center gap-2 mb-2">
           <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400" />
-          <p className="text-sm  text-gray-900 dark:text-gray-100">Alertes Actives</p>
+          <p className="text-lg  text-gray-900 dark:text-gray-100">Alertes Actives</p>
         </div>
-        <div className="space-y-2 text-xs font-medium text-gray-600 dark:text-gray-400">
+        <div className="space-y-2 text-sm font-medium text-gray-600 dark:text-gray-400">
           <div className="flex items-center justify-between">
             <span>Alertes Stock</span>
             <Badge variant="outline" className="h-5 bg-white dark:bg-gray-950 border-red-100 dark:border-red-900/50">
