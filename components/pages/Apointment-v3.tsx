@@ -756,7 +756,7 @@ export default function AppointmentsV3() {
 
                 {[
                   { key: "mobile", label: "Mobile Money" },
-                  { key: "card", label: "Virement" },
+                  // { key: "card", label: "Virement" },
                   { key: "cash", label: "Espèces" },
                   { key: "prepaid", label: "Prépayé" },
                   { key: "giftcard", label: "Carte Cadeau" },
