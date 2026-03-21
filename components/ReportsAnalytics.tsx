@@ -322,7 +322,11 @@ export default function ReportsAnalytics() {
                       <div>
                         <p className="text-base text-gray-600 dark:text-gray-400 mb-1">Revenus</p>
                         <p className="text-lg sm:text-lg  text-gray-900 dark:text-gray-100">
-                          {service.revenue ? `${(service.revenue / 1000000).toFixed(1)}M Fc` : '0M Fc'}
+                          {service?.revenue && service?.revenue > 5000000
+                            ?
+                            (service.revenue / 1000000).toFixed(1)
+                            :
+                            service?.revenue} Fc
                         </p>
                       </div>
                       <div>

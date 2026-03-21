@@ -88,7 +88,7 @@ export async function GET(request: NextRequest) {
           },
         },
       },
-      orderBy: [{ date: 'desc' }],
+      orderBy: [{ date: 'asc' }],
     });
     
     return successResponse(appointments);

@@ -51,6 +51,7 @@ import {
   CreditCard,
   Wallet,
   Info,
+  AlertCircle,
 } from "lucide-react";
 import Link from "next/link";
 import { useAppointments } from "@/lib/hooks/useAppointments";
@@ -164,7 +165,10 @@ export default function ClientDashboardV2() {
 
   // Filter appointments
   const upcomingAppointments = appointments.filter(
-    (apt) => (apt.status === "confirmed" || apt.status === "pending") && new Date(apt.date).getDate() >= new Date().getDate(),
+    (apt) => (apt.status === "confirmed") && new Date(apt.date).getDate() >= new Date().getDate(),
+  );
+  const missedAppointments = appointments.filter(
+    (apt) => (apt.status === "confirmed" || apt.status === "pending") && new Date(apt.date).getDate() <= new Date().getDate(),
   );
 
   const appointmentHistory = appointments.filter(
@@ -882,11 +886,228 @@ export default function ClientDashboardV2() {
                   })}
                 </div>
               )}
+
+              <h2 className="text-2xl font-medium mt-6 mb-6 flex items-center">
+                <AlertCircle className="w-6 h-6 mr-2 text-pink-500" />
+                Rendez-vous manqué
+              </h2>
+
+              <div className="space-y-4">
+                {missedAppointments.map((appointment) => {
+
+                  const missed = isAppointmentMissed(appointment.date, appointment.time);
+
+                  return (
+                    <div
+                      key={appointment.id}
+                      className="p-6 hover:shadow-lg border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950"
+                    >
+                      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-3 mb-3">
+                            <h3 className="text-xl ">
+                              {appointment.service?.name || "Service"}
+                            </h3>
+                            {getStatusBadge(appointment.status)}
+                          </div>
+
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-lg text-gray-900 dark:text-gray-100">
+                            <div className="flex items-center gap-2">
+                              <CalendarIcon className="w-4 h-4 text-pink-500" />
+                              <span>{formatDate(appointment.date)}</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <Clock className="w-4 h-4 text-purple-500" />
+                              <span>{appointment.time}</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <Users className="w-4 h-4 text-amber-500" />
+                              <span>
+                                {appointment.worker?.user?.name || "Non assigné"}
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <MapPin className="w-4 h-4 text-green-500" />
+                              <span>
+                                {appointment.location === "salon"
+                                  ? "Salon"
+                                  : "Domicile"}
+                              </span>
+                            </div>
+                          </div>
+
+                          {appointment.notes && (
+                            <div className="mt-3 p-3 bg-purple-50 rounded-lg">
+                              <p className="text-lg text-gray-700">
+                                <MessageSquare className="w-4 h-4 inline mr-2" />
+                                {appointment.notes}
+                              </p>
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="flex flex-col gap-2">
+                          <div className="text-right mb-2">
+                            <p className="text-2xl font-medium  text-pink-600">
+                              {appointment.price?.toLocaleString()} Fc
+                            </p>
+                          </div>
+
+                          {/* {appointment.status !== "cancelled" && !missed && (
+                              <div className="flex gap-2">
+                                <Button variant="outline" size="sm">
+                                  <Phone className="w-4 h-4 mr-2" />
+                                  Contacter
+                                </Button>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  className="text-red-600 hover:text-red-700"
+                                  onClick={() => {
+                                    setSelectedAppointment(appointment);
+                                    setCancelDialogOpen(true);
+                                  }}
+                                >
+                                  <XCircle className="w-4 h-4 mr-2" />
+                                  Annuler
+                                </Button>
+                              </div>
+                            )} */}
+                          <AppointmentCountdown
+                            date={appointment.date}
+                            time={appointment.time}
+                          />
+                          {missed && appointment.status !== "cancelled" && (
+                            <Popover>
+                              <PopoverTrigger asChild>
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  className="text-amber-600 border-amber-400 hover:bg-amber-50"
+                                >
+                                  RDV Manqué
+                                </Button>
+                              </PopoverTrigger>
+
+                              <PopoverContent className="w-[340px] rounded-2xl p-4 space-y-4">
+
+                                {/* 🧠 Info */}
+                                <div className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
+                                  <p className="font-semibold text-amber-600">
+                                    ⚠️ Rendez-vous manqué
+                                  </p>
+
+                                  <p>
+                                    Vous pouvez reprogrammer ce rendez-vous ou refuser.
+                                  </p>
+                                </div>
+
+                                {/* 💰 Prepaid Status */}
+                                <div className="p-3 rounded-xl bg-gray-50 dark:bg-gray-900 border text-sm">
+                                  {canUsePrepaid ? (
+                                    <p className="text-green-600 font-medium">
+                                      ✅ Le solde prépayé couvrira automatiquement ce service
+                                    </p>
+                                  ) : (
+                                    <p className="text-red-500 font-medium">
+                                      ❌ Solde prépayé insuffisant (paiement requis)
+                                    </p>
+                                  )}
+                                </div>
+
+                                {/* 📅 Date */}
+                                <Popover>
+                                  <PopoverTrigger asChild>
+                                    <Button
+                                      variant="outline"
+                                      className={cn(
+                                        "w-full justify-start text-left font-normal",
+                                        !selectedDate && "text-muted-foreground"
+                                      )}
+                                    >
+                                      <CalendarIcon className="mr-2 h-4 w-4" />
+                                      {selectedDate
+                                        ? format(selectedDate, "PPP", { locale: fr })
+                                        : "Choisir date"}
+                                    </Button>
+                                  </PopoverTrigger>
+
+                                  <PopoverContent className="w-auto p-0">
+                                    <Calendar
+                                      mode="single"
+                                      selected={selectedDate}
+                                      onSelect={setSelectedDate}
+                                      disabled={(date) => date < new Date()}
+                                    />
+                                  </PopoverContent>
+                                </Popover>
+
+                                {/* ⏰ Time */}
+                                <Select value={selectedTime} onValueChange={setSelectedTime}>
+                                  <SelectTrigger>
+                                    <SelectValue placeholder="Choisir une heure" />
+                                  </SelectTrigger>
+
+                                  <SelectContent>
+                                    <SelectItem value="09:00">09:00</SelectItem>
+                                    <SelectItem value="10:00">10:00</SelectItem>
+                                    <SelectItem value="11:00">11:00</SelectItem>
+                                    <SelectItem value="14:00">14:00</SelectItem>
+                                    <SelectItem value="15:00">15:00</SelectItem>
+                                    <SelectItem value="16:00">16:00</SelectItem>
+                                  </SelectContent>
+                                </Select>
+
+                                {/* 📌 Explanation */}
+                                <div className="text-xs text-gray-500 space-y-1">
+                                  <p>• Reprogrammer → utilise le solde prépayé si disponible</p>
+                                  <p>• Refuser → montant sera ajouté au votre solde prépayé</p>
+                                </div>
+
+                                {/* 🔘 Actions */}
+                                <div className="flex gap-2">
+                                  <Button
+                                    variant="outline"
+                                    className="text-red-600"
+                                    onClick={() => handleRefuseAndConvertToPrepaid(appointment)}
+                                  >
+                                    Refuser
+                                  </Button>
+
+                                  <Button
+                                    disabled={!selectedDate || !selectedTime}
+                                    onClick={() =>
+                                      handleReschedule(
+                                        appointment.id,
+                                        selectedTime,
+                                        selectedDate!,
+                                        canUsePrepaid // ✅ dynamic
+                                      )
+                                    }
+                                    className={cn(
+                                      canUsePrepaid
+                                        ? "bg-green-600 hover:bg-green-700"
+                                        : "bg-gray-400 cursor-not-allowed"
+                                    )}
+                                  >
+                                    Reprogrammer
+                                  </Button>
+                                </div>
+
+                              </PopoverContent>
+                            </Popover>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
             </Card>
 
             {/* Appointment History */}
             <Card className="p-6">
-              <h2 className="text-2xl   mb-6 flex items-center">
+              <h2 className="text-2xl font-medium   mb-6 flex items-center">
                 <Package className="w-6 h-6 mr-2 text-purple-500" />
                 Historique
               </h2>
@@ -946,7 +1167,7 @@ export default function ClientDashboardV2() {
           {/* Referrals Tab */}
           <TabsContent value="referrals" className="space-y-6">
             <Card className="p-6">
-              <h2 className="text-2xl   mb-6 flex items-center">
+              <h2 className="text-2xl font-medium   mb-6 flex items-center">
                 <Share2 className="w-6 h-6 mr-2 text-pink-500" />
                 Programme de Parrainage
               </h2>
@@ -974,13 +1195,13 @@ export default function ClientDashboardV2() {
 
                 <div className="grid grid-cols-2 gap-4 text-center">
                   <div className="p-4 bg-white dark:bg-gray-800 rounded-lg">
-                    <p className="text-2xl  text-pink-600">
+                    <p className="text-2xl font-medium  text-pink-600">
                       {referrals?.length || 0}
                     </p>
                     <p className="text-lg text-gray-900 dark:text-gray-100">Parrainages réussis</p>
                   </div>
                   <div className="p-4 bg-white dark:bg-gray-800 rounded-lg">
-                    <p className="text-2xl  text-purple-600">
+                    <p className="text-2xl font-medium  text-purple-600">
                       {nextFreeReferral}
                     </p>
                     <p className="text-lg text-gray-900 dark:text-gray-100">
@@ -1097,7 +1318,7 @@ export default function ClientDashboardV2() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="p-4 border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950">
                     <div className="w-12 h-12 bg-pink-100 rounded-full flex items-center justify-center mb-3">
-                      <span className="text-2xl  text-pink-600">
+                      <span className="text-2xl font-medium  text-pink-600">
                         1
                       </span>
                     </div>
@@ -1108,7 +1329,7 @@ export default function ClientDashboardV2() {
                   </div>
                   <div className="p-4 border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950">
                     <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mb-3">
-                      <span className="text-2xl  text-purple-600">
+                      <span className="text-2xl font-medium  text-purple-600">
                         2
                       </span>
                     </div>
@@ -1119,7 +1340,7 @@ export default function ClientDashboardV2() {
                   </div>
                   <div className="p-4 border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950">
                     <div className="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center mb-3">
-                      <span className="text-2xl  text-amber-600">
+                      <span className="text-2xl font-medium  text-amber-600">
                         3
                       </span>
                     </div>
@@ -1139,7 +1360,7 @@ export default function ClientDashboardV2() {
               <div>
                 <div className="flex items-center gap-4 mb-8">
                   <Award className="w-8 h-8 text-amber-500" />
-                  <h2 className="  text-2xl  text-gray-900 dark:text-gray-100">
+                  <h2 className="  text-2xl font-medium  text-gray-900 dark:text-gray-100">
                     Programme Fidélité
                   </h2>
 
@@ -1163,7 +1384,7 @@ export default function ClientDashboardV2() {
                       <div className="space-y-4">
                         <div className="flex justify-between items-center">
                           <span className="text-base text-gray-700 dark:text-gray-400 font-medium">Points actuels</span>
-                          <span className="text-2xl text-gray-900 dark:text-gray-100 font-black">{selectedClient?.loyaltyPoints || 0} pts</span>
+                          <span className="text-2xl font-medium text-gray-900 dark:text-gray-100 font-black">{selectedClient?.loyaltyPoints || 0} pts</span>
                         </div>
                         <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
                           <div
@@ -1274,11 +1495,11 @@ export default function ClientDashboardV2() {
                   {selectedClient && <>
                     <div className="flex flex-col sm:flex-row items-start justify-between gap-6">
                       <div className="flex items-center gap-4 sm:gap-6">
-                        <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-3xl bg-linear-to-br from-pink-500 to-purple-500 flex items-center justify-center text-white text-2xl sm:text-3xl font-medium font-black shadow-lg shadow-pink-500/20">
+                        <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-3xl bg-linear-to-br from-pink-500 to-purple-500 flex items-center justify-center text-white text-2xl font-medium sm:text-3xl font-medium font-black shadow-lg shadow-pink-500/20">
                           {selectedClient.name.charAt(0)}
                         </div>
                         <div>
-                          <h3 className="text-2xl sm:text-3xl font-medium text-gray-900 dark:text-gray-100 font-black mb-2">{selectedClient.name}</h3>
+                          <h3 className="text-2xl font-medium sm:text-3xl font-medium text-gray-900 dark:text-gray-100 font-black mb-2">{selectedClient.name}</h3>
                           <div className="flex flex-wrap gap-3">
                             <Badge className="bg-amber-500 dark:bg-amber-600 text-white border-0 px-3 py-1  shadow-md shadow-amber-500/10">
                               {selectedClient.membershipStatus}
@@ -1439,7 +1660,7 @@ export default function ClientDashboardV2() {
                           <p className="text-base font-black text-green-600 dark:text-green-400 uppercase tracking-widest">
                             Solde Prépayé
                           </p>
-                          <p className="text-2xl font-black text-gray-900 dark:text-gray-100">
+                          <p className="text-2xl font-medium font-black text-gray-900 dark:text-gray-100">
                             {selectedClient?.prepaymentBalance}
                           </p>
                         </div>
@@ -1500,7 +1721,7 @@ export default function ClientDashboardV2() {
                           <p className="text-base font-black text-purple-600 dark:text-purple-400 uppercase tracking-widest">
                             Carte Cadeau
                           </p>
-                          <p className="text-2xl font-black text-gray-900 dark:text-gray-100">
+                          <p className="text-2xl font-medium font-black text-gray-900 dark:text-gray-100">
                             {selectedClient?.giftCardBalance}
                           </p>
                         </div>
