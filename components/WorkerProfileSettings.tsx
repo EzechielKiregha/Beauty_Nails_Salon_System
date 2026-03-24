@@ -131,29 +131,9 @@ export default function WorkerProfileSettings() {
   };
 
   // Only show commission settings for worker role
-  const showCommissionSettings = user?.role === 'worker';
+  const showCommissionSettings = user?.role === 'admin';
 
-  if (isWorkerLoading) {
-    return (
-      <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-        <Loader2 className="h-8 w-8 animate-spin" />
-      </div>
-    );
-  }
 
-  if (workerError || !workerProfile) {
-    return (
-      <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-        <Card className="mx-4 max-w-md w-full">
-          <CardContent className="p-6 text-center">
-            <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-2" />
-            <p className="text-red-500 mb-4">Erreur de chargement du profil</p>
-            {/* <Button onClick={() => onOpenChange(false)}>Fermer</Button> */}
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
 
   return (
     <div className="max-w-4xl mx-auto p-2">
@@ -167,16 +147,16 @@ export default function WorkerProfileSettings() {
           <div className="space-y-6">
             <div className="flex items-center gap-4">
               <Avatar className="h-20 w-20">
-                <AvatarImage src={workerProfile.user?.avatar || ""} alt={workerProfile.user?.name} />
-                <AvatarFallback>{workerProfile.user?.name?.charAt(0)}</AvatarFallback>
+                <AvatarImage src={workerProfile?.user?.avatar || ""} alt={workerProfile?.user?.name} />
+                <AvatarFallback>{workerProfile?.user?.name?.charAt(0)}</AvatarFallback>
               </Avatar>
               <div className="flex-1">
-                <h3 className="font-medium text-lg">{workerProfile.user?.name}</h3>
-                <p className="text-lg text-gray-500 dark:text-gray-400">{workerProfile.user?.email}</p>
-                <p className="text-lg text-gray-500 dark:text-gray-400">{workerProfile.user?.phone}</p>
+                <h3 className="font-medium text-lg">{workerProfile?.user?.name}</h3>
+                <p className="text-lg text-gray-500 dark:text-gray-400">{workerProfile?.user?.email}</p>
+                <p className="text-lg text-gray-500 dark:text-gray-400">{workerProfile?.user?.phone}</p>
                 <div className="flex items-center gap-1 mt-1">
                   <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                  <span className="text-lg">{workerProfile.rating.toFixed(1)} ({workerProfile.totalReviews} avis)</span>
+                  <span className="text-lg">{workerProfile?.rating.toFixed(1)} ({workerProfile?.totalReviews} avis)</span>
                 </div>
               </div>
               <div>
@@ -184,7 +164,7 @@ export default function WorkerProfileSettings() {
                 <Input
                   id="hireDate"
                   type="date"
-                  value={workerProfile.hireDate.split('T')[0]}
+                  value={workerProfile?.hireDate.split('T')[0]}
                   disabled
                 />
               </div>

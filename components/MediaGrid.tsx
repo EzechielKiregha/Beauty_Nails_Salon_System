@@ -55,7 +55,6 @@ export default function MediaGrid({ workerId, onRemove, onView }: MediaGridProps
 
     try {
       await createMedia(media);
-      toast.success('Document uploadé avec succès');
       if (inputRef.current) {
         inputRef.current.value = '';
       }

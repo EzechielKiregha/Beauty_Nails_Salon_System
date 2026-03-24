@@ -73,6 +73,30 @@ interface WorkerProfileData {
 }
 
 export function StaffModal({ staffId, trigger }: StaffModalProps) {
+  const { user } = useAuth();
+  const { data: workerProfile, isLoading: isWorkerLoading, error: workerError } = useWorker(user?.workerProfile?.id!);
+
+  if (isWorkerLoading) {
+    return (
+      <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
+
+  if (workerError || !workerProfile) {
+    return (
+      <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+        <Card className="mx-4 max-w-md w-full">
+          <CardContent className="p-6 text-center">
+            <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-2" />
+            <p className="text-red-500 mb-4">Erreur de chargement du profil</p>
+            {/* <Button onClick={() => onOpenChange(false)}>Fermer</Button> */}
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <Dialog>

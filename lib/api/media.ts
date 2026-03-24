@@ -36,7 +36,17 @@ export const mediasApi = {
 
   // Create media
   createMedia: async (mediaData: MediaData): Promise<Media> => {
-    const { data } = await axiosdb.post('/media/upload', mediaData);
-    return data;
+
+    const formData = new FormData();
+
+    formData.append('file', mediaData.file); // The actual file
+    formData.append('workerId', mediaData.workerId!);
+    formData.append('clientId', mediaData.clientId!);
+    
+    const res = await fetch(`/api/media/upload?filename=${mediaData.file.name}`, {
+      method: 'POST',
+      body: formData, // No headers needed, browser sets Content-Type automatically
+    });
+    return res.json();
   },
 };

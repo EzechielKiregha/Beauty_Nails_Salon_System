@@ -20,7 +20,7 @@ export function useMedias(params?: { active?: boolean }) {
     mutationFn: mediasApi.createMedia,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['medias'] });
-      toast.success('document media créé avec succès');
+      toast.success('Document uploadé avec succès');
     },
     onError: (err: any) => {
       toast.error(err.response?.data?.error?.message || 'Erreur lors de la création du forfait');
