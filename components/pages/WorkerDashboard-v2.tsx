@@ -1,6 +1,6 @@
 "use client"
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Card } from '../ui/card';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
@@ -23,7 +23,8 @@ import {
   FileText,
   Loader2,
   Info,
-  AlertTriangle
+  AlertTriangle,
+  Download
 } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { useAuth } from '@/lib/hooks/useAuth';
@@ -91,7 +92,7 @@ export default function WorkerDashboardV2() {
   const [selectedPeriod, setSelectedPeriod] = useState<string>('current'); // Default to current period
 
   // Filter commissions for the current worker if using the global hook
-  const workerCommissions = allCommissions?.filter(c => c.workerId === user?.id) || [];
+  const workerCommissions = allCommissions?.filter(c => c.workerId === user?.workerProfile?.id) || [];
 
   // Determine if commission settings are incomplete
   const isCommissionConfigIncomplete = workerProfile && (
@@ -134,11 +135,17 @@ export default function WorkerDashboardV2() {
     ];
   }, [weeklyCommissionData]);
 
+  useEffect(() => {
+    if (workerProfile && workerProfile.commissionFrequency) setFreqComm(workerProfile.commissionFrequency)
+  })
+
   // Calculate next payment date based on profile settings (placeholder logic)
   const getNextPaymentDate = () => {
     if (!workerProfile?.commissionFrequency || !workerProfile?.commissionDay) return 'À configurer';
     // This is simplified - actual calculation would depend on frequency and day
-    return `Le ${workerProfile.commissionDay} de chaque ${workerProfile.commissionFrequency}`;
+    if (freqComm === "monthly") return `Le ${workerProfile.commissionDay}e de chaque mois`
+    else if (freqComm === 'weekly') return `Chaque Samedi soumettez la demande de payement`
+    else return `Ce Soir, soumettez la demande de payement`
   };
 
   // Handle saving commission settings (example action)
@@ -927,7 +934,7 @@ export default function WorkerDashboardV2() {
                     <h3 className="text-lg font-semibold">Historique des Commissions</h3>
                     <div className="flex items-center gap-2">
                       <Select value={selectedPeriod} onValueChange={setSelectedPeriod}>
-                        <SelectTrigger className="w-[180px]">
+                        <SelectTrigger className="w-45">
                           <SelectValue placeholder="Sélectionner période" />
                         </SelectTrigger>
                         <SelectContent>
@@ -972,16 +979,17 @@ export default function WorkerDashboardV2() {
                                     'text-gray-600 dark:text-gray-400'
                                   }`}>
                                   {commission.commissionAmount.toLocaleString()} Fc
-                                  <Badge variant={
-                                    commission.status === 'paid' ? 'default' :
-                                      commission.status === 'pending' ? 'outline' : 'secondary'
-                                  }>
-                                    {commission.status === 'paid' ? 'Payé' :
-                                      commission.status === 'pending' ? 'En attente' : 'Inconnu'}
-                                  </Badge>
+
                                 </p>
+                                <Badge variant={
+                                  commission.status === 'paid' ? 'default' :
+                                    commission.status === 'pending' ? 'outline' : 'secondary'
+                                }>
+                                  {commission.status === 'paid' ? 'Payé' :
+                                    commission.status === 'pending' ? 'En attente' : 'Inconnu'}
+                                </Badge>
                                 <Button variant="ghost" size="sm">
-                                  <ExternalLink className="h-4 w-4" />
+                                  <Download className="h-4 w-4" />
                                 </Button>
                               </div>
                             </div>

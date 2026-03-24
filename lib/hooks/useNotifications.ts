@@ -16,7 +16,7 @@ export function useNotifications(params?: {
   } = useQuery({
     queryKey: ['notifications', params],
     queryFn: () => notificationsApi.getNotifications(params),
-    refetchInterval: 30000, // Refetch every 30 seconds
+    refetchInterval: 120000, // Refetch every 2'
   });
 
   // Mark as read

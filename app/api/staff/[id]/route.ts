@@ -98,8 +98,6 @@ export async function GET(request: NextRequest,
         status: staff?.isAvailable ? 'active' : 'off',
       }
 
-      console.log(formattedStaff)
-
     return successResponse(formattedStaff);
   } catch (error) {
     return handleApiError(error);

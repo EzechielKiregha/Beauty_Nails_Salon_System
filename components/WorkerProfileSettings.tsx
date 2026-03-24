@@ -16,6 +16,8 @@ import MediaGrid from './MediaGrid';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { useWorker } from '@/lib/hooks/useStaff';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
+import { format } from 'date-fns';
+import { fr } from 'date-fns/locale';
 
 // Define types based on your schema
 interface WorkingHours {
@@ -38,8 +40,8 @@ interface WorkerProfileData {
 
 export default function WorkerProfileSettings() {
   const { user } = useAuth();
-  const { data: workerProfile, isLoading: isWorkerLoading, error: workerError, refetch: refetchWorker } = useWorker(user?.workerProfile?.id!);
-  const { updateProfile, isLoading } = useWorkerProfile(user?.workerProfile?.id!);
+  const { data, isLoading: isWorkerLoading, error: workerError, refetch: refetchWorker } = useWorker(user?.workerProfile?.id!);
+  const { updateProfile, isLoading, profile: workerProfile } = useWorkerProfile(user?.workerProfile?.id!);
 
   const [formData, setFormData] = useState<WorkerProfileData>({
     position: '',
@@ -164,7 +166,7 @@ export default function WorkerProfileSettings() {
                 <Input
                   id="hireDate"
                   type="date"
-                  value={workerProfile?.hireDate.split('T')[0]}
+                  value={workerProfile?.hireDate ? format(workerProfile.hireDate, "PPP", { locale: fr }) : workerProfile?.hireDate.split('T')[0]}
                   disabled
                 />
               </div>
@@ -191,7 +193,7 @@ export default function WorkerProfileSettings() {
                 max="100"
                 value={formData.commissionRate}
                 onChange={(e) => handleInputChange('commissionRate', Number(e.target.value))}
-                disabled={!showCommissionSettings || isCommissionLocked}
+                disabled={isCommissionLocked}
                 placeholder="Ex: 45"
               />
               {isCommissionLocked && (
@@ -284,7 +286,7 @@ export default function WorkerProfileSettings() {
         </Card> */}
 
         {/* Commission Settings (for worker only) */}
-        {showCommissionSettings && (
+        {(
           <Card className="p-6 border border-pink-100 dark:border-pink-900/30 bg-white dark:bg-gray-950">
             <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">Paramètres de Commission</h2>
 
