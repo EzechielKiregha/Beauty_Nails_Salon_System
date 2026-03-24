@@ -44,6 +44,7 @@ export default function WorkerDashboardV2() {
   const [notificationOpen, setNotificationOpen] = useState(false);
   const [selectedAppointment, setSelectedAppointment] = useState<any>(null);
   const [detailsOpen, setDetailsOpen] = useState(false);
+  const [freqComm, setFreqComm] = useState('')
   const router = useRouter()
   // Get authenticated user
   const { user, isLoading: isAuthLoading } = useAuth();
@@ -132,8 +133,6 @@ export default function WorkerDashboardV2() {
       { day: 'Dim', rendezVous: 0, commission: 0, totalRevenue: 0 },
     ];
   }, [weeklyCommissionData]);
-
-
 
   // Calculate next payment date based on profile settings (placeholder logic)
   const getNextPaymentDate = () => {
@@ -413,52 +412,93 @@ export default function WorkerDashboardV2() {
           </div>
 
           {/* Stats Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-            <Card className="p-4 sm:p-6 hover:shadow-lg transition-shadow border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950">
-              <div className="flex items-center justify-between mb-4">
-                <div className="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
-                  <CalendarIcon className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600 dark:text-purple-400" />
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+
+            {/* Card 1 */}
+            <Card className="p-3 sm:p-5 hover:shadow-md transition border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400 shadow-lg rounded-xl bg-white dark:bg-gray-950">
+              <div className="flex items-center justify-between mb-2">
+                <div className="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-md">
+                  <CalendarIcon className="w-4 h-4 sm:w-5 sm:h-5 text-purple-600 dark:text-purple-400" />
                 </div>
               </div>
-              <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300  mb-1">Aujourd'hui</p>
-              <p className="text-2xl sm:text-3xl font-medium font-semibold  text-gray-900 dark:text-gray-100">{stats.todayAppointments}</p>
-              <p className="text-base text-gray-500 dark:text-gray-400 mt-2">{stats.completed} terminés</p>
+
+              <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300">
+                Aujourd'hui
+              </p>
+
+              <p className="text-xl sm:text-2xl font-semibold text-gray-900 dark:text-gray-100">
+                {stats.todayAppointments}
+              </p>
+
+              <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1">
+                {stats.completed} terminés
+              </p>
             </Card>
 
-            <Card className="p-4 sm:p-6 hover:shadow-lg transition-shadow border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950">
-              <div className="flex items-center justify-between mb-4">
-                <div className="p-3 bg-green-100 dark:bg-green-900/30 rounded-lg">
-                  <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6 text-green-600 dark:text-green-400" />
+            {/* Card 2 */}
+            <Card className="p-3 sm:p-5 hover:shadow-md transition border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400 shadow-lg rounded-xl bg-white dark:bg-gray-950">
+              <div className="flex items-center justify-between mb-2">
+                <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-md">
+                  <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-600 dark:text-green-400" />
                 </div>
               </div>
-              <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300  mb-1">Complétés</p>
-              <p className="text-2xl sm:text-3xl font-medium font-semibold  text-gray-900 dark:text-gray-100">{completedAppointments.length}</p>
-              <p className="text-base text-gray-500 dark:text-gray-400 mt-2">rendez-vous</p>
+
+              <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300">
+                Complétés
+              </p>
+
+              <p className="text-xl sm:text-2xl font-semibold text-gray-900 dark:text-gray-100">
+                {completedAppointments.length}
+              </p>
+
+              <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1">
+                rendez-vous
+              </p>
             </Card>
 
-            <Card className="p-4 sm:p-6 hover:shadow-lg transition-shadow border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950">
-              <div className="flex items-center justify-between mb-4">
-                <div className="p-3 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg">
-                  <Clock className="w-5 h-5 sm:w-6 sm:h-6 text-yellow-600 dark:text-yellow-400" />
+            {/* Card 3 */}
+            <Card className="p-3 sm:p-5 hover:shadow-md transition border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400 shadow-lg rounded-xl bg-white dark:bg-gray-950">
+              <div className="flex items-center justify-between mb-2">
+                <div className="p-2 bg-yellow-100 dark:bg-yellow-900/30 rounded-md">
+                  <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-600 dark:text-yellow-400" />
                 </div>
               </div>
-              <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300  mb-1">En attente</p>
-              <p className="text-2xl sm:text-3xl font-medium font-semibold  text-gray-900 dark:text-gray-100">{stats.pending}</p>
-              <p className="text-base text-gray-500 dark:text-gray-400 mt-2">vous avez rater  {missedAppointments.length} rendez-vous</p>
+
+              <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300">
+                En attente
+              </p>
+
+              <p className="text-xl sm:text-2xl font-semibold text-gray-900 dark:text-gray-100">
+                {stats.pending}
+              </p>
+
+              <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1">
+                {missedAppointments.length} manqués
+              </p>
             </Card>
-            <Card className="p-4 sm:p-6 bg-linear-to-br from-amber-500 to-pink-500 text-white border-0 shadow-xl">
-              <div className="flex items-center justify-between mb-4">
-                <div className="p-3 bg-white/20 rounded-lg backdrop-blur-sm">
-                  <Award className="w-5 h-5 sm:w-6 sm:h-6" />
+
+            {/* Card 4 */}
+            <Card className="p-3 sm:p-5 bg-linear-to-br from-amber-500 to-pink-500 text-white border-0 shadow-lg rounded-xl">
+              <div className="flex items-center justify-between mb-2">
+                <div className="p-2 bg-white/20 rounded-md backdrop-blur-sm">
+                  <Award className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
-                <Star className="w-4 h-4 sm:w-5 sm:h-5" />
+                <Star className="w-3 h-3 sm:w-4 sm:h-4" />
               </div>
-              <p className="text-base sm:text-lg opacity-90 mb-1">Note moyenne</p>
-              <p className="text-2xl sm:text-3xl font-medium font-semibold ">{stats.rating.toFixed(1)}</p>
-              <p className="text-base opacity-80 mt-2">
+
+              <p className="text-sm sm:text-base opacity-90">
+                Note moyenne
+              </p>
+
+              <p className="text-xl sm:text-2xl font-semibold">
+                {stats.rating.toFixed(1)}
+              </p>
+
+              <p className="text-xs sm:text-sm opacity-80 mt-1">
                 {user?.workerProfile?.totalReviews || 0} avis
               </p>
             </Card>
+
           </div>
         </div>
 
@@ -718,15 +758,21 @@ export default function WorkerDashboardV2() {
                           Vos paramètres de commission (fréquence, jour de paiement, seuil) ne sont pas encore configurés.
                           Ces informations sont nécessaires pour calculer vos paiements et générer les rapports.
                         </p>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="mt-2 text-amber-700 dark:text-amber-300 border-amber-600 dark:border-amber-600 hover:bg-amber-100 dark:hover:bg-amber-900/50"
-                          onClick={handleConfigureCommission}
-                        >
-                          <ExternalLink className="h-4 w-4 mr-2" />
-                          Configurer maintenant
-                        </Button>
+
+                        <StaffModal
+                          staffId={worker?.id || ''}
+                          trigger={
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="mt-2 text-amber-700 dark:text-amber-300 border-amber-600 dark:border-amber-600 hover:bg-amber-100 dark:hover:bg-amber-900/50"
+                              onClick={handleConfigureCommission}
+                            >
+                              <ExternalLink className="h-4 w-4 mr-2" />
+                              Configurer maintenant
+                            </Button>
+                          }
+                        />
                       </div>
                     </div>
                   </Card>
@@ -813,8 +859,8 @@ export default function WorkerDashboardV2() {
                       <div>
                         <p className="font-medium text-gray-900 dark:text-gray-100">
                           {/* Display period dynamically based on workerProfile.frequency */}
-                          {workerProfile?.commissionFrequency === 'daily' ? 'Aujourd\'hui' :
-                            workerProfile?.commissionFrequency === 'weekly' ? 'Cette semaine' : 'Ce mois-ci'}
+                          {freqComm === 'daily' ? 'Aujourd\'hui' :
+                            freqComm === 'weekly' ? 'Cette semaine' : 'Ce mois-ci'}
                         </p>
                         <p className="text-lg text-gray-600 dark:text-gray-400">
                           {currentPeriodCommissionData?.appointmentsCount || 0} rendez-vous complétés
@@ -828,7 +874,7 @@ export default function WorkerDashboardV2() {
                           <PayrollModal
                             staffName={user?.name}
                             staff={worker}
-                            period={workerProfile?.commissionFrequency}
+                            period={freqComm}
                             trigger={
                               <Button
                                 size="default"
@@ -844,8 +890,8 @@ export default function WorkerDashboardV2() {
                             disabled
                             className="w-full bg-emerald-700 hover:bg-green-600 text-white dark:bg-green-600 dark:hover:bg-green-700"
                           >
-                            Vous n'avez pas pu generer de revenue {workerProfile?.commissionFrequency === 'daily' ? 'Aujourd\'hui' :
-                              workerProfile?.commissionFrequency === 'weekly' ? 'Cette semaine' : 'Ce mois-ci'}
+                            Vous n'avez pas pu generer de revenue {freqComm === 'daily' ? 'Aujourd\'hui' :
+                              freqComm === 'weekly' ? 'Cette semaine' : 'Ce mois-ci'}
                           </Button>
                         )}
                       </div>
