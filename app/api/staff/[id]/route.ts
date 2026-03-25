@@ -56,13 +56,24 @@ export async function GET(request: NextRequest,
     }
 
     const completedApps = staff?.appointments || [];
-    const totalRevenue = completedApps.reduce((sum: any, app: any) => sum + (app.price || 0), 0);
+    // const totalRevenue = completedApps.reduce((sum: any, app: any) => sum + (app.price || 0), 0);
     
     const uniqueClients = new Set(completedApps.map((a: any) => a.clientId)).size;
     const retention = completedApps.length > 0 
       ? Math.round((uniqueClients / completedApps.length) * 100) 
       : 0;
 
+    const daysToWorks = staff.schedules.filter((sch: any) => sch.isAvailable).map((sch: any) => daysMap[sch.dayOfWeek]);
+
+    const commissions = await prisma.commission.findMany({
+      where: {
+        workerId: id,
+      },
+    });
+
+    const totalEarnings = commissions.reduce((sum, c) => sum + c.commissionAmount, 0);
+    const totalBusiness = commissions.reduce((sum, c) => sum + c.businessEarnings, 0);
+    const totalRevenue = commissions.reduce((sum, c) => sum + c.totalRevenue, 0);
     const formattedStaff = {
         id: staff?.id,
         userId: staff?.userId,
@@ -77,18 +88,18 @@ export async function GET(request: NextRequest,
         createdAt: staff?.createdAt.toISOString(),
         updatedAt: staff?.updatedAt.toISOString(),
         totalSales: completedApps.length,
-        totalEarnings: totalRevenue * (staff?.commissionRate < 45 ? staff?.commissionRate / 100 : 45 / 100),
-        businessRevenue: totalRevenue * (45 / 100),
+        totalEarnings,
+        businessRevenue: totalBusiness,
         materialsReserve: totalRevenue * (5 / 100),
         operationalCosts: totalRevenue * (5 / 100),
         user: staff?.user,
-        schedules: staff?.schedules,
+        schedules: staff?.schedules.filter((sch: any) => sch.isAvailable),
         appointments: staff?.appointments,
         name: staff?.user.name,
         role: staff?.position,
         phone: staff?.user.phone,
         email: staff?.user.email,
-        workingDays: staff?.schedules.map((sch: any) => daysMap[sch.dayOfWeek]),
+        workingDays: daysToWorks,
         workingHoursString: typeof staff?.workingHours === 'string' ? staff?.workingHours : 'Non défini',
         appointmentsCount: completedApps.length,
         revenue: totalRevenue.toString(),

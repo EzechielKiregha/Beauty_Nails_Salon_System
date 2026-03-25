@@ -1,5 +1,5 @@
 "use client"
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Dialog,
   DialogTrigger,
@@ -16,14 +16,17 @@ import { Textarea } from "../ui/textarea";
 import { useServices, useAddOnMutations } from "@/lib/hooks/useServices";
 import { toast } from "sonner";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
-import { PlusCircle, MinusCircle } from 'lucide-react';
+import { PlusCircle, MinusCircle, Camera, User } from 'lucide-react';
 import { Service, ServiceAddOn } from "@/lib/api/services";
+import { useMedias } from "@/lib/hooks/useMedia";
+import { MediaData } from "@/lib/api/media";
 
 export default function CreateServiceModal({ trigger, service }: { trigger?: React.ReactNode, service?: Service; }) {
   const [name, setName] = useState(service?.name || "");
   const [category, setCategory] = useState<'onglerie' | 'cils' | 'tresses' | 'maquillage' | ''>(service?.category || '');
   const [description, setDescription] = useState(service?.description || "");
   const [price, setPrice] = useState<number | ''>(service?.price || '');
+  const [commission, setCommission] = useState<number | ''>(service?.workerCommission || '');
   const [duration, setDuration] = useState<number | ''>(service?.duration || '');
   const [imageUrl, setImageUrl] = useState(service?.imageUrl || '');
   const [onlineBookable, setOnlineBookable] = useState(true);
@@ -31,8 +34,8 @@ export default function CreateServiceModal({ trigger, service }: { trigger?: Rea
   const [isOpen, setIsOpen] = useState(false);
   const [showAddOnFlow, setShowAddOnFlow] = useState(false);
   const [createdServiceId, setCreatedServiceId] = useState<string | null>(service?.id || null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const [addOns, setAddOns] = useState(() => {
-
     const addOnList: {
       name: string;
       price: number;
@@ -52,6 +55,8 @@ export default function CreateServiceModal({ trigger, service }: { trigger?: Rea
     ]
   });
 
+  const { isCreating: uploading, createMedia, isLoading, error, refetch } = useMedias();
+
   const { createService, updateService, isUpdating, isCreating, createdService, updatedService } = useServices();
   const { createAddOn, isCreatingAddOn } = useAddOnMutations();
 
@@ -65,6 +70,7 @@ export default function CreateServiceModal({ trigger, service }: { trigger?: Rea
       name,
       category,
       price: Number(price),
+      commission: Number(commission),
       duration: Number(duration),
       description,
       imageUrl: imageUrl || undefined,
@@ -172,10 +178,47 @@ export default function CreateServiceModal({ trigger, service }: { trigger?: Rea
     setAddOns(newAddOns);
   };
 
+  const handleUpload = async (file: File) => {
+
+    // Create FormData for upload
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('filename', file.name);
+
+    // Create media object
+    const media: MediaData = {
+      file,
+      clientId: null,
+      appointmentId: null,
+      workerId: null
+    };
+
+    try {
+      await createMedia(media, {
+        onSuccess: (data) => {
+          setImageUrl(data.url)
+        }
+      });
+
+      if (inputRef.current) {
+        inputRef.current.value = '';
+      }
+
+    } catch (err: any) {
+      toast.error(err.response?.data?.error?.message || 'Erreur lors de l\'upload du document');
+    }
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      handleUpload(e.target.files[0]);
+    }
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-3xl w-[95vw] max-h-[90vh] overflow-y-auto  dark:bg-gray-950 p-5">
         {!showAddOnFlow ? (
           <>
             <DialogHeader>
@@ -184,7 +227,7 @@ export default function CreateServiceModal({ trigger, service }: { trigger?: Rea
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-4">
               <div>
-                <Label htmlFor="service-name">Nom</Label>
+                <Label className="mb-2" htmlFor="service-name">Nom</Label>
                 <Input
                   id="service-name"
                   value={name}
@@ -194,12 +237,12 @@ export default function CreateServiceModal({ trigger, service }: { trigger?: Rea
               </div>
 
               <div>
-                <Label htmlFor="service-category">Catégorie</Label>
+                <Label className="mb-2" htmlFor="service-category">Catégorie</Label>
                 <Select
                   value={category}
                   onValueChange={(value) => setCategory(value as any)}
                 >
-                  <SelectTrigger className="w-full rounded-xl border-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100">
+                  <SelectTrigger className="w-full rounded-xl border-gray-200 dark:border-gray-900 dark:bg-gray-900 dark:text-gray-100">
                     <SelectValue placeholder="Sélectionner une catégorie" />
                   </SelectTrigger>
                   <SelectContent>
@@ -220,7 +263,7 @@ export default function CreateServiceModal({ trigger, service }: { trigger?: Rea
               </div>
 
               <div>
-                <Label htmlFor="service-price">Prix (Fc)</Label>
+                <Label className="mb-2" htmlFor="service-price">Prix (Fc)</Label>
                 <Input
                   id="service-price"
                   value={price}
@@ -229,9 +272,19 @@ export default function CreateServiceModal({ trigger, service }: { trigger?: Rea
                   placeholder="Ex: 15000"
                 />
               </div>
+              <div>
+                <Label className="mb-2" htmlFor="service-commission">La Commission</Label>
+                <Input
+                  id="service-commission"
+                  value={commission}
+                  onChange={(e) => setCommission(e.target.value === '' ? '' : Number(e.target.value))}
+                  type="number"
+                  placeholder="Ex: 15000"
+                />
+              </div>
 
               <div>
-                <Label htmlFor="service-duration">Durée (minutes)</Label>
+                <Label className="mb-2" htmlFor="service-duration">Durée (minutes)</Label>
                 <Input
                   id="service-duration"
                   value={duration}
@@ -242,7 +295,7 @@ export default function CreateServiceModal({ trigger, service }: { trigger?: Rea
               </div>
 
               <div className="md:col-span-2">
-                <Label htmlFor="service-desc">Description</Label>
+                <Label className="mb-2" htmlFor="service-desc">Description</Label>
                 <Textarea
                   id="service-desc"
                   value={description}
@@ -251,14 +304,34 @@ export default function CreateServiceModal({ trigger, service }: { trigger?: Rea
                 />
               </div>
 
-              <div>
-                <Label htmlFor="service-image">Image URL (optionnel)</Label>
-                <Input
-                  id="service-image"
-                  value={imageUrl}
-                  onChange={(e) => setImageUrl(e.target.value)}
-                  placeholder="https://example.com/image.jpg"
-                />
+              <div className="space-y-2">
+                <Label className="mb-2" htmlFor="service-img">Service Image</Label>
+                <div className="relative w-24 h-24">
+                  {imageUrl ? (
+                    <img
+                      src={imageUrl}
+                      alt="Business logo"
+                      className="w-full h-full object-cover rounded-lg"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-muted rounded-lg flex items-center justify-center">
+                      <User className="h-8 w-8 text-muted-foreground" />
+                    </div>
+                  )}
+                  <label className="absolute bottom-0 right-0 bg-primary text-primary-foreground rounded-full p-1.5 cursor-pointer hover:bg-accent">
+                    <Camera className="h-4 w-4" />
+                    <input
+                      ref={inputRef}
+                      type="file"
+                      className="hidden"
+                      accept="image/*"
+                      onChange={handleFileChange}
+                    />
+                  </label>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Square image recommended (200x200px)
+                </p>
               </div>
 
               <div className="flex flex-wrap gap-4">
@@ -348,7 +421,7 @@ export default function CreateServiceModal({ trigger, service }: { trigger?: Rea
                     </div>
                   </div>
                   <div className="md:col-span-2">
-                    <Label htmlFor="add-on-desc">Description</Label>
+                    <Label className="mb-2" htmlFor="add-on-desc">Description</Label>
                     <Textarea
                       id="add-on-desc"
                       value={addOn.addOnDesc}

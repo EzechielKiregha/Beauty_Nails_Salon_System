@@ -38,10 +38,10 @@ interface WorkerProfileData {
   bio?: string;
 }
 
-export default function WorkerProfileSettings() {
-  const { user } = useAuth();
-  const { data, isLoading: isWorkerLoading, error: workerError, refetch: refetchWorker } = useWorker(user?.workerProfile?.id!);
-  const { updateProfile, isLoading, profile: workerProfile } = useWorkerProfile(user?.workerProfile?.id!);
+export default function WorkerProfileSettings({ staffId }: { staffId: string }) {
+  const { user } = useAuth()
+  const { data, isLoading: isWorkerLoading, error: workerError, refetch: refetchWorker } = useWorker(staffId);
+  const { updateProfile, isLoading, profile: workerProfile } = useWorkerProfile(staffId);
 
   const [formData, setFormData] = useState<WorkerProfileData>({
     position: '',
@@ -136,7 +136,6 @@ export default function WorkerProfileSettings() {
   const showCommissionSettings = user?.role === 'admin';
 
 
-
   return (
     <div className="max-w-4xl mx-auto p-2">
       {/* <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Mon Profil Employé</h1> */}
@@ -193,10 +192,10 @@ export default function WorkerProfileSettings() {
                 max="100"
                 value={formData.commissionRate}
                 onChange={(e) => handleInputChange('commissionRate', Number(e.target.value))}
-                disabled={isCommissionLocked}
+                disabled={!showCommissionSettings && isCommissionLocked}
                 placeholder="Ex: 45"
               />
-              {isCommissionLocked && (
+              {!showCommissionSettings && isCommissionLocked && (
                 <p className="text-xs text-gray-500 mt-1">Verrouillé - non modifiable</p>
               )}
             </div>
@@ -296,7 +295,7 @@ export default function WorkerProfileSettings() {
                 <Select
                   value={formData.commissionFrequency}
                   onValueChange={(value) => handleInputChange('commissionFrequency', value as any)}
-                  disabled={isCommissionLocked}
+                  disabled={!showCommissionSettings && isCommissionLocked}
                 >
                   <SelectTrigger>
                     <SelectValue />
@@ -307,7 +306,7 @@ export default function WorkerProfileSettings() {
                     <SelectItem value="monthly">Mensuel</SelectItem>
                   </SelectContent>
                 </Select>
-                {isCommissionLocked && (
+                {!showCommissionSettings && isCommissionLocked && (
                   <p className="text-xs text-gray-500 mt-1">Verrouillé - non modifiable</p>
                 )}
               </div>
@@ -321,9 +320,9 @@ export default function WorkerProfileSettings() {
                   max="31"
                   value={formData.commissionDay}
                   onChange={(e) => handleInputChange('commissionDay', Number(e.target.value))}
-                  disabled={isCommissionLocked}
+                  disabled={!showCommissionSettings && isCommissionLocked}
                 />
-                {isCommissionLocked && (
+                {!showCommissionSettings && isCommissionLocked && (
                   <p className="text-xs text-gray-500 mt-1">Verrouillé - non modifiable</p>
                 )}
               </div>

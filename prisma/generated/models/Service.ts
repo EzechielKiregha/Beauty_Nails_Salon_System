@@ -30,12 +30,14 @@ export type ServiceAvgAggregateOutputType = {
   price: number | null
   duration: number | null
   displayOrder: number | null
+  workerCommission: number | null
 }
 
 export type ServiceSumAggregateOutputType = {
   price: number | null
   duration: number | null
   displayOrder: number | null
+  workerCommission: number | null
 }
 
 export type ServiceMinAggregateOutputType = {
@@ -50,6 +52,7 @@ export type ServiceMinAggregateOutputType = {
   isPopular: boolean | null
   isActive: boolean | null
   displayOrder: number | null
+  workerCommission: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -66,6 +69,7 @@ export type ServiceMaxAggregateOutputType = {
   isPopular: boolean | null
   isActive: boolean | null
   displayOrder: number | null
+  workerCommission: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -82,6 +86,7 @@ export type ServiceCountAggregateOutputType = {
   isPopular: number
   isActive: number
   displayOrder: number
+  workerCommission: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -92,12 +97,14 @@ export type ServiceAvgAggregateInputType = {
   price?: true
   duration?: true
   displayOrder?: true
+  workerCommission?: true
 }
 
 export type ServiceSumAggregateInputType = {
   price?: true
   duration?: true
   displayOrder?: true
+  workerCommission?: true
 }
 
 export type ServiceMinAggregateInputType = {
@@ -112,6 +119,7 @@ export type ServiceMinAggregateInputType = {
   isPopular?: true
   isActive?: true
   displayOrder?: true
+  workerCommission?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -128,6 +136,7 @@ export type ServiceMaxAggregateInputType = {
   isPopular?: true
   isActive?: true
   displayOrder?: true
+  workerCommission?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -144,6 +153,7 @@ export type ServiceCountAggregateInputType = {
   isPopular?: true
   isActive?: true
   displayOrder?: true
+  workerCommission?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -247,6 +257,7 @@ export type ServiceGroupByOutputType = {
   isPopular: boolean
   isActive: boolean
   displayOrder: number
+  workerCommission: number
   createdAt: Date
   updatedAt: Date
   _count: ServiceCountAggregateOutputType | null
@@ -286,6 +297,7 @@ export type ServiceWhereInput = {
   isPopular?: Prisma.BoolFilter<"Service"> | boolean
   isActive?: Prisma.BoolFilter<"Service"> | boolean
   displayOrder?: Prisma.IntFilter<"Service"> | number
+  workerCommission?: Prisma.FloatFilter<"Service"> | number
   createdAt?: Prisma.DateTimeFilter<"Service"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Service"> | Date | string
   appointments?: Prisma.AppointmentListRelationFilter
@@ -306,6 +318,7 @@ export type ServiceOrderByWithRelationInput = {
   isPopular?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   displayOrder?: Prisma.SortOrder
+  workerCommission?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   appointments?: Prisma.AppointmentOrderByRelationAggregateInput
@@ -329,6 +342,7 @@ export type ServiceWhereUniqueInput = Prisma.AtLeast<{
   isPopular?: Prisma.BoolFilter<"Service"> | boolean
   isActive?: Prisma.BoolFilter<"Service"> | boolean
   displayOrder?: Prisma.IntFilter<"Service"> | number
+  workerCommission?: Prisma.FloatFilter<"Service"> | number
   createdAt?: Prisma.DateTimeFilter<"Service"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Service"> | Date | string
   appointments?: Prisma.AppointmentListRelationFilter
@@ -349,6 +363,7 @@ export type ServiceOrderByWithAggregationInput = {
   isPopular?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   displayOrder?: Prisma.SortOrder
+  workerCommission?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.ServiceCountOrderByAggregateInput
@@ -373,6 +388,7 @@ export type ServiceScalarWhereWithAggregatesInput = {
   isPopular?: Prisma.BoolWithAggregatesFilter<"Service"> | boolean
   isActive?: Prisma.BoolWithAggregatesFilter<"Service"> | boolean
   displayOrder?: Prisma.IntWithAggregatesFilter<"Service"> | number
+  workerCommission?: Prisma.FloatWithAggregatesFilter<"Service"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Service"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Service"> | Date | string
 }
@@ -389,6 +405,7 @@ export type ServiceCreateInput = {
   isPopular?: boolean
   isActive?: boolean
   displayOrder?: number
+  workerCommission?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   appointments?: Prisma.AppointmentCreateNestedManyWithoutServiceInput
@@ -409,6 +426,7 @@ export type ServiceUncheckedCreateInput = {
   isPopular?: boolean
   isActive?: boolean
   displayOrder?: number
+  workerCommission?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutServiceInput
@@ -429,6 +447,7 @@ export type ServiceUpdateInput = {
   isPopular?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   displayOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  workerCommission?: Prisma.FloatFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   appointments?: Prisma.AppointmentUpdateManyWithoutServiceNestedInput
@@ -449,6 +468,7 @@ export type ServiceUncheckedUpdateInput = {
   isPopular?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   displayOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  workerCommission?: Prisma.FloatFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutServiceNestedInput
@@ -469,6 +489,7 @@ export type ServiceCreateManyInput = {
   isPopular?: boolean
   isActive?: boolean
   displayOrder?: number
+  workerCommission?: number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -485,6 +506,7 @@ export type ServiceUpdateManyMutationInput = {
   isPopular?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   displayOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  workerCommission?: Prisma.FloatFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -501,6 +523,7 @@ export type ServiceUncheckedUpdateManyInput = {
   isPopular?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   displayOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  workerCommission?: Prisma.FloatFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -517,6 +540,7 @@ export type ServiceCountOrderByAggregateInput = {
   isPopular?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   displayOrder?: Prisma.SortOrder
+  workerCommission?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -525,6 +549,7 @@ export type ServiceAvgOrderByAggregateInput = {
   price?: Prisma.SortOrder
   duration?: Prisma.SortOrder
   displayOrder?: Prisma.SortOrder
+  workerCommission?: Prisma.SortOrder
 }
 
 export type ServiceMaxOrderByAggregateInput = {
@@ -539,6 +564,7 @@ export type ServiceMaxOrderByAggregateInput = {
   isPopular?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   displayOrder?: Prisma.SortOrder
+  workerCommission?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -555,6 +581,7 @@ export type ServiceMinOrderByAggregateInput = {
   isPopular?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   displayOrder?: Prisma.SortOrder
+  workerCommission?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -563,6 +590,7 @@ export type ServiceSumOrderByAggregateInput = {
   price?: Prisma.SortOrder
   duration?: Prisma.SortOrder
   displayOrder?: Prisma.SortOrder
+  workerCommission?: Prisma.SortOrder
 }
 
 export type ServiceScalarRelationFilter = {
@@ -676,6 +704,7 @@ export type ServiceCreateWithoutAddOnsInput = {
   isPopular?: boolean
   isActive?: boolean
   displayOrder?: number
+  workerCommission?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   appointments?: Prisma.AppointmentCreateNestedManyWithoutServiceInput
@@ -695,6 +724,7 @@ export type ServiceUncheckedCreateWithoutAddOnsInput = {
   isPopular?: boolean
   isActive?: boolean
   displayOrder?: number
+  workerCommission?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutServiceInput
@@ -730,6 +760,7 @@ export type ServiceUpdateWithoutAddOnsInput = {
   isPopular?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   displayOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  workerCommission?: Prisma.FloatFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   appointments?: Prisma.AppointmentUpdateManyWithoutServiceNestedInput
@@ -749,6 +780,7 @@ export type ServiceUncheckedUpdateWithoutAddOnsInput = {
   isPopular?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   displayOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  workerCommission?: Prisma.FloatFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutServiceNestedInput
@@ -768,6 +800,7 @@ export type ServiceCreateWithoutPackagesInput = {
   isPopular?: boolean
   isActive?: boolean
   displayOrder?: number
+  workerCommission?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   appointments?: Prisma.AppointmentCreateNestedManyWithoutServiceInput
@@ -787,6 +820,7 @@ export type ServiceUncheckedCreateWithoutPackagesInput = {
   isPopular?: boolean
   isActive?: boolean
   displayOrder?: number
+  workerCommission?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutServiceInput
@@ -830,6 +864,7 @@ export type ServiceScalarWhereInput = {
   isPopular?: Prisma.BoolFilter<"Service"> | boolean
   isActive?: Prisma.BoolFilter<"Service"> | boolean
   displayOrder?: Prisma.IntFilter<"Service"> | number
+  workerCommission?: Prisma.FloatFilter<"Service"> | number
   createdAt?: Prisma.DateTimeFilter<"Service"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Service"> | Date | string
 }
@@ -846,6 +881,7 @@ export type ServiceCreateWithoutAppointmentsInput = {
   isPopular?: boolean
   isActive?: boolean
   displayOrder?: number
+  workerCommission?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   addOns?: Prisma.ServiceAddOnCreateNestedManyWithoutServiceInput
@@ -865,6 +901,7 @@ export type ServiceUncheckedCreateWithoutAppointmentsInput = {
   isPopular?: boolean
   isActive?: boolean
   displayOrder?: number
+  workerCommission?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   addOns?: Prisma.ServiceAddOnUncheckedCreateNestedManyWithoutServiceInput
@@ -900,6 +937,7 @@ export type ServiceUpdateWithoutAppointmentsInput = {
   isPopular?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   displayOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  workerCommission?: Prisma.FloatFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   addOns?: Prisma.ServiceAddOnUpdateManyWithoutServiceNestedInput
@@ -919,6 +957,7 @@ export type ServiceUncheckedUpdateWithoutAppointmentsInput = {
   isPopular?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   displayOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  workerCommission?: Prisma.FloatFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   addOns?: Prisma.ServiceAddOnUncheckedUpdateManyWithoutServiceNestedInput
@@ -938,6 +977,7 @@ export type ServiceCreateWithoutSalesInput = {
   isPopular?: boolean
   isActive?: boolean
   displayOrder?: number
+  workerCommission?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   appointments?: Prisma.AppointmentCreateNestedManyWithoutServiceInput
@@ -957,6 +997,7 @@ export type ServiceUncheckedCreateWithoutSalesInput = {
   isPopular?: boolean
   isActive?: boolean
   displayOrder?: number
+  workerCommission?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutServiceInput
@@ -992,6 +1033,7 @@ export type ServiceUpdateWithoutSalesInput = {
   isPopular?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   displayOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  workerCommission?: Prisma.FloatFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   appointments?: Prisma.AppointmentUpdateManyWithoutServiceNestedInput
@@ -1011,6 +1053,7 @@ export type ServiceUncheckedUpdateWithoutSalesInput = {
   isPopular?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   displayOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  workerCommission?: Prisma.FloatFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutServiceNestedInput
@@ -1030,6 +1073,7 @@ export type ServiceUpdateWithoutPackagesInput = {
   isPopular?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   displayOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  workerCommission?: Prisma.FloatFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   appointments?: Prisma.AppointmentUpdateManyWithoutServiceNestedInput
@@ -1049,6 +1093,7 @@ export type ServiceUncheckedUpdateWithoutPackagesInput = {
   isPopular?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   displayOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  workerCommission?: Prisma.FloatFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutServiceNestedInput
@@ -1068,6 +1113,7 @@ export type ServiceUncheckedUpdateManyWithoutPackagesInput = {
   isPopular?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   displayOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  workerCommission?: Prisma.FloatFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1142,6 +1188,7 @@ export type ServiceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   isPopular?: boolean
   isActive?: boolean
   displayOrder?: boolean
+  workerCommission?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   appointments?: boolean | Prisma.Service$appointmentsArgs<ExtArgs>
@@ -1163,6 +1210,7 @@ export type ServiceSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   isPopular?: boolean
   isActive?: boolean
   displayOrder?: boolean
+  workerCommission?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["service"]>
@@ -1179,6 +1227,7 @@ export type ServiceSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   isPopular?: boolean
   isActive?: boolean
   displayOrder?: boolean
+  workerCommission?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["service"]>
@@ -1195,11 +1244,12 @@ export type ServiceSelectScalar = {
   isPopular?: boolean
   isActive?: boolean
   displayOrder?: boolean
+  workerCommission?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ServiceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "category" | "price" | "duration" | "description" | "imageUrl" | "onlineBookable" | "isPopular" | "isActive" | "displayOrder" | "createdAt" | "updatedAt", ExtArgs["result"]["service"]>
+export type ServiceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "category" | "price" | "duration" | "description" | "imageUrl" | "onlineBookable" | "isPopular" | "isActive" | "displayOrder" | "workerCommission" | "createdAt" | "updatedAt", ExtArgs["result"]["service"]>
 export type ServiceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   appointments?: boolean | Prisma.Service$appointmentsArgs<ExtArgs>
   addOns?: boolean | Prisma.Service$addOnsArgs<ExtArgs>
@@ -1230,6 +1280,7 @@ export type $ServicePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     isPopular: boolean
     isActive: boolean
     displayOrder: number
+    workerCommission: number
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["service"]>
@@ -1670,6 +1721,7 @@ export interface ServiceFieldRefs {
   readonly isPopular: Prisma.FieldRef<"Service", 'Boolean'>
   readonly isActive: Prisma.FieldRef<"Service", 'Boolean'>
   readonly displayOrder: Prisma.FieldRef<"Service", 'Int'>
+  readonly workerCommission: Prisma.FieldRef<"Service", 'Float'>
   readonly createdAt: Prisma.FieldRef<"Service", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Service", 'DateTime'>
 }

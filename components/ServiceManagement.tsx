@@ -166,7 +166,7 @@ export default function ServiceManagement({ showMock }: { showMock?: boolean }) 
             </div>
             <CreateServiceModal
               trigger={
-                <Button className="bg-linear-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white rounded-full py-6 transition-all">
+                <Button className="bg-linear-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white rounded-full py-3 transition-all">
                   + Nouveau Service
                 </Button>
               }
@@ -354,12 +354,12 @@ export default function ServiceManagement({ showMock }: { showMock?: boolean }) 
                       <CreateServiceModal
                         service={selectedService}
                         trigger={
-                          <Button className="flex-1 bg-linear-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white rounded-full py-6 transition-all">
+                          <Button className="flex-1 bg-linear-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white rounded-full py-3 transition-all">
                             Modifier
                           </Button>
                         }
                       />
-                      <Button variant="outline" className="rounded-full py-6 text-red-600 border-red-200 dark:border-red-900/50 hover:bg-red-50 dark:hover:bg-red-900/20">
+                      <Button variant="outline" className="rounded-full py-3 text-red-600 border-red-200 dark:border-red-900/50 hover:bg-red-50 dark:hover:bg-red-900/20">
                         Supprimer
                       </Button>
                     </div>

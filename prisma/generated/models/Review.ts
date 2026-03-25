@@ -325,7 +325,7 @@ export type ReviewCreateInput = {
   isPublished?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  appointment: Prisma.AppointmentCreateNestedOneWithoutReviewInput
+  appointment: Prisma.AppointmentCreateNestedOneWithoutReviewsInput
   client: Prisma.ClientProfileCreateNestedOneWithoutReviewsInput
   worker: Prisma.WorkerProfileCreateNestedOneWithoutReviewsInput
 }
@@ -349,7 +349,7 @@ export type ReviewUpdateInput = {
   isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  appointment?: Prisma.AppointmentUpdateOneRequiredWithoutReviewNestedInput
+  appointment?: Prisma.AppointmentUpdateOneRequiredWithoutReviewsNestedInput
   client?: Prisma.ClientProfileUpdateOneRequiredWithoutReviewsNestedInput
   worker?: Prisma.WorkerProfileUpdateOneRequiredWithoutReviewsNestedInput
 }
@@ -407,11 +407,6 @@ export type ReviewListRelationFilter = {
 
 export type ReviewOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
-}
-
-export type ReviewNullableScalarRelationFilter = {
-  is?: Prisma.ReviewWhereInput | null
-  isNot?: Prisma.ReviewWhereInput | null
 }
 
 export type ReviewCountOrderByAggregateInput = {
@@ -542,36 +537,46 @@ export type ReviewUncheckedUpdateManyWithoutWorkerNestedInput = {
   deleteMany?: Prisma.ReviewScalarWhereInput | Prisma.ReviewScalarWhereInput[]
 }
 
-export type ReviewCreateNestedOneWithoutAppointmentInput = {
-  create?: Prisma.XOR<Prisma.ReviewCreateWithoutAppointmentInput, Prisma.ReviewUncheckedCreateWithoutAppointmentInput>
-  connectOrCreate?: Prisma.ReviewCreateOrConnectWithoutAppointmentInput
-  connect?: Prisma.ReviewWhereUniqueInput
+export type ReviewCreateNestedManyWithoutAppointmentInput = {
+  create?: Prisma.XOR<Prisma.ReviewCreateWithoutAppointmentInput, Prisma.ReviewUncheckedCreateWithoutAppointmentInput> | Prisma.ReviewCreateWithoutAppointmentInput[] | Prisma.ReviewUncheckedCreateWithoutAppointmentInput[]
+  connectOrCreate?: Prisma.ReviewCreateOrConnectWithoutAppointmentInput | Prisma.ReviewCreateOrConnectWithoutAppointmentInput[]
+  createMany?: Prisma.ReviewCreateManyAppointmentInputEnvelope
+  connect?: Prisma.ReviewWhereUniqueInput | Prisma.ReviewWhereUniqueInput[]
 }
 
-export type ReviewUncheckedCreateNestedOneWithoutAppointmentInput = {
-  create?: Prisma.XOR<Prisma.ReviewCreateWithoutAppointmentInput, Prisma.ReviewUncheckedCreateWithoutAppointmentInput>
-  connectOrCreate?: Prisma.ReviewCreateOrConnectWithoutAppointmentInput
-  connect?: Prisma.ReviewWhereUniqueInput
+export type ReviewUncheckedCreateNestedManyWithoutAppointmentInput = {
+  create?: Prisma.XOR<Prisma.ReviewCreateWithoutAppointmentInput, Prisma.ReviewUncheckedCreateWithoutAppointmentInput> | Prisma.ReviewCreateWithoutAppointmentInput[] | Prisma.ReviewUncheckedCreateWithoutAppointmentInput[]
+  connectOrCreate?: Prisma.ReviewCreateOrConnectWithoutAppointmentInput | Prisma.ReviewCreateOrConnectWithoutAppointmentInput[]
+  createMany?: Prisma.ReviewCreateManyAppointmentInputEnvelope
+  connect?: Prisma.ReviewWhereUniqueInput | Prisma.ReviewWhereUniqueInput[]
 }
 
-export type ReviewUpdateOneWithoutAppointmentNestedInput = {
-  create?: Prisma.XOR<Prisma.ReviewCreateWithoutAppointmentInput, Prisma.ReviewUncheckedCreateWithoutAppointmentInput>
-  connectOrCreate?: Prisma.ReviewCreateOrConnectWithoutAppointmentInput
-  upsert?: Prisma.ReviewUpsertWithoutAppointmentInput
-  disconnect?: Prisma.ReviewWhereInput | boolean
-  delete?: Prisma.ReviewWhereInput | boolean
-  connect?: Prisma.ReviewWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.ReviewUpdateToOneWithWhereWithoutAppointmentInput, Prisma.ReviewUpdateWithoutAppointmentInput>, Prisma.ReviewUncheckedUpdateWithoutAppointmentInput>
+export type ReviewUpdateManyWithoutAppointmentNestedInput = {
+  create?: Prisma.XOR<Prisma.ReviewCreateWithoutAppointmentInput, Prisma.ReviewUncheckedCreateWithoutAppointmentInput> | Prisma.ReviewCreateWithoutAppointmentInput[] | Prisma.ReviewUncheckedCreateWithoutAppointmentInput[]
+  connectOrCreate?: Prisma.ReviewCreateOrConnectWithoutAppointmentInput | Prisma.ReviewCreateOrConnectWithoutAppointmentInput[]
+  upsert?: Prisma.ReviewUpsertWithWhereUniqueWithoutAppointmentInput | Prisma.ReviewUpsertWithWhereUniqueWithoutAppointmentInput[]
+  createMany?: Prisma.ReviewCreateManyAppointmentInputEnvelope
+  set?: Prisma.ReviewWhereUniqueInput | Prisma.ReviewWhereUniqueInput[]
+  disconnect?: Prisma.ReviewWhereUniqueInput | Prisma.ReviewWhereUniqueInput[]
+  delete?: Prisma.ReviewWhereUniqueInput | Prisma.ReviewWhereUniqueInput[]
+  connect?: Prisma.ReviewWhereUniqueInput | Prisma.ReviewWhereUniqueInput[]
+  update?: Prisma.ReviewUpdateWithWhereUniqueWithoutAppointmentInput | Prisma.ReviewUpdateWithWhereUniqueWithoutAppointmentInput[]
+  updateMany?: Prisma.ReviewUpdateManyWithWhereWithoutAppointmentInput | Prisma.ReviewUpdateManyWithWhereWithoutAppointmentInput[]
+  deleteMany?: Prisma.ReviewScalarWhereInput | Prisma.ReviewScalarWhereInput[]
 }
 
-export type ReviewUncheckedUpdateOneWithoutAppointmentNestedInput = {
-  create?: Prisma.XOR<Prisma.ReviewCreateWithoutAppointmentInput, Prisma.ReviewUncheckedCreateWithoutAppointmentInput>
-  connectOrCreate?: Prisma.ReviewCreateOrConnectWithoutAppointmentInput
-  upsert?: Prisma.ReviewUpsertWithoutAppointmentInput
-  disconnect?: Prisma.ReviewWhereInput | boolean
-  delete?: Prisma.ReviewWhereInput | boolean
-  connect?: Prisma.ReviewWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.ReviewUpdateToOneWithWhereWithoutAppointmentInput, Prisma.ReviewUpdateWithoutAppointmentInput>, Prisma.ReviewUncheckedUpdateWithoutAppointmentInput>
+export type ReviewUncheckedUpdateManyWithoutAppointmentNestedInput = {
+  create?: Prisma.XOR<Prisma.ReviewCreateWithoutAppointmentInput, Prisma.ReviewUncheckedCreateWithoutAppointmentInput> | Prisma.ReviewCreateWithoutAppointmentInput[] | Prisma.ReviewUncheckedCreateWithoutAppointmentInput[]
+  connectOrCreate?: Prisma.ReviewCreateOrConnectWithoutAppointmentInput | Prisma.ReviewCreateOrConnectWithoutAppointmentInput[]
+  upsert?: Prisma.ReviewUpsertWithWhereUniqueWithoutAppointmentInput | Prisma.ReviewUpsertWithWhereUniqueWithoutAppointmentInput[]
+  createMany?: Prisma.ReviewCreateManyAppointmentInputEnvelope
+  set?: Prisma.ReviewWhereUniqueInput | Prisma.ReviewWhereUniqueInput[]
+  disconnect?: Prisma.ReviewWhereUniqueInput | Prisma.ReviewWhereUniqueInput[]
+  delete?: Prisma.ReviewWhereUniqueInput | Prisma.ReviewWhereUniqueInput[]
+  connect?: Prisma.ReviewWhereUniqueInput | Prisma.ReviewWhereUniqueInput[]
+  update?: Prisma.ReviewUpdateWithWhereUniqueWithoutAppointmentInput | Prisma.ReviewUpdateWithWhereUniqueWithoutAppointmentInput[]
+  updateMany?: Prisma.ReviewUpdateManyWithWhereWithoutAppointmentInput | Prisma.ReviewUpdateManyWithWhereWithoutAppointmentInput[]
+  deleteMany?: Prisma.ReviewScalarWhereInput | Prisma.ReviewScalarWhereInput[]
 }
 
 export type ReviewCreateWithoutClientInput = {
@@ -581,7 +586,7 @@ export type ReviewCreateWithoutClientInput = {
   isPublished?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  appointment: Prisma.AppointmentCreateNestedOneWithoutReviewInput
+  appointment: Prisma.AppointmentCreateNestedOneWithoutReviewsInput
   worker: Prisma.WorkerProfileCreateNestedOneWithoutReviewsInput
 }
 
@@ -644,7 +649,7 @@ export type ReviewCreateWithoutWorkerInput = {
   isPublished?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  appointment: Prisma.AppointmentCreateNestedOneWithoutReviewInput
+  appointment: Prisma.AppointmentCreateNestedOneWithoutReviewsInput
   client: Prisma.ClientProfileCreateNestedOneWithoutReviewsInput
 }
 
@@ -712,37 +717,25 @@ export type ReviewCreateOrConnectWithoutAppointmentInput = {
   create: Prisma.XOR<Prisma.ReviewCreateWithoutAppointmentInput, Prisma.ReviewUncheckedCreateWithoutAppointmentInput>
 }
 
-export type ReviewUpsertWithoutAppointmentInput = {
-  update: Prisma.XOR<Prisma.ReviewUpdateWithoutAppointmentInput, Prisma.ReviewUncheckedUpdateWithoutAppointmentInput>
-  create: Prisma.XOR<Prisma.ReviewCreateWithoutAppointmentInput, Prisma.ReviewUncheckedCreateWithoutAppointmentInput>
-  where?: Prisma.ReviewWhereInput
+export type ReviewCreateManyAppointmentInputEnvelope = {
+  data: Prisma.ReviewCreateManyAppointmentInput | Prisma.ReviewCreateManyAppointmentInput[]
+  skipDuplicates?: boolean
 }
 
-export type ReviewUpdateToOneWithWhereWithoutAppointmentInput = {
-  where?: Prisma.ReviewWhereInput
+export type ReviewUpsertWithWhereUniqueWithoutAppointmentInput = {
+  where: Prisma.ReviewWhereUniqueInput
+  update: Prisma.XOR<Prisma.ReviewUpdateWithoutAppointmentInput, Prisma.ReviewUncheckedUpdateWithoutAppointmentInput>
+  create: Prisma.XOR<Prisma.ReviewCreateWithoutAppointmentInput, Prisma.ReviewUncheckedCreateWithoutAppointmentInput>
+}
+
+export type ReviewUpdateWithWhereUniqueWithoutAppointmentInput = {
+  where: Prisma.ReviewWhereUniqueInput
   data: Prisma.XOR<Prisma.ReviewUpdateWithoutAppointmentInput, Prisma.ReviewUncheckedUpdateWithoutAppointmentInput>
 }
 
-export type ReviewUpdateWithoutAppointmentInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  rating?: Prisma.IntFieldUpdateOperationsInput | number
-  comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  client?: Prisma.ClientProfileUpdateOneRequiredWithoutReviewsNestedInput
-  worker?: Prisma.WorkerProfileUpdateOneRequiredWithoutReviewsNestedInput
-}
-
-export type ReviewUncheckedUpdateWithoutAppointmentInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  clientId?: Prisma.StringFieldUpdateOperationsInput | string
-  workerId?: Prisma.StringFieldUpdateOperationsInput | string
-  rating?: Prisma.IntFieldUpdateOperationsInput | number
-  comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+export type ReviewUpdateManyWithWhereWithoutAppointmentInput = {
+  where: Prisma.ReviewScalarWhereInput
+  data: Prisma.XOR<Prisma.ReviewUpdateManyMutationInput, Prisma.ReviewUncheckedUpdateManyWithoutAppointmentInput>
 }
 
 export type ReviewCreateManyClientInput = {
@@ -763,7 +756,7 @@ export type ReviewUpdateWithoutClientInput = {
   isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  appointment?: Prisma.AppointmentUpdateOneRequiredWithoutReviewNestedInput
+  appointment?: Prisma.AppointmentUpdateOneRequiredWithoutReviewsNestedInput
   worker?: Prisma.WorkerProfileUpdateOneRequiredWithoutReviewsNestedInput
 }
 
@@ -807,7 +800,7 @@ export type ReviewUpdateWithoutWorkerInput = {
   isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  appointment?: Prisma.AppointmentUpdateOneRequiredWithoutReviewNestedInput
+  appointment?: Prisma.AppointmentUpdateOneRequiredWithoutReviewsNestedInput
   client?: Prisma.ClientProfileUpdateOneRequiredWithoutReviewsNestedInput
 }
 
@@ -826,6 +819,50 @@ export type ReviewUncheckedUpdateManyWithoutWorkerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   appointmentId?: Prisma.StringFieldUpdateOperationsInput | string
   clientId?: Prisma.StringFieldUpdateOperationsInput | string
+  rating?: Prisma.IntFieldUpdateOperationsInput | number
+  comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type ReviewCreateManyAppointmentInput = {
+  id?: string
+  clientId: string
+  workerId: string
+  rating: number
+  comment?: string | null
+  isPublished?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type ReviewUpdateWithoutAppointmentInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  rating?: Prisma.IntFieldUpdateOperationsInput | number
+  comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  client?: Prisma.ClientProfileUpdateOneRequiredWithoutReviewsNestedInput
+  worker?: Prisma.WorkerProfileUpdateOneRequiredWithoutReviewsNestedInput
+}
+
+export type ReviewUncheckedUpdateWithoutAppointmentInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientId?: Prisma.StringFieldUpdateOperationsInput | string
+  workerId?: Prisma.StringFieldUpdateOperationsInput | string
+  rating?: Prisma.IntFieldUpdateOperationsInput | number
+  comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type ReviewUncheckedUpdateManyWithoutAppointmentInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientId?: Prisma.StringFieldUpdateOperationsInput | string
+  workerId?: Prisma.StringFieldUpdateOperationsInput | string
   rating?: Prisma.IntFieldUpdateOperationsInput | number
   comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean

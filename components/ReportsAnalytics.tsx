@@ -164,7 +164,7 @@ export default function ReportsAnalytics() {
           <p className="text-lg text-gray-600 dark:text-gray-400 mb-1">Revenus Mensuels</p>
           <p className="text-2xl sm:text-3xl font-medium  text-gray-900 dark:text-gray-100">
             {revenueReport ?
-              revenueReport?.totalRevenue && revenueReport?.totalRevenue > 100000
+              revenueReport?.totalRevenue && revenueReport?.totalRevenue > 5000000
                 ?
                 (revenueReport.totalRevenue / 1000000).toFixed(1) + 'M Fc'
                 :
@@ -397,7 +397,11 @@ export default function ReportsAnalytics() {
                 <div className="bg-linear-to-br from-green-50 to-emerald-50 dark:from-gray-800 dark:to-gray-800/50 p-5 rounded-xl border border-green-100 dark:border-green-900/30">
                   <p className="text-base font-semibold text-gray-700 dark:text-gray-300 mb-3 uppercase tracking-wider">Revenus Membres</p>
                   <p className="text-2xl sm:text-3xl font-medium  text-gray-900 dark:text-gray-100 mb-2">
-                    {(membershipAnalytics.memberRevenue / 1000000).toFixed(1)}M Fc
+                    {membershipAnalytics.memberRevenue && membershipAnalytics.memberRevenue > 5000000
+                      ?
+                      (membershipAnalytics.memberRevenue / 1000000).toFixed(1)
+                      :
+                      membershipAnalytics.memberRevenue} Fc
                   </p>
                   <p className="text-base text-gray-600 dark:text-gray-400">
                     Dépense moyenne: <span className="">{(membershipAnalytics.averageMemberSpend / 1000).toFixed(0)}K Fc</span>
@@ -407,7 +411,11 @@ export default function ReportsAnalytics() {
                 <div className="bg-linear-to-br from-blue-50 to-cyan-50 dark:from-gray-800 dark:to-gray-800/50 p-5 rounded-xl border border-blue-100 dark:border-blue-900/30">
                   <p className="text-base font-semibold text-gray-700 dark:text-gray-300 mb-3 uppercase tracking-wider">Revenus Non-Membres</p>
                   <p className="text-2xl sm:text-3xl font-medium  text-gray-900 dark:text-gray-100 mb-2">
-                    {(membershipAnalytics.nonMemberRevenue / 1000000).toFixed(1)}M Fc
+                    {membershipAnalytics.nonMemberRevenue && membershipAnalytics.nonMemberRevenue > 5000000
+                      ?
+                      (membershipAnalytics.nonMemberRevenue / 1000000).toFixed(1)
+                      :
+                      membershipAnalytics.nonMemberRevenue} Fc
                   </p>
                   <p className="text-base text-gray-600 dark:text-gray-400">
                     Dépense moyenne: <span className="">{(membershipAnalytics.averageNonMemberSpend / 1000).toFixed(0)}K Fc</span>

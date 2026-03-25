@@ -115,7 +115,7 @@ export function useAvailableStaff(params?: {
 export function useCommission() {
   const queryClient = useQueryClient();
 
-  const { data: commissions = [], isLoading } = useQuery({
+  const { data: commissions = [], isLoading, refetch } = useQuery({
     queryKey: ["commission"],
     queryFn: () => commissionApi.getAll(),
   });
@@ -135,11 +135,13 @@ export function useCommission() {
     mutationFn: ({ id, status }: { id: string; status: string }) =>
       commissionApi.update(id, status),
     onSuccess: () => toast.success("Statut mis à jour"),
+    onError: (error) => toast.error(error.message)
   });
 
   return {
     commissions,
     isLoading,
+    refetch,
     createCommission: createMutation.mutate,
     isCreating: createMutation.isPending,
     updateCommission: updateMutation.mutate,

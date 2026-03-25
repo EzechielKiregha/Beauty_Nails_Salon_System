@@ -112,7 +112,7 @@ export async function POST(request: NextRequest) {
       location = 'salon',
       addOns = [],
       notes,
-      isPrepaidUsed,
+      isPrepaidUsed = false,
       isGiftCardUsed,
       paymentInfo = {}, // Removed decidedToPay since it's no longer used
     } = body;
@@ -326,6 +326,17 @@ export async function POST(request: NextRequest) {
       // Update client loyalty points
       const loyaltyPointsEarned = Math.floor(finalTotal / 1000); // 1 point per 1000 CDF
       const clientUpdateData: any = {}
+
+      const clientToUpdate = await tx.clientProfile.findUnique({
+        where: { id: clientId },
+        select: {
+          prepaymentBalance: true,
+          giftCardBalance: true,
+        }
+      })
+
+      if (clientToUpdate && isPrepaidUsed && clientToUpdate.prepaymentBalance < appointment.price) return errorResponse("Balance prepaye est insufisant.")
+      if (clientToUpdate && isPrepaidUsed && clientToUpdate.giftCardBalance < appointment.price) return errorResponse("Balance carte cadeau est insufisant.")
 
       if (isPrepaidUsed) {
         clientUpdateData.data = {

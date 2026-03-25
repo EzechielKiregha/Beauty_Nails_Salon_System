@@ -2,6 +2,8 @@
 import { NextRequest } from 'next/server';
 import prisma from '@/lib/prisma';
 import { requireRole, successResponse, handleApiError } from '@/lib/api/helpers';
+import { format } from 'date-fns';
+import { fr } from 'date-fns/locale';
 
 export async function PUT(
   request: NextRequest,
@@ -23,6 +25,7 @@ export async function PUT(
             user: true,
           },
         },
+        worker: true,
         service: true,
       },
     });
@@ -58,6 +61,19 @@ export async function PUT(
             message: 'Vous avez gagné 5 points de fidélité !',
           },
         }),
+
+        prisma.commission.create({
+          data:{
+            worker: { connect : { id: appointment.workerId }},
+            appointmentsCount: 1,
+            commissionAmount: appointment.price * appointment.service.workerCommission / 100,
+            commissionRate: appointment.service?.workerCommission ?? 0,
+            status: 'pending',
+            totalRevenue: appointment.price,
+            period: `${format(appointment.date, "yyyy-MM", { locale: fr })}`,
+            businessEarnings: appointment.price - (appointment.price * appointment.service.workerCommission / 100)
+          }
+        })
       ]);
     }
 

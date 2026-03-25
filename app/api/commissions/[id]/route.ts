@@ -2,7 +2,8 @@
 
 import { NextRequest } from "next/server";
 import prisma from "@/lib/prisma";
-import { requireRole, successResponse, handleApiError } from "@/lib/api/helpers";
+import { requireRole, successResponse, handleApiError, errorResponse } from "@/lib/api/helpers";
+import { error } from "node:console";
 export async function PATCH(
   request: NextRequest,
   context: { params: Promise<{ id: string; }>; }
@@ -27,6 +28,8 @@ export async function PATCH(
     if (!commission) {
       throw new Error("Commission introuvable");
     }
+
+    if (commission.status === 'paid') return errorResponse("Cette commission est deja regler")
 
     const updated = await prisma.$transaction(async (tx) => {
       // 1️⃣ Update worker commission

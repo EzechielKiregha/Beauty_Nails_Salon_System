@@ -54,6 +54,7 @@ export async function GET(request: NextRequest) {
       const retention = completedApps.length > 0 
         ? Math.round((uniqueClients / completedApps.length) * 100) 
         : 0;
+      const daysToWorks = s.schedules.filter((sch: any) => sch.isAvailable).map((sch: any) => daysMap[sch.dayOfWeek]);
 
       return {
         id: s.id,
@@ -74,13 +75,13 @@ export async function GET(request: NextRequest) {
         materialsReserve: totalRevenue * (5 / 100),
         operationalCosts: totalRevenue * (5 / 100),
         user: s.user,
-        schedules: s.schedules,
+        schedules: s?.schedules.filter((sch: any) => sch.isAvailable),
         appointments: s.appointments,
         name: s.user.name,
         role: s.position,
         phone: s.user.phone,
         email: s.user.email,
-        workingDays: s.schedules.map((sch: any) => daysMap[sch.dayOfWeek]),
+        workingDays: daysToWorks,
         workingHoursString: typeof s.workingHours === 'string' ? s.workingHours : 'Non défini',
         appointmentsCount: completedApps.length,
         revenue: totalRevenue.toString(),
@@ -90,6 +91,8 @@ export async function GET(request: NextRequest) {
         status: s.isAvailable ? 'active' : 'off',
       };
     });
+
+    // console.log(formattedStaff)
 
     return successResponse(formattedStaff);
   } catch (error) {

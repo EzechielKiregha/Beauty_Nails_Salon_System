@@ -9,60 +9,45 @@ import { useInventory } from '@/lib/hooks/useInventory';
 import { AppointmentModal } from './modals/AppointmentModal';
 import { AdjustStockModal } from './modals/InventoryModals';
 import { ClientModal } from './modals/ClientModal';
+import { format } from 'date-fns';
 
 
-export default function TodayOverview({ showMock }: { showMock?: boolean }) {
+export default function TodayOverview() {
   const today = new Date().toISOString().split('T')[0];
 
   // Hooks
-  const { appointments: apiAppointments = [] } = useAppointments({ date: today });
+  const { appointments: apiAppointments = [] } = useAppointments();
   const { data: revenueData } = useRevenueReport({ from: today, to: today });
   const { staff: apiStaff = [] } = useAvailableStaff();
   const { inventory: apiInventory = [] } = useInventory();
   const { data: servicePerformance } = useServicePerformance('daily');
 
-  // Local mocks (used only when showMock=true)
-  const MOCK_STATS = {
-    upcomingAppointments: 8,
-    completedAppointments: 12,
-    walkInAvailable: true,
-    currentOccupancy: 75,
-    dailyRevenue: 1250000,
-    clientsServed: 12,
-    staffOnDuty: 6,
-    averageWaitTime: 15,
-  };
-
-  const MOCK_UPCOMING = [
-    { time: '14:00', client: 'Marie Kabila', service: 'Manucure Gel', staff: 'Marie N.', duration: 60 },
-    { time: '14:30', client: 'Grace Lumière', service: 'Extensions Cils', staff: 'Grace L.', duration: 90 },
-    { time: '15:00', client: 'Sophie Makala', service: 'Tresses', staff: 'Sophie K.', duration: 120 },
-    { time: '15:30', client: 'Élise Nkumu', service: 'Maquillage', staff: 'Élise M.', duration: 45 }
-  ];
-
-  const MOCK_STAFF = [
-    { name: 'Marie Nkumu', status: 'busy', currentClient: 'Rose Mbala', service: 'Manucure', nextAvailable: '14:00' },
-    { name: 'Grace Lumière', status: 'busy', currentClient: 'Annie Bokele', service: 'Extension Cils', nextAvailable: '15:00' },
-    { name: 'Sophie Kabila', status: 'available', currentClient: null, service: null, nextAvailable: 'Maintenant' },
-    { name: 'Élise Makala', status: 'break', currentClient: null, service: null, nextAvailable: '13:30' }
-  ];
 
   // Compose data using API first; fall back to mocks only if showMock is true
   const upcomingAppointments = (apiAppointments && apiAppointments.length > 0)
-    ? apiAppointments.map((apt: any) => ({
-      time: apt.time || apt.startTime || new Date(apt.startsAt || apt.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-      client: apt.client?.name || apt.client?.user?.name || apt.clientName || (typeof apt.client === 'string' ? apt.client : 'Client'),
-      service: apt.service?.name || apt.serviceName || (typeof apt.service === 'string' ? apt.service : 'Service'),
-      staff: apt.staff?.name || apt.staff?.user?.name || apt.staffName || (typeof apt.staff === 'string' ? apt.staff : 'Staff'),
-      duration: apt.duration || 60,
-    }))
-    : (showMock ? MOCK_UPCOMING : []);
+    ? apiAppointments.filter(
+      apt => (apt.status === 'confirmed' || apt.status === 'in_progress' || apt.status === 'pending') && new Date(apt.date).getDate() >= new Date().getDate()
+    ) : [];
 
-  const ongoingAppointments = apiAppointments.filter((a) => ['confirmed', 'pending'].includes(a.status));
+  const ongoingAppointments = apiAppointments.filter((a) => ['completed', 'in_progress'].includes(a.status));
+
+  const enrichedAppointments = ongoingAppointments.map((a) => ({
+    ...a,
+    startTime: new Date(a.updatedAt), // or explicit field later
+    duration: a.service?.duration || 60, // minutes
+  }));
+
+  const getElapsedMinutes = (startTime: Date) => {
+    return Math.floor((Date.now() - new Date(startTime).getTime()) / 60000);
+  };
+
+  const isExceeded = (start: Date, duration: number) => {
+    return getElapsedMinutes(start) > duration;
+  };
 
   const staffRoster = (apiStaff && apiStaff.length > 0)
     ? apiStaff.map((s: any) => ({ name: s.name || s.fullName || 'Employé', status: s.isAvailable ? 'available' : 'busy', currentClient: null, service: null, nextAvailable: 'Maintenant' }))
-    : (showMock ? MOCK_STAFF : []);
+    : [];
 
   const urgentAlerts = [] as any[];
   const lowStock = (apiInventory || []).filter((i: any) => i.status === 'low' || i.status === 'critical' || i.status === 'out');
@@ -70,17 +55,17 @@ export default function TodayOverview({ showMock }: { showMock?: boolean }) {
 
   const popularServices = (servicePerformance && servicePerformance.services && servicePerformance.services.length > 0)
     ? servicePerformance.services.slice(0, 4).map((s: any) => ({ name: s.name, count: s.count || 0, revenue: `${(s.revenue || 0).toLocaleString()} Fc` }))
-    : (showMock ? [{ name: 'Manucure Gel', count: 8, revenue: '240 000 Fc' }] : []);
+    : [];
 
   const todayStats = {
     upcomingAppointments: upcomingAppointments.length,
-    completedAppointments: apiAppointments ? apiAppointments.filter((a: any) => a.status === 'completed').length : (showMock ? MOCK_STATS.completedAppointments : 0),
-    walkInAvailable: showMock ? MOCK_STATS.walkInAvailable : false,
-    currentOccupancy: showMock ? MOCK_STATS.currentOccupancy : Math.round((staffRoster.filter(s => s.status === 'busy').length / Math.max(1, staffRoster.length)) * 100),
-    dailyRevenue: revenueData?.totalRevenue ?? (showMock ? MOCK_STATS.dailyRevenue : 0),
-    clientsServed: apiAppointments ? apiAppointments.length : (showMock ? MOCK_STATS.clientsServed : 0),
+    completedAppointments: apiAppointments ? apiAppointments.filter((a: any) => a.status === 'completed').length : 0,
+    walkInAvailable: false,
+    currentOccupancy: Math.round((staffRoster.filter(s => s.status === 'busy').length / Math.max(1, staffRoster.length)) * 100),
+    dailyRevenue: revenueData?.totalRevenue ?? 0,
+    clientsServed: apiAppointments ? apiAppointments.length : 0,
     staffOnDuty: staffRoster.length,
-    averageWaitTime: showMock ? MOCK_STATS.averageWaitTime : 0,
+    averageWaitTime: 0,
   };
 
   return (
@@ -193,17 +178,17 @@ export default function TodayOverview({ showMock }: { showMock?: boolean }) {
                 <div key={idx} className="flex flex-col sm:flex-row sm:items-center gap-4 p-4 bg-linear-to-r from-pink-50 to-purple-50 dark:from-pink-900/10 dark:to-purple-900/10 rounded-xl border border-pink-100/50 dark:border-pink-900/20">
                   <div className="flex items-center gap-4">
                     <div className="text-center min-w-15 bg-white dark:bg-gray-800 p-2 rounded-lg shadow-sm">
-                      <p className="text-base sm:text-lg text-gray-900 dark:text-gray-100 font-black">{apt.time}</p>
+                      <p className="text-base sm:text-lg text-gray-900 dark:text-gray-100 font-black">{format(apt?.date, 'HH:mm')}</p>
                       <p className="text-[10px] sm:text-base text-gray-500 dark:text-gray-400  uppercase">{apt.duration} min</p>
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-lg sm:text-base text-gray-900 dark:text-gray-100  truncate">{apt.client}</p>
-                      <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400 font-medium truncate">{apt.service}</p>
+                      <p className="text-lg sm:text-base text-gray-900 dark:text-gray-100  truncate">{apt.client.user.name}</p>
+                      <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400 font-medium truncate">{apt.service.name}</p>
                     </div>
                   </div>
                   <div className="hidden sm:block w-px h-10 bg-pink-200 dark:bg-pink-800/30" />
                   <div className="flex items-center justify-between sm:justify-end gap-3 flex-1">
-                    <p className="text-base sm:text-lg text-gray-700 dark:text-gray-300">avec <span className="">{apt.staff}</span></p>
+                    <p className="text-base sm:text-lg text-gray-700 dark:text-gray-300">avec <span className="">{apt.worker.user.name}</span></p>
                     <Badge className="bg-blue-500 dark:bg-blue-900/40 text-white dark:text-blue-200 border-0 text-[10px] sm:text-base font-black">Confirmé</Badge>
                   </div>
                 </div>

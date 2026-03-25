@@ -11,7 +11,9 @@ export async function PATCH(
 
   const id = (await context.params).id;
 
-  const userProfileId = (await getAuthenticatedUser()).clientProfile?.id
+  const user =await getAuthenticatedUser();
+
+  const userProfileId = (user).clientProfile?.id
 
   const body = await request.json();
   const { newTime, newDate, newStaffId, isPrePaidUsed } = body;
@@ -36,6 +38,8 @@ export async function PATCH(
   if (conflictingAppointment) {
     return errorResponse('A cette date et heure, ce rendez-vous n\'est pas disponible', 409);
   }
+
+  if (user && Number(user.clientProfile?.prepaymentBalance) <= 5000) return errorResponse("Votre Balance Prepaye est insufisant.")
 
   const app = await prisma.appointment.update({
     where: { id },

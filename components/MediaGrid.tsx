@@ -71,10 +71,10 @@ export default function MediaGrid({ workerId, onRemove, onView }: MediaGridProps
     }
   };
 
-  const handleRemove = (id: string) => {
+  const handleRemove = async (id: string) => {
     // In a real implementation, you would call a delete API
     // For now, we'll just refetch to update the list
-    refetch();
+    await refetch();
   };
 
   const handleView = (url: string) => {

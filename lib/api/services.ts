@@ -13,6 +13,7 @@ export interface Service {
   isPopular: boolean;
   isActive: boolean;
   displayOrder: number;
+  workerCommission: number;
   createdAt: string;
   updatedAt: string;
   addOns?: ServiceAddOn[];
@@ -31,6 +32,7 @@ export interface CreateServiceData {
   name: string;
   category: 'onglerie' | 'cils' | 'tresses' | 'maquillage';
   price: number;
+  commission: number;
   duration: number;
   description: string;
   imageUrl?: string;

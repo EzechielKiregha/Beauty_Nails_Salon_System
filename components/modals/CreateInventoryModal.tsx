@@ -15,6 +15,7 @@ import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
 import { toast } from "sonner";
 import { useInventory } from "@/lib/hooks/useInventory";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 
 export default function CreateInventoryModal({ triggerLabel = "Créer un article" }: { triggerLabel?: string }) {
   const [name, setName] = useState("");
@@ -67,59 +68,80 @@ export default function CreateInventoryModal({ triggerLabel = "Créer un article
       <DialogTrigger asChild>
         <Button variant="ghost">{triggerLabel}</Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="sm:max-w-3xl w-[95vw] max-h-[90vh] overflow-y-auto  dark:bg-gray-950 p-5">
         <DialogHeader>
           <DialogTitle>Créer un nouvel article d'inventaire</DialogTitle>
         </DialogHeader>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-4">
           <div>
-            <Label htmlFor="item-name">Nom</Label>
+            <Label className="mb-2" htmlFor="item-name">Nom</Label>
             <Input id="item-name" value={name} onChange={(e) => setName(e.target.value)} />
           </div>
 
           <div>
-            <Label htmlFor="item-sku">SKU (optionnel)</Label>
+            <Label className="mb-2" htmlFor="item-sku">SKU (optionnel)</Label>
             <Input id="item-sku" value={sku} onChange={(e) => setSku(e.target.value)} placeholder="ex: VN-RED-001" />
           </div>
 
           <div>
-            <Label htmlFor="item-category">Catégorie</Label>
-            <Input id="item-category" value={category} onChange={(e) => setCategory(e.target.value)} />
+            <Label className="mb-2" htmlFor="service-category">Catégorie</Label>
+            <Select
+              value={category}
+              onValueChange={(value) => setCategory(value as any)}
+            >
+              <SelectTrigger >
+                <SelectValue placeholder="Sélectionner une catégorie" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="onglerie">
+                  💅 Onglerie
+                </SelectItem>
+                <SelectItem value="cils">
+                  👁️ Cils
+                </SelectItem>
+                <SelectItem value="tresses">
+                  💇‍♀️ Tresses
+                </SelectItem>
+                <SelectItem value="maquillage">
+                  💄 Maquillage
+                </SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
           <div>
-            <Label htmlFor="item-unit">Unité</Label>
+            <Label className="mb-2" htmlFor="item-unit">Unité</Label>
             <Input id="item-unit" value={unit} onChange={(e) => setUnit(e.target.value)} />
           </div>
 
           <div>
-            <Label htmlFor="item-cost">Coût</Label>
+            <Label className="mb-2" htmlFor="item-cost">Coût</Label>
             <Input id="item-cost" type="number" value={cost} onChange={(e) => setCost(e.target.value === '' ? '' : Number(e.target.value))} />
           </div>
 
           <div>
-            <Label htmlFor="item-supplier">Fournisseur (optionnel)</Label>
+            <Label className="mb-2" htmlFor="item-supplier">Fournisseur (optionnel)</Label>
             <Input id="item-supplier" value={supplier} onChange={(e) => setSupplier(e.target.value)} />
           </div>
 
           <div>
-            <Label htmlFor="item-initial">Stock initial (optionnel)</Label>
+            <Label className="mb-2" htmlFor="item-initial">Stock initial (optionnel)</Label>
             <Input id="item-initial" type="number" value={initialStock} onChange={(e) => setInitialStock(e.target.value === '' ? '' : Number(e.target.value))} />
           </div>
 
           <div>
-            <Label htmlFor="item-min">Stock min (optionnel)</Label>
+            <Label className="mb-2" htmlFor="item-min">Stock min (optionnel)</Label>
             <Input id="item-min" type="number" value={minStock} onChange={(e) => setMinStock(e.target.value === '' ? '' : Number(e.target.value))} />
           </div>
 
           <div>
-            <Label htmlFor="item-max">Stock max (optionnel)</Label>
+            <Label className="mb-2" htmlFor="item-max">Stock max (optionnel)</Label>
             <Input id="item-max" type="number" value={maxStock} onChange={(e) => setMaxStock(e.target.value === '' ? '' : Number(e.target.value))} />
           </div>
 
           <div className="md:col-span-2">
-            <Label htmlFor="item-desc">Description (optionnel)</Label>
+            <Label className="mb-2" htmlFor="item-desc">Description (optionnel)</Label>
             <Textarea id="item-desc" value={description} onChange={(e) => setDescription(e.target.value)} />
           </div>
         </div>

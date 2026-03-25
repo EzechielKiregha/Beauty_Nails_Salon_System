@@ -59,7 +59,7 @@ export async function GET(request: NextRequest) {
     // ✅ Aggregate from paid appointments
     const serviceStats: Record<string, any> = {};
 
-    console.log(appointments);
+    // console.log(appointments);
 
     appointments.forEach((appointment: any) => {
       appointment.sale?.items.forEach((item: any) => {

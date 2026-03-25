@@ -73,8 +73,7 @@ interface WorkerProfileData {
 }
 
 export function StaffModal({ staffId, trigger }: StaffModalProps) {
-  const { user } = useAuth();
-  const { data: workerProfile, isLoading: isWorkerLoading, error: workerError } = useWorker(user?.workerProfile?.id!);
+  const { data: workerProfile, isLoading: isWorkerLoading, error: workerError } = useWorker(staffId);
 
   if (isWorkerLoading) {
     return (
@@ -102,7 +101,7 @@ export function StaffModal({ staffId, trigger }: StaffModalProps) {
     <Dialog>
       {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
       <DialogContent className="sm:max-w-3xl w-[95vw] max-h-[90vh] overflow-y-auto p-4 dark:bg-gray-950">
-        <WorkerProfileSettings />
+        <WorkerProfileSettings staffId={staffId} />
       </DialogContent>
     </Dialog>
   );

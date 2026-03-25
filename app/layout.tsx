@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import { Toaster } from "sonner";
 import { ThemeProvider } from "@/components/theme-provider";
 import { TanstackProvider } from "@/components/providers/TanstackProvider";
+import AppClientLayer from "@/components/AppClientLayer";
 
 const _geistSans = Geist({
   variable: "--font-geist-sans",
@@ -47,6 +48,8 @@ export default function RootLayout({
             <Header />
             <main className="flex-1">{children}</main>
             <Footer />
+            {/* ✅ GLOBAL CLIENT FEATURES */}
+            <AppClientLayer />
             <Toaster position="top-right" />
           </TanstackProvider>
         </ThemeProvider>

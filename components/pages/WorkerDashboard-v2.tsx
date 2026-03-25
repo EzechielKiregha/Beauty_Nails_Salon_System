@@ -24,7 +24,10 @@ import {
   Loader2,
   Info,
   AlertTriangle,
-  Download
+  Download,
+  Package,
+  Settings,
+  Building
 } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { useAuth } from '@/lib/hooks/useAuth';
@@ -68,7 +71,7 @@ export default function WorkerDashboardV2() {
     updateStatus,
   } = useAppointments({
     workerId: user?.workerProfile?.id,
-    date: today,
+    // date: today,
   });
 
   const {
@@ -164,7 +167,7 @@ export default function WorkerDashboardV2() {
 
   // Filter appointments by status
   const todaySchedule = appointments.filter(
-    apt => apt.status === 'confirmed' || apt.status === 'in_progress' || apt.status === 'pending'
+    apt => (apt.status === 'confirmed' || apt.status === 'in_progress' || apt.status === 'pending') && new Date(apt.date).getDate() >= new Date().getDate()
   );
 
   const pendingAppointments = AllAppointments.filter(
@@ -289,29 +292,6 @@ export default function WorkerDashboardV2() {
       month: 'long',
     });
   };
-
-  // Calculate weekly data from appointments
-  // const weeklyData = (() => {
-  //   const days = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
-  //   const data = days.map((day, index) => {
-  //     const dayDate = new Date(weekStart);
-  //     dayDate.setDate(dayDate.getDate() + index);
-  //     const dayStr = dayDate.toISOString().split('T')[0];
-
-  //     const dayAppointments = weeklyAppointments.filter(
-  //       apt => apt.date?.toString().split('T')[0] === dayStr ||
-  //         apt.date === dayStr ||
-  //         new Date(apt.date).toISOString().split('T')[0] === dayStr
-  //     );
-
-  //     return {
-  //       day,
-  //       rendezVous: dayAppointments.length,
-  //       revenus: dayAppointments.reduce((sum, apt) => sum + (apt.price || 0), 0),
-  //     };
-  //   });
-  //   return data;
-  // })();
 
   // Calculate service statistics from appointments
   const serviceStats = (() => {
@@ -505,6 +485,53 @@ export default function WorkerDashboardV2() {
                 {user?.workerProfile?.totalReviews || 0} avis
               </p>
             </Card>
+
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-5">
+
+            {/* 💰 Worker Earnings */}
+            <div className="bg-linear-to-br from-green-50 to-emerald-50 dark:from-gray-950 dark:to-gray-950 p-4 rounded-2xl text-center shadow-sm hover:shadow-lg transition border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400">
+              <DollarSign className="w-5 h-5 text-green-600 dark:text-green-400 mx-auto mb-2" />
+              <p className="text-xl font-bold text-gray-900 dark:text-gray-100">
+                {worker?.totalEarnings?.toLocaleString()} Fc
+              </p>
+              <p className="text-xs text-gray-500 uppercase">
+                Vos gains
+              </p>
+            </div>
+
+            {/* 🏢 Business Revenue */}
+            <div className="bg-linear-to-br from-purple-50 to-pink-50 dark:from-gray-950 dark:to-gray-950 p-4 rounded-2xl text-center shadow-sm hover:shadow-lg transition border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400">
+              <Building className="w-5 h-5 text-purple-600 dark:text-purple-400 mx-auto mb-2" />
+              <p className="text-xl font-bold text-gray-900 dark:text-gray-100">
+                {worker?.businessRevenue?.toLocaleString()} Fc
+              </p>
+              <p className="text-xs text-gray-500 uppercase">
+                Part du salon
+              </p>
+            </div>
+
+            {/* 🧴 Materials */}
+            <div className="bg-linear-to-br from-amber-50 to-orange-50 dark:from-gray-950 dark:to-gray-950 p-4 rounded-2xl text-center shadow-sm hover:shadow-lg transition border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400">
+              <Package className="w-5 h-5 text-amber-600 dark:text-amber-400 mx-auto mb-2" />
+              <p className="text-xl font-bold text-gray-900 dark:text-gray-100">
+                {worker?.materialsReserve?.toLocaleString()} Fc
+              </p>
+              <p className="text-xs text-gray-500 uppercase">
+                Produits
+              </p>
+            </div>
+
+            {/* ⚙️ Operational */}
+            <div className="bg-linear-to-br from-blue-50 to-cyan-50 dark:from-gray-950 dark:to-gray-950 p-4 rounded-2xl text-center shadow-sm hover:shadow-lg transition border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400">
+              <Settings className="w-5 h-5 text-blue-600 dark:text-blue-400 mx-auto mb-2" />
+              <p className="text-xl font-bold text-gray-900 dark:text-gray-100">
+                {worker?.operationalCosts?.toLocaleString()} Fc
+              </p>
+              <p className="text-xs text-gray-500 uppercase">
+                Charges
+              </p>
+            </div>
 
           </div>
         </div>

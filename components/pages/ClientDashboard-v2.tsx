@@ -54,7 +54,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 import Link from "next/link";
-import { useAppointments } from "@/lib/hooks/useAppointments";
+import { useAppointments, useAvailableSlots } from "@/lib/hooks/useAppointments";
 import { useLoyalty, useReferral } from "@/lib/hooks/useLoyalty";
 import { useNotifications } from "@/lib/hooks/useNotifications";
 import { useAuth } from "@/lib/hooks/useAuth";
@@ -71,6 +71,7 @@ import { fr } from "date-fns/locale";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { Calendar } from "../ui/calendar";
 import AppointmentCountdown from "../AppointmentCountdown";
+import { useReviews } from "@/lib/hooks/useReview";
 
 export default function ClientDashboardV2() {
   const [notificationOpen, setNotificationOpen] = useState(false);
@@ -79,6 +80,8 @@ export default function ClientDashboardV2() {
   const [selectedAppointment, setSelectedAppointment] = useState<any>(null);
   const [rating, setRating] = useState(0);
   const [reviewText, setReviewText] = useState("");
+  const [selectedWorker, setSelectedWorker] = useState<string | null>(null);
+  const [selectedWorkerName, setSelectedWorkerName] = useState<string | null>(null);
   const [selectedDate, setSelectedDate] = useState<
     Date | undefined
   >(undefined);
@@ -163,6 +166,22 @@ export default function ClientDashboardV2() {
     markAllAsRead,
   } = useNotifications({ limit: 50 });
 
+  const { createReview } = useReviews()
+
+  const { data: slots, isLoading: slotsLoading } = useAvailableSlots({
+    date: selectedDate ? selectedDate.toString() : undefined,
+    workerId: selectedWorker ? selectedWorker : "",
+  })
+  const weekDay = [
+    "Dimanche",
+    "Lundi",
+    "Mardi",
+    "Mercredi",
+    "Jeudi",
+    "Vendredi",
+    "Samedi"
+  ];
+
   // Filter appointments
   const upcomingAppointments = appointments.filter(
     (apt) => (apt.status === "confirmed") && new Date(apt.date).getDate() >= new Date().getDate(),
@@ -182,11 +201,6 @@ export default function ClientDashboardV2() {
   const nextFreeService = Math.max(0, 5 - (completedAppointments % 5));
   const nextFreeReferral = Math.max(0, 5 - (referrals ? referrals?.length : 0)) || 0;
 
-  // Handle cancel appointment
-  const handleCancelAppointment = () => {
-
-  };
-
   // Handle review submission
   const handleSubmitReview = async () => {
     if (!selectedAppointment || rating === 0) {
@@ -194,8 +208,11 @@ export default function ClientDashboardV2() {
       return;
     }
 
-    // TODO: Implement review submission API
-    toast.success("Merci pour votre avis !");
+    await createReview({
+      appointmentId: selectedAppointment.id,
+      rating: rating,
+      comment: reviewText
+    })
     setReviewDialogOpen(false);
     setSelectedAppointment(null);
     setRating(0);
@@ -734,27 +751,6 @@ export default function ClientDashboardV2() {
                                 {appointment.price?.toLocaleString()} Fc
                               </p>
                             </div>
-
-                            {/* {appointment.status !== "cancelled" && !missed && (
-                              <div className="flex gap-2">
-                                <Button variant="outline" size="sm">
-                                  <Phone className="w-4 h-4 mr-2" />
-                                  Contacter
-                                </Button>
-                                <Button
-                                  variant="outline"
-                                  size="sm"
-                                  className="text-red-600 hover:text-red-700"
-                                  onClick={() => {
-                                    setSelectedAppointment(appointment);
-                                    setCancelDialogOpen(true);
-                                  }}
-                                >
-                                  <XCircle className="w-4 h-4 mr-2" />
-                                  Annuler
-                                </Button>
-                              </div>
-                            )} */}
                             <AppointmentCountdown
                               date={appointment.date}
                               time={appointment.time}
@@ -825,20 +821,36 @@ export default function ClientDashboardV2() {
                                   </Popover>
 
                                   {/* ⏰ Time */}
-                                  <Select value={selectedTime} onValueChange={setSelectedTime}>
-                                    <SelectTrigger>
-                                      <SelectValue placeholder="Choisir une heure" />
-                                    </SelectTrigger>
-
-                                    <SelectContent>
-                                      <SelectItem value="09:00">09:00</SelectItem>
-                                      <SelectItem value="10:00">10:00</SelectItem>
-                                      <SelectItem value="11:00">11:00</SelectItem>
-                                      <SelectItem value="14:00">14:00</SelectItem>
-                                      <SelectItem value="15:00">15:00</SelectItem>
-                                      <SelectItem value="16:00">16:00</SelectItem>
-                                    </SelectContent>
-                                  </Select>
+                                  <div>
+                                    {slots?.slots.length != 0
+                                      ? <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Les Heures <span className="text-md font-bold text-pink-600">{selectedWorkerName}</span> sera disponible le <span className="text-md font-bold text-pink-600">{selectedDate ? format(selectedDate, "PPP", { locale: fr }) : ''}</span></h3>
+                                      : <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Malheureusement <span className="text-md font-bold text-pink-600">{selectedWorkerName}</span> ne travaille pas <span className="text-md font-bold text-pink-600">le {selectedDate ? weekDay[selectedDate.getDay()] : ''}</span></h3>
+                                    }
+                                    <div className={`grid ${slots?.slots.length != 0 ? 'grid-cols-3 sm:grid-cols-4 md:grid-cols-6' : ''} gap-2`}>
+                                      {slots?.slots.length === 0 ? (
+                                        <p className='p-1 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-400 border-gray-300 dark:border-gray-700'>
+                                          Malheureusement aucune heure n'est disponible pour cette date {'. '}
+                                          Choisi un autre specialiste ou une autre date.
+                                        </p>
+                                      )
+                                        :
+                                        slots?.slots.map(time => (
+                                          <button
+                                            key={time}
+                                            type="button"
+                                            onClick={() => setSelectedTime(time)}
+                                            className={`p-2 rounded-lg border ${selectedTime === time
+                                              ? 'bg-pink-500 text-white border-pink-500'
+                                              : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-700'
+                                              } ${(selectedDate && selectedDate < new Date() && Number(time.split(":")[0]) < new Date().getHours()) ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}`}
+                                            disabled={(selectedDate && selectedDate < new Date() && Number(time.split(":")[0]) < new Date().getHours()) ? true : false}
+                                          >
+                                            {time}
+                                          </button>
+                                        ))
+                                      }
+                                    </div>
+                                  </div>
 
                                   {/* 📌 Explanation */}
                                   <div className="text-xs text-gray-500 space-y-1">
@@ -981,6 +993,10 @@ export default function ClientDashboardV2() {
                             <Popover>
                               <PopoverTrigger asChild>
                                 <Button
+                                  onClick={() => {
+                                    setSelectedWorker(appointment.worker?.id)
+                                    setSelectedWorkerName(appointment.worker?.user?.name)
+                                  }}
                                   size="sm"
                                   variant="outline"
                                   className="text-amber-600 border-amber-400 hover:bg-amber-50"
@@ -989,7 +1005,7 @@ export default function ClientDashboardV2() {
                                 </Button>
                               </PopoverTrigger>
 
-                              <PopoverContent className="w-[340px] rounded-2xl p-4 space-y-4">
+                              <PopoverContent className="w-95 rounded-2xl p-4 space-y-4">
 
                                 {/* 🧠 Info */}
                                 <div className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
@@ -1043,21 +1059,36 @@ export default function ClientDashboardV2() {
                                 </Popover>
 
                                 {/* ⏰ Time */}
-                                <Select value={selectedTime} onValueChange={setSelectedTime}>
-                                  <SelectTrigger>
-                                    <SelectValue placeholder="Choisir une heure" />
-                                  </SelectTrigger>
-
-                                  <SelectContent>
-                                    <SelectItem value="09:00">09:00</SelectItem>
-                                    <SelectItem value="10:00">10:00</SelectItem>
-                                    <SelectItem value="11:00">11:00</SelectItem>
-                                    <SelectItem value="14:00">14:00</SelectItem>
-                                    <SelectItem value="15:00">15:00</SelectItem>
-                                    <SelectItem value="16:00">16:00</SelectItem>
-                                  </SelectContent>
-                                </Select>
-
+                                <div>
+                                  {slots?.slots.length != 0
+                                    ? <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Les Heures <span className="text-md font-bold text-pink-600">{selectedWorkerName}</span> sera disponible le <span className="text-md font-bold text-pink-600">{selectedDate ? format(selectedDate, "PPP", { locale: fr }) : ''}</span></h3>
+                                    : <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Malheureusement <span className="text-md font-bold text-pink-600">{selectedWorkerName}</span> ne travaille pas <span className="text-md font-bold text-pink-600">le {selectedDate ? weekDay[selectedDate.getDay()] : ''}</span></h3>
+                                  }
+                                  <div className={`grid ${slots?.slots.length != 0 ? 'grid-cols-3 sm:grid-cols-4 md:grid-cols-6' : ''} gap-2`}>
+                                    {slots?.slots.length === 0 ? (
+                                      <p className='p-1 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-400 border-gray-300 dark:border-gray-700'>
+                                        Malheureusement aucune heure n'est disponible pour cette date {'. '}
+                                        Choisi un autre specialiste ou une autre date.
+                                      </p>
+                                    )
+                                      :
+                                      slots?.slots.map(time => (
+                                        <button
+                                          key={time}
+                                          type="button"
+                                          onClick={() => setSelectedTime(time)}
+                                          className={`p-2 rounded-lg border ${selectedTime === time
+                                            ? 'bg-pink-500 text-white border-pink-500'
+                                            : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-700'
+                                            } ${(selectedDate && selectedDate < new Date() && Number(time.split(":")[0]) < new Date().getHours()) ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}`}
+                                          disabled={(selectedDate && selectedDate < new Date() && Number(time.split(":")[0]) < new Date().getHours()) ? true : false}
+                                        >
+                                          {time}
+                                        </button>
+                                      ))
+                                    }
+                                  </div>
+                                </div>
                                 {/* 📌 Explanation */}
                                 <div className="text-xs text-gray-500 space-y-1">
                                   <p>• Reprogrammer → utilise le solde prépayé si disponible</p>
@@ -1075,7 +1106,7 @@ export default function ClientDashboardV2() {
                                   </Button>
 
                                   <Button
-                                    disabled={!selectedDate || !selectedTime}
+                                    disabled={!selectedDate || !selectedTime || !canUsePrepaid}
                                     onClick={() =>
                                       handleReschedule(
                                         appointment.id,
@@ -1227,7 +1258,7 @@ export default function ClientDashboardV2() {
                   {canClaimBonus && (
                     <Button
                       onClick={() => console.log("Claim bonus")}
-                      className="bg-gradient-to-r from-amber-500 to-yellow-500 hover:opacity-90"
+                      className="bg-linear-to-r from-amber-500 to-yellow-500 hover:opacity-90"
                     >
                       🎁 Réclamer Bonus
                     </Button>
@@ -1808,7 +1839,7 @@ export default function ClientDashboardV2() {
             </Button>
             <Button
               variant="destructive"
-              onClick={handleCancelAppointment}
+            // onClick={handleCancelAppointment}
             >
               Confirmer l'annulation
             </Button>

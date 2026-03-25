@@ -121,7 +121,7 @@ export default function CreateWorkerModal({
       </DialogTrigger>
 
       {/* ✅ Bigger + Responsive */}
-      <DialogContent className="w-[95vw] max-w-4xl max-h-[90vh] overflow-y-auto rounded-2xl">
+      <DialogContent className="sm:max-w-3xl w-[95vw] max-h-[90vh] overflow-y-auto  dark:bg-gray-950 p-5">
 
         <DialogHeader>
           <DialogTitle className="text-xl">
@@ -139,7 +139,7 @@ export default function CreateWorkerModal({
             </h3>
 
             <div>
-              <Label>Nom complet *</Label>
+              <Label className="mb-3">Nom complet *</Label>
               <Input
                 value={name}
                 onChange={(e) => setName(e.target.value)}
@@ -148,7 +148,7 @@ export default function CreateWorkerModal({
             </div>
 
             <div>
-              <Label>Email *</Label>
+              <Label className="mb-3">Email *</Label>
               <Input
                 type="email"
                 value={email}
@@ -158,7 +158,7 @@ export default function CreateWorkerModal({
             </div>
 
             <div>
-              <Label>Téléphone *</Label>
+              <Label className="mb-3">Téléphone *</Label>
               <Input
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
@@ -167,7 +167,7 @@ export default function CreateWorkerModal({
             </div>
 
             <div>
-              <Label>Mot de passe *</Label>
+              <Label className="mb-3">Mot de passe *</Label>
               <Input
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -184,7 +184,7 @@ export default function CreateWorkerModal({
 
             {/* ✅ Shadcn Select */}
             <div>
-              <Label>Poste *</Label>
+              <Label className="mb-3">Poste *</Label>
               <Select value={position} onValueChange={setPosition}>
                 <SelectTrigger>
                   <SelectValue placeholder="Choisir un poste" />
@@ -201,7 +201,7 @@ export default function CreateWorkerModal({
 
             {/* ✅ Checkbox Specialties */}
             <div>
-              <Label>Spécialités</Label>
+              <Label className="mb-3">Spécialités</Label>
               <div className="grid grid-cols-2 gap-3 mt-2">
                 {SERVICE_CATEGORIES.map((category) => (
                   <div
@@ -222,7 +222,7 @@ export default function CreateWorkerModal({
             </div>
 
             <div>
-              <Label>Commission (%)</Label>
+              <Label className="mb-3">Commission (%)</Label>
               <Input
                 type="number"
                 step="0.1"
@@ -248,7 +248,7 @@ export default function CreateWorkerModal({
             </h3>
 
             <div>
-              <Label>Horaires de travail</Label>
+              <Label className="mb-3">Horaires de travail</Label>
               <Input
                 value={workingHours}
                 onChange={(e) => setWorkingHours(e.target.value)}

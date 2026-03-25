@@ -9,6 +9,7 @@ export interface Commission {
   totalRevenue: number;
   commissionRate: number;
   commissionAmount: number;
+  businessEarnings: number,
   paidAt: Date | null;
   createdAt: Date;
   updatedAt: Date;

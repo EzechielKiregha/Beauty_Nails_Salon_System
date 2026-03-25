@@ -13,6 +13,8 @@ import { Worker } from '@/lib/api/staff';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { toast } from 'sonner';
 import { useAuth } from '@/lib/hooks/useAuth';
+import { StaffModal } from './modals/StaffModals-v2';
+import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 
 export default function StaffManagement() {
   const [selectedStaff, setSelectedStaff] = useState<Worker | null>(null);
@@ -142,6 +144,8 @@ export default function StaffManagement() {
     }
   };
 
+  console.log(selectedStaff?.workingDays)
+
   // Determine status of the currently selected period
   const selectedPeriodCommission = getCommissionForPeriod(selectedPeriod);
   const selectedPeriodStatus = selectedPeriodCommission?.status || 'none'; // 'none', 'pending', 'paid'
@@ -237,7 +241,20 @@ export default function StaffManagement() {
               <TabsContent value="performance" className="space-y-6">
                 <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
                   <div>
-                    <h3 className="text-xl sm:text-2xl text-gray-900 dark:text-gray-100 mb-2">{selectedStaff.name}</h3>
+                    <div className="flex flex-row space-x-4">
+                      <StaffModal
+                        staffId={selectedStaff?.id || ''}
+                        trigger={
+                          <Avatar className="w-16 h-16 mb-4 mr-4 border-4 border-white shadow-lg">
+                            <AvatarImage src="" />
+                            <AvatarFallback className="text-2xl font-medium bg-gray-100 text-gray-600">
+                              {selectedStaff?.name.split(" ")[0]?.charAt(0) || selectedStaff?.name.charAt(0)}
+                            </AvatarFallback>
+                          </Avatar>
+                        }
+                      />
+                      <h3 className="text-xl sm:text-2xl text-gray-900 dark:text-gray-100 mb-2">{selectedStaff.name}</h3>
+                    </div>
                     <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400 mb-4">{selectedStaff.role}</p>
                     <div className="space-y-1 text-base sm:text-lg text-gray-600 dark:text-gray-400">
                       <p className="flex items-center gap-2"><span>📞</span> {selectedStaff.phone}</p>
@@ -279,7 +296,7 @@ export default function StaffManagement() {
                 <div className="bg-purple-50 dark:bg-purple-900/10 p-4 rounded-xl border border-purple-100 dark:border-purple-900/30">
                   <h4 className="text-lg sm:text-base text-gray-900 dark:text-gray-100 mb-3 font-medium">Jours de Travail</h4>
                   <div className="flex flex-wrap gap-2">
-                    {['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'].map((day) => (
+                    {['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'].map((day) => (
                       <Badge
                         key={day}
                         className={selectedStaff.workingDays.includes(day)

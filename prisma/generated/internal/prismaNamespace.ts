@@ -3067,6 +3067,7 @@ export const ServiceScalarFieldEnum = {
   isPopular: 'isPopular',
   isActive: 'isActive',
   displayOrder: 'displayOrder',
+  workerCommission: 'workerCommission',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -3270,6 +3271,7 @@ export const CommissionScalarFieldEnum = {
   totalRevenue: 'totalRevenue',
   commissionRate: 'commissionRate',
   commissionAmount: 'commissionAmount',
+  businessEarnings: 'businessEarnings',
   appointmentsCount: 'appointmentsCount',
   status: 'status',
   paidAt: 'paidAt',

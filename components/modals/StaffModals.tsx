@@ -11,7 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Calendar, Clock, MapPin, Phone, Mail, DollarSign, Star, FileText, Download, Copy, Save, Loader2, CalendarIcon, TrendingUp, Award } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { Separator } from '@/components/ui/separator';
-import { useCommission, useWorker, useWorkerSchedule } from '@/lib/hooks/useStaff';
+import { useCommission, useStaff, useWorker, useWorkerSchedule } from '@/lib/hooks/useStaff';
 import { Worker } from '@/lib/api/staff';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { toast } from 'sonner';
@@ -37,15 +37,18 @@ export function EditScheduleModal({
   const { updateSchedule, schedule, isUpdating } = useWorkerSchedule(staffId);
   const [weekSchedule, setWeekSchedule] = useState<Record<number, DaySchedule>>({});
   const [savingDays, setSavingDays] = useState<Record<number, boolean>>({});
+  const { refetch } = useStaff()
   const daysOfWeek = [
-    { idx: 0, day: "Lundi" },
-    { idx: 1, day: "Mardi" },
-    { idx: 2, day: "Mercredi" },
-    { idx: 3, day: "Jeudi" },
-    { idx: 4, day: "Vendredi" },
-    { idx: 5, day: "Samedi" },
-    { idx: 6, day: "Dimanche" },
+    { idx: 0, day: "Dimanche" },
+    { idx: 1, day: "Lundi" },
+    { idx: 2, day: "Mardi" },
+    { idx: 3, day: "Mercredi" },
+    { idx: 4, day: "Jeudi" },
+    { idx: 5, day: "Vendredi" },
+    { idx: 6, day: "Samedi" },
   ];
+
+  // console.log("schedule: ", schedule)
 
   /* ----------------------------------
   Map API schedule → UI state
@@ -121,6 +124,8 @@ export function EditScheduleModal({
     for (const day of Object.keys(weekSchedule)) {
       await saveDay(Number(day));
     }
+
+    refetch()
   };
 
   return (
@@ -570,7 +575,7 @@ interface PayrollModalProps {
 export function PayrollModal({ staffName, staff, period, trigger }: PayrollModalProps) {
   const { user } = useAuth(); // or however you get current user
   const isAdmin = user?.role === "admin";
-  const { createCommission, isCreating } = useCommission();
+  const { createCommission, isCreating, refetch } = useCommission();
   const { updateCommission, commissions, isUpdating } = useCommission();
   const { data: workerProfile } = useWorker(staff?.id || ''); // Fetch worker profile to get frequency
 
@@ -698,6 +703,7 @@ export function PayrollModal({ staffName, staff, period, trigger }: PayrollModal
         commissionRate: commissionRate,
         // status defaults to 'pending' in backend
       });
+      refetch()
     } else {
       // Worker requests generation - this might involve creating a record with status 'requested'
       // or sending a notification. For now, we'll create a 'pending' record.
@@ -710,6 +716,7 @@ export function PayrollModal({ staffName, staff, period, trigger }: PayrollModal
         commissionRate: commissionRate,
         // status defaults to 'pending' in backend, which is appropriate for a request
       });
+      refetch()
     }
   };
 
@@ -724,6 +731,7 @@ export function PayrollModal({ staffName, staff, period, trigger }: PayrollModal
       id: commission.id,
       status: "paid",
     });
+    refetch()
   };
 
   // Determine button states based on user role, period status, and record existence

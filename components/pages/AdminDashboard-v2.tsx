@@ -38,6 +38,7 @@ import { useRouter } from 'next/navigation';
 import TasksManagement from '@/components/TasksManagement';
 import MembershipsManagement from '../MembershipsManagement';
 import LoaderBN from '../Loader-BN';
+import FloatingBubbles from '../FloatingBubbles';
 
 export default function AdminDashboardV2() {
   const [notificationOpen, setNotificationOpen] = useState(false);
