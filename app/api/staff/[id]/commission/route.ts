@@ -27,50 +27,57 @@ export async function GET(
     const now = new Date();
     let startDate = new Date();
 
-    if (period === 'weekly') {
+    if (worker.commissionFrequency === 'weekly') {
       startDate.setDate(now.getDate() - now.getDay()); // Start of current week
-    } else if (period === 'monthly') {
+    } else if (worker.commissionFrequency === 'monthly') {
       startDate.setDate(1); // Start of current month
-    } else if (period === 'daily') {
+    } else if (worker.commissionFrequency === 'daily') {
       startDate.setDate(now.getDate()); // Start of today
     }
 
-    // Get completed appointments in the period
-    const appointments = await prisma.appointment.findMany({
+    const commissions = await prisma.commission.findMany({
       where: {
         workerId: id,
-        status: 'completed',
-        date: {
+        createdAt: {
           gte: startDate,
-          // lte: now,
         },
+      },
+      cacheStrategy: { 
+        ttl: 60,      // Fresh for 60 seconds
+        swr: 30,      // For another 30s, serve old data while updating in background
       },
     });
 
+    const totalEarnings = commissions.reduce((sum, c) => sum + c.commissionAmount, 0);
+    const totalBusiness = commissions.reduce((sum, c) => {
 
-    const totalR = await prisma.appointment.aggregate({
-      where: {
-        workerId: id,
-        status: 'completed',
-        date: {
-          gte: startDate,
-          // lte: now,
-        },
-      },
-      _sum: {
-        price: true,
-      },
-    });
+      const buzRate = 100 - c.commissionRate
+      const buzEarnings = c.totalRevenue * buzRate / 100
 
-    // Calculate totals
-    const totalRevenue = totalR._sum.price || 0;
-    // CommissionRate is stored as 0-100 (e.g., 10 for 10%), so divide by 100 for calculation
-    const commissionRate = (worker.commissionRate || 10) / 100;
-    const commission = totalRevenue * commissionRate;
-    const appointmentsCount = appointments.length;
+      return sum + buzEarnings
+    }, 0);
+    const totalRevenue = commissions.reduce((sum, c) => sum + c.totalRevenue, 0);
+    const matCost = totalBusiness * 0.5;
+    const operaCost = totalBusiness * 0.5;
+    const appointmentsCount = commissions.reduce((sum, c) => sum + c.appointmentsCount, 0);
+
+    // console.log({
+    //   commission: totalEarnings,
+    //   totalBusiness,
+    //   matCost,
+    //   operaCost,
+    //   totalRevenue,
+    //   appointmentsCount,
+    //   period,
+    //   startDate: startDate.toISOString(),
+    //   endDate: now.toISOString(),
+    // })
 
     return successResponse({
-      commission,
+      commission: totalEarnings,
+      totalBusiness,
+      matCost,
+      operaCost,
       totalRevenue,
       appointmentsCount,
       period,

@@ -70,8 +70,10 @@ export async function PUT(
             commissionRate: appointment.service?.workerCommission ?? 0,
             status: 'pending',
             totalRevenue: appointment.price,
-            period: `${format(appointment.date, "EEEE d MMMM 'à' HH'h'mm", { locale: fr })}`,
-            businessEarnings: appointment.price - (appointment.price * appointment.service.workerCommission / 100)
+            period: `${format(new Date(appointment.date), "EEEE d MMMM 'à' HH'h'mm", { locale: fr })}`,
+            businessEarnings: appointment.price - (appointment.price * appointment.service.workerCommission / 100),
+            materialsCost: (appointment.price - (appointment.price * appointment.service.workerCommission / 100)) * 0.5,
+            operationalCost: (appointment.price - (appointment.price * appointment.service.workerCommission / 100)) * 0.5
           }
         })
       ]);

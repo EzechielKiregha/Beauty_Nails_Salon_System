@@ -7,21 +7,28 @@ import { useRevenueReport, useServicePerformance } from '@/lib/hooks/useReports'
 import { useAvailableStaff, useStaff } from '@/lib/hooks/useStaff';
 import { useInventory } from '@/lib/hooks/useInventory';
 import { AppointmentModal } from './modals/AppointmentModal';
-import { AdjustStockModal } from './modals/InventoryModals';
 import { ClientModal } from './modals/ClientModal';
-import { format } from 'date-fns';
+import { endOfDay, format, formatISO, startOfDay } from 'date-fns';
 
 
 export default function TodayOverview() {
-  const today = new Date().toISOString().split('T')[0];
+  // 1. Get the current date object
+  const now = new Date();
+
+  // This ensures "from" is exactly 2026-03-26T00:00:00.000...
+  const from = formatISO(startOfDay(now));
+
+  // This ensures "to" is exactly 2026-03-26T23:59:59.999...
+  const to = formatISO(endOfDay(now));
 
   // Hooks
   const { appointments: apiAppointments = [] } = useAppointments();
-  const { data: revenueData } = useRevenueReport({ from: today, to: today });
+  const { data: revenueData } = useRevenueReport({ from, to });
   const { staff: apiStaff = [] } = useAvailableStaff();
   const { inventory: apiInventory = [] } = useInventory();
   const { data: servicePerformance } = useServicePerformance('daily');
 
+  console.log(revenueData)
 
   // Compose data using API first; fall back to mocks only if showMock is true
   const upcomingAppointments = (apiAppointments && apiAppointments.length > 0)
@@ -29,25 +36,23 @@ export default function TodayOverview() {
       apt => (apt.status === 'confirmed' || apt.status === 'in_progress' || apt.status === 'pending') && new Date(apt.date).getDate() >= new Date().getDate()
     ) : [];
 
-  const ongoingAppointments = apiAppointments.filter((a) => ['completed', 'in_progress'].includes(a.status));
+  const ongoingAppointments = apiAppointments.filter((a) => ['in_progress'].includes(a.status));
+  // console.log(ongoingAppointments[0])
 
-  const enrichedAppointments = ongoingAppointments.map((a) => ({
-    ...a,
-    startTime: new Date(a.updatedAt), // or explicit field later
-    duration: a.service?.duration || 60, // minutes
-  }));
+  const busyRosterIds = apiAppointments.filter((a) => a.status === 'in_progress').map((apt) => apt.workerId)
 
-  const getElapsedMinutes = (startTime: Date) => {
-    return Math.floor((Date.now() - new Date(startTime).getTime()) / 60000);
-  };
+  // console.log("all staffs : ", apiStaff)
+  // console.log("busyRosterIds : ", busyRosterIds)
 
-  const isExceeded = (start: Date, duration: number) => {
-    return getElapsedMinutes(start) > duration;
-  };
-
-  const staffRoster = (apiStaff && apiStaff.length > 0)
-    ? apiStaff.map((s: any) => ({ name: s.name || s.fullName || 'Employé', status: s.isAvailable ? 'available' : 'busy', currentClient: null, service: null, nextAvailable: 'Maintenant' }))
+  const busyStaffs = (apiStaff && apiStaff.length > 0)
+    ? apiStaff.filter((s: any) => busyRosterIds.includes(s.id)).map((s: any) => ({ id: s.id, name: s.name || s.fullName || 'Employé', status: 'busy', currentClient: s.currentlyWorking.client?.user?.name ?? "CLIENT AU SERVICE", service: null, nextAvailable: `Dans ${s.currentlyWorking.duration} minutes` }))
     : [];
+  const availableStaffs = (apiStaff && apiStaff.length > 0)
+    ? apiStaff.filter((s: any) => !busyRosterIds.includes(s.id)).map((s: any) => ({ id: s.id, name: s.name || s.fullName || 'Employé', status: 'available', currentClient: null, service: null, nextAvailable: `Maintenant` }))
+    : [];
+
+  // console.log("Busy Wokers :", busyStaffs)
+  // console.log("Available Wokers :", availableStaffs)
 
   const urgentAlerts = [] as any[];
   const lowStock = (apiInventory || []).filter((i: any) => i.status === 'low' || i.status === 'critical' || i.status === 'out');
@@ -61,10 +66,10 @@ export default function TodayOverview() {
     upcomingAppointments: upcomingAppointments.length,
     completedAppointments: apiAppointments ? apiAppointments.filter((a: any) => a.status === 'completed').length : 0,
     walkInAvailable: false,
-    currentOccupancy: Math.round((staffRoster.filter(s => s.status === 'busy').length / Math.max(1, staffRoster.length)) * 100),
+    currentOccupancy: Math.round((busyStaffs.length / Math.max(1, apiStaff.length)) * 100),
     dailyRevenue: revenueData?.totalRevenue ?? 0,
-    clientsServed: apiAppointments ? apiAppointments.length : 0,
-    staffOnDuty: staffRoster.length,
+    clientsServed: apiAppointments ? apiAppointments.filter((a: any) => a.status === 'completed').length : 0,
+    staffOnDuty: busyStaffs.length,
     averageWaitTime: 0,
   };
 
@@ -158,8 +163,8 @@ export default function TodayOverview() {
           />
         </div>
         <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400 mt-3 font-medium">
-          <span className="text-gray-900 dark:text-gray-200 ">{staffRoster.filter(s => s.status === 'busy').length}</span> employées occupées • {' '}
-          <span className="text-gray-900 dark:text-gray-200 ">{staffRoster.filter(s => s.status === 'available').length}</span> disponibles
+          <span className="text-gray-900 dark:text-gray-200 ">{busyStaffs.length}</span> employées occupées • {' '}
+          <span className="text-gray-900 dark:text-gray-200 ">{availableStaffs.length}</span> disponibles
         </p>
       </Card>
 
@@ -251,7 +256,37 @@ export default function TodayOverview() {
           <h3 className="text-lg sm:text-xl text-gray-900 dark:text-gray-100 ">Personnel Aujourd'hui</h3>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {staffRoster.map((staff, idx) => (
+          {busyStaffs.map((staff, idx) => (
+            <Card key={idx} className={`p-4 border-2 transition-all duration-300 ${staff.status === 'busy' ? 'bg-blue-50 dark:bg-blue-900/10 border-blue-200 dark:border-blue-900/30' :
+              staff.status === 'available' ? 'bg-green-50 dark:bg-green-900/10 border-green-200 dark:border-green-900/30' :
+                'bg-amber-50 dark:bg-amber-900/10 border-amber-200 dark:border-amber-900/30'
+              }`}>
+              <div className="flex items-center justify-between mb-4">
+                <p className="text-base text-gray-900 dark:text-gray-100 ">{staff.name}</p>
+                <Badge className={`${staff.status === 'busy' ? 'bg-blue-500 dark:bg-blue-900/40 text-white dark:text-blue-200' :
+                  staff.status === 'available' ? 'bg-green-500 dark:bg-green-900/40 text-white dark:text-green-200' : 'bg-amber-500 dark:bg-amber-900/40 text-white dark:text-amber-200'
+                  } border-0 text-[10px] sm:text-base font-black`}>
+                  {staff.status === 'busy' ? 'Occupée' :
+                    staff.status === 'available' ? 'Disponible' : 'Pause'}
+                </Badge>
+              </div>
+              <div className="space-y-1.5 mb-4">
+                {staff.currentClient ? (
+                  <>
+                    <p className="text-base sm:text-lg text-gray-700 dark:text-gray-300 font-medium">Cliente: <span className="">{staff.currentClient}</span></p>
+                    <p className="text-[10px] sm:text-base text-gray-500 dark:text-gray-400 italic">{staff.service}</p>
+                  </>
+                ) : (
+                  <p className="text-base sm:text-lg text-gray-500 dark:text-gray-400 italic">Aucune cliente actuellement</p>
+                )}
+              </div>
+              <div className="flex items-center gap-2 text-[10px] sm:text-base text-gray-500 dark:text-gray-400 pt-3 border-t border-gray-100 dark:border-gray-800">
+                <Clock className="w-3 h-3" />
+                <span>Disponible: <span className=" text-gray-700 dark:text-gray-300">{staff.nextAvailable}</span></span>
+              </div>
+            </Card>
+          ))}
+          {availableStaffs.map((staff, idx) => (
             <Card key={idx} className={`p-4 border-2 transition-all duration-300 ${staff.status === 'busy' ? 'bg-blue-50 dark:bg-blue-900/10 border-blue-200 dark:border-blue-900/30' :
               staff.status === 'available' ? 'bg-green-50 dark:bg-green-900/10 border-green-200 dark:border-green-900/30' :
                 'bg-amber-50 dark:bg-amber-900/10 border-amber-200 dark:border-amber-900/30'

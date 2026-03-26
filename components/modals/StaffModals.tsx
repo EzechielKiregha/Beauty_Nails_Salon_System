@@ -11,10 +11,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Calendar, Clock, MapPin, Phone, Mail, DollarSign, Star, FileText, Download, Copy, Save, Loader2, CalendarIcon, TrendingUp, Award } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { Separator } from '@/components/ui/separator';
-import { useCommission, useStaff, useWorker, useWorkerSchedule } from '@/lib/hooks/useStaff';
+import { useCommission, useStaff, useWorker, useWorkerCommission, useWorkerSchedule } from '@/lib/hooks/useStaff';
 import { Worker } from '@/lib/api/staff';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { toast } from 'sonner';
+import { PayrollCountdown } from '../PayrollCountdown';
+import { format } from 'date-fns';
+import { fr } from 'date-fns/locale';
 
 // --- Edit Schedule Modal (Mobile Optimized with Dark Mode) ---
 interface EditScheduleModalProps {
@@ -572,68 +575,46 @@ interface PayrollModalProps {
   trigger?: React.ReactNode;
 }
 
+export const getNextResetDate = (period: string) => {
+  const now = new Date()
+  const next = new Date()
+
+  if (period === "daily") {
+    next.setDate(now.getDate() + 1)
+    next.setHours(0, 0, 0, 0)
+  }
+
+  if (period === "weekly") {
+    const day = now.getDay()
+    const diff = (7 - day + 1) % 7 || 7
+    next.setDate(now.getDate() + diff)
+    next.setHours(0, 0, 0, 0)
+  }
+
+  if (period === "monthly") {
+    next.setMonth(now.getMonth() + 1)
+    next.setDate(1)
+    next.setHours(0, 0, 0, 0)
+  }
+
+  return next
+}
+
 export function PayrollModal({ staffName, staff, period, trigger }: PayrollModalProps) {
   const { user } = useAuth(); // or however you get current user
   const isAdmin = user?.role === "admin";
-  const { createCommission, isCreating, refetch } = useCommission();
-  const { updateCommission, commissions, isUpdating } = useCommission();
-  const { data: workerProfile } = useWorker(staff?.id || ''); // Fetch worker profile to get frequency
+  const { createCommission, isCreating, updateCommission, commissions, isUpdating, refetch } = useCommission();
 
-  const [localPeriod, setLocalPeriod] = useState(period || '');
+  const { data: workerProfile } = useWorker(staff?.id || ''); // Fetch worker profile to get frequency
+  const [isPaymentAvailable, setIsPaymentAvailable] = useState(false)
+
+  const { data: currentPeriodCommissionData, isLoading: isCurrentPeriodCommissionLoading } = useWorkerCommission(workerProfile?.id || '', period);
+  const [localPeriod, setLocalPeriod] = useState('');
 
   // Generate periods based on worker's frequency
-  const generatedPeriods = useState(() => {
-    if (!workerProfile?.commissionFrequency) return [];
+  const generatedPeriods = commissions.filter((c) => c.workerId === workerProfile?.id).map((c) => c.period); // Use only the getter part of useState
 
-    const now = new Date();
-    const periods = [];
-
-    if (workerProfile.commissionFrequency === 'daily') {
-      // Generate last 30 days
-      for (let i = 0; i < 30; i++) {
-        const date = new Date(now);
-        date.setDate(date.getDate() - i);
-        const periodStr = date.toISOString().split('T')[0]; // YYYY-MM-DD
-        periods.push({
-          value: periodStr,
-          label: date.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short' })
-        });
-      }
-    } else if (workerProfile.commissionFrequency === 'weekly') {
-      // Generate last 12 weeks
-      for (let i = 0; i < 12; i++) {
-        const date = new Date(now);
-        date.setDate(date.getDate() - (i * 7)); // Go back i weeks
-
-        // Calculate the start of the week (Monday) for the period string
-        const day = date.getDay();
-        const diff = date.getDate() - day + (day === 0 ? -6 : 1); // Adjust to get Monday
-        const monday = new Date(date.setDate(diff));
-        const periodStr = monday.toISOString().split('T')[0]; // Use Monday's date as identifier
-
-        const endOfWeek = new Date(monday);
-        endOfWeek.setDate(monday.getDate() + 6);
-
-        periods.push({
-          value: periodStr,
-          label: `Semaine du ${monday.toLocaleDateString('fr-FR')} au ${endOfWeek.toLocaleDateString('fr-FR')}`
-        });
-      }
-    } else { // monthly
-      // Generate last 12 months
-      for (let i = 0; i < 12; i++) {
-        const date = new Date(now);
-        date.setMonth(date.getMonth() - i);
-        const periodStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`; // YYYY-MM
-        periods.push({
-          value: periodStr,
-          label: date.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })
-        });
-      }
-    }
-    return periods;
-  })[0]; // Use only the getter part of useState
-
+  const isLockedByTime = !isPaymentAvailable
 
   // Get commission data for the selected period
   const getCommissionForPeriod = (periodStr: string) =>
@@ -643,23 +624,39 @@ export function PayrollModal({ staffName, staff, period, trigger }: PayrollModal
         c.period === periodStr // period format matches generated format
     );
 
-  const isPeriodPaid = (periodStr: string) =>
-    getCommissionForPeriod(periodStr)?.status === "paid";
-
-  const unpaidPeriods = generatedPeriods.filter(
-    (p) => !isPeriodPaid(p.value)
-  );
+  const isPeriodPaid = (periodStr: string) => getCommissionForPeriod(periodStr)?.status === "paid";
 
   // Determine if a commission record already exists for the selected period
   const commissionRecordExists = !!getCommissionForPeriod(localPeriod);
 
   // Use the existing commission data if available, otherwise calculate from profile (for preview)
   const commissionData = getCommissionForPeriod(localPeriod);
-  const totalRevenue = commissionData?.totalRevenue || 0;
-  const commissionRate = commissionData?.commissionRate || workerProfile?.commissionRate || 0;
-  const appointmentsCount = commissionData?.appointmentsCount || 0;
-  const commissionAmount = totalRevenue * (commissionRate / 100);
-  const employerShare = totalRevenue - commissionAmount;
+
+  if (isCurrentPeriodCommissionLoading) {
+    return (<div className="flex justify-center items-center h-64">
+      <Loader2 className="h-8 w-8 animate-spin" />
+    </div>)
+  }
+
+  let totalRevenue = 0;
+  let commissionRate = 0;
+  let appointmentsCount = 0;
+  let commissionAmount = 0;
+  let employerShare = 0;
+
+  if (isAdmin) {
+    totalRevenue = commissionData?.totalRevenue || 0;
+    commissionRate = workerProfile?.commissionRate || 0;
+    appointmentsCount = commissionData?.appointmentsCount || 0;
+    commissionAmount = commissionData?.commissionAmount || 0;
+    employerShare = commissionData?.businessEarnings || 0;
+  } else {
+    totalRevenue = currentPeriodCommissionData?.totalRevenue || 0;
+    commissionRate = workerProfile?.commissionRate || 0;
+    appointmentsCount = currentPeriodCommissionData?.appointmentsCount || 0;
+    commissionAmount = currentPeriodCommissionData?.commission || 0;
+    employerShare = currentPeriodCommissionData?.totalBusiness || 0;
+  }
 
   const handleGenerateOrRequest = () => {
     if (!staff || !localPeriod) {
@@ -802,22 +799,41 @@ export function PayrollModal({ staffName, staff, period, trigger }: PayrollModal
             </div>
 
             <div className="space-y-2">
-              <Label className="text-lg text-gray-700 dark:text-gray-300">Période ({workerProfile?.commissionFrequency || 'période'})</Label>
-              <Select value={localPeriod} onValueChange={setLocalPeriod}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Sélectionnez une période" />
-                </SelectTrigger>
-                <SelectContent>
-                  {unpaidPeriods.map((periodOption) => (
-                    <SelectItem key={periodOption.value} value={periodOption.value}>
-                      {periodOption.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              {!isAdmin && <Label className="text-lg justify-between text-gray-700 dark:text-gray-300">
+                ({period === 'daily' ? 'Aujourd\'hui' : period === 'weekly' ? 'Cette semaine' : 'Ce mois-ci'})
+                {<Input
+                  type="text"
+                  value={`${format(getNextResetDate(period || ''), "EEEE d MMMM 'à' HH'h'mm", { locale: fr })}`}
+                  // onChange={(e) => setLocalTotalRevenue(parseFloat(e.target.value) || 0)} // Disable editing in this view
+                  className="w-56 text-right h-10 text-base bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300"
+                  disabled // Values are calculated/fetched, not edited here
+                />}
+              </Label>}
+              {isAdmin &&
+                <><Label className="text-lg text-gray-700 dark:text-gray-300">Periode</Label>
+                  <Select value={localPeriod} onValueChange={setLocalPeriod}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Sélectionnez une période" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {generatedPeriods.map((periodOption) => (
+                        <SelectItem key={periodOption} value={periodOption}>
+                          {periodOption}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select></>
+              }
             </div>
           </div>
 
+          <Separator className="dark:bg-gray-700" />
+          <div className="space-y-3">
+            <PayrollCountdown
+              frequency={workerProfile?.commissionFrequency as any}
+              onReadyChange={setIsPaymentAvailable}
+            />
+          </div>
           <Separator className="dark:bg-gray-700" />
 
           <div className="space-y-3">
@@ -900,7 +916,7 @@ export function PayrollModal({ staffName, staff, period, trigger }: PayrollModal
                 defaultChecked
                 className="border-gray-400 dark:border-gray-600 data-[state=checked]:bg-pink-500 data-[state=checked]:border-pink-500 dark:data-[state=checked]:bg-pink-600 dark:data-[state=checked]:border-pink-600"
               />
-              <Label htmlFor="email-slip" className="text-gray-600 dark:text-gray-400">Envoyer par email à l'employé(e)</Label>
+              <Label htmlFor="email-slip" className="text-gray-600 dark:text-gray-400">{!isAdmin ? "Envoyer par email à l'employeur" : "Envoyer par email à l'employé(e)"}</Label>
             </div>
           </div>
         </div>
@@ -921,11 +937,14 @@ export function PayrollModal({ staffName, staff, period, trigger }: PayrollModal
           ) : (
             <Button
               onClick={handleGenerateOrRequest}
-              disabled={buttonDisabled || isCreating}
-              variant={buttonVariant}
+              disabled={buttonDisabled || isCreating || isLockedByTime}
               className="w-full sm:w-auto"
             >
-              {isCreating ? "Envoi..." : buttonText}
+              {isLockedByTime
+                ? "Disponible après délai"
+                : isCreating
+                  ? "Envoi..."
+                  : buttonText}
             </Button>
           )}
         </DialogFooter>

@@ -964,27 +964,6 @@ export default function ClientDashboardV2() {
                               {appointment.price?.toLocaleString()} Fc
                             </p>
                           </div>
-
-                          {/* {appointment.status !== "cancelled" && !missed && (
-                              <div className="flex gap-2">
-                                <Button variant="outline" size="sm">
-                                  <Phone className="w-4 h-4 mr-2" />
-                                  Contacter
-                                </Button>
-                                <Button
-                                  variant="outline"
-                                  size="sm"
-                                  className="text-red-600 hover:text-red-700"
-                                  onClick={() => {
-                                    setSelectedAppointment(appointment);
-                                    setCancelDialogOpen(true);
-                                  }}
-                                >
-                                  <XCircle className="w-4 h-4 mr-2" />
-                                  Annuler
-                                </Button>
-                              </div>
-                            )} */}
                           <AppointmentCountdown
                             date={appointment.date}
                             time={appointment.time}
@@ -996,6 +975,7 @@ export default function ClientDashboardV2() {
                                   onClick={() => {
                                     setSelectedWorker(appointment.worker?.id)
                                     setSelectedWorkerName(appointment.worker?.user?.name)
+                                    setSelectedAppointment(appointment)
                                   }}
                                   size="sm"
                                   variant="outline"

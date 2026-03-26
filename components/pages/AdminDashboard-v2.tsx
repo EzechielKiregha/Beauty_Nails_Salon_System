@@ -13,7 +13,8 @@ import {
   CheckCircle,
   Clock,
   AlertCircle,
-  CreditCard
+  CreditCard,
+  MoreHorizontal
 } from 'lucide-react';
 import { LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import TodayOverview from '../TodayOverview';
@@ -58,7 +59,7 @@ export default function AdminDashboardV2() {
   const today = new Date().toISOString().split('T')[0];
   const { appointments: todayAppointments = [] } = useAppointments({ date: today });
 
-  const { appointments: allAppointments = [] } = useAppointments({})
+  const { appointments: allAppointments = [] } = useAppointments()
 
 
   // Get revenue report (current month)
@@ -99,13 +100,13 @@ export default function AdminDashboardV2() {
     // Use the revenueData fetched for the specific period (e.g., monthly)
     // Renamed for clarity - this reflects the revenue for the period defined by from/to in useRevenueReport call
     currentPeriodRevenue: revenueData?.totalRevenue || 0,
-    todayAppointments: todayAppointmentsList.length,
+    todayAppointments: allAppointments.length,
     // monthlyRevenue can be the same as currentPeriodRevenue if fetching monthly data
     // Otherwise, calculate differently if needed
     monthlyRevenue: revenueData?.totalRevenue || 0,
     avgRating: staffList.reduce((acc: number, w: any) => acc + (w.rating || 0), 0) / (staffList.length || 1),
-    completedAppointments: todayAppointmentsList.filter((apt: any) => apt.status === 'completed').length,
-    pendingAppointments: todayAppointmentsList.filter((apt: any) => apt.status === 'pending' || apt.status === 'confirmed').length,
+    completedAppointments: allAppointments.filter((apt: any) => apt.status === 'completed').length,
+    pendingAppointments: allAppointments.filter((apt: any) => apt.status === 'pending' || apt.status === 'confirmed').length,
     lowStockItems: inventoryList.filter((item: any) => item.status === 'low' || item.status === 'critical').length,
     newClients: clientAnalytics?.newClients || 0,
   };
@@ -410,7 +411,7 @@ export default function AdminDashboardV2() {
               Abonnement
             </TabsTrigger>
             <TabsTrigger value="more" className="data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400 text-base sm:text-base">
-              <SettingsIcon className="w-4 h-4 mr-2" />
+              <MoreHorizontal className="w-4 h-4 mr-2" />
               Plus
             </TabsTrigger>
           </TabsList>

@@ -9,6 +9,7 @@ export interface Worker {
   rating: number;
   totalReviews: number;
   isAvailable: boolean;
+  currentlyWorking: any,
   workingHours?: any;
   hireDate: string;
   bio: string;
@@ -143,6 +144,9 @@ export const staffApi = {
     totalRevenue: number;
     commission: number;
     appointmentsCount: number;
+    totalBusiness: number,
+    matCost: number,
+    operaCost: number,
   }> => {
     const { data } = await axiosdb.get(`/staff/${id}/commission`, {
       params: { period },

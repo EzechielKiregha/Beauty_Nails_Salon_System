@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { requireRole, successResponse, handleApiError, errorResponse } from '@/lib/api/helpers';
-import { format } from 'date-fns';
+import { endOfDay, format, startOfDay } from 'date-fns';
 import { ContentSection, generateReportPdf } from '@/lib/pdf/jsPdfGenerator';
 
 export async function GET(request: NextRequest) {
@@ -17,12 +17,18 @@ export async function GET(request: NextRequest) {
       return errorResponse('Dates requises', 400);
     }
 
-    const from = new Date(fromParam);
-    const to = new Date(toParam);
+    // 1. Convert params to Date objects, then force start/end of day
+    const from = startOfDay(new Date(fromParam));
+    const to = endOfDay(new Date(toParam));
 
     if (isNaN(from.getTime()) || isNaN(to.getTime())) {
       return errorResponse('Dates invalides', 400);
     }
+
+    console.log("dates: ",{
+      from,
+      to
+    })
 
     const sales = await prisma.sale.findMany({
       where: {
@@ -191,6 +197,17 @@ export async function GET(request: NextRequest) {
         },
       });
     }
+
+    console.log({
+      totalRevenue,
+      salesCount: sales.length,
+      breakdown,
+      monthlyBreakdown, // ✅ Added for LineChart
+      serviceCount,
+      topSellingServices,
+      paymentMethods,
+      period: { from: fromParam, to: toParam },
+    })
 
     return successResponse({
       totalRevenue,

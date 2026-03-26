@@ -26,10 +26,9 @@ import {
   Settings,
   Building
 } from 'lucide-react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { useAppointments } from '@/lib/hooks/useAppointments';
-import { useCommission, useStaff, useWorker, useWorkerCommission } from '@/lib/hooks/useStaff';
+import { useCommission, useWorker, useWorkerCommission } from '@/lib/hooks/useStaff';
 import { useNotifications } from '@/lib/hooks/useNotifications';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
@@ -40,6 +39,7 @@ import { StaffModal } from '../modals/StaffModals-v2';
 import AppointmentCountdown from '../AppointmentCountdown';
 import { useWorkerProfile } from '@/lib/hooks/useWorkerProfile';
 import { PayrollModal } from '../modals/StaffModals';
+import { PayrollCountdown } from '../PayrollCountdown';
 
 export default function WorkerDashboardV2() {
   const [notificationOpen, setNotificationOpen] = useState(false);
@@ -49,17 +49,14 @@ export default function WorkerDashboardV2() {
   const router = useRouter()
   // Get authenticated user
   const { user, isLoading: isAuthLoading } = useAuth();
-  const { staff, isLoading: staffLoading } = useStaff();
+  const { data: worker, isLoading: isWorkerLoading } = useWorker(user?.workerProfile?.id || '');
 
 
   const { profile: workerProfile, isLoading: isWorkerProfileLoading, error: workerProfileError } = useWorkerProfile(user?.workerProfile?.id || '');
-  const { data: currentPeriodCommissionData, isLoading: isCurrentPeriodCommissionLoading, error: commissionDataError } = useWorkerCommission(user?.workerProfile?.id || '');
+  const { data: currentPeriodCommissionData, isLoading: isCurrentPeriodCommissionLoading } = useWorkerCommission(user?.workerProfile?.id || '', workerProfile?.commissionFrequency);
   const { commissions: allCommissions, isLoading: isAllCommissionsLoading } = useCommission(); // Fetch all commissions for history
   // Assuming the backend can accept a 'period' like 'week' to aggregate weekly data
   const { data: weeklyCommissionData, isLoading: isWeeklyCommissionLoading } = useWorkerCommission(user?.id || '', user?.workerProfile?.commissionFrequency);
-
-  // Get today's date
-  const today = new Date().toISOString().split('T')[0];
 
   // Get appointments (today for schedule tab)
   const {
@@ -81,14 +78,6 @@ export default function WorkerDashboardV2() {
   // Get weekly appointments for stats
   const weekStart = new Date();
   weekStart.setDate(weekStart.getDate() - weekStart.getDay());
-  const weekStartStr = weekStart.toISOString().split('T')[0];
-
-  const {
-    appointments: weeklyAppointments = [],
-  } = useAppointments({
-    workerId: user?.workerProfile?.id,
-    date: weekStartStr,
-  });
 
   const [selectedPeriod, setSelectedPeriod] = useState<string>('current'); // Default to current period
 
@@ -186,19 +175,23 @@ export default function WorkerDashboardV2() {
     apt => apt.status === 'cancelled'
   );
 
-  const worker = staff?.find(s => s.id === user?.workerProfile?.id);
-
   // Stats for the summary cards and performance section
   const stats = useMemo(() => {
     // Calculate stats based on currentPeriodCommissionData or workerProfile
     const commission = currentPeriodCommissionData?.commission || 0;
     const totalRevenue = currentPeriodCommissionData?.totalRevenue || 0;
+    const totalBusinessEarnings = currentPeriodCommissionData?.totalBusiness || 0;
+    const materialsCost = currentPeriodCommissionData?.matCost || 0
+    const operationsCost = currentPeriodCommissionData?.operaCost || 0
     const rating = workerProfile?.rating || 0; // Assuming rating comes from profile
 
     return {
       commission,
       revenue: totalRevenue,
       rating,
+      totalBusinessEarnings,
+      materialsCost,
+      operationsCost,
       todayAppointments: todaySchedule.length,
       completed: completedToday.length,
       pending: pendingAppointments.length,
@@ -293,27 +286,27 @@ export default function WorkerDashboardV2() {
   };
 
   // Calculate service statistics from appointments
-  const serviceStats = (() => {
-    const serviceCounts: Record<string, number> = {};
+  // const serviceStats = (() => {
+  //   const serviceCounts: Record<string, number> = {};
 
-    weeklyAppointments.forEach(apt => {
-      const serviceName = apt.service?.name || 'Autre';
-      serviceCounts[serviceName] = (serviceCounts[serviceName] || 0) + 1;
-    });
+  //   weeklyAppointments.forEach(apt => {
+  //     const serviceName = apt.service?.name || 'Autre';
+  //     serviceCounts[serviceName] = (serviceCounts[serviceName] || 0) + 1;
+  //   });
 
-    const total = Object.values(serviceCounts).reduce((a, b) => a + b, 0);
-    return Object.entries(serviceCounts)
-      .map(([name, count]) => ({
-        name,
-        percentage: total > 0 ? Math.round((count / total) * 100) : 0,
-        count,
-      }))
-      .sort((a, b) => b.percentage - a.percentage)
-      .slice(0, 3);
-  })();
+  //   const total = Object.values(serviceCounts).reduce((a, b) => a + b, 0);
+  //   return Object.entries(serviceCounts)
+  //     .map(([name, count]) => ({
+  //       name,
+  //       percentage: total > 0 ? Math.round((count / total) * 100) : 0,
+  //       count,
+  //     }))
+  //     .sort((a, b) => b.percentage - a.percentage)
+  //     .slice(0, 3);
+  // })();
 
   // Loading state
-  if (isAuthLoading || isAppointmentsLoading) {
+  if (isAuthLoading || isAppointmentsLoading || isWorkerLoading) {
     return (
       <LoaderBN />
     );
@@ -408,15 +401,15 @@ export default function WorkerDashboardV2() {
                 </div>
               </div>
 
-              <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300">
+              <p className="text-lg sm:text-lg font-medium text-gray-600 dark:text-gray-300">
                 Aujourd'hui
               </p>
 
-              <p className="text-xl sm:text-2xl font-semibold text-gray-900 dark:text-gray-100">
+              <p className="text-2xl sm:text-4xl font-semibold text-gray-900 dark:text-gray-100">
                 {stats.todayAppointments}
               </p>
 
-              <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1">
+              <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400 mt-1">
                 {stats.completed} terminés
               </p>
             </Card>
@@ -429,15 +422,15 @@ export default function WorkerDashboardV2() {
                 </div>
               </div>
 
-              <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300">
+              <p className="text-lg sm:text-lg font-medium text-gray-600 dark:text-gray-300">
                 Complétés
               </p>
 
-              <p className="text-xl sm:text-2xl font-semibold text-gray-900 dark:text-gray-100">
+              <p className="text-2xl sm:text-4xl font-semibold text-gray-900 dark:text-gray-100">
                 {completedAppointments.length}
               </p>
 
-              <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1">
+              <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400 mt-1">
                 rendez-vous
               </p>
             </Card>
@@ -450,15 +443,15 @@ export default function WorkerDashboardV2() {
                 </div>
               </div>
 
-              <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300">
+              <p className="text-lg sm:text-lg font-medium text-gray-600 dark:text-gray-300">
                 En attente
               </p>
 
-              <p className="text-xl sm:text-2xl font-semibold text-gray-900 dark:text-gray-100">
+              <p className="text-2xl sm:text-4xl font-semibold text-gray-900 dark:text-gray-100">
                 {stats.pending}
               </p>
 
-              <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1">
+              <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400 mt-1">
                 {missedAppointments.length} manqués
               </p>
             </Card>
@@ -467,21 +460,21 @@ export default function WorkerDashboardV2() {
             <Card className="p-3 sm:p-5 bg-linear-to-br from-amber-500 to-pink-500 text-white border-0 shadow-lg rounded-xl">
               <div className="flex items-center justify-between mb-2">
                 <div className="p-2 bg-white/20 rounded-md backdrop-blur-sm">
-                  <Award className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
                 <Star className="w-3 h-3 sm:w-4 sm:h-4" />
               </div>
 
-              <p className="text-sm sm:text-base opacity-90">
-                Note moyenne
+              <p className="text-lg sm:text-lg font-medium opacity-90">
+                Revenus Générés
               </p>
 
-              <p className="text-xl sm:text-2xl font-semibold">
-                {stats.rating.toFixed(1)}
+              <p className="text-2xl sm:text-4xl font-semibold">
+                {stats.revenue} Fc
               </p>
 
-              <p className="text-xs sm:text-sm opacity-80 mt-1">
-                {user?.workerProfile?.totalReviews || 0} avis
+              <p className="text-sm sm:text-base opacity-80 mt-1">
+                {user?.workerProfile?.commissionFrequency === 'mothly' ? 'Ce dernier Mois' : user?.workerProfile?.commissionFrequency === 'weekly' ? 'Le 7 dernier jours' : "Aujourd'hui"}
               </p>
             </Card>
 
@@ -494,7 +487,7 @@ export default function WorkerDashboardV2() {
               <p className="text-xl font-bold text-gray-900 dark:text-gray-100">
                 {worker?.totalEarnings?.toLocaleString()} Fc
               </p>
-              <p className="text-xs text-gray-500 uppercase">
+              <p className="text-sm text-gray-500 uppercase">
                 Vos gains
               </p>
             </div>
@@ -505,7 +498,7 @@ export default function WorkerDashboardV2() {
               <p className="text-xl font-bold text-gray-900 dark:text-gray-100">
                 {worker?.businessRevenue?.toLocaleString()} Fc
               </p>
-              <p className="text-xs text-gray-500 uppercase">
+              <p className="text-sm text-gray-500 uppercase">
                 Part du salon
               </p>
             </div>
@@ -516,7 +509,7 @@ export default function WorkerDashboardV2() {
               <p className="text-xl font-bold text-gray-900 dark:text-gray-100">
                 {worker?.materialsReserve?.toLocaleString()} Fc
               </p>
-              <p className="text-xs text-gray-500 uppercase">
+              <p className="text-sm text-gray-500 uppercase">
                 Produits
               </p>
             </div>
@@ -527,7 +520,7 @@ export default function WorkerDashboardV2() {
               <p className="text-xl font-bold text-gray-900 dark:text-gray-100">
                 {worker?.operationalCosts?.toLocaleString()} Fc
               </p>
-              <p className="text-xs text-gray-500 uppercase">
+              <p className="text-sm text-gray-500 uppercase">
                 Charges
               </p>
             </div>
@@ -832,8 +825,8 @@ export default function WorkerDashboardV2() {
                       <p className="text-3xl font-semibold text-gray-900 dark:text-gray-100">
                         {stats.commission ? stats.commission.toLocaleString() : '0'} Fc
                       </p>
-                      <p className="text-lg text-gray-600 dark:text-gray-300 mt-2">
-                        Taux: {workerProfile?.commissionRate || 0}%
+                      <p className="text-sm text-gray-600 dark:text-gray-300 mt-2">
+                        Ta commission varie selon le taux de commision par service, Taux est {workerProfile?.commissionRate || 0}%
                       </p>
                     </Card>
 
@@ -866,7 +859,7 @@ export default function WorkerDashboardV2() {
                 </Card>
 
                 {/* Performance Chart */}
-                <Card className="p-6">
+                {/* <Card className="p-6">
                   <h3 className="text-lg font-semibold mb-4">Performance Hebdomadaire</h3>
                   <div className="h-80">
                     <ResponsiveContainer width="100%" height="100%">
@@ -882,53 +875,53 @@ export default function WorkerDashboardV2() {
                       </BarChart>
                     </ResponsiveContainer>
                   </div>
-                </Card>
+                </Card> */}
 
                 {/* Current Period Summary */}
                 <Card className="p-6">
                   <h3 className="text-lg font-semibold mb-4">Période Actuelle</h3>
-                  <Card className="p-4 border border-pink-100 dark:border-pink-900 shadow-sm">
+
+                  <Card className="p-4 border border-pink-100 dark:border-pink-900 shadow-sm space-y-4">
+
                     <div className="flex flex-wrap items-center justify-between gap-4">
                       <div>
                         <p className="font-medium text-gray-900 dark:text-gray-100">
-                          {/* Display period dynamically based on workerProfile.frequency */}
                           {freqComm === 'daily' ? 'Aujourd\'hui' :
                             freqComm === 'weekly' ? 'Cette semaine' : 'Ce mois-ci'}
                         </p>
+
                         <p className="text-lg text-gray-600 dark:text-gray-400">
                           {currentPeriodCommissionData?.appointmentsCount || 0} rendez-vous complétés
                         </p>
                       </div>
+
                       <div className="text-right">
                         <p className="text-xl font-semibold text-green-600 dark:text-green-400">
-                          {currentPeriodCommissionData?.commission ? currentPeriodCommissionData.commission.toLocaleString() : '0'} Fc
+                          {currentPeriodCommissionData?.commission
+                            ? currentPeriodCommissionData.commission.toLocaleString()
+                            : '0'} Fc
                         </p>
-                        {currentPeriodCommissionData?.commission && currentPeriodCommissionData?.commission >= 0 ? (
-                          <PayrollModal
-                            staffName={user?.name}
-                            staff={worker}
-                            period={freqComm}
-                            trigger={
-                              <Button
-                                size="default"
-                                className="w-full bg-green-500 hover:bg-green-600 text-white dark:bg-green-600 dark:hover:bg-green-700"
-                              >
-                                Générer Fiche de Paie
-                              </Button>
-                            }
-                          />
-                        ) : (
-                          <Button
-                            size="default"
-                            disabled
-                            className="w-full bg-emerald-700 hover:bg-green-600 text-white dark:bg-green-600 dark:hover:bg-green-700"
-                          >
-                            Vous n'avez pas pu generer de revenue {freqComm === 'daily' ? 'Aujourd\'hui' :
-                              freqComm === 'weekly' ? 'Cette semaine' : 'Ce mois-ci'}
-                          </Button>
-                        )}
                       </div>
                     </div>
+
+                    {/* 🔥 TIMER */}
+                    <PayrollCountdown frequency={freqComm as any} />
+
+                    {/* BUTTON */}
+                    <PayrollModal
+                      staffName={user?.name}
+                      staff={worker}
+                      period={freqComm}
+                      trigger={
+                        <Button
+                          size="default"
+                          className="w-full bg-green-500 hover:bg-green-600 text-white"
+                        >
+                          Voir Fiche de Paie
+                        </Button>
+                      }
+                    />
+
                   </Card>
                 </Card>
 
@@ -971,8 +964,8 @@ export default function WorkerDashboardV2() {
                         </SelectContent>
                       </Select>
                       <Button variant="outline" size="sm">
-                        <FileText className="h-4 w-4 mr-2" />
-                        Télécharger Rapport
+                        <Download className="h-4 w-4 mr-2" />
+                        Rapport
                       </Button>
                     </div>
                   </div>
@@ -1081,17 +1074,18 @@ export default function WorkerDashboardV2() {
               )}
 
               <div className="flex gap-2 pt-4">
-                {selectedAppointment.status === 'confirmed' && (
-                  <>
-                    <Button
-                      className="flex-1 bg-purple-600 hover:bg-purple-700"
-                      onClick={() => handleUpdateStatus(selectedAppointment.id, 'in_progress')}
-                    >
-                      <PlayCircle className="w-4 h-4 mr-2" />
-                      Commencer
-                    </Button>
-                  </>
-                )}
+                {(selectedAppointment.status === 'confirmed' ||
+                  selectedAppointment.status === 'pending') && (
+                    <>
+                      <Button
+                        className="flex-1 bg-purple-600 hover:bg-purple-700"
+                        onClick={() => handleUpdateStatus(selectedAppointment.id, 'in_progress')}
+                      >
+                        <PlayCircle className="w-4 h-4 mr-2" />
+                        Commencer
+                      </Button>
+                    </>
+                  )}
 
                 {selectedAppointment.status === 'in_progress' && (
                   <Button

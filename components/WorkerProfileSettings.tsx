@@ -18,6 +18,7 @@ import { useWorker } from '@/lib/hooks/useStaff';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
+import { getNextResetDate } from './modals/StaffModals';
 
 // Define types based on your schema
 interface WorkingHours {
@@ -164,8 +165,8 @@ export default function WorkerProfileSettings({ staffId }: { staffId: string }) 
                 <Label htmlFor="hireDate">Date d'embauche</Label>
                 <Input
                   id="hireDate"
-                  type="date"
-                  value={workerProfile?.hireDate ? format(workerProfile.hireDate, "PPP", { locale: fr }) : workerProfile?.hireDate.split('T')[0]}
+                  type="text"
+                  value={workerProfile?.hireDate ? `${format(new Date(workerProfile.hireDate), "EEEE d MMMM 'à' HH'h'mm", { locale: fr })}` : workerProfile?.hireDate.split('T')[0]}
                   disabled
                 />
               </div>

@@ -83,7 +83,7 @@ export function StaffModal({ staffId, trigger }: StaffModalProps) {
     );
   }
 
-  if (workerError || !workerProfile) {
+  if (staffId && (workerError || !workerProfile)) {
     return (
       <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
         <Card className="mx-4 max-w-md w-full">

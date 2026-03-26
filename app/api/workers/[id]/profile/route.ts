@@ -26,7 +26,11 @@ export async function GET(request: NextRequest,
         // You can include other related data if needed
         schedules: true,
         commissions: true,
-      }
+      },
+      cacheStrategy: { 
+        ttl: 60,      // Fresh for 60 seconds
+        swr: 30,      // For another 30s, serve old data while updating in background
+      },
     });
 
     if (!workerProfile) {
@@ -93,7 +97,11 @@ export async function PUT(request: NextRequest,
     // Find the worker profile to get the associated user ID
     const workerProfile = await prisma.workerProfile.findUnique({
       where: { id: id },
-      select: { id: true }
+      select: { id: true },
+      cacheStrategy: { 
+        ttl: 60,      // Fresh for 60 seconds
+        swr: 30,      // For another 30s, serve old data while updating in background
+      },
     });
 
     if (!workerProfile) {
@@ -114,7 +122,7 @@ export async function PUT(request: NextRequest,
             avatar: true,
           }
         }
-      }
+      },
     });
 
     // Also potentially update user details if provided in the request

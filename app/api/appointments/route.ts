@@ -18,6 +18,10 @@ export async function GET(request: NextRequest) {
     if (workerId && user.role === 'worker') {
       const w = await prisma.workerProfile.findUnique({
         where: { userId: user.id },
+        cacheStrategy: { 
+          ttl: 60,      // Fresh for 60 seconds
+          swr: 30,      // For another 30s, serve old data while updating in background
+        },
       });
       if (!w) {
         return errorResponse('Employé non trouvé pour la notification', 404);
@@ -89,6 +93,10 @@ export async function GET(request: NextRequest) {
         },
       },
       orderBy: [{ date: 'asc' }],
+      cacheStrategy: { 
+        ttl: 60,      // Fresh for 60 seconds
+        swr: 30,      // For another 30s, serve old data while updating in background
+      },
     });
     
     return successResponse(appointments);

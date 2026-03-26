@@ -46,7 +46,46 @@ export async function GET(request: NextRequest) {
         },
       },
       orderBy: { createdAt: 'desc' },
+      cacheStrategy: { 
+        ttl: 60,      // Fresh for 60 seconds
+        swr: 30,      // For another 30s, serve old data while updating in background
+      },
     });
+
+    const staffIds = staff.map((s: any) => s.id);
+
+    // Get the earliest possible start date (e.g., start of this month) 
+    // to cover all staff frequencies in one go.
+    const now = new Date();
+    const globalStartDate = new Date(now.getFullYear(), now.getMonth(), 1);
+
+    // 2. FETCH ALL COMMISSIONS AT ONCE
+    const allCommissions = await prisma.commission.findMany({
+      where: {
+        workerId: { in: staffIds },
+        createdAt: { gte: globalStartDate },
+      },
+      cacheStrategy: { ttl: 60, swr: 30 }
+    });
+
+    // 3. FETCH ALL ACTIVE APPOINTMENTS AT ONCE
+    const allBusyAppointments = await prisma.appointment.findMany({
+      where: {
+        workerId: { in: staffIds },
+        status: "in_progress"
+      },
+      include: { client: {
+        include: {
+          user:{
+            select: {
+              name: true
+            }
+          }
+        }
+      } },
+      cacheStrategy: { ttl: 30 } // Cache this too for speed
+    });
+
 
     // Filter out staff who have conflicting appointments
     const availableStaff = staff.filter(async (worker) => {
@@ -58,7 +97,12 @@ export async function GET(request: NextRequest) {
           status: {
             in: ['confirmed', 'in_progress'],
           },
-      }})
+        },
+        cacheStrategy: { 
+          ttl: 60,      // Fresh for 60 seconds
+          swr: 30,      // For another 30s, serve old data while updating in background
+        },
+    })
 
       if (!dateStr || !timeStr ) return true;
 
@@ -73,14 +117,47 @@ export async function GET(request: NextRequest) {
     
     const daysMap = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
 
-    const formattedStaff = availableStaff.map((s: any) => {
+    const formattedStaff = (
+      availableStaff.map((s: any) => {
       const completedApps = s.appointments || [];
-      const totalRevenue = completedApps.reduce((sum: any, app: any) => sum + (app.price || 0), 0);
+      // const totalRevenue = completedApps.reduce((sum: any, app: any) => sum + (app.price || 0), 0);
       
       const uniqueClients = new Set(completedApps.map((a: any) => a.clientId)).size;
       const retention = completedApps.length > 0 
         ? Math.round((uniqueClients / completedApps.length) * 100) 
         : 0;
+
+      const daysToWorks = s.schedules.filter((sch: any) => sch.isAvailable).map((sch: any) => daysMap[sch.dayOfWeek]);
+
+      // Calculate date range based on period
+      const now = new Date();
+      let startDate = new Date();
+  
+      if (s.commissionFrequency === 'weekly') {
+        startDate.setDate(now.getDate() - now.getDay()); // Start of current week
+      } else if (s.commissionFrequency === 'monthly') {
+        startDate.setDate(1); // Start of current month
+      } else if (s.commissionFrequency === 'daily') {
+        startDate.setDate(now.getDate()); // Start of today
+      }
+  
+      // Filter commissions for THIS specific staff member in memory
+      const staffCommissions = allCommissions.filter(c => c.workerId === s.id);
+      
+      // Find if this staff member is busy from our pre-fetched list
+      const isBusy = allBusyAppointments.find(app => app.workerId === s.id);
+  
+      const totalEarnings = staffCommissions.reduce((sum, c) => sum + c.commissionAmount, 0);
+      const totalBusiness = staffCommissions.reduce((sum, c) => {
+
+        const buzRate = 100 - c.commissionRate
+        const buzEarnings = c.totalRevenue * buzRate / 100
+
+        return sum + buzEarnings
+      }, 0);
+      const totalRevenue = staffCommissions.reduce((sum, c) => sum + c.totalRevenue, 0);
+      const matCost = totalBusiness * 0.5;
+      const operaCost = totalBusiness * 0.5;
 
       return {
         id: s.id,
@@ -90,24 +167,25 @@ export async function GET(request: NextRequest) {
         commissionRate: s.commissionRate,
         rating: s.rating,
         totalReviews: s.totalReviews,
-        isAvailable: s.isAvailable,
+        isAvailable: !!isBusy,
+        currentlyWorking: isBusy || null,
         workingHours: s.workingHours,
         hireDate: s.hireDate.toISOString(),
         createdAt: s.createdAt.toISOString(),
         updatedAt: s.updatedAt.toISOString(),
         totalSales: completedApps.length,
-        totalEarnings: totalRevenue * (s.commissionRate < 45 ? s.commissionRate / 100 : 45 / 100),
-        businessRevenue: totalRevenue * (45 / 100),
-        materialsReserve: totalRevenue * (5 / 100),
-        operationalCosts: totalRevenue * (5 / 100),
+        totalEarnings: totalEarnings,
+        businessRevenue: totalBusiness,
+        materialsReserve: matCost,
+        operationalCosts: operaCost,
         user: s.user,
-        schedules: s.schedules,
+        schedules: s?.schedules.filter((sch: any) => sch.isAvailable),
         appointments: s.appointments,
         name: s.user.name,
         role: s.position,
         phone: s.user.phone,
         email: s.user.email,
-        workingDays: s.schedules.map((sch: any) => daysMap[sch.dayOfWeek]),
+        workingDays: daysToWorks,
         workingHoursString: typeof s.workingHours === 'string' ? s.workingHours : 'Non défini',
         appointmentsCount: completedApps.length,
         revenue: totalRevenue.toString(),
@@ -116,7 +194,10 @@ export async function GET(request: NextRequest) {
         commission: s.commissionRate,
         status: s.isAvailable ? 'active' : 'off',
       };
-    });
+    })
+    )
+
+    // console.log(formattedStaff)
 
     return successResponse(formattedStaff);
   } catch (error) {
