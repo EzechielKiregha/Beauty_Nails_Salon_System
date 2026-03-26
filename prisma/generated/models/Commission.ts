@@ -30,16 +30,20 @@ export type CommissionAvgAggregateOutputType = {
   totalRevenue: number | null
   commissionRate: number | null
   commissionAmount: number | null
-  businessEarnings: number | null
   appointmentsCount: number | null
+  businessEarnings: number | null
+  materialsCost: number | null
+  operationalCost: number | null
 }
 
 export type CommissionSumAggregateOutputType = {
   totalRevenue: number | null
   commissionRate: number | null
   commissionAmount: number | null
-  businessEarnings: number | null
   appointmentsCount: number | null
+  businessEarnings: number | null
+  materialsCost: number | null
+  operationalCost: number | null
 }
 
 export type CommissionMinAggregateOutputType = {
@@ -49,8 +53,10 @@ export type CommissionMinAggregateOutputType = {
   totalRevenue: number | null
   commissionRate: number | null
   commissionAmount: number | null
-  businessEarnings: number | null
   appointmentsCount: number | null
+  businessEarnings: number | null
+  materialsCost: number | null
+  operationalCost: number | null
   status: $Enums.CommissionStatus | null
   paidAt: Date | null
   createdAt: Date | null
@@ -64,8 +70,10 @@ export type CommissionMaxAggregateOutputType = {
   totalRevenue: number | null
   commissionRate: number | null
   commissionAmount: number | null
-  businessEarnings: number | null
   appointmentsCount: number | null
+  businessEarnings: number | null
+  materialsCost: number | null
+  operationalCost: number | null
   status: $Enums.CommissionStatus | null
   paidAt: Date | null
   createdAt: Date | null
@@ -79,8 +87,10 @@ export type CommissionCountAggregateOutputType = {
   totalRevenue: number
   commissionRate: number
   commissionAmount: number
-  businessEarnings: number
   appointmentsCount: number
+  businessEarnings: number
+  materialsCost: number
+  operationalCost: number
   status: number
   paidAt: number
   createdAt: number
@@ -93,16 +103,20 @@ export type CommissionAvgAggregateInputType = {
   totalRevenue?: true
   commissionRate?: true
   commissionAmount?: true
-  businessEarnings?: true
   appointmentsCount?: true
+  businessEarnings?: true
+  materialsCost?: true
+  operationalCost?: true
 }
 
 export type CommissionSumAggregateInputType = {
   totalRevenue?: true
   commissionRate?: true
   commissionAmount?: true
-  businessEarnings?: true
   appointmentsCount?: true
+  businessEarnings?: true
+  materialsCost?: true
+  operationalCost?: true
 }
 
 export type CommissionMinAggregateInputType = {
@@ -112,8 +126,10 @@ export type CommissionMinAggregateInputType = {
   totalRevenue?: true
   commissionRate?: true
   commissionAmount?: true
-  businessEarnings?: true
   appointmentsCount?: true
+  businessEarnings?: true
+  materialsCost?: true
+  operationalCost?: true
   status?: true
   paidAt?: true
   createdAt?: true
@@ -127,8 +143,10 @@ export type CommissionMaxAggregateInputType = {
   totalRevenue?: true
   commissionRate?: true
   commissionAmount?: true
-  businessEarnings?: true
   appointmentsCount?: true
+  businessEarnings?: true
+  materialsCost?: true
+  operationalCost?: true
   status?: true
   paidAt?: true
   createdAt?: true
@@ -142,8 +160,10 @@ export type CommissionCountAggregateInputType = {
   totalRevenue?: true
   commissionRate?: true
   commissionAmount?: true
-  businessEarnings?: true
   appointmentsCount?: true
+  businessEarnings?: true
+  materialsCost?: true
+  operationalCost?: true
   status?: true
   paidAt?: true
   createdAt?: true
@@ -244,8 +264,10 @@ export type CommissionGroupByOutputType = {
   totalRevenue: number
   commissionRate: number
   commissionAmount: number
-  businessEarnings: number
   appointmentsCount: number
+  businessEarnings: number
+  materialsCost: number
+  operationalCost: number
   status: $Enums.CommissionStatus
   paidAt: Date | null
   createdAt: Date
@@ -282,8 +304,10 @@ export type CommissionWhereInput = {
   totalRevenue?: Prisma.FloatFilter<"Commission"> | number
   commissionRate?: Prisma.FloatFilter<"Commission"> | number
   commissionAmount?: Prisma.FloatFilter<"Commission"> | number
-  businessEarnings?: Prisma.FloatFilter<"Commission"> | number
   appointmentsCount?: Prisma.IntFilter<"Commission"> | number
+  businessEarnings?: Prisma.FloatFilter<"Commission"> | number
+  materialsCost?: Prisma.FloatFilter<"Commission"> | number
+  operationalCost?: Prisma.FloatFilter<"Commission"> | number
   status?: Prisma.EnumCommissionStatusFilter<"Commission"> | $Enums.CommissionStatus
   paidAt?: Prisma.DateTimeNullableFilter<"Commission"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Commission"> | Date | string
@@ -298,8 +322,10 @@ export type CommissionOrderByWithRelationInput = {
   totalRevenue?: Prisma.SortOrder
   commissionRate?: Prisma.SortOrder
   commissionAmount?: Prisma.SortOrder
-  businessEarnings?: Prisma.SortOrder
   appointmentsCount?: Prisma.SortOrder
+  businessEarnings?: Prisma.SortOrder
+  materialsCost?: Prisma.SortOrder
+  operationalCost?: Prisma.SortOrder
   status?: Prisma.SortOrder
   paidAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -318,8 +344,10 @@ export type CommissionWhereUniqueInput = Prisma.AtLeast<{
   totalRevenue?: Prisma.FloatFilter<"Commission"> | number
   commissionRate?: Prisma.FloatFilter<"Commission"> | number
   commissionAmount?: Prisma.FloatFilter<"Commission"> | number
-  businessEarnings?: Prisma.FloatFilter<"Commission"> | number
   appointmentsCount?: Prisma.IntFilter<"Commission"> | number
+  businessEarnings?: Prisma.FloatFilter<"Commission"> | number
+  materialsCost?: Prisma.FloatFilter<"Commission"> | number
+  operationalCost?: Prisma.FloatFilter<"Commission"> | number
   status?: Prisma.EnumCommissionStatusFilter<"Commission"> | $Enums.CommissionStatus
   paidAt?: Prisma.DateTimeNullableFilter<"Commission"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Commission"> | Date | string
@@ -334,8 +362,10 @@ export type CommissionOrderByWithAggregationInput = {
   totalRevenue?: Prisma.SortOrder
   commissionRate?: Prisma.SortOrder
   commissionAmount?: Prisma.SortOrder
-  businessEarnings?: Prisma.SortOrder
   appointmentsCount?: Prisma.SortOrder
+  businessEarnings?: Prisma.SortOrder
+  materialsCost?: Prisma.SortOrder
+  operationalCost?: Prisma.SortOrder
   status?: Prisma.SortOrder
   paidAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -357,8 +387,10 @@ export type CommissionScalarWhereWithAggregatesInput = {
   totalRevenue?: Prisma.FloatWithAggregatesFilter<"Commission"> | number
   commissionRate?: Prisma.FloatWithAggregatesFilter<"Commission"> | number
   commissionAmount?: Prisma.FloatWithAggregatesFilter<"Commission"> | number
-  businessEarnings?: Prisma.FloatWithAggregatesFilter<"Commission"> | number
   appointmentsCount?: Prisma.IntWithAggregatesFilter<"Commission"> | number
+  businessEarnings?: Prisma.FloatWithAggregatesFilter<"Commission"> | number
+  materialsCost?: Prisma.FloatWithAggregatesFilter<"Commission"> | number
+  operationalCost?: Prisma.FloatWithAggregatesFilter<"Commission"> | number
   status?: Prisma.EnumCommissionStatusWithAggregatesFilter<"Commission"> | $Enums.CommissionStatus
   paidAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Commission"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Commission"> | Date | string
@@ -371,8 +403,10 @@ export type CommissionCreateInput = {
   totalRevenue: number
   commissionRate: number
   commissionAmount: number
-  businessEarnings?: number
   appointmentsCount: number
+  businessEarnings?: number
+  materialsCost?: number
+  operationalCost?: number
   status?: $Enums.CommissionStatus
   paidAt?: Date | string | null
   createdAt?: Date | string
@@ -387,8 +421,10 @@ export type CommissionUncheckedCreateInput = {
   totalRevenue: number
   commissionRate: number
   commissionAmount: number
-  businessEarnings?: number
   appointmentsCount: number
+  businessEarnings?: number
+  materialsCost?: number
+  operationalCost?: number
   status?: $Enums.CommissionStatus
   paidAt?: Date | string | null
   createdAt?: Date | string
@@ -401,8 +437,10 @@ export type CommissionUpdateInput = {
   totalRevenue?: Prisma.FloatFieldUpdateOperationsInput | number
   commissionRate?: Prisma.FloatFieldUpdateOperationsInput | number
   commissionAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  businessEarnings?: Prisma.FloatFieldUpdateOperationsInput | number
   appointmentsCount?: Prisma.IntFieldUpdateOperationsInput | number
+  businessEarnings?: Prisma.FloatFieldUpdateOperationsInput | number
+  materialsCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  operationalCost?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumCommissionStatusFieldUpdateOperationsInput | $Enums.CommissionStatus
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -417,8 +455,10 @@ export type CommissionUncheckedUpdateInput = {
   totalRevenue?: Prisma.FloatFieldUpdateOperationsInput | number
   commissionRate?: Prisma.FloatFieldUpdateOperationsInput | number
   commissionAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  businessEarnings?: Prisma.FloatFieldUpdateOperationsInput | number
   appointmentsCount?: Prisma.IntFieldUpdateOperationsInput | number
+  businessEarnings?: Prisma.FloatFieldUpdateOperationsInput | number
+  materialsCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  operationalCost?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumCommissionStatusFieldUpdateOperationsInput | $Enums.CommissionStatus
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -432,8 +472,10 @@ export type CommissionCreateManyInput = {
   totalRevenue: number
   commissionRate: number
   commissionAmount: number
-  businessEarnings?: number
   appointmentsCount: number
+  businessEarnings?: number
+  materialsCost?: number
+  operationalCost?: number
   status?: $Enums.CommissionStatus
   paidAt?: Date | string | null
   createdAt?: Date | string
@@ -446,8 +488,10 @@ export type CommissionUpdateManyMutationInput = {
   totalRevenue?: Prisma.FloatFieldUpdateOperationsInput | number
   commissionRate?: Prisma.FloatFieldUpdateOperationsInput | number
   commissionAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  businessEarnings?: Prisma.FloatFieldUpdateOperationsInput | number
   appointmentsCount?: Prisma.IntFieldUpdateOperationsInput | number
+  businessEarnings?: Prisma.FloatFieldUpdateOperationsInput | number
+  materialsCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  operationalCost?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumCommissionStatusFieldUpdateOperationsInput | $Enums.CommissionStatus
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -461,8 +505,10 @@ export type CommissionUncheckedUpdateManyInput = {
   totalRevenue?: Prisma.FloatFieldUpdateOperationsInput | number
   commissionRate?: Prisma.FloatFieldUpdateOperationsInput | number
   commissionAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  businessEarnings?: Prisma.FloatFieldUpdateOperationsInput | number
   appointmentsCount?: Prisma.IntFieldUpdateOperationsInput | number
+  businessEarnings?: Prisma.FloatFieldUpdateOperationsInput | number
+  materialsCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  operationalCost?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumCommissionStatusFieldUpdateOperationsInput | $Enums.CommissionStatus
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -491,8 +537,10 @@ export type CommissionCountOrderByAggregateInput = {
   totalRevenue?: Prisma.SortOrder
   commissionRate?: Prisma.SortOrder
   commissionAmount?: Prisma.SortOrder
-  businessEarnings?: Prisma.SortOrder
   appointmentsCount?: Prisma.SortOrder
+  businessEarnings?: Prisma.SortOrder
+  materialsCost?: Prisma.SortOrder
+  operationalCost?: Prisma.SortOrder
   status?: Prisma.SortOrder
   paidAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -503,8 +551,10 @@ export type CommissionAvgOrderByAggregateInput = {
   totalRevenue?: Prisma.SortOrder
   commissionRate?: Prisma.SortOrder
   commissionAmount?: Prisma.SortOrder
-  businessEarnings?: Prisma.SortOrder
   appointmentsCount?: Prisma.SortOrder
+  businessEarnings?: Prisma.SortOrder
+  materialsCost?: Prisma.SortOrder
+  operationalCost?: Prisma.SortOrder
 }
 
 export type CommissionMaxOrderByAggregateInput = {
@@ -514,8 +564,10 @@ export type CommissionMaxOrderByAggregateInput = {
   totalRevenue?: Prisma.SortOrder
   commissionRate?: Prisma.SortOrder
   commissionAmount?: Prisma.SortOrder
-  businessEarnings?: Prisma.SortOrder
   appointmentsCount?: Prisma.SortOrder
+  businessEarnings?: Prisma.SortOrder
+  materialsCost?: Prisma.SortOrder
+  operationalCost?: Prisma.SortOrder
   status?: Prisma.SortOrder
   paidAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -529,8 +581,10 @@ export type CommissionMinOrderByAggregateInput = {
   totalRevenue?: Prisma.SortOrder
   commissionRate?: Prisma.SortOrder
   commissionAmount?: Prisma.SortOrder
-  businessEarnings?: Prisma.SortOrder
   appointmentsCount?: Prisma.SortOrder
+  businessEarnings?: Prisma.SortOrder
+  materialsCost?: Prisma.SortOrder
+  operationalCost?: Prisma.SortOrder
   status?: Prisma.SortOrder
   paidAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -541,8 +595,10 @@ export type CommissionSumOrderByAggregateInput = {
   totalRevenue?: Prisma.SortOrder
   commissionRate?: Prisma.SortOrder
   commissionAmount?: Prisma.SortOrder
-  businessEarnings?: Prisma.SortOrder
   appointmentsCount?: Prisma.SortOrder
+  businessEarnings?: Prisma.SortOrder
+  materialsCost?: Prisma.SortOrder
+  operationalCost?: Prisma.SortOrder
 }
 
 export type CommissionCreateNestedManyWithoutWorkerInput = {
@@ -597,8 +653,10 @@ export type CommissionCreateWithoutWorkerInput = {
   totalRevenue: number
   commissionRate: number
   commissionAmount: number
-  businessEarnings?: number
   appointmentsCount: number
+  businessEarnings?: number
+  materialsCost?: number
+  operationalCost?: number
   status?: $Enums.CommissionStatus
   paidAt?: Date | string | null
   createdAt?: Date | string
@@ -611,8 +669,10 @@ export type CommissionUncheckedCreateWithoutWorkerInput = {
   totalRevenue: number
   commissionRate: number
   commissionAmount: number
-  businessEarnings?: number
   appointmentsCount: number
+  businessEarnings?: number
+  materialsCost?: number
+  operationalCost?: number
   status?: $Enums.CommissionStatus
   paidAt?: Date | string | null
   createdAt?: Date | string
@@ -655,8 +715,10 @@ export type CommissionScalarWhereInput = {
   totalRevenue?: Prisma.FloatFilter<"Commission"> | number
   commissionRate?: Prisma.FloatFilter<"Commission"> | number
   commissionAmount?: Prisma.FloatFilter<"Commission"> | number
-  businessEarnings?: Prisma.FloatFilter<"Commission"> | number
   appointmentsCount?: Prisma.IntFilter<"Commission"> | number
+  businessEarnings?: Prisma.FloatFilter<"Commission"> | number
+  materialsCost?: Prisma.FloatFilter<"Commission"> | number
+  operationalCost?: Prisma.FloatFilter<"Commission"> | number
   status?: Prisma.EnumCommissionStatusFilter<"Commission"> | $Enums.CommissionStatus
   paidAt?: Prisma.DateTimeNullableFilter<"Commission"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Commission"> | Date | string
@@ -669,8 +731,10 @@ export type CommissionCreateManyWorkerInput = {
   totalRevenue: number
   commissionRate: number
   commissionAmount: number
-  businessEarnings?: number
   appointmentsCount: number
+  businessEarnings?: number
+  materialsCost?: number
+  operationalCost?: number
   status?: $Enums.CommissionStatus
   paidAt?: Date | string | null
   createdAt?: Date | string
@@ -683,8 +747,10 @@ export type CommissionUpdateWithoutWorkerInput = {
   totalRevenue?: Prisma.FloatFieldUpdateOperationsInput | number
   commissionRate?: Prisma.FloatFieldUpdateOperationsInput | number
   commissionAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  businessEarnings?: Prisma.FloatFieldUpdateOperationsInput | number
   appointmentsCount?: Prisma.IntFieldUpdateOperationsInput | number
+  businessEarnings?: Prisma.FloatFieldUpdateOperationsInput | number
+  materialsCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  operationalCost?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumCommissionStatusFieldUpdateOperationsInput | $Enums.CommissionStatus
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -697,8 +763,10 @@ export type CommissionUncheckedUpdateWithoutWorkerInput = {
   totalRevenue?: Prisma.FloatFieldUpdateOperationsInput | number
   commissionRate?: Prisma.FloatFieldUpdateOperationsInput | number
   commissionAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  businessEarnings?: Prisma.FloatFieldUpdateOperationsInput | number
   appointmentsCount?: Prisma.IntFieldUpdateOperationsInput | number
+  businessEarnings?: Prisma.FloatFieldUpdateOperationsInput | number
+  materialsCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  operationalCost?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumCommissionStatusFieldUpdateOperationsInput | $Enums.CommissionStatus
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -711,8 +779,10 @@ export type CommissionUncheckedUpdateManyWithoutWorkerInput = {
   totalRevenue?: Prisma.FloatFieldUpdateOperationsInput | number
   commissionRate?: Prisma.FloatFieldUpdateOperationsInput | number
   commissionAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  businessEarnings?: Prisma.FloatFieldUpdateOperationsInput | number
   appointmentsCount?: Prisma.IntFieldUpdateOperationsInput | number
+  businessEarnings?: Prisma.FloatFieldUpdateOperationsInput | number
+  materialsCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  operationalCost?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumCommissionStatusFieldUpdateOperationsInput | $Enums.CommissionStatus
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -728,8 +798,10 @@ export type CommissionSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   totalRevenue?: boolean
   commissionRate?: boolean
   commissionAmount?: boolean
-  businessEarnings?: boolean
   appointmentsCount?: boolean
+  businessEarnings?: boolean
+  materialsCost?: boolean
+  operationalCost?: boolean
   status?: boolean
   paidAt?: boolean
   createdAt?: boolean
@@ -744,8 +816,10 @@ export type CommissionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   totalRevenue?: boolean
   commissionRate?: boolean
   commissionAmount?: boolean
-  businessEarnings?: boolean
   appointmentsCount?: boolean
+  businessEarnings?: boolean
+  materialsCost?: boolean
+  operationalCost?: boolean
   status?: boolean
   paidAt?: boolean
   createdAt?: boolean
@@ -760,8 +834,10 @@ export type CommissionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   totalRevenue?: boolean
   commissionRate?: boolean
   commissionAmount?: boolean
-  businessEarnings?: boolean
   appointmentsCount?: boolean
+  businessEarnings?: boolean
+  materialsCost?: boolean
+  operationalCost?: boolean
   status?: boolean
   paidAt?: boolean
   createdAt?: boolean
@@ -776,15 +852,17 @@ export type CommissionSelectScalar = {
   totalRevenue?: boolean
   commissionRate?: boolean
   commissionAmount?: boolean
-  businessEarnings?: boolean
   appointmentsCount?: boolean
+  businessEarnings?: boolean
+  materialsCost?: boolean
+  operationalCost?: boolean
   status?: boolean
   paidAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type CommissionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workerId" | "period" | "totalRevenue" | "commissionRate" | "commissionAmount" | "businessEarnings" | "appointmentsCount" | "status" | "paidAt" | "createdAt" | "updatedAt", ExtArgs["result"]["commission"]>
+export type CommissionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workerId" | "period" | "totalRevenue" | "commissionRate" | "commissionAmount" | "appointmentsCount" | "businessEarnings" | "materialsCost" | "operationalCost" | "status" | "paidAt" | "createdAt" | "updatedAt", ExtArgs["result"]["commission"]>
 export type CommissionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   worker?: boolean | Prisma.WorkerProfileDefaultArgs<ExtArgs>
 }
@@ -807,8 +885,10 @@ export type $CommissionPayload<ExtArgs extends runtime.Types.Extensions.Internal
     totalRevenue: number
     commissionRate: number
     commissionAmount: number
-    businessEarnings: number
     appointmentsCount: number
+    businessEarnings: number
+    materialsCost: number
+    operationalCost: number
     status: $Enums.CommissionStatus
     paidAt: Date | null
     createdAt: Date
@@ -1243,8 +1323,10 @@ export interface CommissionFieldRefs {
   readonly totalRevenue: Prisma.FieldRef<"Commission", 'Float'>
   readonly commissionRate: Prisma.FieldRef<"Commission", 'Float'>
   readonly commissionAmount: Prisma.FieldRef<"Commission", 'Float'>
-  readonly businessEarnings: Prisma.FieldRef<"Commission", 'Float'>
   readonly appointmentsCount: Prisma.FieldRef<"Commission", 'Int'>
+  readonly businessEarnings: Prisma.FieldRef<"Commission", 'Float'>
+  readonly materialsCost: Prisma.FieldRef<"Commission", 'Float'>
+  readonly operationalCost: Prisma.FieldRef<"Commission", 'Float'>
   readonly status: Prisma.FieldRef<"Commission", 'CommissionStatus'>
   readonly paidAt: Prisma.FieldRef<"Commission", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"Commission", 'DateTime'>
