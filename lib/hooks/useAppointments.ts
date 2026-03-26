@@ -20,6 +20,7 @@ export function useAppointments(params?: {
     data: appointments = [],
     isLoading,
     error,
+    refetch,
   } = useQuery({
     queryKey: ['appointments', params],
     queryFn: () => appointmentsApi.getAppointments(params),
@@ -101,6 +102,7 @@ export function useAppointments(params?: {
     appointments,
     isLoading,
     error,
+    refetch,
     createAppointment: createMutation.mutate,
     createAppointmentAsAdmin: createMutationAsAdmin.mutate,
     updateStatus: updateStatusMutation.mutate,

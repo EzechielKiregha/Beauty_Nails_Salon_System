@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "commissions" ADD COLUMN     "materialsCost" DOUBLE PRECISION NOT NULL DEFAULT 0,
+ADD COLUMN     "operationalCost" DOUBLE PRECISION NOT NULL DEFAULT 0;

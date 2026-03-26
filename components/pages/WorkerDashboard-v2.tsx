@@ -16,9 +16,6 @@ import {
   Bell, Phone, MessageSquare, MapPin,
   PlayCircle, CheckCheck, XCircle, AlertCircle,
   DollarSign,
-  Plus,
-  Users,
-  ShoppingCart,
   ExternalLink,
   FileText,
   Loader2,
@@ -69,6 +66,7 @@ export default function WorkerDashboardV2() {
     appointments = [],
     isLoading: isAppointmentsLoading,
     updateStatus,
+    refetch
   } = useAppointments({
     workerId: user?.workerProfile?.id,
     // date: today,
@@ -215,9 +213,10 @@ export default function WorkerDashboardV2() {
         statusData: { status: newStatus as any },
       },
       {
-        onSuccess: () => {
+        onSuccess: async () => {
           toast.success('Statut mis à jour');
           setDetailsOpen(false);
+          await refetch()
         },
       }
     );
