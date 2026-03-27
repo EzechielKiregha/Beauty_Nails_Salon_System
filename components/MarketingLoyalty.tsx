@@ -28,10 +28,10 @@ export default function MarketingLoyalty() {
   // Fetch data using hooks
   const { campaigns: apiCampaigns = [], isLoading: campaignsLoading, error: campaignsError } = useCampaigns();
   const { discounts: apiDiscounts = [], isLoading: discountsLoading, error: discountsError } = useDiscounts();
-  const { points: loyaltyPoints, tier: loyaltyTier, transactions: loyaltyTransactions, isLoading: loyaltyLoading, error: loyaltyError } = useLoyalty();
-  const { referralCode: userReferralCode, referrals: userReferralsCount, isLoading: referralLoading, error: referralError, applyReferralCode, isApplying } = useReferral();
+  const { points: loyaltyPoints, isLoading: loyaltyLoading, error: loyaltyError } = useLoyalty();
+  const { referrals: userReferralsCount, isLoading: referralLoading, error: referralError } = useReferral();
   const { clients: allClients = [], isLoading: clientsLoading, error: clientsError } = useClients(); // Fetch all clients
-  const { createNotification, isCreatingNotification } = useNotifications(); // Hook to create notifications
+  const { createNotification } = useNotifications(); // Hook to create notifications
 
   const loyaltyRules = {
     pointsPerSpend: 1,
@@ -183,7 +183,7 @@ export default function MarketingLoyalty() {
                 <Card className="bg-linear-to-br from-purple-50 to-pink-50 dark:from-gray-800 dark:to-gray-800/50 border border-purple-100 dark:border-purple-900/30 p-4 sm:p-5 rounded-2xl">
                   <p className="text-[10px] sm:text-base  text-purple-600 dark:text-purple-400 uppercase tracking-widest mb-1">Points par dépense</p>
                   <p className="text-base sm:text-2xl font-black text-gray-900 dark:text-gray-100">
-                    {loyaltyRules.pointsPerSpend} point / 1 000 Fc dépensé
+                    {loyaltyRules.pointsPerSpend} point / 1 000 CDF dépensé
                   </p>
                 </Card>
 

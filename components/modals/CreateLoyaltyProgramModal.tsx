@@ -70,7 +70,7 @@ export function CreateLoyaltyProgramModal({ trigger }: { trigger: React.ReactNod
         <div className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="pointsPerSpend">Points par 1000 Fc</Label>
+              <Label htmlFor="pointsPerSpend">Points par 1000 CDF</Label>
               <Input
                 id="pointsPerSpend"
                 type="number"

@@ -470,7 +470,7 @@ export default function WorkerDashboardV2() {
               </p>
 
               <p className="text-2xl sm:text-4xl font-semibold">
-                {stats.revenue} Fc
+                {stats.revenue} CDF
               </p>
 
               <p className="text-sm sm:text-base opacity-80 mt-1">
@@ -485,7 +485,7 @@ export default function WorkerDashboardV2() {
             <div className="bg-linear-to-br from-green-50 to-emerald-50 dark:from-gray-950 dark:to-gray-950 p-4 rounded-2xl text-center shadow-sm hover:shadow-lg transition border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400">
               <DollarSign className="w-5 h-5 text-green-600 dark:text-green-400 mx-auto mb-2" />
               <p className="text-xl font-bold text-gray-900 dark:text-gray-100">
-                {worker?.totalEarnings?.toLocaleString()} Fc
+                {worker?.totalEarnings?.toLocaleString()} CDF
               </p>
               <p className="text-sm text-gray-500 uppercase">
                 Vos gains
@@ -496,7 +496,7 @@ export default function WorkerDashboardV2() {
             <div className="bg-linear-to-br from-purple-50 to-pink-50 dark:from-gray-950 dark:to-gray-950 p-4 rounded-2xl text-center shadow-sm hover:shadow-lg transition border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400">
               <Building className="w-5 h-5 text-purple-600 dark:text-purple-400 mx-auto mb-2" />
               <p className="text-xl font-bold text-gray-900 dark:text-gray-100">
-                {worker?.businessRevenue?.toLocaleString()} Fc
+                {worker?.businessRevenue?.toLocaleString()} CDF
               </p>
               <p className="text-sm text-gray-500 uppercase">
                 Part du salon
@@ -507,7 +507,7 @@ export default function WorkerDashboardV2() {
             <div className="bg-linear-to-br from-amber-50 to-orange-50 dark:from-gray-950 dark:to-gray-950 p-4 rounded-2xl text-center shadow-sm hover:shadow-lg transition border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400">
               <Package className="w-5 h-5 text-amber-600 dark:text-amber-400 mx-auto mb-2" />
               <p className="text-xl font-bold text-gray-900 dark:text-gray-100">
-                {worker?.materialsReserve?.toLocaleString()} Fc
+                {worker?.materialsReserve?.toLocaleString()} CDF
               </p>
               <p className="text-sm text-gray-500 uppercase">
                 Produits
@@ -518,7 +518,7 @@ export default function WorkerDashboardV2() {
             <div className="bg-linear-to-br from-blue-50 to-cyan-50 dark:from-gray-950 dark:to-gray-950 p-4 rounded-2xl text-center shadow-sm hover:shadow-lg transition border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400">
               <Settings className="w-5 h-5 text-blue-600 dark:text-blue-400 mx-auto mb-2" />
               <p className="text-xl font-bold text-gray-900 dark:text-gray-100">
-                {worker?.operationalCosts?.toLocaleString()} Fc
+                {worker?.operationalCosts?.toLocaleString()} CDF
               </p>
               <p className="text-sm text-gray-500 uppercase">
                 Charges
@@ -823,7 +823,7 @@ export default function WorkerDashboardV2() {
                         <p className="text-lg text-gray-600 dark:text-gray-300">Commission Attendue</p>
                       </div>
                       <p className="text-3xl font-semibold text-gray-900 dark:text-gray-100">
-                        {stats.commission ? stats.commission.toLocaleString() : '0'} Fc
+                        {stats.commission ? stats.commission.toLocaleString() : '0'} CDF
                       </p>
                       <p className="text-sm text-gray-600 dark:text-gray-300 mt-2">
                         Ta commission varie selon le taux de commision par service, Taux est {workerProfile?.commissionRate || 0}%
@@ -836,7 +836,7 @@ export default function WorkerDashboardV2() {
                         <p className="text-lg text-gray-600 dark:text-gray-300">Revenus Générés</p>
                       </div>
                       <p className="text-3xl font-semibold text-gray-900 dark:text-gray-100">
-                        {stats.revenue ? stats.revenue.toLocaleString() : '0'} Fc
+                        {stats.revenue ? stats.revenue.toLocaleString() : '0'} CDF
                       </p>
                       <p className="text-lg text-gray-600 dark:text-gray-300 mt-2">
                         {currentPeriodCommissionData?.appointmentsCount || 0} rendez-vous
@@ -870,8 +870,8 @@ export default function WorkerDashboardV2() {
                         <Tooltip formatter={(value) => [`${value}`, 'Valeur']} labelFormatter={(label) => `Jour: ${label}`} />
                         <Legend />
                         <Bar dataKey="rendezVous" fill="#a855f7" name="Rendez-vous" />
-                        <Bar dataKey="commission" fill="#10b981" name="Commission (Fc)" />
-                        <Bar dataKey="totalRevenue" fill="#3b82f6" name="Revenu (Fc)" />
+                        <Bar dataKey="commission" fill="#10b981" name="Commission (CDF)" />
+                        <Bar dataKey="totalRevenue" fill="#3b82f6" name="Revenu (CDF)" />
                       </BarChart>
                     </ResponsiveContainer>
                   </div>
@@ -899,7 +899,7 @@ export default function WorkerDashboardV2() {
                         <p className="text-xl font-semibold text-green-600 dark:text-green-400">
                           {currentPeriodCommissionData?.commission
                             ? currentPeriodCommissionData.commission.toLocaleString()
-                            : '0'} Fc
+                            : '0'} CDF
                         </p>
                       </div>
                     </div>
@@ -938,7 +938,7 @@ export default function WorkerDashboardV2() {
                         <div className="text-right">
                           <p className="text-lg font-semibold text-gray-900 dark:text-gray-100">
                             {/* Estimate based on current period or average */
-                              currentPeriodCommissionData?.commission ? currentPeriodCommissionData.commission.toLocaleString() : '0'} Fc
+                              currentPeriodCommissionData?.commission ? currentPeriodCommissionData.commission.toLocaleString() : '0'} CDF
                           </p>
                           <Badge variant="outline" className="text-base">Estimé</Badge>
                         </div>
@@ -988,7 +988,7 @@ export default function WorkerDashboardV2() {
                             <div>
                               <p className="font-medium text-gray-900 dark:text-gray-100">{commission.period}</p>
                               <p className="text-lg text-gray-600 dark:text-gray-400">
-                                {commission.appointmentsCount} RDV • {commission.totalRevenue.toLocaleString()} Fc généré(s)
+                                {commission.appointmentsCount} RDV • {commission.totalRevenue.toLocaleString()} CDF généré(s)
                               </p>
                             </div>
                             <div className="flex items-center gap-4">
@@ -997,7 +997,7 @@ export default function WorkerDashboardV2() {
                                   commission.status === 'pending' ? 'text-amber-600 dark:text-amber-400' :
                                     'text-gray-600 dark:text-gray-400'
                                   }`}>
-                                  {commission.commissionAmount.toLocaleString()} Fc
+                                  {commission.commissionAmount.toLocaleString()} CDF
 
                                 </p>
                                 <Badge variant={
@@ -1062,7 +1062,7 @@ export default function WorkerDashboardV2() {
                 </div>
                 <div>
                   <label className="text-lg text-gray-600 dark:text-gray-300">Prix</label>
-                  <p className="font-semibold">{selectedAppointment.price?.toLocaleString()} Fc</p>
+                  <p className="font-semibold">{selectedAppointment.price?.toLocaleString()} CDF</p>
                 </div>
               </div>
 

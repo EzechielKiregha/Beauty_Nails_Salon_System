@@ -1,3 +1,4 @@
+import { UserRole } from '@/prisma/generated/enums';
 import axiosdb from '../axios';
 
 export interface SalonProfile {
@@ -38,6 +39,26 @@ export const settingsApi = {
   // Get system settings
   getSystemSettings: async (): Promise<SystemSettings> => {
     const { data } = await axiosdb.get('/settings/system');
+    return data;
+  },
+  getUsers: async (): Promise<{
+    name: string;
+    id: string;
+    email: string;
+    emailVerified: Date | null;
+    password: string;
+    phone: string;
+    avatar: string | null;
+    role: UserRole;
+    isActive: boolean;
+    resetToken: string | null;
+    resetTokenExpires: Date | null;
+    otpSecret: string | null;
+    otpSecretExpires: Date | null;
+    createdAt: Date;
+    updatedAt: Date;
+  }[]> => {
+    const { data } = await axiosdb.get('/settings/users');
     return data;
   },
 

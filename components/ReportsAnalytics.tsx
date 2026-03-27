@@ -166,9 +166,9 @@ export default function ReportsAnalytics() {
             {revenueReport ?
               revenueReport?.totalRevenue && revenueReport?.totalRevenue > 5000000
                 ?
-                (revenueReport.totalRevenue / 1000000).toFixed(1) + 'M Fc'
+                (revenueReport.totalRevenue / 1000000).toFixed(1) + 'M CDF'
                 :
-                revenueReport?.totalRevenue + ' Fc'
+                revenueReport?.totalRevenue + ' CDF'
               : <Loader2 className="w-5 h-5 animate-spin text-purple-500 dark:text-purple-400 mx-auto mb-4" />}
           </p>
           <div className="flex items-center gap-1 mt-2">
@@ -326,7 +326,7 @@ export default function ReportsAnalytics() {
                             ?
                             (service.revenue / 1000000).toFixed(1)
                             :
-                            service?.revenue} Fc
+                            service?.revenue} CDF
                         </p>
                       </div>
                       <div>
@@ -336,7 +336,7 @@ export default function ReportsAnalytics() {
                       <div>
                         <p className="text-base text-gray-600 dark:text-gray-400 mb-1">Prix Moyen</p>
                         <p className="text-lg sm:text-lg  text-gray-900 dark:text-gray-100">
-                          {service.avgPrice ? `${(service.avgPrice / 1000).toFixed(0)}K Fc` : '0K Fc'}
+                          {service.avgPrice ? `${(service.avgPrice / 1000).toFixed(0)}K CDF` : '0K CDF'}
                         </p>
                       </div>
                     </div>
@@ -401,10 +401,10 @@ export default function ReportsAnalytics() {
                       ?
                       (membershipAnalytics.memberRevenue / 1000000).toFixed(1)
                       :
-                      membershipAnalytics.memberRevenue} Fc
+                      membershipAnalytics.memberRevenue} CDF
                   </p>
                   <p className="text-base text-gray-600 dark:text-gray-400">
-                    Dépense moyenne: <span className="">{(membershipAnalytics.averageMemberSpend / 1000).toFixed(0)}K Fc</span>
+                    Dépense moyenne: <span className="">{(membershipAnalytics.averageMemberSpend / 1000).toFixed(0)}K CDF</span>
                   </p>
                 </div>
 
@@ -415,10 +415,10 @@ export default function ReportsAnalytics() {
                       ?
                       (membershipAnalytics.nonMemberRevenue / 1000000).toFixed(1)
                       :
-                      membershipAnalytics.nonMemberRevenue} Fc
+                      membershipAnalytics.nonMemberRevenue} CDF
                   </p>
                   <p className="text-base text-gray-600 dark:text-gray-400">
-                    Dépense moyenne: <span className="">{(membershipAnalytics.averageNonMemberSpend / 1000).toFixed(0)}K Fc</span>
+                    Dépense moyenne: <span className="">{(membershipAnalytics.averageNonMemberSpend / 1000).toFixed(0)}K CDF</span>
                   </p>
                 </div>
 
@@ -462,7 +462,7 @@ export default function ReportsAnalytics() {
                     </div>
                     <div className="flex justify-between items-center text-lg p-2 bg-white dark:bg-gray-950 rounded-lg border border-gray-100 dark:border-gray-800">
                       <span className="text-gray-600 dark:text-gray-400">Revenus générés:</span>
-                      <span className=" text-gray-900 dark:text-gray-100">{(staff.totalRevenue / 1000).toFixed(0)}K Fc</span>
+                      <span className=" text-gray-900 dark:text-gray-100">{(staff.totalRevenue / 1000).toFixed(0)}K CDF</span>
                     </div>
                   </Card>
                 ))
@@ -484,7 +484,7 @@ export default function ReportsAnalytics() {
                 </div>
                 <div className="p-4 bg-white dark:bg-gray-950 rounded-xl shadow-sm border border-blue-50 dark:border-blue-900/20">
                   <p className="text-2xl  text-blue-600 dark:text-blue-400">
-                    {staffUtilization.length > 0 ? Math.round(staffUtilization.reduce((sum: any, s: any) => sum + (s.totalRevenue || 0), 0) / staffUtilization.length / 1000) : 0}K Fc
+                    {staffUtilization.length > 0 ? Math.round(staffUtilization.reduce((sum: any, s: any) => sum + (s.totalRevenue || 0), 0) / staffUtilization.length / 1000) : 0}K CDF
                   </p>
                   <p className="text-base text-gray-600 dark:text-gray-400 uppercase mt-1 tracking-wider">Revenus / Staff</p>
                 </div>
@@ -517,7 +517,7 @@ export default function ReportsAnalytics() {
                         <Target className="w-5 h-5 text-green-600" />
                         <span className="text-gray-700">Revenus générés:</span>
                       </div>
-                      <span className="text-xl text-gray-900">{(campaign.revenue / 1000).toFixed(0)}K Fc</span>
+                      <span className="text-xl text-gray-900">{(campaign.revenue / 1000).toFixed(0)}K CDF</span>
                     </div>
                   </Card>
                 ))
@@ -534,7 +534,7 @@ export default function ReportsAnalytics() {
               <Card className="bg-linear-to-br from-blue-50 to-cyan-50 dark:from-blue-900/10 dark:to-cyan-900/10 border border-blue-100 dark:border-blue-900/30 p-6 rounded-xl">
                 <p className="text-lg font-medium text-gray-600 dark:text-gray-400 mb-1">Total Revenus Marketing</p>
                 <p className="text-2xl font-black text-gray-900 dark:text-gray-100">
-                  {(marketingCampaigns.reduce((sum: any, camp: any) => sum + (camp.revenue || 0), 0) / 1000000).toFixed(1)}M Fc
+                  {(marketingCampaigns.reduce((sum: any, camp: any) => sum + (camp.revenue || 0), 0) / 1000000).toFixed(1)}M CDF
                 </p>
               </Card>
               <Card className="bg-linear-to-br from-amber-50 to-orange-50 dark:from-amber-900/10 dark:to-orange-900/10 border border-amber-100 dark:border-amber-900/30 p-6 rounded-xl">

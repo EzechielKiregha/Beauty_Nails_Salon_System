@@ -15,9 +15,7 @@ import { useInventory } from '@/lib/hooks/useInventory';
 import LoaderBN from '../Loader-BN';
 import { useClients } from '@/lib/hooks/useClients';
 import { useAddOns } from '@/lib/hooks/useServices';
-import { Avatar } from '../ui/avatar';
-import Image from 'next/image';
-import { AvatarFallback, AvatarImage } from '@radix-ui/react-avatar';
+import { toast } from 'sonner';
 
 // Add-on Modal Component
 const AddOnModal = ({
@@ -392,12 +390,16 @@ export default function CatalogPage() {
                     </div>
 
                     <div className="flex gap-2">
-                      <Button size="sm" variant="outline" className="flex-1 rounded-full py-5 bg-white dark:bg-gray-900 dark:border-gray-700 dark:text-gray-300">
+                      <Button onClick={() => {
+                        navigator.clipboard.writeText(`${promo.code.toUpperCase}`);
+                        toast.success("Code Promotion Copié !");
+                      }
+                      } size="sm" variant="outline" className="flex-1 rounded-full py-5 bg-white dark:bg-gray-900 dark:border-gray-700 dark:text-gray-300">
                         Copier Code
                       </Button>
-                      <Button size="sm" variant="outline" className="flex-1 rounded-full py-5 text-red-600 bg-white dark:bg-gray-900 dark:border-red-900/30">
+                      {/* <Button size="sm" variant="outline" className="flex-1 rounded-full py-5 text-red-600 bg-white dark:bg-gray-900 dark:border-red-900/30">
                         Désactiver
-                      </Button>
+                      </Button> */}
                     </div>
                   </Card>
                 ))}
@@ -420,7 +422,7 @@ export default function CatalogPage() {
                     <Card className="bg-linear-to-br from-purple-50 to-pink-50 dark:from-gray-800 dark:to-gray-800/50 border border-purple-100 dark:border-purple-900/30 p-4 sm:p-5 rounded-2xl">
                       <p className="text-[10px] sm:text-base  text-purple-600 dark:text-purple-400 uppercase tracking-widest mb-1">Points par dépense</p>
                       <p className="text-base sm:text-2xl font-black text-gray-900 dark:text-gray-100">
-                        {loyaltyRules.pointsPerSpend} point / 1 000 Fc dépensé
+                        {loyaltyRules.pointsPerSpend} point / 1 000 CDF dépensé
                       </p>
                     </Card>
 

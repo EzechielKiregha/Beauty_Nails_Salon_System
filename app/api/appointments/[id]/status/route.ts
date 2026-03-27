@@ -39,7 +39,7 @@ export async function PUT(
           data: {
             totalAppointments: { increment: 1 },
             totalSpent: { increment: appointment.price },
-            loyaltyPoints: { increment: 5 },
+            // loyaltyPoints: { increment: 5 },
           },
         }),
         // Create loyalty transaction

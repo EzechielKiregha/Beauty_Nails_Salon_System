@@ -42,8 +42,18 @@ export const loyaltyApi = {
   },
 
   // Apply referral code
-  applyReferralCode: async (code: string): Promise<{ success: boolean; message: string }> => {
-    const { data } = await axiosdb.post('/loyalty/apply-referral', { code });
+  applyReferralBonus: async (refIds: string[]): Promise<{ message: string }> => {
+    const { data } = await axiosdb.put('/loyalty/apply-referral-bonus', { refIds });
+    return data;
+  },
+  // Apply applyLoyaltyBonus code
+  applyLoyaltyBonus: async (id: string): Promise<{ message: string }> => {
+    const { data } = await axiosdb.put('/loyalty/apply-loyalty-bonus', { id });
+    return data;
+  },
+  // Apply applyLoyaltyBonus code
+  applyFreeService: async (id: string): Promise<{ message: string }> => {
+    const { data } = await axiosdb.put('/loyalty/apply-free-service-bonus', { id });
     return data;
   },
 };

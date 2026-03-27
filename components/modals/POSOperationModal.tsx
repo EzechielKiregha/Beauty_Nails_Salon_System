@@ -169,7 +169,7 @@ export default function POSOperationModal({ triggerLabel = "Opération POS" }: {
                   <div>
                     <p className="font-medium text-base">{it.serviceId}</p>
                     <p className="text-lg text-gray-600">
-                      {it.quantity} × {it.price.toLocaleString()} Fc
+                      {it.quantity} × {it.price.toLocaleString()} CDF
                     </p>
                   </div>
                   <Button

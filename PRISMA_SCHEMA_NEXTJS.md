@@ -849,7 +849,7 @@ model SalonProfile {
   logo        String?
   openingHours Json?
   socialMedia Json?
-  currency    String   @default("Fc") // Congolese Franc
+  currency    String   @default("CDF") // Congolese Franc
   timezone    String   @default("Africa/Kinshasa")
   language    String   @default("fr")
   createdAt   DateTime @default(now())
@@ -1144,7 +1144,7 @@ async function main() {
       phone: '+243900000000',
       email: 'contact@beautynails.cd',
       description: 'Salon de beauté spécialisé en ongles, cils, tresses et maquillage',
-      currency: 'Fc',
+      currency: 'CDF',
       timezone: 'Africa/Kinshasa',
       language: 'fr',
       openingHours: {

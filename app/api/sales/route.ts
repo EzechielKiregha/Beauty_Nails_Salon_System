@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
         payments: true,
       },
       orderBy: {
-        createdAt: 'desc',
+        createdAt: 'asc',
       },
       cacheStrategy: { 
         ttl: 60,      // Fresh for 60 seconds

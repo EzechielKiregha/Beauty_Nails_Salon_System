@@ -30,8 +30,11 @@ export type ClientProfileAvgAggregateOutputType = {
   loyaltyPoints: number | null
   totalAppointments: number | null
   totalSpent: number | null
+  refBonus: number | null
   prepaymentBalance: number | null
   giftCardBalance: number | null
+  giftCardCount: number | null
+  freeServiceCount: number | null
   referrals: number | null
 }
 
@@ -39,8 +42,11 @@ export type ClientProfileSumAggregateOutputType = {
   loyaltyPoints: number | null
   totalAppointments: number | null
   totalSpent: number | null
+  refBonus: number | null
   prepaymentBalance: number | null
   giftCardBalance: number | null
+  giftCardCount: number | null
+  freeServiceCount: number | null
   referrals: number | null
 }
 
@@ -53,12 +59,15 @@ export type ClientProfileMinAggregateOutputType = {
   totalSpent: number | null
   referralCode: string | null
   referredBy: string | null
+  refBonus: number | null
   notes: string | null
   birthday: Date | null
   address: string | null
   allergies: string | null
   prepaymentBalance: number | null
   giftCardBalance: number | null
+  giftCardCount: number | null
+  freeServiceCount: number | null
   referrals: number | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -73,12 +82,15 @@ export type ClientProfileMaxAggregateOutputType = {
   totalSpent: number | null
   referralCode: string | null
   referredBy: string | null
+  refBonus: number | null
   notes: string | null
   birthday: Date | null
   address: string | null
   allergies: string | null
   prepaymentBalance: number | null
   giftCardBalance: number | null
+  giftCardCount: number | null
+  freeServiceCount: number | null
   referrals: number | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -93,6 +105,7 @@ export type ClientProfileCountAggregateOutputType = {
   totalSpent: number
   referralCode: number
   referredBy: number
+  refBonus: number
   preferences: number
   notes: number
   birthday: number
@@ -101,6 +114,8 @@ export type ClientProfileCountAggregateOutputType = {
   allergies: number
   prepaymentBalance: number
   giftCardBalance: number
+  giftCardCount: number
+  freeServiceCount: number
   referrals: number
   createdAt: number
   updatedAt: number
@@ -112,8 +127,11 @@ export type ClientProfileAvgAggregateInputType = {
   loyaltyPoints?: true
   totalAppointments?: true
   totalSpent?: true
+  refBonus?: true
   prepaymentBalance?: true
   giftCardBalance?: true
+  giftCardCount?: true
+  freeServiceCount?: true
   referrals?: true
 }
 
@@ -121,8 +139,11 @@ export type ClientProfileSumAggregateInputType = {
   loyaltyPoints?: true
   totalAppointments?: true
   totalSpent?: true
+  refBonus?: true
   prepaymentBalance?: true
   giftCardBalance?: true
+  giftCardCount?: true
+  freeServiceCount?: true
   referrals?: true
 }
 
@@ -135,12 +156,15 @@ export type ClientProfileMinAggregateInputType = {
   totalSpent?: true
   referralCode?: true
   referredBy?: true
+  refBonus?: true
   notes?: true
   birthday?: true
   address?: true
   allergies?: true
   prepaymentBalance?: true
   giftCardBalance?: true
+  giftCardCount?: true
+  freeServiceCount?: true
   referrals?: true
   createdAt?: true
   updatedAt?: true
@@ -155,12 +179,15 @@ export type ClientProfileMaxAggregateInputType = {
   totalSpent?: true
   referralCode?: true
   referredBy?: true
+  refBonus?: true
   notes?: true
   birthday?: true
   address?: true
   allergies?: true
   prepaymentBalance?: true
   giftCardBalance?: true
+  giftCardCount?: true
+  freeServiceCount?: true
   referrals?: true
   createdAt?: true
   updatedAt?: true
@@ -175,6 +202,7 @@ export type ClientProfileCountAggregateInputType = {
   totalSpent?: true
   referralCode?: true
   referredBy?: true
+  refBonus?: true
   preferences?: true
   notes?: true
   birthday?: true
@@ -183,6 +211,8 @@ export type ClientProfileCountAggregateInputType = {
   allergies?: true
   prepaymentBalance?: true
   giftCardBalance?: true
+  giftCardCount?: true
+  freeServiceCount?: true
   referrals?: true
   createdAt?: true
   updatedAt?: true
@@ -284,6 +314,7 @@ export type ClientProfileGroupByOutputType = {
   totalSpent: number
   referralCode: string
   referredBy: string | null
+  refBonus: number
   preferences: runtime.JsonValue | null
   notes: string | null
   birthday: Date | null
@@ -292,6 +323,8 @@ export type ClientProfileGroupByOutputType = {
   allergies: string | null
   prepaymentBalance: number
   giftCardBalance: number
+  giftCardCount: number
+  freeServiceCount: number
   referrals: number
   createdAt: Date
   updatedAt: Date
@@ -329,6 +362,7 @@ export type ClientProfileWhereInput = {
   totalSpent?: Prisma.FloatFilter<"ClientProfile"> | number
   referralCode?: Prisma.StringFilter<"ClientProfile"> | string
   referredBy?: Prisma.StringNullableFilter<"ClientProfile"> | string | null
+  refBonus?: Prisma.IntFilter<"ClientProfile"> | number
   preferences?: Prisma.JsonNullableFilter<"ClientProfile">
   notes?: Prisma.StringNullableFilter<"ClientProfile"> | string | null
   birthday?: Prisma.DateTimeNullableFilter<"ClientProfile"> | Date | string | null
@@ -337,6 +371,8 @@ export type ClientProfileWhereInput = {
   allergies?: Prisma.StringNullableFilter<"ClientProfile"> | string | null
   prepaymentBalance?: Prisma.FloatFilter<"ClientProfile"> | number
   giftCardBalance?: Prisma.FloatFilter<"ClientProfile"> | number
+  giftCardCount?: Prisma.FloatFilter<"ClientProfile"> | number
+  freeServiceCount?: Prisma.FloatFilter<"ClientProfile"> | number
   referrals?: Prisma.IntFilter<"ClientProfile"> | number
   createdAt?: Prisma.DateTimeFilter<"ClientProfile"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ClientProfile"> | Date | string
@@ -360,6 +396,7 @@ export type ClientProfileOrderByWithRelationInput = {
   totalSpent?: Prisma.SortOrder
   referralCode?: Prisma.SortOrder
   referredBy?: Prisma.SortOrderInput | Prisma.SortOrder
+  refBonus?: Prisma.SortOrder
   preferences?: Prisma.SortOrderInput | Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   birthday?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -368,6 +405,8 @@ export type ClientProfileOrderByWithRelationInput = {
   allergies?: Prisma.SortOrderInput | Prisma.SortOrder
   prepaymentBalance?: Prisma.SortOrder
   giftCardBalance?: Prisma.SortOrder
+  giftCardCount?: Prisma.SortOrder
+  freeServiceCount?: Prisma.SortOrder
   referrals?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -394,6 +433,7 @@ export type ClientProfileWhereUniqueInput = Prisma.AtLeast<{
   totalAppointments?: Prisma.IntFilter<"ClientProfile"> | number
   totalSpent?: Prisma.FloatFilter<"ClientProfile"> | number
   referredBy?: Prisma.StringNullableFilter<"ClientProfile"> | string | null
+  refBonus?: Prisma.IntFilter<"ClientProfile"> | number
   preferences?: Prisma.JsonNullableFilter<"ClientProfile">
   notes?: Prisma.StringNullableFilter<"ClientProfile"> | string | null
   birthday?: Prisma.DateTimeNullableFilter<"ClientProfile"> | Date | string | null
@@ -402,6 +442,8 @@ export type ClientProfileWhereUniqueInput = Prisma.AtLeast<{
   allergies?: Prisma.StringNullableFilter<"ClientProfile"> | string | null
   prepaymentBalance?: Prisma.FloatFilter<"ClientProfile"> | number
   giftCardBalance?: Prisma.FloatFilter<"ClientProfile"> | number
+  giftCardCount?: Prisma.FloatFilter<"ClientProfile"> | number
+  freeServiceCount?: Prisma.FloatFilter<"ClientProfile"> | number
   referrals?: Prisma.IntFilter<"ClientProfile"> | number
   createdAt?: Prisma.DateTimeFilter<"ClientProfile"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ClientProfile"> | Date | string
@@ -425,6 +467,7 @@ export type ClientProfileOrderByWithAggregationInput = {
   totalSpent?: Prisma.SortOrder
   referralCode?: Prisma.SortOrder
   referredBy?: Prisma.SortOrderInput | Prisma.SortOrder
+  refBonus?: Prisma.SortOrder
   preferences?: Prisma.SortOrderInput | Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   birthday?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -433,6 +476,8 @@ export type ClientProfileOrderByWithAggregationInput = {
   allergies?: Prisma.SortOrderInput | Prisma.SortOrder
   prepaymentBalance?: Prisma.SortOrder
   giftCardBalance?: Prisma.SortOrder
+  giftCardCount?: Prisma.SortOrder
+  freeServiceCount?: Prisma.SortOrder
   referrals?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -455,6 +500,7 @@ export type ClientProfileScalarWhereWithAggregatesInput = {
   totalSpent?: Prisma.FloatWithAggregatesFilter<"ClientProfile"> | number
   referralCode?: Prisma.StringWithAggregatesFilter<"ClientProfile"> | string
   referredBy?: Prisma.StringNullableWithAggregatesFilter<"ClientProfile"> | string | null
+  refBonus?: Prisma.IntWithAggregatesFilter<"ClientProfile"> | number
   preferences?: Prisma.JsonNullableWithAggregatesFilter<"ClientProfile">
   notes?: Prisma.StringNullableWithAggregatesFilter<"ClientProfile"> | string | null
   birthday?: Prisma.DateTimeNullableWithAggregatesFilter<"ClientProfile"> | Date | string | null
@@ -463,6 +509,8 @@ export type ClientProfileScalarWhereWithAggregatesInput = {
   allergies?: Prisma.StringNullableWithAggregatesFilter<"ClientProfile"> | string | null
   prepaymentBalance?: Prisma.FloatWithAggregatesFilter<"ClientProfile"> | number
   giftCardBalance?: Prisma.FloatWithAggregatesFilter<"ClientProfile"> | number
+  giftCardCount?: Prisma.FloatWithAggregatesFilter<"ClientProfile"> | number
+  freeServiceCount?: Prisma.FloatWithAggregatesFilter<"ClientProfile"> | number
   referrals?: Prisma.IntWithAggregatesFilter<"ClientProfile"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"ClientProfile"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"ClientProfile"> | Date | string
@@ -476,6 +524,7 @@ export type ClientProfileCreateInput = {
   totalSpent?: number
   referralCode: string
   referredBy?: string | null
+  refBonus?: number
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: string | null
   birthday?: Date | string | null
@@ -484,6 +533,8 @@ export type ClientProfileCreateInput = {
   allergies?: string | null
   prepaymentBalance?: number
   giftCardBalance?: number
+  giftCardCount?: number
+  freeServiceCount?: number
   referrals?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -507,6 +558,7 @@ export type ClientProfileUncheckedCreateInput = {
   totalSpent?: number
   referralCode: string
   referredBy?: string | null
+  refBonus?: number
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: string | null
   birthday?: Date | string | null
@@ -515,6 +567,8 @@ export type ClientProfileUncheckedCreateInput = {
   allergies?: string | null
   prepaymentBalance?: number
   giftCardBalance?: number
+  giftCardCount?: number
+  freeServiceCount?: number
   referrals?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -536,6 +590,7 @@ export type ClientProfileUpdateInput = {
   totalSpent?: Prisma.FloatFieldUpdateOperationsInput | number
   referralCode?: Prisma.StringFieldUpdateOperationsInput | string
   referredBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refBonus?: Prisma.IntFieldUpdateOperationsInput | number
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birthday?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -544,6 +599,8 @@ export type ClientProfileUpdateInput = {
   allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   prepaymentBalance?: Prisma.FloatFieldUpdateOperationsInput | number
   giftCardBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  giftCardCount?: Prisma.FloatFieldUpdateOperationsInput | number
+  freeServiceCount?: Prisma.FloatFieldUpdateOperationsInput | number
   referrals?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -567,6 +624,7 @@ export type ClientProfileUncheckedUpdateInput = {
   totalSpent?: Prisma.FloatFieldUpdateOperationsInput | number
   referralCode?: Prisma.StringFieldUpdateOperationsInput | string
   referredBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refBonus?: Prisma.IntFieldUpdateOperationsInput | number
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birthday?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -575,6 +633,8 @@ export type ClientProfileUncheckedUpdateInput = {
   allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   prepaymentBalance?: Prisma.FloatFieldUpdateOperationsInput | number
   giftCardBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  giftCardCount?: Prisma.FloatFieldUpdateOperationsInput | number
+  freeServiceCount?: Prisma.FloatFieldUpdateOperationsInput | number
   referrals?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -597,6 +657,7 @@ export type ClientProfileCreateManyInput = {
   totalSpent?: number
   referralCode: string
   referredBy?: string | null
+  refBonus?: number
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: string | null
   birthday?: Date | string | null
@@ -605,6 +666,8 @@ export type ClientProfileCreateManyInput = {
   allergies?: string | null
   prepaymentBalance?: number
   giftCardBalance?: number
+  giftCardCount?: number
+  freeServiceCount?: number
   referrals?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -618,6 +681,7 @@ export type ClientProfileUpdateManyMutationInput = {
   totalSpent?: Prisma.FloatFieldUpdateOperationsInput | number
   referralCode?: Prisma.StringFieldUpdateOperationsInput | string
   referredBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refBonus?: Prisma.IntFieldUpdateOperationsInput | number
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birthday?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -626,6 +690,8 @@ export type ClientProfileUpdateManyMutationInput = {
   allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   prepaymentBalance?: Prisma.FloatFieldUpdateOperationsInput | number
   giftCardBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  giftCardCount?: Prisma.FloatFieldUpdateOperationsInput | number
+  freeServiceCount?: Prisma.FloatFieldUpdateOperationsInput | number
   referrals?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -640,6 +706,7 @@ export type ClientProfileUncheckedUpdateManyInput = {
   totalSpent?: Prisma.FloatFieldUpdateOperationsInput | number
   referralCode?: Prisma.StringFieldUpdateOperationsInput | string
   referredBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refBonus?: Prisma.IntFieldUpdateOperationsInput | number
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birthday?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -648,6 +715,8 @@ export type ClientProfileUncheckedUpdateManyInput = {
   allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   prepaymentBalance?: Prisma.FloatFieldUpdateOperationsInput | number
   giftCardBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  giftCardCount?: Prisma.FloatFieldUpdateOperationsInput | number
+  freeServiceCount?: Prisma.FloatFieldUpdateOperationsInput | number
   referrals?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -675,6 +744,7 @@ export type ClientProfileCountOrderByAggregateInput = {
   totalSpent?: Prisma.SortOrder
   referralCode?: Prisma.SortOrder
   referredBy?: Prisma.SortOrder
+  refBonus?: Prisma.SortOrder
   preferences?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   birthday?: Prisma.SortOrder
@@ -683,6 +753,8 @@ export type ClientProfileCountOrderByAggregateInput = {
   allergies?: Prisma.SortOrder
   prepaymentBalance?: Prisma.SortOrder
   giftCardBalance?: Prisma.SortOrder
+  giftCardCount?: Prisma.SortOrder
+  freeServiceCount?: Prisma.SortOrder
   referrals?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -692,8 +764,11 @@ export type ClientProfileAvgOrderByAggregateInput = {
   loyaltyPoints?: Prisma.SortOrder
   totalAppointments?: Prisma.SortOrder
   totalSpent?: Prisma.SortOrder
+  refBonus?: Prisma.SortOrder
   prepaymentBalance?: Prisma.SortOrder
   giftCardBalance?: Prisma.SortOrder
+  giftCardCount?: Prisma.SortOrder
+  freeServiceCount?: Prisma.SortOrder
   referrals?: Prisma.SortOrder
 }
 
@@ -706,12 +781,15 @@ export type ClientProfileMaxOrderByAggregateInput = {
   totalSpent?: Prisma.SortOrder
   referralCode?: Prisma.SortOrder
   referredBy?: Prisma.SortOrder
+  refBonus?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   birthday?: Prisma.SortOrder
   address?: Prisma.SortOrder
   allergies?: Prisma.SortOrder
   prepaymentBalance?: Prisma.SortOrder
   giftCardBalance?: Prisma.SortOrder
+  giftCardCount?: Prisma.SortOrder
+  freeServiceCount?: Prisma.SortOrder
   referrals?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -726,12 +804,15 @@ export type ClientProfileMinOrderByAggregateInput = {
   totalSpent?: Prisma.SortOrder
   referralCode?: Prisma.SortOrder
   referredBy?: Prisma.SortOrder
+  refBonus?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   birthday?: Prisma.SortOrder
   address?: Prisma.SortOrder
   allergies?: Prisma.SortOrder
   prepaymentBalance?: Prisma.SortOrder
   giftCardBalance?: Prisma.SortOrder
+  giftCardCount?: Prisma.SortOrder
+  freeServiceCount?: Prisma.SortOrder
   referrals?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -741,8 +822,11 @@ export type ClientProfileSumOrderByAggregateInput = {
   loyaltyPoints?: Prisma.SortOrder
   totalAppointments?: Prisma.SortOrder
   totalSpent?: Prisma.SortOrder
+  refBonus?: Prisma.SortOrder
   prepaymentBalance?: Prisma.SortOrder
   giftCardBalance?: Prisma.SortOrder
+  giftCardCount?: Prisma.SortOrder
+  freeServiceCount?: Prisma.SortOrder
   referrals?: Prisma.SortOrder
 }
 
@@ -934,6 +1018,7 @@ export type ClientProfileCreateWithoutUserInput = {
   totalSpent?: number
   referralCode: string
   referredBy?: string | null
+  refBonus?: number
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: string | null
   birthday?: Date | string | null
@@ -942,6 +1027,8 @@ export type ClientProfileCreateWithoutUserInput = {
   allergies?: string | null
   prepaymentBalance?: number
   giftCardBalance?: number
+  giftCardCount?: number
+  freeServiceCount?: number
   referrals?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -963,6 +1050,7 @@ export type ClientProfileUncheckedCreateWithoutUserInput = {
   totalSpent?: number
   referralCode: string
   referredBy?: string | null
+  refBonus?: number
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: string | null
   birthday?: Date | string | null
@@ -971,6 +1059,8 @@ export type ClientProfileUncheckedCreateWithoutUserInput = {
   allergies?: string | null
   prepaymentBalance?: number
   giftCardBalance?: number
+  giftCardCount?: number
+  freeServiceCount?: number
   referrals?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1008,6 +1098,7 @@ export type ClientProfileUpdateWithoutUserInput = {
   totalSpent?: Prisma.FloatFieldUpdateOperationsInput | number
   referralCode?: Prisma.StringFieldUpdateOperationsInput | string
   referredBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refBonus?: Prisma.IntFieldUpdateOperationsInput | number
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birthday?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1016,6 +1107,8 @@ export type ClientProfileUpdateWithoutUserInput = {
   allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   prepaymentBalance?: Prisma.FloatFieldUpdateOperationsInput | number
   giftCardBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  giftCardCount?: Prisma.FloatFieldUpdateOperationsInput | number
+  freeServiceCount?: Prisma.FloatFieldUpdateOperationsInput | number
   referrals?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1037,6 +1130,7 @@ export type ClientProfileUncheckedUpdateWithoutUserInput = {
   totalSpent?: Prisma.FloatFieldUpdateOperationsInput | number
   referralCode?: Prisma.StringFieldUpdateOperationsInput | string
   referredBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refBonus?: Prisma.IntFieldUpdateOperationsInput | number
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birthday?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1045,6 +1139,8 @@ export type ClientProfileUncheckedUpdateWithoutUserInput = {
   allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   prepaymentBalance?: Prisma.FloatFieldUpdateOperationsInput | number
   giftCardBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  giftCardCount?: Prisma.FloatFieldUpdateOperationsInput | number
+  freeServiceCount?: Prisma.FloatFieldUpdateOperationsInput | number
   referrals?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1066,6 +1162,7 @@ export type ClientProfileCreateWithoutTasksInput = {
   totalSpent?: number
   referralCode: string
   referredBy?: string | null
+  refBonus?: number
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: string | null
   birthday?: Date | string | null
@@ -1074,6 +1171,8 @@ export type ClientProfileCreateWithoutTasksInput = {
   allergies?: string | null
   prepaymentBalance?: number
   giftCardBalance?: number
+  giftCardCount?: number
+  freeServiceCount?: number
   referrals?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1096,6 +1195,7 @@ export type ClientProfileUncheckedCreateWithoutTasksInput = {
   totalSpent?: number
   referralCode: string
   referredBy?: string | null
+  refBonus?: number
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: string | null
   birthday?: Date | string | null
@@ -1104,6 +1204,8 @@ export type ClientProfileUncheckedCreateWithoutTasksInput = {
   allergies?: string | null
   prepaymentBalance?: number
   giftCardBalance?: number
+  giftCardCount?: number
+  freeServiceCount?: number
   referrals?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1140,6 +1242,7 @@ export type ClientProfileUpdateWithoutTasksInput = {
   totalSpent?: Prisma.FloatFieldUpdateOperationsInput | number
   referralCode?: Prisma.StringFieldUpdateOperationsInput | string
   referredBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refBonus?: Prisma.IntFieldUpdateOperationsInput | number
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birthday?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1148,6 +1251,8 @@ export type ClientProfileUpdateWithoutTasksInput = {
   allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   prepaymentBalance?: Prisma.FloatFieldUpdateOperationsInput | number
   giftCardBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  giftCardCount?: Prisma.FloatFieldUpdateOperationsInput | number
+  freeServiceCount?: Prisma.FloatFieldUpdateOperationsInput | number
   referrals?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1170,6 +1275,7 @@ export type ClientProfileUncheckedUpdateWithoutTasksInput = {
   totalSpent?: Prisma.FloatFieldUpdateOperationsInput | number
   referralCode?: Prisma.StringFieldUpdateOperationsInput | string
   referredBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refBonus?: Prisma.IntFieldUpdateOperationsInput | number
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birthday?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1178,6 +1284,8 @@ export type ClientProfileUncheckedUpdateWithoutTasksInput = {
   allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   prepaymentBalance?: Prisma.FloatFieldUpdateOperationsInput | number
   giftCardBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  giftCardCount?: Prisma.FloatFieldUpdateOperationsInput | number
+  freeServiceCount?: Prisma.FloatFieldUpdateOperationsInput | number
   referrals?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1198,6 +1306,7 @@ export type ClientProfileCreateWithoutAppointmentsInput = {
   totalSpent?: number
   referralCode: string
   referredBy?: string | null
+  refBonus?: number
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: string | null
   birthday?: Date | string | null
@@ -1206,6 +1315,8 @@ export type ClientProfileCreateWithoutAppointmentsInput = {
   allergies?: string | null
   prepaymentBalance?: number
   giftCardBalance?: number
+  giftCardCount?: number
+  freeServiceCount?: number
   referrals?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1228,6 +1339,7 @@ export type ClientProfileUncheckedCreateWithoutAppointmentsInput = {
   totalSpent?: number
   referralCode: string
   referredBy?: string | null
+  refBonus?: number
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: string | null
   birthday?: Date | string | null
@@ -1236,6 +1348,8 @@ export type ClientProfileUncheckedCreateWithoutAppointmentsInput = {
   allergies?: string | null
   prepaymentBalance?: number
   giftCardBalance?: number
+  giftCardCount?: number
+  freeServiceCount?: number
   referrals?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1272,6 +1386,7 @@ export type ClientProfileUpdateWithoutAppointmentsInput = {
   totalSpent?: Prisma.FloatFieldUpdateOperationsInput | number
   referralCode?: Prisma.StringFieldUpdateOperationsInput | string
   referredBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refBonus?: Prisma.IntFieldUpdateOperationsInput | number
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birthday?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1280,6 +1395,8 @@ export type ClientProfileUpdateWithoutAppointmentsInput = {
   allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   prepaymentBalance?: Prisma.FloatFieldUpdateOperationsInput | number
   giftCardBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  giftCardCount?: Prisma.FloatFieldUpdateOperationsInput | number
+  freeServiceCount?: Prisma.FloatFieldUpdateOperationsInput | number
   referrals?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1302,6 +1419,7 @@ export type ClientProfileUncheckedUpdateWithoutAppointmentsInput = {
   totalSpent?: Prisma.FloatFieldUpdateOperationsInput | number
   referralCode?: Prisma.StringFieldUpdateOperationsInput | string
   referredBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refBonus?: Prisma.IntFieldUpdateOperationsInput | number
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birthday?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1310,6 +1428,8 @@ export type ClientProfileUncheckedUpdateWithoutAppointmentsInput = {
   allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   prepaymentBalance?: Prisma.FloatFieldUpdateOperationsInput | number
   giftCardBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  giftCardCount?: Prisma.FloatFieldUpdateOperationsInput | number
+  freeServiceCount?: Prisma.FloatFieldUpdateOperationsInput | number
   referrals?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1330,6 +1450,7 @@ export type ClientProfileCreateWithoutReviewsInput = {
   totalSpent?: number
   referralCode: string
   referredBy?: string | null
+  refBonus?: number
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: string | null
   birthday?: Date | string | null
@@ -1338,6 +1459,8 @@ export type ClientProfileCreateWithoutReviewsInput = {
   allergies?: string | null
   prepaymentBalance?: number
   giftCardBalance?: number
+  giftCardCount?: number
+  freeServiceCount?: number
   referrals?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1360,6 +1483,7 @@ export type ClientProfileUncheckedCreateWithoutReviewsInput = {
   totalSpent?: number
   referralCode: string
   referredBy?: string | null
+  refBonus?: number
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: string | null
   birthday?: Date | string | null
@@ -1368,6 +1492,8 @@ export type ClientProfileUncheckedCreateWithoutReviewsInput = {
   allergies?: string | null
   prepaymentBalance?: number
   giftCardBalance?: number
+  giftCardCount?: number
+  freeServiceCount?: number
   referrals?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1404,6 +1530,7 @@ export type ClientProfileUpdateWithoutReviewsInput = {
   totalSpent?: Prisma.FloatFieldUpdateOperationsInput | number
   referralCode?: Prisma.StringFieldUpdateOperationsInput | string
   referredBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refBonus?: Prisma.IntFieldUpdateOperationsInput | number
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birthday?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1412,6 +1539,8 @@ export type ClientProfileUpdateWithoutReviewsInput = {
   allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   prepaymentBalance?: Prisma.FloatFieldUpdateOperationsInput | number
   giftCardBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  giftCardCount?: Prisma.FloatFieldUpdateOperationsInput | number
+  freeServiceCount?: Prisma.FloatFieldUpdateOperationsInput | number
   referrals?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1434,6 +1563,7 @@ export type ClientProfileUncheckedUpdateWithoutReviewsInput = {
   totalSpent?: Prisma.FloatFieldUpdateOperationsInput | number
   referralCode?: Prisma.StringFieldUpdateOperationsInput | string
   referredBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refBonus?: Prisma.IntFieldUpdateOperationsInput | number
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birthday?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1442,6 +1572,8 @@ export type ClientProfileUncheckedUpdateWithoutReviewsInput = {
   allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   prepaymentBalance?: Prisma.FloatFieldUpdateOperationsInput | number
   giftCardBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  giftCardCount?: Prisma.FloatFieldUpdateOperationsInput | number
+  freeServiceCount?: Prisma.FloatFieldUpdateOperationsInput | number
   referrals?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1462,6 +1594,7 @@ export type ClientProfileCreateWithoutMembershipPurchasesInput = {
   totalSpent?: number
   referralCode: string
   referredBy?: string | null
+  refBonus?: number
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: string | null
   birthday?: Date | string | null
@@ -1470,6 +1603,8 @@ export type ClientProfileCreateWithoutMembershipPurchasesInput = {
   allergies?: string | null
   prepaymentBalance?: number
   giftCardBalance?: number
+  giftCardCount?: number
+  freeServiceCount?: number
   referrals?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1492,6 +1627,7 @@ export type ClientProfileUncheckedCreateWithoutMembershipPurchasesInput = {
   totalSpent?: number
   referralCode: string
   referredBy?: string | null
+  refBonus?: number
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: string | null
   birthday?: Date | string | null
@@ -1500,6 +1636,8 @@ export type ClientProfileUncheckedCreateWithoutMembershipPurchasesInput = {
   allergies?: string | null
   prepaymentBalance?: number
   giftCardBalance?: number
+  giftCardCount?: number
+  freeServiceCount?: number
   referrals?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1536,6 +1674,7 @@ export type ClientProfileUpdateWithoutMembershipPurchasesInput = {
   totalSpent?: Prisma.FloatFieldUpdateOperationsInput | number
   referralCode?: Prisma.StringFieldUpdateOperationsInput | string
   referredBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refBonus?: Prisma.IntFieldUpdateOperationsInput | number
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birthday?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1544,6 +1683,8 @@ export type ClientProfileUpdateWithoutMembershipPurchasesInput = {
   allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   prepaymentBalance?: Prisma.FloatFieldUpdateOperationsInput | number
   giftCardBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  giftCardCount?: Prisma.FloatFieldUpdateOperationsInput | number
+  freeServiceCount?: Prisma.FloatFieldUpdateOperationsInput | number
   referrals?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1566,6 +1707,7 @@ export type ClientProfileUncheckedUpdateWithoutMembershipPurchasesInput = {
   totalSpent?: Prisma.FloatFieldUpdateOperationsInput | number
   referralCode?: Prisma.StringFieldUpdateOperationsInput | string
   referredBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refBonus?: Prisma.IntFieldUpdateOperationsInput | number
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birthday?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1574,6 +1716,8 @@ export type ClientProfileUncheckedUpdateWithoutMembershipPurchasesInput = {
   allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   prepaymentBalance?: Prisma.FloatFieldUpdateOperationsInput | number
   giftCardBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  giftCardCount?: Prisma.FloatFieldUpdateOperationsInput | number
+  freeServiceCount?: Prisma.FloatFieldUpdateOperationsInput | number
   referrals?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1594,6 +1738,7 @@ export type ClientProfileCreateWithoutLoyaltyTransactionsInput = {
   totalSpent?: number
   referralCode: string
   referredBy?: string | null
+  refBonus?: number
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: string | null
   birthday?: Date | string | null
@@ -1602,6 +1747,8 @@ export type ClientProfileCreateWithoutLoyaltyTransactionsInput = {
   allergies?: string | null
   prepaymentBalance?: number
   giftCardBalance?: number
+  giftCardCount?: number
+  freeServiceCount?: number
   referrals?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1624,6 +1771,7 @@ export type ClientProfileUncheckedCreateWithoutLoyaltyTransactionsInput = {
   totalSpent?: number
   referralCode: string
   referredBy?: string | null
+  refBonus?: number
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: string | null
   birthday?: Date | string | null
@@ -1632,6 +1780,8 @@ export type ClientProfileUncheckedCreateWithoutLoyaltyTransactionsInput = {
   allergies?: string | null
   prepaymentBalance?: number
   giftCardBalance?: number
+  giftCardCount?: number
+  freeServiceCount?: number
   referrals?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1668,6 +1818,7 @@ export type ClientProfileUpdateWithoutLoyaltyTransactionsInput = {
   totalSpent?: Prisma.FloatFieldUpdateOperationsInput | number
   referralCode?: Prisma.StringFieldUpdateOperationsInput | string
   referredBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refBonus?: Prisma.IntFieldUpdateOperationsInput | number
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birthday?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1676,6 +1827,8 @@ export type ClientProfileUpdateWithoutLoyaltyTransactionsInput = {
   allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   prepaymentBalance?: Prisma.FloatFieldUpdateOperationsInput | number
   giftCardBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  giftCardCount?: Prisma.FloatFieldUpdateOperationsInput | number
+  freeServiceCount?: Prisma.FloatFieldUpdateOperationsInput | number
   referrals?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1698,6 +1851,7 @@ export type ClientProfileUncheckedUpdateWithoutLoyaltyTransactionsInput = {
   totalSpent?: Prisma.FloatFieldUpdateOperationsInput | number
   referralCode?: Prisma.StringFieldUpdateOperationsInput | string
   referredBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refBonus?: Prisma.IntFieldUpdateOperationsInput | number
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birthday?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1706,6 +1860,8 @@ export type ClientProfileUncheckedUpdateWithoutLoyaltyTransactionsInput = {
   allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   prepaymentBalance?: Prisma.FloatFieldUpdateOperationsInput | number
   giftCardBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  giftCardCount?: Prisma.FloatFieldUpdateOperationsInput | number
+  freeServiceCount?: Prisma.FloatFieldUpdateOperationsInput | number
   referrals?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1726,6 +1882,7 @@ export type ClientProfileCreateWithoutReferralsMadeInput = {
   totalSpent?: number
   referralCode: string
   referredBy?: string | null
+  refBonus?: number
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: string | null
   birthday?: Date | string | null
@@ -1734,6 +1891,8 @@ export type ClientProfileCreateWithoutReferralsMadeInput = {
   allergies?: string | null
   prepaymentBalance?: number
   giftCardBalance?: number
+  giftCardCount?: number
+  freeServiceCount?: number
   referrals?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1756,6 +1915,7 @@ export type ClientProfileUncheckedCreateWithoutReferralsMadeInput = {
   totalSpent?: number
   referralCode: string
   referredBy?: string | null
+  refBonus?: number
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: string | null
   birthday?: Date | string | null
@@ -1764,6 +1924,8 @@ export type ClientProfileUncheckedCreateWithoutReferralsMadeInput = {
   allergies?: string | null
   prepaymentBalance?: number
   giftCardBalance?: number
+  giftCardCount?: number
+  freeServiceCount?: number
   referrals?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1789,6 +1951,7 @@ export type ClientProfileCreateWithoutReferralsReceivedInput = {
   totalSpent?: number
   referralCode: string
   referredBy?: string | null
+  refBonus?: number
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: string | null
   birthday?: Date | string | null
@@ -1797,6 +1960,8 @@ export type ClientProfileCreateWithoutReferralsReceivedInput = {
   allergies?: string | null
   prepaymentBalance?: number
   giftCardBalance?: number
+  giftCardCount?: number
+  freeServiceCount?: number
   referrals?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1819,6 +1984,7 @@ export type ClientProfileUncheckedCreateWithoutReferralsReceivedInput = {
   totalSpent?: number
   referralCode: string
   referredBy?: string | null
+  refBonus?: number
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: string | null
   birthday?: Date | string | null
@@ -1827,6 +1993,8 @@ export type ClientProfileUncheckedCreateWithoutReferralsReceivedInput = {
   allergies?: string | null
   prepaymentBalance?: number
   giftCardBalance?: number
+  giftCardCount?: number
+  freeServiceCount?: number
   referrals?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1863,6 +2031,7 @@ export type ClientProfileUpdateWithoutReferralsMadeInput = {
   totalSpent?: Prisma.FloatFieldUpdateOperationsInput | number
   referralCode?: Prisma.StringFieldUpdateOperationsInput | string
   referredBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refBonus?: Prisma.IntFieldUpdateOperationsInput | number
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birthday?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1871,6 +2040,8 @@ export type ClientProfileUpdateWithoutReferralsMadeInput = {
   allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   prepaymentBalance?: Prisma.FloatFieldUpdateOperationsInput | number
   giftCardBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  giftCardCount?: Prisma.FloatFieldUpdateOperationsInput | number
+  freeServiceCount?: Prisma.FloatFieldUpdateOperationsInput | number
   referrals?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1893,6 +2064,7 @@ export type ClientProfileUncheckedUpdateWithoutReferralsMadeInput = {
   totalSpent?: Prisma.FloatFieldUpdateOperationsInput | number
   referralCode?: Prisma.StringFieldUpdateOperationsInput | string
   referredBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refBonus?: Prisma.IntFieldUpdateOperationsInput | number
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birthday?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1901,6 +2073,8 @@ export type ClientProfileUncheckedUpdateWithoutReferralsMadeInput = {
   allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   prepaymentBalance?: Prisma.FloatFieldUpdateOperationsInput | number
   giftCardBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  giftCardCount?: Prisma.FloatFieldUpdateOperationsInput | number
+  freeServiceCount?: Prisma.FloatFieldUpdateOperationsInput | number
   referrals?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1932,6 +2106,7 @@ export type ClientProfileUpdateWithoutReferralsReceivedInput = {
   totalSpent?: Prisma.FloatFieldUpdateOperationsInput | number
   referralCode?: Prisma.StringFieldUpdateOperationsInput | string
   referredBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refBonus?: Prisma.IntFieldUpdateOperationsInput | number
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birthday?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1940,6 +2115,8 @@ export type ClientProfileUpdateWithoutReferralsReceivedInput = {
   allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   prepaymentBalance?: Prisma.FloatFieldUpdateOperationsInput | number
   giftCardBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  giftCardCount?: Prisma.FloatFieldUpdateOperationsInput | number
+  freeServiceCount?: Prisma.FloatFieldUpdateOperationsInput | number
   referrals?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1962,6 +2139,7 @@ export type ClientProfileUncheckedUpdateWithoutReferralsReceivedInput = {
   totalSpent?: Prisma.FloatFieldUpdateOperationsInput | number
   referralCode?: Prisma.StringFieldUpdateOperationsInput | string
   referredBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refBonus?: Prisma.IntFieldUpdateOperationsInput | number
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birthday?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1970,6 +2148,8 @@ export type ClientProfileUncheckedUpdateWithoutReferralsReceivedInput = {
   allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   prepaymentBalance?: Prisma.FloatFieldUpdateOperationsInput | number
   giftCardBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  giftCardCount?: Prisma.FloatFieldUpdateOperationsInput | number
+  freeServiceCount?: Prisma.FloatFieldUpdateOperationsInput | number
   referrals?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1990,6 +2170,7 @@ export type ClientProfileCreateWithoutSalesInput = {
   totalSpent?: number
   referralCode: string
   referredBy?: string | null
+  refBonus?: number
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: string | null
   birthday?: Date | string | null
@@ -1998,6 +2179,8 @@ export type ClientProfileCreateWithoutSalesInput = {
   allergies?: string | null
   prepaymentBalance?: number
   giftCardBalance?: number
+  giftCardCount?: number
+  freeServiceCount?: number
   referrals?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2020,6 +2203,7 @@ export type ClientProfileUncheckedCreateWithoutSalesInput = {
   totalSpent?: number
   referralCode: string
   referredBy?: string | null
+  refBonus?: number
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: string | null
   birthday?: Date | string | null
@@ -2028,6 +2212,8 @@ export type ClientProfileUncheckedCreateWithoutSalesInput = {
   allergies?: string | null
   prepaymentBalance?: number
   giftCardBalance?: number
+  giftCardCount?: number
+  freeServiceCount?: number
   referrals?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2064,6 +2250,7 @@ export type ClientProfileUpdateWithoutSalesInput = {
   totalSpent?: Prisma.FloatFieldUpdateOperationsInput | number
   referralCode?: Prisma.StringFieldUpdateOperationsInput | string
   referredBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refBonus?: Prisma.IntFieldUpdateOperationsInput | number
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birthday?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2072,6 +2259,8 @@ export type ClientProfileUpdateWithoutSalesInput = {
   allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   prepaymentBalance?: Prisma.FloatFieldUpdateOperationsInput | number
   giftCardBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  giftCardCount?: Prisma.FloatFieldUpdateOperationsInput | number
+  freeServiceCount?: Prisma.FloatFieldUpdateOperationsInput | number
   referrals?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2094,6 +2283,7 @@ export type ClientProfileUncheckedUpdateWithoutSalesInput = {
   totalSpent?: Prisma.FloatFieldUpdateOperationsInput | number
   referralCode?: Prisma.StringFieldUpdateOperationsInput | string
   referredBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refBonus?: Prisma.IntFieldUpdateOperationsInput | number
   preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birthday?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2102,6 +2292,8 @@ export type ClientProfileUncheckedUpdateWithoutSalesInput = {
   allergies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   prepaymentBalance?: Prisma.FloatFieldUpdateOperationsInput | number
   giftCardBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  giftCardCount?: Prisma.FloatFieldUpdateOperationsInput | number
+  freeServiceCount?: Prisma.FloatFieldUpdateOperationsInput | number
   referrals?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2217,6 +2409,7 @@ export type ClientProfileSelect<ExtArgs extends runtime.Types.Extensions.Interna
   totalSpent?: boolean
   referralCode?: boolean
   referredBy?: boolean
+  refBonus?: boolean
   preferences?: boolean
   notes?: boolean
   birthday?: boolean
@@ -2225,6 +2418,8 @@ export type ClientProfileSelect<ExtArgs extends runtime.Types.Extensions.Interna
   allergies?: boolean
   prepaymentBalance?: boolean
   giftCardBalance?: boolean
+  giftCardCount?: boolean
+  freeServiceCount?: boolean
   referrals?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -2249,6 +2444,7 @@ export type ClientProfileSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   totalSpent?: boolean
   referralCode?: boolean
   referredBy?: boolean
+  refBonus?: boolean
   preferences?: boolean
   notes?: boolean
   birthday?: boolean
@@ -2257,6 +2453,8 @@ export type ClientProfileSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   allergies?: boolean
   prepaymentBalance?: boolean
   giftCardBalance?: boolean
+  giftCardCount?: boolean
+  freeServiceCount?: boolean
   referrals?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -2272,6 +2470,7 @@ export type ClientProfileSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   totalSpent?: boolean
   referralCode?: boolean
   referredBy?: boolean
+  refBonus?: boolean
   preferences?: boolean
   notes?: boolean
   birthday?: boolean
@@ -2280,6 +2479,8 @@ export type ClientProfileSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   allergies?: boolean
   prepaymentBalance?: boolean
   giftCardBalance?: boolean
+  giftCardCount?: boolean
+  freeServiceCount?: boolean
   referrals?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -2295,6 +2496,7 @@ export type ClientProfileSelectScalar = {
   totalSpent?: boolean
   referralCode?: boolean
   referredBy?: boolean
+  refBonus?: boolean
   preferences?: boolean
   notes?: boolean
   birthday?: boolean
@@ -2303,12 +2505,14 @@ export type ClientProfileSelectScalar = {
   allergies?: boolean
   prepaymentBalance?: boolean
   giftCardBalance?: boolean
+  giftCardCount?: boolean
+  freeServiceCount?: boolean
   referrals?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ClientProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "tier" | "loyaltyPoints" | "totalAppointments" | "totalSpent" | "referralCode" | "referredBy" | "preferences" | "notes" | "birthday" | "address" | "favoriteServices" | "allergies" | "prepaymentBalance" | "giftCardBalance" | "referrals" | "createdAt" | "updatedAt", ExtArgs["result"]["clientProfile"]>
+export type ClientProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "tier" | "loyaltyPoints" | "totalAppointments" | "totalSpent" | "referralCode" | "referredBy" | "refBonus" | "preferences" | "notes" | "birthday" | "address" | "favoriteServices" | "allergies" | "prepaymentBalance" | "giftCardBalance" | "giftCardCount" | "freeServiceCount" | "referrals" | "createdAt" | "updatedAt", ExtArgs["result"]["clientProfile"]>
 export type ClientProfileInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   appointments?: boolean | Prisma.ClientProfile$appointmentsArgs<ExtArgs>
@@ -2350,6 +2554,7 @@ export type $ClientProfilePayload<ExtArgs extends runtime.Types.Extensions.Inter
     totalSpent: number
     referralCode: string
     referredBy: string | null
+    refBonus: number
     preferences: runtime.JsonValue | null
     notes: string | null
     birthday: Date | null
@@ -2358,6 +2563,8 @@ export type $ClientProfilePayload<ExtArgs extends runtime.Types.Extensions.Inter
     allergies: string | null
     prepaymentBalance: number
     giftCardBalance: number
+    giftCardCount: number
+    freeServiceCount: number
     referrals: number
     createdAt: Date
     updatedAt: Date
@@ -2801,6 +3008,7 @@ export interface ClientProfileFieldRefs {
   readonly totalSpent: Prisma.FieldRef<"ClientProfile", 'Float'>
   readonly referralCode: Prisma.FieldRef<"ClientProfile", 'String'>
   readonly referredBy: Prisma.FieldRef<"ClientProfile", 'String'>
+  readonly refBonus: Prisma.FieldRef<"ClientProfile", 'Int'>
   readonly preferences: Prisma.FieldRef<"ClientProfile", 'Json'>
   readonly notes: Prisma.FieldRef<"ClientProfile", 'String'>
   readonly birthday: Prisma.FieldRef<"ClientProfile", 'DateTime'>
@@ -2809,6 +3017,8 @@ export interface ClientProfileFieldRefs {
   readonly allergies: Prisma.FieldRef<"ClientProfile", 'String'>
   readonly prepaymentBalance: Prisma.FieldRef<"ClientProfile", 'Float'>
   readonly giftCardBalance: Prisma.FieldRef<"ClientProfile", 'Float'>
+  readonly giftCardCount: Prisma.FieldRef<"ClientProfile", 'Float'>
+  readonly freeServiceCount: Prisma.FieldRef<"ClientProfile", 'Float'>
   readonly referrals: Prisma.FieldRef<"ClientProfile", 'Int'>
   readonly createdAt: Prisma.FieldRef<"ClientProfile", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"ClientProfile", 'DateTime'>

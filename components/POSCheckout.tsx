@@ -138,7 +138,7 @@ export default function POSCheckout({ showMock }: { showMock?: boolean }) {
                   className="h-auto flex flex-col items-start p-4 rounded-xl border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-800/30 hover:bg-pink-50 dark:hover:bg-pink-900/20 hover:border-pink-300 dark:hover:border-pink-500 transition-all group"
                 >
                   <p className="text-lg font-medium text-gray-700 dark:text-gray-300 mb-2 group-hover:text-pink-600 dark:group-hover:text-pink-400">{service.name}</p>
-                  <p className="text-lg  text-pink-600 dark:text-pink-400">{(service.price).toLocaleString()} Fc</p>
+                  <p className="text-lg  text-pink-600 dark:text-pink-400">{(service.price).toLocaleString()} CDF</p>
                 </Button>
               ))}
             </div>
@@ -159,7 +159,7 @@ export default function POSCheckout({ showMock }: { showMock?: boolean }) {
                   className="h-auto flex flex-col items-start p-4 rounded-xl border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-800/30 hover:bg-purple-50 dark:hover:bg-purple-900/20 hover:border-purple-300 dark:hover:border-purple-500 transition-all group"
                 >
                   <p className="text-lg font-medium text-gray-700 dark:text-gray-300 mb-2 group-hover:text-purple-600 dark:group-hover:text-purple-400">{product.name}</p>
-                  <p className="text-lg  text-purple-600 dark:text-purple-400">{(product.price).toLocaleString()} Fc</p>
+                  <p className="text-lg  text-purple-600 dark:text-purple-400">{(product.price).toLocaleString()} CDF</p>
                 </Button>
               ))}
             </div>
@@ -204,7 +204,7 @@ export default function POSCheckout({ showMock }: { showMock?: boolean }) {
                       <div className="flex-1">
                         <p className=" text-gray-900 dark:text-gray-100 mb-1">{item.name}</p>
                         <p className="text-base font-medium text-gray-500 dark:text-gray-400">
-                          {item.price.toLocaleString()} Fc × {item.quantity}
+                          {item.price.toLocaleString()} CDF × {item.quantity}
                         </p>
                       </div>
                       <Button
@@ -239,7 +239,7 @@ export default function POSCheckout({ showMock }: { showMock?: boolean }) {
                         </Button>
                       </div>
                       <p className="font-black text-gray-900 dark:text-gray-100">
-                        {(item.price * item.quantity).toLocaleString()} Fc
+                        {(item.price * item.quantity).toLocaleString()} CDF
                       </p>
                     </div>
                   </div>
@@ -269,17 +269,17 @@ export default function POSCheckout({ showMock }: { showMock?: boolean }) {
             <div className="space-y-3 mb-8 bg-gray-50 dark:bg-gray-800/50 p-5 rounded-2xl border border-gray-100 dark:border-gray-800">
               <div className="flex justify-between text-lg font-medium text-gray-600 dark:text-gray-400">
                 <span>Sous-total:</span>
-                <span className="text-gray-900 dark:text-gray-100">{subtotal.toLocaleString()} Fc</span>
+                <span className="text-gray-900 dark:text-gray-100">{subtotal.toLocaleString()} CDF</span>
               </div>
               {discountPercent > 0 && (
                 <div className="flex justify-between text-lg  text-green-600 dark:text-green-400">
                   <span>Remise ({discountPercent}%):</span>
-                  <span>- {discountAmount.toLocaleString()} Fc</span>
+                  <span>- {discountAmount.toLocaleString()} CDF</span>
                 </div>
               )}
               <div className="pt-3 border-t border-gray-200 dark:border-gray-700 flex justify-between items-center">
                 <span className="text-lg  text-gray-900 dark:text-gray-100">Total:</span>
-                <span className="text-2xl font-black text-pink-600 dark:text-pink-400">{total.toLocaleString()} Fc</span>
+                <span className="text-2xl font-black text-pink-600 dark:text-pink-400">{total.toLocaleString()} CDF</span>
               </div>
             </div>
 
@@ -376,17 +376,17 @@ export default function POSCheckout({ showMock }: { showMock?: boolean }) {
               <div className="space-y-4 mb-8 bg-white/50 dark:bg-black/10 p-5 rounded-2xl border border-white/50 dark:border-white/5">
                 <div className="flex justify-between text-lg font-medium text-gray-600 dark:text-gray-400">
                   <span>Total à payer:</span>
-                  <span className="text-gray-900 dark:text-gray-100">{total.toLocaleString()} Fc</span>
+                  <span className="text-gray-900 dark:text-gray-100">{total.toLocaleString()} CDF</span>
                 </div>
                 <div className="flex justify-between text-lg font-medium text-gray-600 dark:text-gray-400">
                   <span>Total payé:</span>
-                  <span className="text-gray-900 dark:text-gray-100">{totalPaid.toLocaleString()} Fc</span>
+                  <span className="text-gray-900 dark:text-gray-100">{totalPaid.toLocaleString()} CDF</span>
                 </div>
                 <Separator className="dark:bg-gray-800" />
                 <div className={`flex justify-between items-center ${remaining > 0 ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-400'
                   }`}>
                   <span className="text-lg  uppercase tracking-wider">{remaining > 0 ? 'Reste à payer:' : 'Monnaie:'}</span>
-                  <span className="text-2xl font-black">{Math.abs(remaining).toLocaleString()} Fc</span>
+                  <span className="text-2xl font-black">{Math.abs(remaining).toLocaleString()} CDF</span>
                 </div>
               </div>
 
@@ -410,11 +410,11 @@ export default function POSCheckout({ showMock }: { showMock?: boolean }) {
         </Card>
         <Card className="bg-linear-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-0 p-6 rounded-2xl">
           <p className="text-lg text-gray-600 dark:text-gray-400 mb-1">Revenus Journée</p>
-          <p className="text-2xl font-black text-gray-900 dark:text-gray-100">1 250 000 Fc</p>
+          <p className="text-2xl font-black text-gray-900 dark:text-gray-100">1 250 000 CDF</p>
         </Card>
         <Card className="bg-linear-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border-0 p-6 rounded-2xl">
           <p className="text-lg text-gray-600 dark:text-gray-400 mb-1">Ticket Moyen</p>
-          <p className="text-2xl font-black text-gray-900 dark:text-gray-100">39 063 Fc</p>
+          <p className="text-2xl font-black text-gray-900 dark:text-gray-100">39 063 CDF</p>
         </Card>
         <Card className="bg-linear-to-br from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 border-0 p-6 rounded-2xl flex items-center">
           <Button className="w-full bg-linear-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-full py-6  shadow-lg shadow-amber-500/20 transition-all">

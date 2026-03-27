@@ -2,6 +2,22 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { workerApiFunctions } from '../api/workerApiFunctions';
 
+export function useWorkerProfiles() {
+
+  const {
+    data: workers,
+    isLoading
+  } = useQuery({
+    queryKey:['workers-profile'],
+    queryFn: () => workerApiFunctions.getWorkerProfiles()
+  })
+
+  return {
+    workers,
+    isLoading
+  }
+}
+
 export function useWorkerProfile(userId: string) {
   const queryClient = useQueryClient();
 

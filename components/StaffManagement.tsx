@@ -396,7 +396,7 @@ export default function StaffManagement() {
                                   <div className="space-y-1 text-base sm:text-lg text-gray-600 dark:text-gray-400 mt-1">
                                     <div className="flex justify-between">
                                       <span>Revenu Généré:</span>
-                                      <span>{selectedPeriodCommission.totalRevenue.toLocaleString()} Fc</span>
+                                      <span>{selectedPeriodCommission.totalRevenue.toLocaleString()} CDF</span>
                                     </div>
                                     <div className="flex justify-between">
                                       <span>Nb. RDV:</span>
@@ -411,7 +411,7 @@ export default function StaffManagement() {
                                 <div className="flex flex-col items-end gap-2">
                                   <div className="text-right">
                                     <p className="text-lg text-gray-600 dark:text-gray-400">Commission</p>
-                                    <p className="text-xl font-bold text-green-600 dark:text-green-400">{selectedPeriodCommission.commissionAmount.toLocaleString()} Fc</p>
+                                    <p className="text-xl font-bold text-green-600 dark:text-green-400">{selectedPeriodCommission.commissionAmount.toLocaleString()} CDF</p>
                                   </div>
                                   {user?.role === 'admin' && (
                                     <PayrollModal
@@ -434,22 +434,22 @@ export default function StaffManagement() {
                               <div className="pt-4 border-t border-amber-200 dark:border-amber-800 text-base text-gray-600 dark:text-gray-400">
                                 <div className="grid grid-cols-2 gap-2">
                                   <div>Total Revenu:</div>
-                                  <div className="text-right">{selectedPeriodCommission.totalRevenue.toLocaleString()} Fc</div>
+                                  <div className="text-right">{selectedPeriodCommission.totalRevenue.toLocaleString()} CDF</div>
 
                                   <div className="pl-2">- Commission ({selectedPeriodCommission.commissionRate}%):</div>
-                                  <div className="text-right pl-2">-{selectedPeriodCommission.commissionAmount.toLocaleString()} Fc</div>
+                                  <div className="text-right pl-2">-{selectedPeriodCommission.commissionAmount.toLocaleString()} CDF</div>
 
                                   <div className="pt-2">Business Revenue (Brut):</div>
-                                  <div className="text-right pt-2">{(selectedPeriodCommission.totalRevenue - selectedPeriodCommission.commissionAmount).toLocaleString()} Fc</div>
+                                  <div className="text-right pt-2">{(selectedPeriodCommission.totalRevenue - selectedPeriodCommission.commissionAmount).toLocaleString()} CDF</div>
 
                                   <div className="pl-2 pt-1">- Matériel (5%):</div>
-                                  <div className="text-right pl-2 pt-1">-{(selectedPeriodCommission.totalRevenue - selectedPeriodCommission.commissionAmount) * 0.05} Fc</div>
+                                  <div className="text-right pl-2 pt-1">-{(selectedPeriodCommission.totalRevenue - selectedPeriodCommission.commissionAmount) * 0.05} CDF</div>
 
                                   <div className="pl-2">- Coûts Op. (5%):</div>
-                                  <div className="text-right pl-2">-{(selectedPeriodCommission.totalRevenue - selectedPeriodCommission.commissionAmount) * 0.05} Fc</div>
+                                  <div className="text-right pl-2">-{(selectedPeriodCommission.totalRevenue - selectedPeriodCommission.commissionAmount) * 0.05} CDF</div>
 
                                   <div className="pt-2 font-medium">Business Revenue (Net):</div>
-                                  <div className="text-right pt-2 font-medium">{(selectedPeriodCommission.totalRevenue - selectedPeriodCommission.commissionAmount - ((selectedPeriodCommission.totalRevenue - selectedPeriodCommission.commissionAmount) * 0.1)).toLocaleString()} Fc</div>
+                                  <div className="text-right pt-2 font-medium">{(selectedPeriodCommission.totalRevenue - selectedPeriodCommission.commissionAmount - ((selectedPeriodCommission.totalRevenue - selectedPeriodCommission.commissionAmount) * 0.1)).toLocaleString()} CDF</div>
                                 </div>
                               </div>
                             </>
@@ -471,11 +471,11 @@ export default function StaffManagement() {
                                     </div>
                                     <div className="flex justify-between">
                                       <span>Revenu Généré:</span>
-                                      <span>{selectedPeriodCommission.totalRevenue.toLocaleString()} Fc</span>
+                                      <span>{selectedPeriodCommission.totalRevenue.toLocaleString()} CDF</span>
                                     </div>
                                     <div className="flex justify-between">
                                       <span>Commission Payée:</span>
-                                      <span className="text-green-600 dark:text-green-400">{selectedPeriodCommission.commissionAmount.toLocaleString()} Fc</span>
+                                      <span className="text-green-600 dark:text-green-400">{selectedPeriodCommission.commissionAmount.toLocaleString()} CDF</span>
                                     </div>
                                   </div>
                                 </div>
@@ -490,22 +490,22 @@ export default function StaffManagement() {
                               <div className="pt-4 border-t border-green-200 dark:border-green-800 text-base text-gray-600 dark:text-gray-400">
                                 <div className="grid grid-cols-2 gap-2">
                                   <div>Total Revenu:</div>
-                                  <div className="text-right">{selectedPeriodCommission.totalRevenue.toLocaleString()} Fc</div>
+                                  <div className="text-right">{selectedPeriodCommission.totalRevenue.toLocaleString()} CDF</div>
 
                                   <div className="pl-2">- Commission ({selectedPeriodCommission.commissionRate}%):</div>
-                                  <div className="text-right pl-2">-{selectedPeriodCommission.commissionAmount.toLocaleString()} Fc</div>
+                                  <div className="text-right pl-2">-{selectedPeriodCommission.commissionAmount.toLocaleString()} CDF</div>
 
                                   <div className="pt-2">Business Revenue (Brut):</div>
-                                  <div className="text-right pt-2">{(selectedPeriodCommission.totalRevenue - selectedPeriodCommission.commissionAmount).toLocaleString()} Fc</div>
+                                  <div className="text-right pt-2">{(selectedPeriodCommission.totalRevenue - selectedPeriodCommission.commissionAmount).toLocaleString()} CDF</div>
 
                                   <div className="pl-2 pt-1">- Matériel (5%):</div>
-                                  <div className="text-right pl-2 pt-1">-{(selectedPeriodCommission.totalRevenue - selectedPeriodCommission.commissionAmount) * 0.05} Fc</div>
+                                  <div className="text-right pl-2 pt-1">-{(selectedPeriodCommission.totalRevenue - selectedPeriodCommission.commissionAmount) * 0.05} CDF</div>
 
                                   <div className="pl-2">- Coûts Op. (5%):</div>
-                                  <div className="text-right pl-2">-{(selectedPeriodCommission.totalRevenue - selectedPeriodCommission.commissionAmount) * 0.05} Fc</div>
+                                  <div className="text-right pl-2">-{(selectedPeriodCommission.totalRevenue - selectedPeriodCommission.commissionAmount) * 0.05} CDF</div>
 
                                   <div className="pt-2 font-medium">Business Revenue (Net):</div>
-                                  <div className="text-right pt-2 font-medium">{(selectedPeriodCommission.totalRevenue - selectedPeriodCommission.commissionAmount - ((selectedPeriodCommission.totalRevenue - selectedPeriodCommission.commissionAmount) * 0.1)).toLocaleString()} Fc</div>
+                                  <div className="text-right pt-2 font-medium">{(selectedPeriodCommission.totalRevenue - selectedPeriodCommission.commissionAmount - ((selectedPeriodCommission.totalRevenue - selectedPeriodCommission.commissionAmount) * 0.1)).toLocaleString()} CDF</div>
                                 </div>
                               </div>
                             </>
@@ -571,7 +571,7 @@ export default function StaffManagement() {
                                     <div className="space-y-1 text-base sm:text-lg text-gray-600 dark:text-gray-400 mt-1">
                                       <div className="flex justify-between">
                                         <span>Revenu Généré:</span>
-                                        <span>{commission.totalRevenue.toLocaleString()} Fc</span>
+                                        <span>{commission.totalRevenue.toLocaleString()} CDF</span>
                                       </div>
                                       <div className="flex justify-between">
                                         <span>Nb. RDV:</span>
@@ -586,7 +586,7 @@ export default function StaffManagement() {
                                   <div className="flex flex-col items-end gap-2">
                                     <div className="text-right">
                                       <p className="text-lg text-gray-600 dark:text-gray-400">Commission</p>
-                                      <p className="text-xl font-bold text-green-600 dark:text-green-400">{commission.commissionAmount.toLocaleString()} Fc</p>
+                                      <p className="text-xl font-bold text-green-600 dark:text-green-400">{commission.commissionAmount.toLocaleString()} CDF</p>
                                     </div>
                                     {user?.role === 'admin' && (
                                       <PayrollModal
@@ -631,11 +631,11 @@ export default function StaffManagement() {
                                       </div>
                                       <div className="flex justify-between">
                                         <span>Revenu Généré:</span>
-                                        <span>{commission.totalRevenue.toLocaleString()} Fc</span>
+                                        <span>{commission.totalRevenue.toLocaleString()} CDF</span>
                                       </div>
                                       <div className="flex justify-between">
                                         <span>Commission Payée:</span>
-                                        <span className="text-green-600 dark:text-green-400">{commission.commissionAmount.toLocaleString()} Fc</span>
+                                        <span className="text-green-600 dark:text-green-400">{commission.commissionAmount.toLocaleString()} CDF</span>
                                       </div>
                                     </div>
                                   </div>

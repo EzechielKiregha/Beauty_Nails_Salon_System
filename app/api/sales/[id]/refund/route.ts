@@ -59,7 +59,7 @@ export async function POST(
         await tx.clientProfile.update({
           where: { id: sale.clientId },
           data: {
-            loyaltyPoints: { increment: sale.loyaltyPointsUsed },
+            // loyaltyPoints: { increment: sale.loyaltyPointsUsed },
           },
         });
 

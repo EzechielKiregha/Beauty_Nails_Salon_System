@@ -2963,6 +2963,7 @@ export const ClientProfileScalarFieldEnum = {
   totalSpent: 'totalSpent',
   referralCode: 'referralCode',
   referredBy: 'referredBy',
+  refBonus: 'refBonus',
   preferences: 'preferences',
   notes: 'notes',
   birthday: 'birthday',
@@ -2971,6 +2972,8 @@ export const ClientProfileScalarFieldEnum = {
   allergies: 'allergies',
   prepaymentBalance: 'prepaymentBalance',
   giftCardBalance: 'giftCardBalance',
+  giftCardCount: 'giftCardCount',
+  freeServiceCount: 'freeServiceCount',
   referrals: 'referrals',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

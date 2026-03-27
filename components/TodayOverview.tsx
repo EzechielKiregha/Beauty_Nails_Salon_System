@@ -59,7 +59,7 @@ export default function TodayOverview() {
   if (lowStock.length > 0) urgentAlerts.push({ type: 'stock', message: `${lowStock.length} article(s) avec stock bas`, priority: 'high', icon: Package });
 
   const popularServices = (servicePerformance && servicePerformance.services && servicePerformance.services.length > 0)
-    ? servicePerformance.services.slice(0, 4).map((s: any) => ({ name: s.name, count: s.count || 0, revenue: `${(s.revenue || 0).toLocaleString()} Fc` }))
+    ? servicePerformance.services.slice(0, 4).map((s: any) => ({ name: s.name, count: s.count || 0, revenue: `${(s.revenue || 0).toLocaleString()} CDF` }))
     : [];
 
   const todayStats = {
@@ -94,7 +94,7 @@ export default function TodayOverview() {
           <div className="flex items-center justify-between">
             <div className="min-w-0">
               <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400 mb-1 font-medium">Revenus du Jour</p>
-              <p className="text-xl sm:text-2xl text-gray-900 dark:text-gray-100 font-black">{todayStats.dailyRevenue.toLocaleString()} Fc</p>
+              <p className="text-xl sm:text-2xl text-gray-900 dark:text-gray-100 font-black">{todayStats.dailyRevenue.toLocaleString()} CDF</p>
               <p className="text-[10px] sm:text-base text-green-600 dark:text-green-400 mt-1 ">n/a% vs hier</p>
             </div>
             <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-linear-to-br from-green-400 to-emerald-400 flex items-center justify-center shrink-0 shadow-lg shadow-green-500/30">

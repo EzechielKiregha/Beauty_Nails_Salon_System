@@ -263,7 +263,7 @@ export default function CreateServiceModal({ trigger, service }: { trigger?: Rea
               </div>
 
               <div>
-                <Label className="mb-2" htmlFor="service-price">Prix (Fc)</Label>
+                <Label className="mb-2" htmlFor="service-price">Prix (CDF)</Label>
                 <Input
                   id="service-price"
                   value={price}
@@ -402,7 +402,7 @@ export default function CreateServiceModal({ trigger, service }: { trigger?: Rea
                       />
                     </div>
                     <div>
-                      <Label>Prix (Fc)</Label>
+                      <Label>Prix (CDF)</Label>
                       <Input
                         type="number"
                         value={addOn.price}

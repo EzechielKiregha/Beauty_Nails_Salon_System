@@ -621,7 +621,7 @@ export function AppointmentModal({ open, onOpenChange, appointment, trigger, cli
                           À domicile
                         </p>
                         <p className="text-base sm:text-lg text-gray-500 dark:text-gray-400">
-                          +20 000 Fc - Dans la zone de Goma
+                          +20 000 CDF - Dans la zone de Goma
                         </p>
                       </div>
                     </Label>
@@ -644,7 +644,7 @@ export function AppointmentModal({ open, onOpenChange, appointment, trigger, cli
                       <SelectContent>
                         {discounts.map((d) => (
                           <SelectItem key={d.id} value={d.code}>
-                            {d.code} ({d.type === "percentage" ? `${d.value}%` : `${d.value} Fc`})
+                            {d.code} ({d.type === "percentage" ? `${d.value}%` : `${d.value} CDF`})
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -659,24 +659,24 @@ export function AppointmentModal({ open, onOpenChange, appointment, trigger, cli
                   <Card className="p-4 space-y-2 text-lg">
                     <div className="flex justify-between">
                       <span>Sous-total</span>
-                      <span>{subtotal.toLocaleString()} Fc</span>
+                      <span>{subtotal.toLocaleString()} CDF</span>
                     </div>
 
                     <div className="flex justify-between text-green-600">
                       <span>Remise</span>
-                      <span>- {discountAmount.toLocaleString()} Fc</span>
+                      <span>- {discountAmount.toLocaleString()} CDF</span>
                     </div>
 
                     <div className="flex justify-between">
                       <span>Taxe</span>
-                      <span>{taxAmount.toLocaleString()} Fc</span>
+                      <span>{taxAmount.toLocaleString()} CDF</span>
                     </div>
 
                     <Separator />
 
                     <div className="flex justify-between font-semibold text-lg">
                       <span>Total</span>
-                      <span>{total.toLocaleString()} Fc</span>
+                      <span>{total.toLocaleString()} CDF</span>
                     </div>
                   </Card>
                 </div>

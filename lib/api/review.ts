@@ -14,11 +14,8 @@ interface Review {
 
 export const reviewsApi = {
   
-  getReviews : async (params?: {
-    clientId?: string,
-    workerId?: string
-  }): Promise<Review[]> => {
-    const {data} = await axiosdb.get('/reviews', {params})
+  getReviews : async (): Promise<Review[]> => {
+    const {data} = await axiosdb.get(`/reviews/all`)
     return data
   },
 

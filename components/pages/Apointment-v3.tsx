@@ -21,7 +21,8 @@ import {
   Calendar as CalendarIcon,
   HardHatIcon,
   RefreshCcw,
-  Info
+  Info,
+  CheckCircle
 } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { Button } from '../ui/button';
@@ -32,6 +33,8 @@ import { Calendar } from '../ui/calendar';
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
 import LoaderBN from '../Loader-BN';
 import { clearBookingProgress, loadBookingProgress, saveBookingProgress } from '@/lib/local/booking-storage';
+import { useClient } from '@/lib/hooks/useClients';
+import { useLoyalty } from '@/lib/hooks/useLoyalty';
 
 export default function AppointmentsV3() {
   const router = useRouter();
@@ -67,7 +70,7 @@ export default function AppointmentsV3() {
   const [payerPhone, setPayerPhone] = useState("");
   const [discountCode, setDiscountCode] = useState("");
   const [tip, setTip] = useState(0);
-  const [selectedMethod, setSelectedMethod] = useState<"mobile" | "card" | "cash" | "prepaid" | "giftcard">("mobile");
+  const [selectedMethod, setSelectedMethod] = useState<"mobile" | "card" | "cash" | "prepaid" | "giftcard" | "free-service">("mobile");
 
   const TAX_RATE = 0.16; // 16% tax
 
@@ -81,6 +84,7 @@ export default function AppointmentsV3() {
     date: selectedDate ? selectedDate.toString() : undefined,
     workerId: selectedWorker ? selectedWorker : "",
   })
+  const { data: selectedClient } = useClient(user?.clientProfile?.id!)
 
   // Fetch add-ons for selected service
   const { data: addOns = [], isLoading: addOnsLoading } = useAddOns(selectedServiceId);
@@ -195,27 +199,44 @@ export default function AppointmentsV3() {
     "maquillage": <Sparkles className="w-6 h-6" />,
   };
 
-  const prepaid = Number(user?.clientProfile?.prepaymentBalance || 0);
-  const giftCard = Number(user?.clientProfile?.giftCardBalance || 0);
+  // Get loyalty data
+  const {
+    points: loyaltyPoints,
+  } = useLoyalty();
+
+  const prepaid = Number(selectedClient?.prepaymentBalance || 0);
+  const giftCardBalance = Number(selectedClient?.giftCardBalance || 0);
+  const freeServiceCount = Number(selectedClient?.freeServiceCount || 0);
+  const giftCardCount = Number(selectedClient?.giftCardCount || 0);
+  // const loyaltyPoints = Number(selectedClient?.loyaltyPoints || 0);
+  const refBonus = Number(selectedClient?.refBonus || 0);
+
+
+  const isFreeService = selectedMethod === "free-service";
+  const isGiftCard = selectedMethod === "giftcard";
+  const isPrepaid = selectedMethod === "prepaid";
+  const isCash = selectedMethod === "cash";
 
   // ⚠️ define your total cost properly (service + tip - discount etc.)
-  const totalCost = Number(total || 0) + Number(tip || 0);
-
-  const canUsePrepaid = prepaid >= totalCost;
-  const canUseGiftCard = giftCard > 0;
-
+  const activeTip = isFreeService || isGiftCard ? 0 : Number(tip || 0);
+  const totalCost = Number(total || 0) + activeTip;
+  const canUsePrepaid = prepaid > totalCost;
+  const canUseGiftCard = giftCardBalance > totalCost && giftCardCount > 0; // Based on your points logic
+  const canUseFreeService = freeServiceCount > 0;
 
   const paymentInfo = useMemo(() => ({
     discountCode,
     subtotal,
     discount: discountAmount,
     tax: taxAmount,
-    tip,
-    total,
+    tip: activeTip,
+    total: isFreeService ? 0 : totalCost, // Zero out if free service
     method: selectedMethod,
-    isPrepaidUsed: selectedMethod === "prepaid" && canUsePrepaid,
-    isGiftCardUsed: selectedMethod === "giftcard" && canUseGiftCard,
-    status: 'completed', // Default to pending
+    isPrepaidUsed: isPrepaid && canUsePrepaid,
+    isGiftCardUsed: isGiftCard && canUseGiftCard,
+    isFreeServiceUsed: isFreeService && canUseFreeService,
+    refBonusApplied: refBonus > 0, // Flag to process backend reductions
+    status: 'completed',
     receipt: `RCT-${Date.now()}`,
     transactionId: null
   }), [
@@ -223,9 +244,16 @@ export default function AppointmentsV3() {
     subtotal,
     discountAmount,
     taxAmount,
-    tip,
-    total,
-    selectedMethod
+    activeTip,
+    totalCost,
+    selectedMethod,
+    isPrepaid,
+    canUsePrepaid,
+    isGiftCard,
+    canUseGiftCard,
+    isFreeService,
+    canUseFreeService,
+    refBonus
   ]);
 
   if (servicesLoading || staffLoading || appointmentLoading || discountsLoading) {
@@ -260,6 +288,10 @@ export default function AppointmentsV3() {
         time: selectedTime,
         location: location,
         addOns: activeAddOns,
+        isPrepaidUsed: isPrepaid && canUsePrepaid,
+        isGiftCardUsed: isGiftCard && canUseGiftCard,
+        isFreeServiceUsed: isFreeService && canUseFreeService,
+        refBonusApplied: refBonus > 0 && !canUseFreeService,
         paymentInfo,
       };
 
@@ -628,7 +660,7 @@ export default function AppointmentsV3() {
                         À domicile
                       </p>
                       <p className="text-base sm:text-lg text-gray-500 dark:text-gray-400">
-                        +20 000 Fc - Dans la zone de Goma
+                        +20 000 CDF - Dans la zone de Goma
                       </p>
                     </div>
                   </Label>
@@ -664,110 +696,72 @@ export default function AppointmentsV3() {
                 <label className="block text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">Code de Réduction</label>
                 <input
                   type="text"
-
                   onChange={(e) => setDiscountCode(e.target.value)}
                   placeholder="CODE10"
-                  className="w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 p-3"
+                  className="w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 p-3 focus:ring-2 focus:ring-pink-500 focus:outline-none"
                 />
               </div>
 
-              <div>
-                <label className="block text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">Pourboire</label>
-                <input
-                  type="number"
-                  value={tip}
-                  onChange={(e) => setTip(Number(e.target.value))}
-                  placeholder="0"
-                  className="w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 p-3"
-                />
-              </div>
+              {/* Conditionally hide tip if free service or gift card is used */}
+              {!(isFreeService || isGiftCard) && (
+                <div>
+                  <label className="block text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">Pourboire</label>
+                  <input
+                    type="number"
+                    value={tip}
+                    onChange={(e) => setTip(Number(e.target.value))}
+                    placeholder="0"
+                    className="w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 p-3 focus:ring-2 focus:ring-purple-500 focus:outline-none"
+                  />
+                </div>
+              )}
             </div>
 
             <div className="mb-4 space-y-4">
-
               <label className="block text-lg font-medium text-gray-700 dark:text-gray-300">
                 Méthode de Paiement
               </label>
 
-              {/* 💰 BALANCES */}
-              <div className="grid grid-cols-2 gap-3 text-sm">
-
-                {/* Prepaid */}
+              {/* 💰 BALANCES OVERVIEW */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
                 <div className="p-3 rounded-xl bg-green-50 dark:bg-green-900/10 border border-green-100 dark:border-green-900/30">
-                  <div className="flex items-center justify-between">
-                    <span className="text-green-600 font-semibold">Prépayé</span>
-
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <Info className="w-4 h-4 cursor-pointer text-green-500" />
-                      </PopoverTrigger>
-
-                      <PopoverContent className="w-72 text-sm space-y-2">
-                        <p className="font-semibold text-green-600">💡 Solde Prépayé</p>
-                        <p>
-                          Ce solde provient des rendez-vous manqués ou reprogrammés.
-                        </p>
-                        <ul className="list-disc pl-4 space-y-1">
-                          <li>Utilisable uniquement si suffisant</li>
-                          <li>Non négatif</li>
-                          <li>Déduit automatiquement si utilisé</li>
-                        </ul>
-                      </PopoverContent>
-                    </Popover>
-                  </div>
-
-                  <p className="text-lg font-bold text-gray-900 dark:text-gray-100">
-                    {prepaid} Fc
-                  </p>
+                  <span className="text-green-600 font-semibold block mb-1">Prépayé</span>
+                  <p className="text-lg font-bold text-gray-900 dark:text-gray-100">{prepaid} CDF</p>
                 </div>
 
-                {/* Gift Card */}
                 <div className="p-3 rounded-xl bg-purple-50 dark:bg-purple-900/10 border border-purple-100 dark:border-purple-900/30">
-                  <div className="flex items-center justify-between">
-                    <span className="text-purple-600 font-semibold">Carte Cadeau</span>
-
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <Info className="w-4 h-4 cursor-pointer text-purple-500" />
-                      </PopoverTrigger>
-
-                      <PopoverContent className="w-72 text-sm space-y-2">
-                        <p className="font-semibold text-purple-600">🎁 Carte Cadeau</p>
-                        <p>
-                          Montant offert utilisable comme moyen de paiement.
-                        </p>
-                        <ul className="list-disc pl-4 space-y-1">
-                          <li>Peut couvrir totalement ou partiellement</li>
-                          <li>Non échangeable</li>
-                        </ul>
-                      </PopoverContent>
-                    </Popover>
-                  </div>
-
-                  <p className="text-lg font-bold text-gray-900 dark:text-gray-100">
-                    {giftCard} Fc
-                  </p>
+                  <span className="text-purple-600 font-semibold block mb-1">Carte Cadeau</span>
+                  <p className="text-lg font-bold text-gray-900 dark:text-gray-100">{giftCardBalance} CDF - {giftCardCount} dispo</p>
                 </div>
 
+                <div className="p-3 rounded-xl bg-pink-50 dark:bg-pink-900/10 border border-pink-100 dark:border-pink-900/30">
+                  <span className="text-pink-600 font-semibold block mb-1">Services Gratuits</span>
+                  <p className="text-lg font-bold text-gray-900 dark:text-gray-100">{freeServiceCount} dispo</p>
+                </div>
+
+                <div className="p-3 rounded-xl bg-blue-50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-900/30">
+                  <span className="text-blue-600 font-semibold block mb-1">Points Fidélité</span>
+                  <p className="text-lg font-bold text-gray-900 dark:text-gray-100">{loyaltyPoints} / {selectedClient?.loyaltyPoints} pts</p>
+                </div>
               </div>
 
-              {/* 💳 METHODS */}
+              {/* 💳 METHODS BUTTONS */}
               <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
-
                 {[
                   { key: "mobile", label: "Mobile Money" },
-                  // { key: "card", label: "Virement" },
                   { key: "cash", label: "Espèces" },
                   { key: "prepaid", label: "Prépayé" },
                   { key: "giftcard", label: "Carte Cadeau" },
+                  { key: "free-service", label: "Service Gratuit" },
                 ].map((method) => {
-
-                  const isPrepaid = method.key === "prepaid";
-                  const isGift = method.key === "giftcard";
+                  const _isPrepaid = method.key === "prepaid";
+                  const _isGift = method.key === "giftcard";
+                  const _isFree = method.key === "free-service";
 
                   const disabled =
-                    (isPrepaid && !canUsePrepaid) ||
-                    (isGift && !canUseGiftCard);
+                    (_isPrepaid && !canUsePrepaid) ||
+                    (_isGift && !canUseGiftCard) ||
+                    (_isFree && !canUseFreeService);
 
                   return (
                     <button
@@ -776,40 +770,97 @@ export default function AppointmentsV3() {
                       disabled={disabled}
                       onClick={() => !disabled && setSelectedMethod(method.key as any)}
                       className={`
-            p-3 rounded-lg border text-sm transition
-            ${selectedMethod === method.key
-                          ? 'bg-pink-500 text-white border-pink-500'
-                          : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-700'
+                p-3 rounded-lg border text-sm font-medium transition duration-200
+                ${selectedMethod === method.key
+                          ? 'bg-linear-to-r from-pink-500 to-purple-500 text-white border-transparent shadow-md'
+                          : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-700 hover:border-pink-400'
                         }
-            ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
-          `}
+                ${disabled ? 'opacity-40 cursor-not-allowed bg-gray-100 dark:bg-gray-900' : 'cursor-pointer'}
+              `}
                     >
                       {method.label}
                     </button>
                   );
                 })}
-
               </div>
 
-              {/* ⚠️ FEEDBACK MESSAGE */}
-              {!canUsePrepaid && (
-                <p className="text-sm text-red-500">
-                  Le solde prépayé est insuffisant pour couvrir ce service.
+              {/* ⚠️ FEEDBACK MESSAGES */}
+              {!canUsePrepaid && isPrepaid && (
+                <p className="text-sm text-red-500 animate-pulse">
+                  Votre solde prépayé est insuffisant pour ce service.
                 </p>
               )}
-
             </div>
           </div>
         )}
 
-        {/* Premium Payment Details */}
-        {user && selectedMethod && selectedMethod !== "cash" && (
+        {/* Premium Details Cards (Dynamic based on selected method) */}
+        {user && selectedMethod && !isCash && (
           <div className="mt-6 space-y-6">
 
-            {/* Mobile Money Card */}
+            {/* ✨ FREE SERVICE BEAUTY CARD */}
+            {isFreeService && (
+              <div className="relative overflow-hidden rounded-2xl border border-pink-200 dark:border-pink-900 bg-white dark:bg-gray-900 shadow-xl p-6">
+                <div className="absolute top-0 right-0 p-4 opacity-10">
+                  <Sparkles className="w-24 h-24 text-pink-500" />
+                </div>
+
+                <h3 className="text-xl font-bold bg-linear-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent mb-4 flex items-center gap-2">
+                  ✨ Beauty Nails Salon - Cadeau de Fidélité
+                </h3>
+
+                <div className="space-y-3 relative z-10">
+                  <p className="text-gray-700 dark:text-gray-300 text-lg mb-4">
+                    Félicitations ! Ce rendez-vous est entièrement pris en charge.
+                  </p>
+
+                  <ul className="space-y-2">
+                    <li className="flex items-center gap-3 text-gray-700 dark:text-gray-200">
+                      <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />
+                      <span>Récompense débloquée après <strong>5 rendez-vous payés</strong>.</span>
+                    </li>
+                    <li className="flex items-center gap-3 text-gray-700 dark:text-gray-200">
+                      <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />
+                      <span>Aucun frais supplémentaire requis pour la prestation.</span>
+                    </li>
+                    <li className="flex items-center gap-3 text-gray-700 dark:text-gray-200">
+                      <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />
+                      <span>Les pourboires ont été désactivés pour ce mode.</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            )}
+
+            {/* 🎁 GIFT CARD BEAUTY CARD */}
+            {isGiftCard && (
+              <div className="relative overflow-hidden rounded-2xl border border-purple-200 dark:border-purple-900 bg-white dark:bg-gray-900 shadow-xl p-6">
+                <h3 className="text-xl font-bold text-purple-600 dark:text-purple-400 mb-4 flex items-center gap-2">
+                  🎁 Paiement par Carte Cadeau
+                </h3>
+
+                <div className="space-y-3">
+                  <p className="text-gray-700 dark:text-gray-300">
+                    Vous utilisez votre solde de points ou votre carte cadeau Beauty Nails Salon.
+                  </p>
+
+                  <ul className="space-y-2">
+                    <li className="flex items-center gap-3 text-gray-700 dark:text-gray-200">
+                      <CheckCircle className="w-5 h-5 text-purple-500 shrink-0" />
+                      <span>Débloqué grâce à vos paliers de fidélité (500, 1000, ou 2000 points).</span>
+                    </li>
+                    <li className="flex items-center gap-3 text-gray-700 dark:text-gray-200">
+                      <CheckCircle className="w-5 h-5 text-purple-500 shrink-0" />
+                      <span>Solde disponible : <strong>{giftCardBalance} CDF</strong></span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            )}
+
+            {/* 📱 MOBILE MONEY (Keep your existing Mobile Money code here) */}
             {selectedMethod === "mobile" && (
               <div className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-xl p-6 transition-all duration-300">
-
                 <div className="flex justify-between items-center mb-5">
                   <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                     💳 Mobile Money
@@ -882,130 +933,68 @@ export default function AppointmentsV3() {
                 </div>
               </div>
             )}
-
-            {/* Bank Transfer Card */}
-            {selectedMethod === "card" && (
-              <div className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-xl p-6">
-
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-5">
-                  🏦 Virement Bancaire
-                </h3>
-
-                <div className="space-y-4 text-lg text-gray-700 dark:text-gray-300">
-
-                  <div>
-                    <p className="text-base text-gray-500 dark:text-gray-400">
-                      Banque
-                    </p>
-                    <p className="font-medium">
-                      Bank of Kigali
-                    </p>
-                  </div>
-
-                  <div>
-                    <p className="text-base text-gray-500 dark:text-gray-400">
-                      Numéro de compte
-                    </p>
-                    <p className="text-xl font-semibold tracking-wide">
-                      123456789
-                    </p>
-                  </div>
-
-                  <div>
-                    <p className="text-base text-gray-500 dark:text-gray-400">
-                      Nom du compte
-                    </p>
-                    <p className="font-medium">
-                      Salon Beauty
-                    </p>
-                  </div>
-
-                  <div className="pt-4 border-t border-gray-200 dark:border-gray-800 text-base text-gray-500 dark:text-gray-400">
-                    Après le virement, veuillez confirmer le paiement pour finaliser la réservation.
-                  </div>
-
-                </div>
-              </div>
-            )}
-
           </div>
         )}
 
         {/* Premium Summary */}
         {user && selectedMethod && (
-          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-900 via-indigo-900 to-slate-900 p-6 shadow-2xl text-white">
-
-            {/* Soft glow overlay */}
+          <div className="relative overflow-hidden rounded-2xl bg-linear-to-br from-gray-900 via-gray-800 to-black p-6 shadow-2xl text-white mt-6">
             <div className="absolute inset-0 bg-white/5 backdrop-blur-sm"></div>
-
             <div className="relative z-10 space-y-5">
-
-              {/* Header */}
               <div>
-                <h3 className="text-lg font-semibold tracking-wide">
-                  Récapitulatif du Paiement
-                </h3>
-                <p className="text-lg text-indigo-200">
-                  Vérifiez les détails avant confirmation
-                </p>
+                <h3 className="text-lg font-semibold tracking-wide">Récapitulatif du Paiement</h3>
+                <p className="text-sm text-gray-400">Vérifiez les détails avant confirmation</p>
               </div>
 
-              {/* Divider */}
-              <div className="h-px bg-white/20"></div>
+              <div className="h-px bg-white/10"></div>
 
-              {/* Amounts */}
-              <div className="space-y-3 text-lg">
-
-                <div className="flex justify-between text-indigo-100">
+              <div className="space-y-3 text-base">
+                <div className="flex justify-between text-gray-300">
                   <span>Sous-total</span>
-                  <span className="font-medium">
+                  <span className={isFreeService ? "line-through opacity-50" : "font-medium"}>
                     {subtotal.toLocaleString()} CDF
                   </span>
                 </div>
 
-                {discountAmount > 0 && (
-                  <div className="flex justify-between text-green-400">
+                {discountAmount > 0 && !isFreeService && (
+                  <div className="flex justify-between text-pink-400">
                     <span>Réduction</span>
-                    <span className="font-medium">
-                      -{discountAmount.toLocaleString()} CDF
-                    </span>
+                    <span className="font-medium">-{discountAmount.toLocaleString()} CDF</span>
                   </div>
                 )}
 
-                <div className="flex justify-between text-indigo-100">
+                {refBonus > 0 && !isFreeService && (
+                  <div className="flex justify-between text-green-400">
+                    <span>Bonus Parrainage (Mensuel)</span>
+                    <span className="font-medium">-{refBonus.toLocaleString()} CDF</span>
+                  </div>
+                )}
+
+                <div className="flex justify-between text-gray-300">
                   <span>Taxe</span>
-                  <span className="font-medium">
+                  <span className={isFreeService ? "line-through opacity-50" : "font-medium"}>
                     {taxAmount.toLocaleString()} CDF
                   </span>
                 </div>
 
-                {tip > 0 && (
-                  <div className="flex justify-between text-indigo-100">
+                {activeTip > 0 && !isFreeService && !isGiftCard && (
+                  <div className="flex justify-between text-gray-300">
                     <span>Pourboire</span>
-                    <span className="font-medium">
-                      {tip.toLocaleString()} CDF
-                    </span>
+                    <span className="font-medium">{activeTip.toLocaleString()} CDF</span>
                   </div>
                 )}
               </div>
 
-              {/* Total Section */}
-              <div className="pt-4 border-t border-white/20">
-
+              <div className="pt-4 border-t border-white/10">
                 <div className="flex justify-between items-center">
-                  <span className="text-lg font-semibold tracking-wide">
-                    TOTAL
-                  </span>
-
-                  <span className="text-2xl font-bold bg-gradient-to-r from-green-400 to-emerald-300 bg-clip-text text-transparent">
-                    {total.toLocaleString()} CDF
+                  <span className="text-lg font-semibold tracking-wide">TOTAL</span>
+                  <span className="text-2xl font-bold bg-linear-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">
+                    {isFreeService ? "0 CDF" : `${totalCost.toLocaleString()} CDF`}
                   </span>
                 </div>
-
-                <p className="text-base text-indigo-300 mt-1">
-                  Paiement via {selectedMethod}
+                <p className="text-sm text-gray-400 mt-1 uppercase tracking-wider">
+                  Via {selectedMethod.replace('-', ' ')}
                 </p>
-
               </div>
             </div>
           </div>

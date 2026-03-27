@@ -196,9 +196,9 @@ export default function AppointmentsV2() {
   ];
 
   const availableAddOns = [
-    "Prestation à domicile (+20 000 Fc)",
-    "Rendez-vous express (+10 000 Fc)",
-    "Produits premium (+15 000 Fc)",
+    "Prestation à domicile (+20 000 CDF)",
+    "Rendez-vous express (+10 000 CDF)",
+    "Produits premium (+15 000 CDF)",
   ];
 
   const paymentInfo = useMemo(() => ({
@@ -515,7 +515,7 @@ export default function AppointmentsV2() {
                           À domicile
                         </p>
                         <p className="text-base sm:text-lg text-gray-500 dark:text-gray-400">
-                          +20 000 Fc - Dans la zone de Goma
+                          +20 000 CDF - Dans la zone de Goma
                         </p>
                       </div>
                     </Label>
@@ -585,7 +585,7 @@ export default function AppointmentsV2() {
                         {service.name}
                       </p>
                       <span className="text-base sm:text-base text-gray-900 dark:text-gray-100 font-medium" >
-                        {service.price.toLocaleString()} Fc
+                        {service.price.toLocaleString()} CDF
                       </span>
                     </div>
                   </div>
@@ -762,7 +762,7 @@ export default function AppointmentsV2() {
                           <SelectContent>
                             {discounts.map((d) => (
                               <SelectItem key={d.id} value={d.code}>
-                                {d.code} ({d.type === "percentage" ? `${d.value}%` : `${d.value} Fc`})
+                                {d.code} ({d.type === "percentage" ? `${d.value}%` : `${d.value} CDF`})
                               </SelectItem>
                             ))}
                           </SelectContent>
@@ -785,29 +785,29 @@ export default function AppointmentsV2() {
                       <Card className="p-4 space-y-2 text-lg">
                         <div className="flex justify-between">
                           <span>Sous-total</span>
-                          <span>{subtotal.toLocaleString()} Fc</span>
+                          <span>{subtotal.toLocaleString()} CDF</span>
                         </div>
 
                         <div className="flex justify-between text-green-600">
                           <span>Remise</span>
-                          <span>- {discountAmount.toLocaleString()} Fc</span>
+                          <span>- {discountAmount.toLocaleString()} CDF</span>
                         </div>
 
                         <div className="flex justify-between">
                           <span>Taxe</span>
-                          <span>{taxAmount.toLocaleString()} Fc</span>
+                          <span>{taxAmount.toLocaleString()} CDF</span>
                         </div>
 
                         <div className="flex justify-between">
                           <span>Pourboire</span>
-                          <span>{tip.toLocaleString()} Fc</span>
+                          <span>{tip.toLocaleString()} CDF</span>
                         </div>
 
                         <Separator />
 
                         <div className="flex justify-between font-semibold text-lg">
                           <span>Total</span>
-                          <span>{total.toLocaleString()} Fc</span>
+                          <span>{total.toLocaleString()} CDF</span>
                         </div>
                       </Card>
                       <div className="space-y-3">
@@ -855,7 +855,7 @@ export default function AppointmentsV2() {
                       <SelectContent>
                         {discounts.map((d) => (
                           <SelectItem key={d.id} value={d.code}>
-                            {d.code} ({d.type === "percentage" ? `${d.value}%` : `${d.value} Fc`})
+                            {d.code} ({d.type === "percentage" ? `${d.value}%` : `${d.value} CDF`})
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -870,17 +870,17 @@ export default function AppointmentsV2() {
                   <Card className="p-4 space-y-2 text-lg">
                     <div className="flex justify-between">
                       <span>Sous-total</span>
-                      <span>{subtotal.toLocaleString()} Fc</span>
+                      <span>{subtotal.toLocaleString()} CDF</span>
                     </div>
 
                     <div className="flex justify-between text-green-600">
                       <span>Remise</span>
-                      <span>- {discountAmount.toLocaleString()} Fc</span>
+                      <span>- {discountAmount.toLocaleString()} CDF</span>
                     </div>
 
                     <div className="flex justify-between">
                       <span>Taxe</span>
-                      <span>{taxAmount.toLocaleString()} Fc</span>
+                      <span>{taxAmount.toLocaleString()} CDF</span>
                     </div>
 
                     <Separator />
@@ -889,7 +889,7 @@ export default function AppointmentsV2() {
 
                     <div className="flex justify-between font-semibold text-lg">
                       <span>Total</span>
-                      <span>{total.toLocaleString()} Fc</span>
+                      <span>{total.toLocaleString()} CDF</span>
                     </div>
                   </Card>
                 </div>

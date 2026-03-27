@@ -212,7 +212,7 @@ export default function AdminDashboardV2() {
                 ?
                 (revenueData.totalRevenue / 1000000).toFixed(1)
                 :
-                revenueData?.totalRevenue} Fc
+                revenueData?.totalRevenue} CDF
             </p>
             <p className="text-base opacity-80 ">
               {/* Removed the "today" part as it now reflects the period defined by the hook params */}
@@ -339,7 +339,7 @@ export default function AdminDashboardV2() {
                       ?
                       (value / 1000000).toFixed(1)
                       :
-                      value} Fc`}
+                      value} CDF`}
                     contentStyle={{ backgroundColor: '#1F2937', border: '1px solid #374151', borderRadius: '8px' }}
                     labelStyle={{ color: '#F3F4F6' }}
                   />

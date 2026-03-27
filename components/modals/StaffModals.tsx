@@ -843,7 +843,7 @@ export function PayrollModal({ staffName, staff, period, trigger }: PayrollModal
               <div className="flex justify-between items-center">
                 <Label className="text-gray-600 dark:text-gray-400 text-lg">Revenu Généré</Label>
                 <div className="flex items-center">
-                  <span className="text-lg text-gray-500 dark:text-gray-400 mr-1">Fc</span>
+                  <span className="text-lg text-gray-500 dark:text-gray-400 mr-1">CDF</span>
                   <Input
                     type="number"
                     value={totalRevenue}
@@ -881,7 +881,7 @@ export function PayrollModal({ staffName, staff, period, trigger }: PayrollModal
               <div className="flex justify-between items-center">
                 <Label className="text-gray-600 dark:text-gray-400 text-lg">Commission (Calculée)</Label>
                 <div className="flex items-center">
-                  <span className="text-lg text-gray-500 dark:text-gray-400 mr-1">Fc</span>
+                  <span className="text-lg text-gray-500 dark:text-gray-400 mr-1">CDF</span>
                   <Input
                     value={commissionAmount.toFixed(2)}
                     disabled
@@ -894,7 +894,7 @@ export function PayrollModal({ staffName, staff, period, trigger }: PayrollModal
                 <div className="flex justify-between items-center">
                   <Label className="text-blue-600 dark:text-blue-400 text-lg">Part Administrateur</Label>
                   <div className="flex items-center">
-                    <span className="text-lg text-gray-500 dark:text-gray-400 mr-1">Fc</span>
+                    <span className="text-lg text-gray-500 dark:text-gray-400 mr-1">CDF</span>
                     <Input
                       value={employerShare.toFixed(2)}
                       disabled
@@ -907,7 +907,7 @@ export function PayrollModal({ staffName, staff, period, trigger }: PayrollModal
 
             <div className="bg-gray-900 dark:bg-gray-800 text-white p-3 rounded-xl flex justify-between items-center">
               <span className="font-medium">Net à Payer</span>
-              <span className="text-xl font-bold">{commissionAmount.toLocaleString()} Fc</span>
+              <span className="text-xl font-bold">{commissionAmount.toLocaleString()} CDF</span>
             </div>
 
             <div className="flex items-center gap-2">

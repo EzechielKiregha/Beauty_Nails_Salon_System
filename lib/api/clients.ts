@@ -20,6 +20,9 @@ export interface Client {
   allergies?: string;
   prepaymentBalance?: number | string;
   giftCardBalance?: number | string;
+  freeServiceCount: number,
+  giftCardCount: number,
+  refBonus: number,
   referrals?: number;
   createdAt: string;
   updatedAt: string;

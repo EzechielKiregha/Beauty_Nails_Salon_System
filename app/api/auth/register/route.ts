@@ -91,7 +91,7 @@ export async function POST(request: NextRequest) {
     if (referrerProfileId && user.clientProfile) {
       await prisma.referral.create({
         data: {
-          status: "pending",
+          status: "completed",
           rewardGranted: false,
           referrer: { connect : { 
             id: referrerProfileId
@@ -110,9 +110,9 @@ export async function POST(request: NextRequest) {
           referrals: {
             increment: 1,
           },
-          loyaltyPoints:{
-            increment: 5
-          },
+          // loyaltyPoints:{
+          //   increment: 5
+          // },
           loyaltyTransactions:{
             create:{
               points: 5,

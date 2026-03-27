@@ -21,8 +21,15 @@ export async function GET(_request: NextRequest) {
       take: 20,
     });
 
+    const loyaltyPoints = await prisma.loyaltyTransaction.aggregate({
+      where: {clientId: client.id},
+      _sum:{
+        points: true
+      }
+    })
+
     return successResponse({
-      points: client.loyaltyPoints,
+      points: loyaltyPoints._sum.points || 0,
       tier: client.tier,
       transactions: loyaltyTransactions,
     });

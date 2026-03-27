@@ -90,6 +90,7 @@ model ClientProfile {
   totalSpent        Float     @default(0)
   referralCode      String    @unique
   referredBy        String?
+  refBonus          Int       @default(0)
   preferences       Json?
   notes             String?   @db.Text
   // Additional profile fields used by the UI
@@ -99,6 +100,8 @@ model ClientProfile {
   allergies         String?
   prepaymentBalance Float     @default(0)
   giftCardBalance   Float     @default(0)
+  giftCardCount     Float     @default(0)
+  freeServiceCount  Float     @default(0)
   referrals         Int       @default(0)
 
   createdAt DateTime @default(now())

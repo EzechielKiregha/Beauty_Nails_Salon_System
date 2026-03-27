@@ -1,3 +1,4 @@
+import { PaymentMethod, PaymentStatus } from '@/prisma/generated/enums';
 import axiosdb from '../axios';
 
 export interface Sale {
@@ -92,6 +93,37 @@ export const paymentsApi = {
     clientId?: string;
   }): Promise<Sale[]> => {
     const { data } = await axiosdb.get('/sales', { params });
+    return data;
+  },
+  getPayments: async (): Promise<{
+    status: PaymentStatus;
+    id: string;
+    saleId: string;
+    createdAt: Date;
+    method: PaymentMethod;
+    amount: number;
+    transactionId: string 
+  }[]> => {
+    const { data } = await axiosdb.get('/payments', );
+    return data;
+  },
+  getRegisters: async (): Promise<{
+    id: string;
+    date: Date;
+    openingCash: number;
+    closingCash: number;
+    expectedCash: number;
+    discrepancy: number;
+    totalSales: number;
+    cashSales: number;
+    cardSales: number;
+    mobileSales: number;
+    notes: string | null;
+    closedBy: string | null;
+    closedAt: Date | null;
+    createdAt: Date;
+  }[]> => {
+    const { data } = await axiosdb.get('/sales/registers', );
     return data;
   },
 

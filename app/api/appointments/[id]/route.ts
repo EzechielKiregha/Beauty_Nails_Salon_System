@@ -50,9 +50,9 @@ export async function DELETE(
     const userClient = await prisma.clientProfile.update({
       where: { id: appointment.clientId },
       data:{
-        loyaltyPoints:{
-          decrement: updated.service.price / 1000
-        },
+        // loyaltyPoints:{
+        //   decrement: updated.service.price / 1000
+        // },
         prepaymentBalance:{
           increment : appointment.price
         },

@@ -11,12 +11,11 @@ export function useReviews(params?: {
   const queryClient = useQueryClient();
 
   const {
-    data: reviews = [],
+    data,
     isLoading,
-    error,
   } = useQuery({
-    queryKey: ['reviews', params],
-    queryFn: () => reviewsApi.getReviews(params),
+    queryKey: ['reviews'],
+    queryFn: () => reviewsApi.getReviews(),
   });
 
   // Create service
@@ -35,7 +34,7 @@ export function useReviews(params?: {
     });
 
     return {
-      reviews,
+      reviews: data,
       isLoading,
       createReview,
       isCreating

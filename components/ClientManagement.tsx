@@ -309,7 +309,7 @@ export default function ClientManagement({ showMock }: { showMock?: boolean }) {
                   <div className="bg-linear-to-br from-green-50 to-emerald-50 dark:from-gray-800 dark:to-gray-800/50 p-5 rounded-3xl border border-green-100 dark:border-green-900/30 text-center shadow-sm">
                     <DollarSign className="w-6 h-6 text-green-600 dark:text-green-400 mx-auto mb-2" />
                     <p className="text-lg font-black text-gray-900 dark:text-gray-100 truncate px-1">{selectedClient.totalSpent}</p>
-                    <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase  tracking-tight">Dépensé en Fc</p>
+                    <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase  tracking-tight">Dépensé en CDF</p>
                   </div>
                   <div className="bg-linear-to-br from-purple-50 to-pink-50 dark:from-gray-800 dark:to-gray-800/50 p-5 rounded-3xl border border-purple-100 dark:border-purple-900/30 text-center shadow-sm">
                     <Award className="w-6 h-6 text-purple-600 dark:text-purple-400 mx-auto mb-2" />

@@ -3,10 +3,12 @@
 import FloatingBubbles from "@/components/FloatingBubbles";
 import { useAppointments } from "@/lib/hooks/useAppointments";
 import { useAuth } from "@/lib/hooks/useAuth";
+import { useClientReferrals } from "@/lib/hooks/useServices";
 
 export default function AppClientLayer() {
   const { appointments = [] } = useAppointments();
   const { user } = useAuth();
+  const { data: referrals } = useClientReferrals(user?.clientProfile?.id);
 
   // 🔥 prepare data HERE (not in layout)
   const ongoingAppointments = appointments
@@ -24,6 +26,7 @@ export default function AppClientLayer() {
       <FloatingBubbles
         appointments={ongoingAppointments}
         user={user}
+        referralList={referrals || []}
       />
     </>
   );

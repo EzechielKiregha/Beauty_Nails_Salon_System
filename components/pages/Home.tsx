@@ -25,7 +25,7 @@ export default function Home() {
   const [selectedDate, setSelectedDate] = React.useState<Date | undefined>(new Date());
   const [selectedTime, setSelectedTime] = React.useState<string>('');
   const [loading, setLoading] = useState(true);
-  const { points: loyaltyPoints, tier: loyaltyTier, transactions: loyaltyTransactions, isLoading: loyaltyLoading } = useLoyalty();
+  const { transactions: loyaltyTransactions, isLoading: loyaltyLoading } = useLoyalty();
   const { memberships, isLoading: membershipsLoading } = useMemberships();
 
   // --- Process Loyalty Data for Cards ---
@@ -354,7 +354,7 @@ export default function Home() {
                         <h3 className="text-3xl text-gray-900 dark:text-gray-100 mt-4 mb-2">{membership.name}</h3>
                         <div className="flex items-baseline mb-6">
                           <span className="text-5xl text-gray-900 dark:text-gray-100">{membership.price.toLocaleString()}</span>
-                          <span className="text-xl text-gray-600 dark:text-gray-300 ml-2">Fc</span>
+                          <span className="text-xl text-gray-600 dark:text-gray-300 ml-2">CDF</span>
                         </div>
                       </div>
                     </div>

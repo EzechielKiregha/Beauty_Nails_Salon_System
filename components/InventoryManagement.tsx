@@ -48,7 +48,7 @@ export default function InventoryManagement({ showMock }: { showMock?: boolean }
       stock: 45,
       minStock: 30,
       unit: 'unités',
-      cost: '15 000 Fc',
+      cost: '15 000 CDF',
       supplier: 'Beauty Supplies DRC',
       lastRestock: '2024-11-15',
       usageRate: '8 unités/semaine',
@@ -101,11 +101,11 @@ export default function InventoryManagement({ showMock }: { showMock?: boolean }
   ];
 
   const usageReport = [
-    { item: 'Vernis Gel', used: 32, revenue: '480 000 Fc', trend: 'up' },
-    { item: 'Extensions Cils', used: 24, revenue: '600 000 Fc', trend: 'up' },
-    { item: 'Rajouts Cheveux', used: 16, revenue: '480 000 Fc', trend: 'stable' },
-    { item: 'Fond de Teint', used: 20, revenue: '400 000 Fc', trend: 'up' },
-    { item: 'Fils Tresses', used: 24, revenue: '192 000 Fc', trend: 'stable' }
+    { item: 'Vernis Gel', used: 32, revenue: '480 000 CDF', trend: 'up' },
+    { item: 'Extensions Cils', used: 24, revenue: '600 000 CDF', trend: 'up' },
+    { item: 'Rajouts Cheveux', used: 16, revenue: '480 000 CDF', trend: 'stable' },
+    { item: 'Fond de Teint', used: 20, revenue: '400 000 CDF', trend: 'up' },
+    { item: 'Fils Tresses', used: 24, revenue: '192 000 CDF', trend: 'stable' }
   ];
 
   const categories = ['Onglerie', 'Cils', 'Tresses', 'Maquillage'];
@@ -196,8 +196,8 @@ export default function InventoryManagement({ showMock }: { showMock?: boolean }
       <Tabs defaultValue="stock" className="space-y-6">
         <TabsList className="w-full bg-white dark:bg-gray-950 border border-gray-200 dark:border-pink-900/30 p-1 rounded-xl flex overflow-x-auto no-scrollbar justify-start sm:justify-center">
           <TabsTrigger value="stock" className="data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400 text-base sm:text-base">Stock</TabsTrigger>
-          <TabsTrigger value="suppliers" className="data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400 text-base sm:text-base">Fournisseurs</TabsTrigger>
-          <TabsTrigger value="usage" className="data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400 text-base sm:text-base">Rapport d'Utilisation</TabsTrigger>
+          {/* <TabsTrigger value="suppliers" className="data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400 text-base sm:text-base">Fournisseurs</TabsTrigger>
+          <TabsTrigger value="usage" className="data-[state=active]:bg-pink-100 dark:data-[state=active]:bg-pink-900/30 dark:data-[state=active]:text-pink-400 text-base sm:text-base">Rapport d'Utilisation</TabsTrigger> */}
         </TabsList>
 
         {/* Stock Tab */}
@@ -416,7 +416,7 @@ export default function InventoryManagement({ showMock }: { showMock?: boolean }
                   <p className="text-base text-gray-600 dark:text-gray-400 uppercase  mt-2 tracking-widest">Produits Utilisés</p>
                 </div>
                 <div className="p-4 bg-white dark:bg-gray-950 rounded-2xl shadow-sm border border-blue-50 dark:border-blue-900/20">
-                  <p className="text-2xl sm:text-3xl font-medium font-black text-gray-900 dark:text-gray-100">2,15M Fc</p>
+                  <p className="text-2xl sm:text-3xl font-medium font-black text-gray-900 dark:text-gray-100">2,15M CDF</p>
                   <p className="text-base text-gray-600 dark:text-gray-400 uppercase  mt-2 tracking-widest">Valeur Stock</p>
                 </div>
                 <div className="p-4 bg-white dark:bg-gray-950 rounded-2xl shadow-sm border border-blue-50 dark:border-blue-900/20">

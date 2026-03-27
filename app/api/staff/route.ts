@@ -146,8 +146,6 @@ export async function GET(request: NextRequest) {
       };
     }))
 
-    console.log(formattedStaff)
-
     return successResponse(formattedStaff);
   } catch (error) {
     return handleApiError(error);

@@ -23,6 +23,10 @@ export const workerApiFunctions = {
     const response = await axiosdb.get(`/workers/${id}/profile`);
     return response.data;
   },
+  getWorkerProfiles: async (): Promise<Worker[]> => {
+    const response = await axiosdb.get(`/workers`);
+    return response.data;
+  },
 
   updateWorkerProfile: async (id: string, data: WorkerProfileUpdateData) => {
     const response = await axiosdb.put(`/workers/${id}/profile`, data);

@@ -52,6 +52,7 @@ import {
   Wallet,
   Info,
   AlertCircle,
+  Loader2,
 } from "lucide-react";
 import Link from "next/link";
 import { useAppointments, useAvailableSlots } from "@/lib/hooks/useAppointments";
@@ -68,10 +69,11 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { cn } from "../ui/utils";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { Calendar } from "../ui/calendar";
 import AppointmentCountdown from "../AppointmentCountdown";
 import { useReviews } from "@/lib/hooks/useReview";
+import confetti from "canvas-confetti";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function ClientDashboardV2() {
   const [notificationOpen, setNotificationOpen] = useState(false);
@@ -90,35 +92,61 @@ export default function ClientDashboardV2() {
   // Get authenticated user
   const { user, isLoading: isAuthLoading } = useAuth();
   const { data: referrals, isLoading } = useClientReferrals(user?.clientProfile?.id);
+  const { applyReferralBonus } = useReferral()
+  const { applyLoyaltyBonus, applyFreeService } = useLoyalty()
+  const { createNotification } = useNotifications()
 
   // API hook
-  const { clients: allClients = [] } = useClients()
+  const { data: c } = useClient(user?.clientProfile?.id!)
 
   // Use API data first, fallback to mock only when showMock is true
-  const clients = (allClients && allClients.length > 0)
-    ? allClients.map((c: any) => ({
-      id: c.id || c.user?.id || String(c.user?.name ?? c.user?.email ?? 'unknown'),
-      userId: c.user?.id || undefined,
-      name: c.user?.name || c.user?.email || 'Platform User',
-      phone: c.user?.phone || '',
-      email: c.user?.email || '',
-      birthday: c.birthday ? new Date(c.birthday).toISOString().split('T')[0] : undefined,
-      address: c.address || undefined,
-      totalAppointments: c.totalAppointments || 0,
-      totalSpent: typeof c.totalSpent === 'number' ? `${c.totalSpent}` : (c.totalSpent || '0'),
-      loyaltyPoints: c.loyaltyPoints || 0,
-      membershipStatus: c.tier || 'Standard',
-      lastVisit: (c as any).lastVisit || undefined,
-      preferences: typeof c.preferences === 'string' ? c.preferences : JSON.stringify(c.preferences || ''),
-      allergies: c.allergies || undefined,
-      favoriteServices: c.favoriteServices || [],
-      prepaymentBalance: c.prepaymentBalance ?? '0',
-      giftCardBalance: c.giftCardBalance ?? '0',
-      referrals: c.referrals || 0
-    }))
-    : [];
+  const selectedClient = (c) ? {
+    id: c.id || c.user?.id || String(c.user?.name ?? c.user?.email ?? 'unknown'),
+    userId: c.user?.id || undefined,
+    name: c.user?.name || c.user?.email || 'Platform User',
+    phone: c.user?.phone || '',
+    email: c.user?.email || '',
+    birthday: c.birthday ? new Date(c.birthday).toISOString().split('T')[0] : undefined,
+    address: c.address || undefined,
+    totalAppointments: c.totalAppointments || 0,
+    totalSpent: typeof c.totalSpent === 'number' ? `${c.totalSpent}` : (c.totalSpent || '0'),
+    loyaltyPoints: c.loyaltyPoints || 0,
+    freeServiceCount: c.freeServiceCount || 0,
+    giftCardCount: c.giftCardCount || 0,
+    refBonus: c.refBonus || 0,
+    membershipStatus: c.tier || 'Standard',
+    lastVisit: (c as any).lastVisit || undefined,
+    preferences: typeof c.preferences === 'string' ? c.preferences : JSON.stringify(c.preferences || ''),
+    allergies: c.allergies || undefined,
+    favoriteServices: c.favoriteServices || [],
+    prepaymentBalance: c.prepaymentBalance ?? '0',
+    giftCardBalance: c.giftCardBalance ?? '0',
+    referrals: c.referrals || 0
+  }
+    : {
+      id: 'unknown',
+      userId: undefined,
+      name: 'Platform User',
+      phone: '',
+      email: '',
+      birthday: undefined,
+      address: undefined,
+      totalAppointments: 0,
+      totalSpent: '0',
+      loyaltyPoints: 0,
+      freeServiceCount: 0,
+      giftCardCount: 0,
+      refBonus: 0,
+      membershipStatus: 'Standard',
+      lastVisit: undefined,
+      preferences: '',
+      allergies: undefined,
+      favoriteServices: [],
+      prepaymentBalance: '0',
+      giftCardBalance: '0',
+      referrals: 0
+    };
 
-  const selectedClient = clients.find((client: any) => client.id === user?.clientProfile?.id);
   // Get appointments
   const {
     appointments = [],
@@ -155,7 +183,8 @@ export default function ClientDashboardV2() {
   } = useReferral();
 
   const referralList = referrals || [];
-  const successfulReferrals = referralList.filter(r => r.status === "completed").length;
+  const refIds = referralList.filter(r => (r.status === "completed" || r.status === "pending")).map((r) => r.id);
+  const successfulReferrals = referralList.filter(r => (r.status === "completed" || r.status === "pending")).length;
   const canClaimBonus = successfulReferrals >= 5;
 
   // Get notifications
@@ -219,10 +248,162 @@ export default function ClientDashboardV2() {
     setReviewText("");
   };
 
+  const handleClaimRefBonus = () => {
+
+    applyReferralBonus(refIds, {
+      onSuccess: () => {
+        // 1. Canva-style burst from the center
+        confetti({
+          particleCount: 150,
+          spread: 70,
+          origin: { y: 0.6 },
+          colors: ['#8B5CF6', '#D946EF', '#3B82F6'] // Custom Canva-like palette
+        });
+
+        // 2. Immediate Toast Notification
+        toast.success(`Joyeux Anniversaire ${user?.name}! 🎉`, {
+          description: "Profitez de 20% de réduction ce mois-ci.",
+          duration: 5000,
+        });
+
+        // 3. Your Database Notification
+        createNotification({
+          userId: user?.id ?? '',
+          type: 'marketing',
+          title: `Joyeux Anniversaire ${user?.name}!`,
+          message: `Profitez de 10% de réduction sur tous nos services.`,
+        });
+      }
+    });
+  }
+
+  const callApplyLoyaltyBonus = () => {
+    applyLoyaltyBonus(selectedClient?.id, {
+      onSuccess: () => {
+        // 1. Canva-style burst
+        confetti({
+          particleCount: 150,
+          spread: 70,
+          origin: { y: 0.6 },
+          colors: ['#8B5CF6', '#D946EF', '#3B82F6']
+        });
+
+        // 2. Immediate Toast (UI Feedback)
+        toast.success("Récompense débloquée ! 🏆", {
+          description: "Votre bonus de fidélité a été appliqué avec succès.",
+          duration: 5000,
+          style: {
+            border: '1px solid #8B5CF6',
+            padding: '16px',
+            color: '#1F2937',
+          },
+
+          // iconTheme: {
+          //   primary: '#8B5CF6',
+          //   secondary: '#FFFAEE',
+          // },
+        });
+
+        // 3. Database Notification (Persistent History)
+        createNotification({
+          userId: user?.id ?? '', // Using client ID here
+          type: 'loyalty_reward',
+          title: `Félicitations ${user?.name}! ✨`,
+          message: `Vous avez utilisé vos points pour obtenir un bonus de fidélité. Profitez-en bien !`,
+        });
+      }
+    });
+  }
+
+  const handleApplyLoyaltyBonus = () => {
+
+    if ((selectedClient.loyaltyPoints === 500 && (loyaltyPoints % 500) === 0)
+      || (selectedClient.loyaltyPoints === 1000 && (loyaltyPoints % 1000) === 0)
+      || (selectedClient.loyaltyPoints === 1500 && (loyaltyPoints % 1500) === 0)
+      || (selectedClient.loyaltyPoints === 2000 && (loyaltyPoints % 1500) === 0)
+      || (selectedClient.loyaltyPoints === 2500 && (loyaltyPoints % 1500) === 0)
+      || (selectedClient.loyaltyPoints === 3000 && (loyaltyPoints % 1500) === 0)
+    ) {
+      callApplyLoyaltyBonus()
+    } else if ((selectedClient.loyaltyPoints === 500 && (loyaltyPoints >= 500))) {
+      callApplyLoyaltyBonus()
+    } else if ((selectedClient.loyaltyPoints === 1000 && (loyaltyPoints >= 1000))) {
+      callApplyLoyaltyBonus()
+    } else if ((selectedClient.loyaltyPoints === 1500 && (loyaltyPoints >= 1500))) {
+      callApplyLoyaltyBonus()
+    } else if ((selectedClient.loyaltyPoints === 2000 && (loyaltyPoints >= 2000))) {
+      callApplyLoyaltyBonus()
+    } else {
+      toast.error("Vous n'avez pas assez de points de loyaute")
+      return
+    }
+
+  }
+
+  const handleApplyFreeService = () => {
+    applyFreeService(selectedClient?.id, {
+      onSuccess: () => {
+        // 1. Grand Canva-style Side Bursts
+        const count = 200;
+        const defaults = { origin: { y: 0.7 } };
+
+        function fire(particleRatio: number, opts: confetti.Options | undefined) {
+          confetti({
+            ...defaults,
+            ...opts,
+            particleCount: Math.floor(count * particleRatio),
+          });
+        }
+
+        fire(0.25, { spread: 26, startVelocity: 55 });
+        fire(0.2, { spread: 60 });
+        fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
+
+        // 2. High-Impact Toast Notification
+        toast.success("C'est offert ! 🏆✨", {
+          description: `Félicitations ${user?.name}, votre prochain service est 100% gratuit !`,
+          duration: 8000, // Longer for a big win
+          style: {
+            border: '2px solid #10B981', // Green for "Free/Success"
+            padding: '20px',
+            fontWeight: 'bold',
+            fontSize: '16px',
+          },
+          icon: '🎁',
+        });
+
+        // 3. Database Notification (Persistent History)
+        createNotification({
+          userId: user?.id ?? '',
+          type: 'loyalty_reward',
+          title: `Service Gratuit Débloqué ! 🎖️`,
+          message: `Félicitations ! Votre fidélité a payé. Votre prochain passage en salon est totalement gratuit. À très vite !`,
+        });
+      }
+    });
+  }
+
+
+  const canClaimGiftCard = loyaltyPoints === selectedClient.loyaltyPoints;
+  const canClaimFreeService = nextFreeService === 0;
+
+  // Animation variant for claimable cards
+  const claimableAnimation = {
+    animate: {
+      scale: [1, 1.02, 1],
+      boxShadow: [
+        "0px 0px 0px rgba(139, 92, 246, 0)",
+        "0px 0px 20px rgba(139, 92, 246, 0.4)",
+        "0px 0px 0px rgba(139, 92, 246, 0)",
+      ],
+      transition: { duration: 2, repeat: Infinity },
+    },
+  };
+
   // Copy referral code
   const handleCopyReferralCode = () => {
     navigator.clipboard.writeText("https://beauty-nails.vercel.app/auth/signup?ref=" + referralCode.toLocaleLowerCase());
-    toast.success("Code de parrainage copié !");
+    toast.success("Lien de parrainage copié !");
   };
 
   // Get notification icon
@@ -348,7 +529,7 @@ export default function ClientDashboardV2() {
       {
         onSuccess: () => {
           toast.success(
-            `Le montant (${amount} Fc) sera ajouté au solde prépayé`
+            `Le montant (${amount} CDF) sera ajouté au solde prépayé`
           );
           setSelectedAppointment(null);
         },
@@ -500,100 +681,105 @@ export default function ClientDashboardV2() {
           <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
 
             {/* Loyalty */}
-            <Card className="p-4 sm:p-5 bg-linear-to-br from-pink-500 to-purple-500 text-white border-0 shadow-xl flex flex-col justify-between">
+            {/* 1. Loyalty Card */}
+            <Popover>
+              <PopoverTrigger asChild>
+                <motion.div {...(canClaimGiftCard ? claimableAnimation : {})}>
+                  <Card className={`p-4 sm:p-5 h-full cursor-pointer bg-linear-to-br from-pink-500 to-purple-500 text-white border-0 shadow-xl flex flex-col justify-between ${canClaimGiftCard ? 'ring-2 ring-white ring-offset-2 ring-offset-purple-500' : ''}`}>
+                    <div className="flex items-center justify-between">
+                      <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
+                        <Gift className="w-5 h-5" />
+                      </div>
+                      {loyaltyTier === "VIP" && <Crown className="w-5 h-5 opacity-80" />}
+                    </div>
+                    <div>
+                      <p className="text-lg opacity-90">Points de fidélité</p>
+                      <p className="text-3xl sm:text-4xl font-bold mt-1">{loyaltyPoints}</p>
+                      <div className="flex flex-row justify-between">
+                        <Badge className="bg-white/20 hover:bg-white/30 text-white border-0 mt-2 text-base">{loyaltyTier}</Badge>
+                        <p>vers <Badge className="bg-white/20 hover:bg-white/30 text-white border-0 mt-2 text-2xl">{selectedClient.loyaltyPoints}</Badge></p>
+                      </div>
+                    </div>
+                  </Card>
+                </motion.div>
+              </PopoverTrigger>
+              <PopoverContent className="w-64 bg-linear-to-br from-purple-50 to-pink-50 dark:from-gray-950 dark:to-gray-950 p-4 rounded-2xl text-center shadow-sm hover:shadow-lg transition border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400">
+                <p className="text-base mb-3">Accumulez des points à chaque service pour débloquer des cartes cadeaux.</p>
+                {canClaimGiftCard ? (
+                  <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold" onClick={handleApplyLoyaltyBonus}>
+                    Claim free gift card 🎁
+                  </Button>
+                ) : (
+                  <p className="text-xs text-muted-foreground italic">Besoin de {selectedClient.loyaltyPoints} points pour réclamer.</p>
+                )}
+              </PopoverContent>
+            </Popover>
 
-              <div className="flex items-center justify-between">
-                <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
-                  <Gift className="w-5 h-5" />
-                </div>
+            {/* 2. Appointments Card */}
+            <Popover>
+              <PopoverTrigger asChild>
+                <Card className="p-4 sm:p-5 h-full cursor-pointer hover:shadow-lg transition-shadow border border-pink-100 dark:border-pink-900 shadow-xl rounded-2xl bg-white dark:bg-gray-950 flex flex-col justify-between">
+                  <div className="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-lg w-fit">
+                    <CalendarIcon className="w-5 h-5 text-purple-600 dark:text-purple-400" />
+                  </div>
+                  <div>
+                    <p className="text-lg text-gray-900 dark:text-gray-300">Rendez-vous</p>
+                    <p className="text-2xl sm:text-3xl font-medium text-gray-900 dark:text-gray-100">{completedAppointments}</p>
+                    <p className="text-base text-gray-500 dark:text-gray-400">{upcomingAppointments.length} à venir</p>
+                  </div>
+                </Card>
+              </PopoverTrigger>
+              <PopoverContent className="w-64 bg-linear-to-br from-purple-50 to-pink-50 dark:from-gray-950 dark:to-gray-950 p-4 rounded-2xl text-center shadow-sm hover:shadow-lg transition border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400">
+                <p className="text-sm">Historique de vos visites. Plus vous venez, plus vous gagnez de privilèges !</p>
+              </PopoverContent>
+            </Popover>
 
-                {loyaltyTier === "VIP" && <Crown className="w-5 h-5 opacity-80" />}
-                {loyaltyTier === "Premium" && <Sparkles className="w-5 h-5 opacity-80" />}
-              </div>
+            {/* 3. Referrals Card */}
+            <Popover>
+              <PopoverTrigger asChild>
+                <Card className="p-4 sm:p-5 h-full cursor-pointer hover:shadow-lg transition-shadow border border-pink-100 dark:border-pink-900 shadow-xl rounded-2xl bg-white dark:bg-gray-950 flex flex-col justify-between">
+                  <div className="p-2 bg-amber-100 dark:bg-amber-900/30 rounded-lg w-fit">
+                    <Users className="w-5 h-5 text-amber-600 dark:text-amber-400" />
+                  </div>
+                  <div>
+                    <p className="text-lg text-gray-900 dark:text-gray-300">Parrainages</p>
+                    <p className="text-2xl sm:text-3xl font-medium text-gray-900 dark:text-gray-100">{referrals?.length}</p>
+                    <p className="text-base text-gray-500 dark:text-gray-400">{nextFreeReferral} pour service gratuit</p>
+                  </div>
+                </Card>
+              </PopoverTrigger>
+              <PopoverContent className="w-64 bg-linear-to-br from-purple-50 to-pink-50 dark:from-gray-950 dark:to-gray-950 p-4 rounded-2xl text-center shadow-sm hover:shadow-lg transition border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400">
+                <p className="text-sm">Invitez vos amis ! Pour chaque 5 parrainages terminés, recevez un service 100% gratuit.</p>
+              </PopoverContent>
+            </Popover>
 
-              <div>
-                <p className="text-lg opacity-90">Points de fidélité</p>
-
-                <p className="text-2xl sm:text-3xl font-medium mt-1">{loyaltyPoints}</p>
-
-                <Badge className="bg-white/20 hover:bg-white/30 text-white border-0 mt-2 text-base">
-                  {loyaltyTier}
-                </Badge>
-              </div>
-
-            </Card>
-
-
-            {/* Appointments */}
-            <Card className="p-4 sm:p-5 hover:shadow-lg transition-shadow border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950 flex flex-col justify-between">
-
-              <div className="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-lg w-fit">
-                <CalendarIcon className="w-5 h-5 text-purple-600 dark:text-purple-400" />
-              </div>
-
-              <div>
-                <p className="text-lg text-gray-900 dark:text-gray-300">
-                  Rendez-vous
-                </p>
-
-                <p className="text-2xl sm:text-3xl font-medium text-gray-900 dark:text-gray-100">
-                  {completedAppointments}
-                </p>
-
-                <p className="text-base text-gray-500 dark:text-gray-400">
-                  {upcomingAppointments.length} à venir
-                </p>
-              </div>
-
-            </Card>
-
-
-            {/* Referrals */}
-            <Card className="p-4 sm:p-5 hover:shadow-lg transition-shadow border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950 flex flex-col justify-between">
-
-              <div className="p-2 bg-amber-100 dark:bg-amber-900/30 rounded-lg w-fit">
-                <Users className="w-5 h-5 text-amber-600 dark:text-amber-400" />
-              </div>
-
-              <div>
-                <p className="text-lg text-gray-900 dark:text-gray-300">
-                  Parrainages
-                </p>
-
-                <p className="text-2xl sm:text-3xl font-medium text-gray-900 dark:text-gray-100">
-                  {referrals?.length}
-                </p>
-
-                <p className="text-base text-gray-500 dark:text-gray-400">
-                  {nextFreeReferral} pour service gratuit
-                </p>
-              </div>
-
-            </Card>
-
-
-            {/* Free Service */}
-            <Card className="p-4 sm:p-5 hover:shadow-lg transition-shadow border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950 flex flex-col justify-between">
-
-              <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-lg w-fit">
-                <Award className="w-5 h-5 text-green-600 dark:text-green-400" />
-              </div>
-
-              <div>
-                <p className="text-lg text-gray-900 dark:text-gray-300">
-                  Service gratuit dans
-                </p>
-
-                <p className="text-2xl sm:text-3xl font-medium text-gray-900 dark:text-gray-100">
-                  {nextFreeService}
-                </p>
-
-                <p className="text-base text-gray-500 dark:text-gray-400">
-                  rendez-vous
-                </p>
-              </div>
-
-            </Card>
+            {/* 4. Free Service Card */}
+            <Popover>
+              <PopoverTrigger asChild>
+                <motion.div {...(canClaimFreeService ? claimableAnimation : {})}>
+                  <Card className={`p-4 sm:p-5 h-full cursor-pointer hover:shadow-lg transition-shadow border border-pink-100 dark:border-pink-900 shadow-xl rounded-2xl bg-white dark:bg-gray-950 flex flex-col justify-between ${canClaimFreeService ? 'border-green-500 border-2 shadow-green-100' : ''}`}>
+                    <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-lg w-fit">
+                      <Award className="w-5 h-5 text-green-600 dark:text-green-400" />
+                    </div>
+                    <div>
+                      <p className="text-lg text-gray-900 dark:text-gray-300">Service gratuit dans</p>
+                      <p className="text-2xl sm:text-3xl font-medium text-gray-900 dark:text-gray-100">{nextFreeService}</p>
+                      <p className="text-base text-gray-500 dark:text-gray-400">rendez-vous</p>
+                    </div>
+                  </Card>
+                </motion.div>
+              </PopoverTrigger>
+              <PopoverContent className="w-64 bg-linear-to-br from-purple-50 to-pink-50 dark:from-gray-950 dark:to-gray-950 p-4 rounded-2xl text-center shadow-sm hover:shadow-lg transition border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400">
+                <p className="text-base mb-3">Votre fidélité récompensée ! Un service offert tous les 5 rendez-vous.</p>
+                {canClaimFreeService ? (
+                  <Button className="w-full bg-green-600 hover:bg-green-700 text-white font-bold" onClick={handleApplyFreeService}>
+                    Claim my free service 🏆
+                  </Button>
+                ) : (
+                  <p className="text-xs text-muted-foreground italic">Continuez ainsi !</p>
+                )}
+              </PopoverContent>
+            </Popover>
 
           </div>
 
@@ -605,7 +791,7 @@ export default function ClientDashboardV2() {
             <div className="bg-linear-to-br from-blue-50 to-cyan-50 dark:from-gray-950 dark:to-gray-950 p-4 rounded-2xl text-center shadow-sm hover:shadow-lg transition-shadow border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400">
               <CalendarIcon className="w-5 h-5 text-blue-600 dark:text-blue-400 mx-auto mb-2" />
               <p className="text-xl font-black text-gray-900 dark:text-gray-100">
-                {selectedClient?.totalAppointments}
+                {appointments ? appointments.length : 0}
               </p>
               <p className="text-base text-gray-500 uppercase tracking-tight">
                 Tous les rendez-vous
@@ -748,7 +934,7 @@ export default function ClientDashboardV2() {
                           <div className="flex flex-col gap-2">
                             <div className="text-right mb-2">
                               <p className="text-2xl  text-pink-600">
-                                {appointment.price?.toLocaleString()} Fc
+                                {appointment.price?.toLocaleString()} CDF
                               </p>
                             </div>
                             <AppointmentCountdown
@@ -767,7 +953,7 @@ export default function ClientDashboardV2() {
                                   </Button>
                                 </PopoverTrigger>
 
-                                <PopoverContent className="w-[340px] rounded-2xl p-4 space-y-4">
+                                <PopoverContent className="w-85 rounded-2xl p-4 space-y-4">
 
                                   {/* 🧠 Info */}
                                   <div className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
@@ -961,7 +1147,7 @@ export default function ClientDashboardV2() {
                         <div className="flex flex-col gap-2">
                           <div className="text-right mb-2">
                             <p className="text-2xl font-medium  text-pink-600">
-                              {appointment.price?.toLocaleString()} Fc
+                              {appointment.price?.toLocaleString()} CDF
                             </p>
                           </div>
                           <AppointmentCountdown
@@ -1151,7 +1337,7 @@ export default function ClientDashboardV2() {
 
                       <div className="flex items-center gap-4">
                         <p className=" text-gray-900 dark:text-gray-200">
-                          {appointment.price?.toLocaleString()} Fc
+                          {appointment.price?.toLocaleString()} CDF
                         </p>
                         {appointment.status === "completed" &&
                           !appointment.review && (
@@ -1237,7 +1423,7 @@ export default function ClientDashboardV2() {
 
                   {canClaimBonus && (
                     <Button
-                      onClick={() => console.log("Claim bonus")}
+                      onClick={handleClaimRefBonus}
                       className="bg-linear-to-r from-amber-500 to-yellow-500 hover:opacity-90"
                     >
                       🎁 Réclamer Bonus
@@ -1246,7 +1432,9 @@ export default function ClientDashboardV2() {
                 </div>
 
                 {isLoading ? (
-                  <p className="text-lg text-muted-foreground">Chargement...</p>
+                  <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+                    <Loader2 className="h-8 w-8 animate-spin" />
+                  </div>
                 ) : referralList.length === 0 ? (
                   <p className="text-lg text-muted-foreground">
                     Aucun parrainage pour le moment.
@@ -1286,7 +1474,98 @@ export default function ClientDashboardV2() {
                               </td>
 
                               <td className="p-3">
-                                {ref.referred.totalSpent.toLocaleString()} Fc
+                                {ref.referred.totalSpent.toLocaleString()} CDF
+                              </td>
+
+                              <td className="p-3">
+                                <span
+                                  className={`px-3 py-1 text-base rounded-full ${ref.status === "completed"
+                                    ? "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400"
+                                    : ref.status === "pending"
+                                      ? "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-400"
+                                      : "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400"
+                                    }`}
+                                >
+                                  {ref.status}
+                                </span>
+                              </td>
+
+                              <td className="p-3">
+                                {ref.rewardGranted ? (
+                                  <span className="text-green-600 dark:text-green-400 text-base font-medium">
+                                    ✔ Accordée
+                                  </span>
+                                ) : (
+                                  <span className="text-muted-foreground text-base">
+                                    —
+                                  </span>
+                                )}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+
+                    </div>
+                  </div>
+                )}
+              </Card>
+              <Card className="mb-8 p-6 border border-pink-100 hover:border-pink-400  dark:border-pink-900 dark:hover:border-pink-400 shadow-xl rounded-2xl bg-white dark:bg-gray-950">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-lg font-semibold">
+                    Parrainages - Bonus ✔ Accordée
+                  </h3>
+                </div>
+
+                {isLoading ? (
+                  <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+                    <Loader2 className="h-8 w-8 animate-spin" />
+                  </div>
+                ) : referralList.length === 0 ? (
+                  <>
+                    <p className="text-lg text-muted-foreground">
+                      Continue de faire du parrainage.
+                    </p>
+                    <p className="text-lg text-muted-foreground">
+                      Profitez de 10% de réduction sur tous nos services.
+                    </p>
+                  </>
+                ) : (
+                  <div className="rounded-xl border overflow-hidden">
+                    <div className="max-h-100 overflow-y-auto">
+
+                      <table className="w-full text-lg">
+                        <thead className="bg-muted sticky top-0 z-10">
+                          <tr>
+                            <th className="text-left p-3">Nom</th>
+                            <th className="text-left p-3">Email</th>
+                            <th className="text-left p-3">Téléphone</th>
+                            <th className="text-left p-3">Dépenses</th>
+                            <th className="text-left p-3">Statut</th>
+                            <th className="text-left p-3">Récompense</th>
+                          </tr>
+                        </thead>
+
+                        <tbody>
+                          {referralList.filter((r) => r.status === "rewarded").map((ref) => (
+                            <tr
+                              key={ref.id}
+                              className="border-t hover:bg-muted/40 transition"
+                            >
+                              <td className="p-3 font-medium">
+                                {ref.referred.user.name}
+                              </td>
+
+                              <td className="p-3">
+                                {ref.referred.user.email}
+                              </td>
+
+                              <td className="p-3">
+                                {ref.referred.user.phone}
+                              </td>
+
+                              <td className="p-3">
+                                {ref.referred.totalSpent.toLocaleString()} CDF
                               </td>
 
                               <td className="p-3">
@@ -1418,7 +1697,7 @@ export default function ClientDashboardV2() {
                   <AccordionItem value="item-1">
                     <AccordionTrigger>Comment accumuler des points ?</AccordionTrigger>
                     <AccordionContent>
-                      Gagnez 1 point pour chaque 1000 Fc dépensés. Obtenez des points bonus pour les anniversaires, parrainages et participation à des événements.
+                      Gagnez 1 point pour chaque 1000 CDF dépensés. Obtenez des points bonus pour les anniversaires, parrainages et participation à des événements.
                     </AccordionContent>
                   </AccordionItem>
                   <AccordionItem value="item-2">
@@ -1510,7 +1789,7 @@ export default function ClientDashboardV2() {
                           {selectedClient.name.charAt(0)}
                         </div>
                         <div>
-                          <h3 className="text-2xl font-medium sm:text-3xl font-medium text-gray-900 dark:text-gray-100 font-black mb-2">{selectedClient.name}</h3>
+                          <h3 className="text-2xl font-medium sm:text-3xl text-gray-900 dark:text-gray-100 font-black mb-2">{selectedClient.name}</h3>
                           <div className="flex flex-wrap gap-3">
                             <Badge className="bg-amber-500 dark:bg-amber-600 text-white border-0 px-3 py-1  shadow-md shadow-amber-500/10">
                               {selectedClient.membershipStatus}
@@ -1732,7 +2011,7 @@ export default function ClientDashboardV2() {
                           <p className="text-base font-black text-purple-600 dark:text-purple-400 uppercase tracking-widest">
                             Carte Cadeau
                           </p>
-                          <p className="text-2xl font-medium font-black text-gray-900 dark:text-gray-100">
+                          <p className="text-2xl font-medium text-gray-900 dark:text-gray-100">
                             {selectedClient?.giftCardBalance}
                           </p>
                         </div>
@@ -1890,6 +2169,6 @@ export default function ClientDashboardV2() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </div>
+    </div >
   );
 }

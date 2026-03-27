@@ -122,6 +122,8 @@ export async function POST(request: NextRequest) {
       notes,
       isPrepaidUsed = false,
       isGiftCardUsed,
+      isFreeServiceUsed,
+      refBonusApplied,
       paymentInfo = {}, // Removed decidedToPay since it's no longer used
     } = body;
     
@@ -222,10 +224,18 @@ export async function POST(request: NextRequest) {
         discountAmount = Math.min(discount.value, totalPrice);
       }
     }
+
+    const wasRefBonusUsed = (amount: number) => {
+
+      if(refBonusApplied) {
+        return amount * 0.01;
+      }
+      return amount
+    }
     
     // Calculate final total
     const taxAmount = (totalPrice - discountAmount) * 0.16; // 16% tax
-    const finalTotal = totalPrice - discountAmount + taxAmount + (paymentInfo.tip || 0);
+    const finalTotal = wasRefBonusUsed(isFreeServiceUsed ? 0 : (totalPrice - discountAmount + taxAmount + (paymentInfo.tip || 0)));
     
     // Create appointment in a single transaction
     const result =await prisma.$transaction(async (tx) => {
@@ -348,9 +358,9 @@ export async function POST(request: NextRequest) {
 
       if (isPrepaidUsed) {
         clientUpdateData.data = {
-          loyaltyPoints: {
-            increment: loyaltyPointsEarned,
-          },
+          // loyaltyPoints: {
+          //   increment: loyaltyPointsEarned,
+          // },
           prepaymentBalance : {
             decrement: finalTotal
           },
@@ -367,11 +377,33 @@ export async function POST(request: NextRequest) {
         }
       } else if (isGiftCardUsed) {
         clientUpdateData.data = {
-          loyaltyPoints: {
-            increment: loyaltyPointsEarned,
-          },
+          // loyaltyPoints: {
+          //   increment: loyaltyPointsEarned,
+          // },
           giftCardBalance : {
             decrement: finalTotal
+          },
+          totalSpent: {
+            increment: finalTotal,
+          },
+          giftCardCount: {
+            decrement: 1
+          },
+          loyaltyTransactions: {
+            create: {
+              points: loyaltyPointsEarned,
+              type: 'earned_appointment',
+              description: `Bonus pour avoir réservé ${service.name}`,
+            },
+          },
+        }
+      } else if (isFreeServiceUsed){
+        clientUpdateData.data = {
+          // loyaltyPoints: {
+          //   increment: loyaltyPointsEarned,
+          // },
+          freeServiceCount: {
+            decrement: 1
           },
           totalSpent: {
             increment: finalTotal,
@@ -386,9 +418,9 @@ export async function POST(request: NextRequest) {
         }
       } else {
         clientUpdateData.data = {
-          loyaltyPoints: {
-            increment: loyaltyPointsEarned,
-          },
+          // loyaltyPoints: {
+          //   increment: loyaltyPointsEarned,
+          // },
           totalSpent: {
             increment: finalTotal,
           },
@@ -409,13 +441,31 @@ export async function POST(request: NextRequest) {
         }
       });
       
-      // Create notification for client
+      // 1. Définir les valeurs par défaut (pour cash, mobile money, etc.)
+      let notifTitle = '📅 Rendez-vous confirmé';
+      let notifMessage = `Votre rendez-vous pour ${service.name} le ${date.split('T')[0]} à ${time} a été créé avec succès.`;
+
+      // 2. Vérifier les méthodes spéciales pour personnaliser le message
+      if (paymentInfo.method === 'free-service') {
+        notifTitle = '✨ Rendez-vous Cadeau Confirmé !';
+        notifMessage = `Félicitations ! Votre prestation "${service.name}" du ${date.split('T')[0]} à ${time} est entièrement offerte en récompense de votre fidélité. À très vite au Beauty Nails Salon !`;
+      } 
+      else if (paymentInfo.method === 'giftcard') {
+        notifTitle = '🎁 Paiement par Carte Cadeau';
+        notifMessage = `Votre rendez-vous pour "${service.name}" le ${date.split('T')[0]} à ${time} est confirmé. Le paiement a été déduit de votre carte cadeau Beauty Nails.`;
+      } 
+      else if (paymentInfo.method === 'prepaid') {
+        notifTitle = '💳 Solde Prépayé Utilisé';
+        notifMessage = `Votre rendez-vous pour "${service.name}" le ${date.split('T')[0]} à ${time} a été réglé et confirmé avec succès en utilisant votre solde prépayé.`;
+      }
+
+      // 3. Créer la notification avec les variables dynamiques
       await tx.notification.create({
         data: {
           userId: updateClient.userId,
           type: "appointment_created",
-          title: 'Rendez-vous créé',
-          message: `Votre rendez-vous pour ${service.name} le ${date.split('T')[0]} à ${time} a été créé avec succès.`,
+          title: notifTitle,
+          message: notifMessage,
           link: `/dashboard/client?appointment=confirm&id=${appointment.id}`,
         },
       });

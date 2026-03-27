@@ -68,31 +68,42 @@ export async function POST(
   }
 }
 
-export async function GET(req: NextRequest){
+export async function GET(request: NextRequest){
   try {
+
+    const { searchParams } = new URL(request.url);
+    const workerId = searchParams.get('workerId');
+    const clientId = searchParams.get('clientId');
+
     requireRole(["admin","client","worker"])
 
-    const body = await req.json()
-
-    const { clientId, workerId } = body.params
-
-    let reviews: Review[] = []
+    let reviews = await prisma.review.findMany({
+      cacheStrategy:{
+        ttl: 60
+      }
+    })
 
     if (clientId) {
       reviews = await prisma.review.findMany({
         where:{
           clientId
+        },
+        cacheStrategy:{
+          ttl: 60
         }
       })
     } else if (workerId){
       reviews = await prisma.review.findMany({
         where:{
           workerId
+        },
+        cacheStrategy:{
+          ttl: 60
         }
       })
-    } else {
-      reviews = await prisma.review.findMany()
     }
+
+    console.log(reviews)
 
     return successResponse({
       message: 'Merci pour votre avis !',

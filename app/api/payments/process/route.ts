@@ -115,10 +115,10 @@ export async function POST(request: NextRequest) {
         data: {
           totalSpent: { increment: total },
           totalAppointments: appointmentId ? { increment: 1 } : undefined,
-          loyaltyPoints: { 
-            decrement: loyaltyPointsUsed,
-            increment: pointsEarned 
-          },
+          // loyaltyPoints: { 
+          //   decrement: loyaltyPointsUsed,
+          //   increment: pointsEarned 
+          // },
         },
       });
 

@@ -18,6 +18,14 @@ export function usePayments(params?: {
     queryFn: () => paymentsApi.getSales(params),
   });
 
+  const {
+    data: payments = [],
+    isLoading: paymentsLoading
+  } = useQuery({
+    queryKey: ['payments'],
+    queryFn: () => paymentsApi.getPayments(),
+  });
+
   // Process payment
   const processPaymentMutation = useMutation({
     mutationFn: paymentsApi.processPayment,
@@ -71,6 +79,8 @@ export function usePayments(params?: {
 
   return {
     sales,
+    payments,
+    paymentsLoading,
     isLoading,
     error,
     processPayment: processPaymentMutation.mutate,
@@ -83,6 +93,24 @@ export function usePayments(params?: {
     isUpdating: updateSaleMutation.isPending,
     paymentResult: processPaymentMutation.data,
   };
+}
+
+export function useDailyRegisters() {
+
+  const {
+    data: registers = [],
+    isLoading
+  } = useQuery({
+    queryKey:['registers'],
+    queryFn: () => paymentsApi.getRegisters()
+  })
+
+  return (
+    {
+      registers,
+      isLoading
+    }
+  )
 }
 
 export function useTransactions(params?: {
