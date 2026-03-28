@@ -3,7 +3,6 @@ import { useState } from "react";
 import { Card } from "../ui/card";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
-import { Progress } from "../ui/progress";
 import {
   Tabs,
   TabsContent,
@@ -74,6 +73,7 @@ import AppointmentCountdown from "../AppointmentCountdown";
 import { useReviews } from "@/lib/hooks/useReview";
 import confetti from "canvas-confetti";
 import { motion, AnimatePresence } from "framer-motion";
+import ClientModalTrigger from "../ClientModalTrigger";
 
 export default function ClientDashboardV2() {
   const [notificationOpen, setNotificationOpen] = useState(false);
@@ -1789,7 +1789,7 @@ export default function ClientDashboardV2() {
                           {selectedClient.name.charAt(0)}
                         </div>
                         <div>
-                          <h3 className="text-2xl font-medium sm:text-3xl text-gray-900 dark:text-gray-100 font-black mb-2">{selectedClient.name}</h3>
+                          <h3 className="text-2xl sm:text-3xl text-gray-900 dark:text-gray-100 font-black mb-2">{selectedClient.name}</h3>
                           <div className="flex flex-wrap gap-3">
                             <Badge className="bg-amber-500 dark:bg-amber-600 text-white border-0 px-3 py-1  shadow-md shadow-amber-500/10">
                               {selectedClient.membershipStatus}
@@ -1800,6 +1800,15 @@ export default function ClientDashboardV2() {
                           </div>
                         </div>
                       </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-3 w-full sm:w-auto">
+
+                      <ClientModalTrigger client={selectedClient} edit={true}>
+                        <Button variant="outline" className="rounded-full py-5 px-6 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300  transition-all text-lg">
+                          Modifier
+                        </Button>
+                      </ClientModalTrigger>
+
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -1950,7 +1959,7 @@ export default function ClientDashboardV2() {
                           <p className="text-base font-black text-green-600 dark:text-green-400 uppercase tracking-widest">
                             Solde Prépayé
                           </p>
-                          <p className="text-2xl font-medium font-black text-gray-900 dark:text-gray-100">
+                          <p className="text-2xl font-black text-gray-900 dark:text-gray-100">
                             {selectedClient?.prepaymentBalance}
                           </p>
                         </div>

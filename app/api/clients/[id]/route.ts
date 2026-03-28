@@ -69,3 +69,62 @@ export async function GET(
     return handleApiError(error);
   }
 }
+
+export async function PATCH(
+  request: NextRequest,
+  context: { params: Promise<{ id: string; }>; }
+) {
+  try {
+    
+    requireRole(['admin', 'client', 'worker'])
+
+    const id = (await context.params).id;
+    const body = await request.json();
+
+    const {
+      name,
+      email,
+      phone,
+      tier,
+      notes,
+      birthday,
+      address,
+      allergies,
+      favoriteServices,
+      prepaymentBalance,
+      giftCardBalance,
+      referrals,
+    } = body;
+
+    const user = await prisma.user.update({
+      where: { id },
+      data: {
+        name,
+        email,
+        phone,
+        role: 'client',
+        clientProfile: {
+          update: {
+            tier: tier || 'Regular',
+            notes,
+            birthday: birthday ? new Date(birthday) : undefined,
+            address: address || undefined,
+            allergies: Array.isArray(allergies) ? allergies.join(", ") : '',
+            favoriteServices: Array.isArray(favoriteServices) ? favoriteServices : (favoriteServices ? String(favoriteServices).split(',').map(s=>s.trim()).filter(Boolean) : []),
+            prepaymentBalance: prepaymentBalance ? Number(prepaymentBalance) : undefined,
+            giftCardBalance: giftCardBalance ? Number(giftCardBalance) : undefined,
+            referrals: referrals ? Number(referrals) : undefined,
+          },
+        },
+      },
+      include: { clientProfile: true },
+    });
+
+    return successResponse({ message: 'Client(e) modifié avec success', client: user.clientProfile }, 201);
+  } catch (error: any) {
+    if (error?.code === 'P2002') {
+      return errorResponse('Email ou téléphone déjà utilisé', 400);
+    }
+    return handleApiError(error);
+  }
+}

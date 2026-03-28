@@ -17,7 +17,7 @@ export interface Client {
   birthday?: string;
   address?: string;
   favoriteServices?: string[];
-  allergies?: string;
+  allergies: string[];
   prepaymentBalance?: number | string;
   giftCardBalance?: number | string;
   freeServiceCount: number,
@@ -119,13 +119,13 @@ export const clientsApi = {
   },
 
   // Create client (admin)
-  createClient: async (payload: { name: string; email: string; phone: string; tier?: string; notes?: string; password?: string; birthday?: string; address?: string; allergies?: string; favoriteServices?: string[]; prepaymentBalance?: number | string; giftCardBalance?: number | string; referrals?: number; }) => {
+  createClient: async (payload: { name: string; email: string; phone: string; tier?: string; notes?: string; password?: string; birthday?: string; address?: string; allergies: string[]; favoriteServices?: string[]; prepaymentBalance?: number | string; giftCardBalance?: number | string; referrals?: number; }) => {
     const { data } = await axiosdb.post('/clients', payload);
     return data;
   },
 
-  updateClient: async (payload: { id: string, name: string; email: string; phone: string; tier?: string; notes?: string; password?: string; birthday?: string; address?: string; allergies?: string; favoriteServices?: string[]; prepaymentBalance?: number | string; giftCardBalance?: number | string; referrals?: number; }) => {
-    const { data } = await axiosdb.put(`/clients/${payload.id}`, payload);
+  updateClient: async (payload: { userId: string, name: string; email: string; phone: string; tier?: string; notes?: string; password?: string; birthday?: string; address?: string; allergies: string[]; favoriteServices?: string[]; prepaymentBalance?: number | string; giftCardBalance?: number | string; referrals?: number; }) => {
+    const { data } = await axiosdb.patch(`/clients/${payload.userId}`, payload);
     return data;
   },
 

@@ -13,6 +13,7 @@ export function useServices(params?: {
     data: services = [],
     isLoading,
     error,
+    refetch
   } = useQuery({
     queryKey: ['services', params],
     queryFn: () => servicesApi.getServices(params),
@@ -63,6 +64,7 @@ export function useServices(params?: {
     services,
     isLoading,
     error,
+    refetch,
     createService: createService,
     createdService: createdService,
     updateService: updateMutation.mutate,

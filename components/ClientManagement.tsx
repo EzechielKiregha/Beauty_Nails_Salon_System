@@ -1,41 +1,20 @@
 "use client"
 import { useState } from 'react';
-import CreateClientModal from '@/components/modals/CreateClientModal';
 import { Card } from './ui/card';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Badge } from './ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
-import { Search, Phone, Calendar, DollarSign, Gift, Bell, CreditCard, Award, Mail, MapPin, Cake, Clock, Users, Plus } from 'lucide-react';
+import { Search, Phone, Calendar, DollarSign, Gift, Bell, CreditCard, Award, Mail, MapPin, Cake, Clock, Users } from 'lucide-react';
 import { useClients } from '@/lib/hooks/useClients';
-import { ClientModal } from './modals/ClientModal';
 import { useAppointments } from '@/lib/hooks/useAppointments';
 import { useNotifications } from '@/lib/hooks/useNotifications';
-import { AppointmentModal } from './modals/AppointmentModal';
 import ManageClientMembership from './ManageClientMembership';
 import { useAuth } from '@/lib/hooks/useAuth';
+import ClientModalTrigger from './ClientModalTrigger';
+import { useLoyaltyTransactions } from '@/lib/hooks/useLoyalty';
 
-interface Client {
-  id: string;
-  name: string;
-  phone: string;
-  email: string;
-  birthday: string;
-  address: string;
-  totalAppointments: number;
-  totalSpent: string;
-  loyaltyPoints: number;
-  membershipStatus: string;
-  lastVisit: string;
-  preferences: string;
-  allergies: string;
-  favoriteServices: string[];
-  prepaymentBalance: string;
-  giftCardBalance: string;
-  referrals: number;
-}
-
-export default function ClientManagement({ showMock }: { showMock?: boolean }) {
+export default function ClientManagement() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedClient, setSelectedClient] = useState<any>();
   const { user } = useAuth()
@@ -45,18 +24,18 @@ export default function ClientManagement({ showMock }: { showMock?: boolean }) {
 
   const {
     appointments = [],
-    isLoading: isAppointmentsLoading,
-    cancelAppointment,
   } = useAppointments({
     clientId: selectedClient?.id,
     workerId: user?.role === 'worker' ? user.workerProfile?.id : undefined,
   });
 
   const {
-    notifications: notificationList = [],
-    unreadCount = 0,
-  } = useNotifications({ userId: selectedClient?.user?.id, limit: 50 });
+    transactions: transactions = [],
+  } = useLoyaltyTransactions();
 
+  const {
+    notifications: notificationList = [],
+  } = useNotifications({ userId: selectedClient?.user?.id, limit: 50 });
 
   const apiClients = allClients.filter(c => {
 
@@ -65,30 +44,37 @@ export default function ClientManagement({ showMock }: { showMock?: boolean }) {
     return clientHasAppointmentsWithCurrentWorker;
   })
 
+  const getPoints = (id: string) => {
+    return transactions.map((e) => e.clientId === id ? e.points : 0).reduce((sum, p) => sum + p, 0)
+  }
   // Use API data first, fallback to mock only when showMock is true
-  const clients = (user?.role === 'worker' && apiClients.length > 0)
-    ? apiClients.map((c) => ({
-      id: c.id || c.user?.id || String(c.user?.name ?? c.user?.email ?? 'unknown'),
-      name: c.user?.name || c.user?.email || 'Platform User',
-      phone: c.user?.phone || '',
-      email: c.user?.email || '',
-      birthday: c.birthday ? new Date(c.birthday).toISOString().split('T')[0] : undefined,
-      address: c.address || undefined,
-      totalAppointments: c.totalAppointments || 0,
-      totalSpent: typeof c.totalSpent === 'number' ? `${c.totalSpent}` : (c.totalSpent || '0'),
-      loyaltyPoints: c.loyaltyPoints || 0,
-      membershipStatus: c.tier || 'Standard',
-      lastVisit: (c as any).lastVisit || undefined,
-      preferences: typeof c.preferences === 'string' ? c.preferences : JSON.stringify(c.preferences || ''),
-      allergies: c.allergies || undefined,
-      favoriteServices: c.favoriteServices || [],
-      prepaymentBalance: c.prepaymentBalance ?? '0',
-      giftCardBalance: c.giftCardBalance ?? '0',
-      referrals: c.referrals || 0
-    }))
+  const clients = (user?.role === 'worker' && apiClients.length > 0) ? apiClients.map((c) => ({
+    id: c.id || String(c.user?.name ?? c.user?.email ?? 'unknown'),
+    userId: c.userId || c.user?.id || 'no user id',
+    name: c.user?.name || c.user?.email || 'Platform User',
+    phone: c.user?.phone || '',
+    email: c.user?.email || '',
+    birthday: c.birthday ? new Date(c.birthday).toISOString().split('T')[0] : undefined,
+    address: c.address || undefined,
+    totalAppointments: c.totalAppointments || 0,
+    totalSpent: typeof c.totalSpent === 'number' ? `${c.totalSpent}` : (c.totalSpent || '0'),
+    loyaltyPoints: getPoints(c.id) || 0,
+    freeServiceCount: c.freeServiceCount || 0,
+    giftCardCount: c.giftCardCount || 0,
+    refBonus: c.refBonus || 0,
+    membershipStatus: c.tier || 'Standard',
+    lastVisit: (c as any).lastVisit || undefined,
+    preferences: typeof c.preferences === 'string' ? c.preferences : JSON.stringify(c.preferences || ''),
+    allergies: c.allergies || undefined,
+    favoriteServices: c.favoriteServices || [],
+    prepaymentBalance: c.prepaymentBalance ?? '0',
+    giftCardBalance: c.giftCardBalance ?? '0',
+    referrals: c.referrals || 0
+  }))
     : (allClients && allClients.length > 0)
       ? allClients.map((c) => ({
-        id: c.id || c.user?.id || String(c.user?.name ?? c.user?.email ?? 'unknown'),
+        id: c.id || String(c.user?.name ?? c.user?.email ?? 'unknown'),
+        userId: c.userId || c.user?.id || 'no user id',
         name: c.user?.name || c.user?.email || 'Platform User',
         phone: c.user?.phone || '',
         email: c.user?.email || '',
@@ -96,7 +82,10 @@ export default function ClientManagement({ showMock }: { showMock?: boolean }) {
         address: c.address || undefined,
         totalAppointments: c.totalAppointments || 0,
         totalSpent: typeof c.totalSpent === 'number' ? `${c.totalSpent}` : (c.totalSpent || '0'),
-        loyaltyPoints: c.loyaltyPoints || 0,
+        loyaltyPoints: getPoints(c.id) || 0,
+        freeServiceCount: c.freeServiceCount || 0,
+        giftCardCount: c.giftCardCount || 0,
+        refBonus: c.refBonus || 0,
         membershipStatus: c.tier || 'Standard',
         lastVisit: (c as any).lastVisit || undefined,
         preferences: typeof c.preferences === 'string' ? c.preferences : JSON.stringify(c.preferences || ''),
@@ -134,13 +123,12 @@ export default function ClientManagement({ showMock }: { showMock?: boolean }) {
         <h2 className="text-2xl  sm:text-3xl font-medium text-gray-900 dark:text-gray-100 ">Gestion des Clientes</h2>
         <div className="flex items-center gap-2 w-full sm:w-auto">
           {/* <CreateClientModal triggerLabel="+ Nouvelle Cliente" /> */}
-          <ClientModal
-            trigger={
-              <Button variant="outline" className="w-full rounded-full py-6 justify-start px-6  dark:border-gray-700 dark:hover:bg-gray-800 transition-all hover:scale-[1.02]">
-                <Users className="w-5 h-5 mr-3 text-purple-500" />
-                + Nouvelle Cliente
-              </Button>
-            } />
+          <ClientModalTrigger>
+            <Button variant="outline" className="w-full rounded-full py-6 justify-start px-6  dark:border-gray-700 dark:hover:bg-gray-800 transition-all hover:scale-[1.02]">
+              <Users className="w-5 h-5 mr-3 text-purple-500" />
+              Nouvelle Cliente
+            </Button>
+          </ClientModalTrigger>
           {/* <Button variant="ghost" size="sm" className="dark:text-gray-400 dark:hover:text-gray-200">Importer</Button> */}
         </div>
       </div>
@@ -219,7 +207,7 @@ export default function ClientManagement({ showMock }: { showMock?: boolean }) {
                       {selectedClient.name.charAt(0)}
                     </div>
                     <div>
-                      <h3 className="text-2xl sm:text-3xl font-medium text-gray-900 dark:text-gray-100 font-black mb-2">{selectedClient.name}</h3>
+                      <h3 className="text-2xl sm:text-3xl text-gray-900 dark:text-gray-100 font-black mb-2">{selectedClient.name}</h3>
                       <div className="flex flex-wrap gap-3">
                         <Badge className="bg-amber-500 dark:bg-amber-600 text-white border-0 px-3 py-1  shadow-md shadow-amber-500/10">
                           {selectedClient.membershipStatus}
@@ -231,23 +219,19 @@ export default function ClientManagement({ showMock }: { showMock?: boolean }) {
                     </div>
                   </div>
                   <div className="grid grid-cols-2 gap-3 w-full sm:w-auto">
-                    <AppointmentModal
+                    {/* <AppointmentModal
                       client={selectedClient}
                       trigger={
                         <Button className="bg-linear-to-r from-pink-500 to-purple-500 text-white rounded-full py-5 px-6 shadow-lg shadow-pink-500/20  transition-all text-lg">
                           <Plus className="w-5 h-5 mr-3" />
                           Prendre RDV
                         </Button>
-                      } />
-
-                    {!user?.role || user?.role !== "worker" &&
-                      <ClientModal
-                        client={selectedClient}
-                        trigger={
-                          <Button variant="outline" className="rounded-full py-5 px-6 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300  transition-all text-lg">
-                            Modifier
-                          </Button>
-                        } />}
+                      } /> */}
+                    <ClientModalTrigger client={selectedClient} edit={true}>
+                      <Button variant="outline" className="rounded-full py-5 px-6 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300  transition-all text-lg">
+                        Modifier
+                      </Button>
+                    </ClientModalTrigger>
 
                   </div>
                 </div>
@@ -456,7 +440,7 @@ export default function ClientManagement({ showMock }: { showMock?: boolean }) {
                     <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
                       <div
                         className="bg-linear-to-r from-amber-500 to-orange-500 h-full rounded-full transition-all duration-500"
-                        style={{ width: `${(selectedClient.loyaltyPoints / 500) * 100}%` }}
+                        style={{ width: `${selectedClient.loyaltyPoints < 500 ? (selectedClient.loyaltyPoints / 500) * 100 : selectedClient.loyaltyPoints < 1000 ? (selectedClient.loyaltyPoints / 1000) * 100 : (selectedClient.loyaltyPoints / 1500) * 100}%` }}
                       />
                     </div>
                     <p className="text-base text-gray-600 dark:text-gray-400 italic">

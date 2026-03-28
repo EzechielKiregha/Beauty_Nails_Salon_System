@@ -29,7 +29,7 @@ export function useClients(params?: ClientsParams) {
 
   // Create client
   const createClientMutation = useMutation({
-    mutationFn: (payload: { name: string; email: string; phone: string; tier?: string; notes?: string; password?: string; birthday?: string; address?: string; allergies?: string; favoriteServices?: string[]; prepaymentBalance?: number | string; giftCardBalance?: number | string; referrals?: number; }) => clientsApi.createClient(payload),
+    mutationFn: (payload: { name: string; email: string; phone: string; tier?: string; notes?: string; password?: string; birthday?: string; address?: string; allergies: string[]; favoriteServices: string[]; prepaymentBalance?: number | string; giftCardBalance?: number | string; referrals?: number; }) => clientsApi.createClient(payload),
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['clients'] });
       toast.success(data.message || 'Client créé');
@@ -40,13 +40,13 @@ export function useClients(params?: ClientsParams) {
   });
   // Update client
   const updateClientMutation = useMutation({
-    mutationFn: (payload: { id:string, name: string; email: string; phone: string; tier?: string; notes?: string; password?: string; birthday?: string; address?: string; allergies?: string; favoriteServices?: string[]; prepaymentBalance?: number | string; giftCardBalance?: number | string; referrals?: number; }) => clientsApi.updateClient(payload),
+    mutationFn: (payload: { userId: string, name: string; email: string; phone: string; tier?: string; notes?: string; password?: string; birthday?: string; address?: string; allergies: string[]; favoriteServices: string[]; prepaymentBalance?: number | string; giftCardBalance?: number | string; referrals?: number; }) => clientsApi.updateClient(payload),
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['clients'] });
       toast.success(data.message || 'Client modifié');
     },
     onError: (error: any) => {
-      toast.error(error.response?.data?.error?.message || 'Erreur création du client');
+      toast.error(error.response?.data?.error?.message || 'Erreur mise en jour du client');
     },
   });
 

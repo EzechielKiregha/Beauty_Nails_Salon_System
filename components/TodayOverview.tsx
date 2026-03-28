@@ -1,3 +1,4 @@
+'use client'
 import { Card } from './ui/card';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
@@ -7,11 +8,15 @@ import { useRevenueReport, useServicePerformance } from '@/lib/hooks/useReports'
 import { useAvailableStaff, useStaff } from '@/lib/hooks/useStaff';
 import { useInventory } from '@/lib/hooks/useInventory';
 import { AppointmentModal } from './modals/AppointmentModal';
-import { ClientModal } from './modals/ClientModal';
 import { endOfDay, format, formatISO, startOfDay } from 'date-fns';
+import ClientModal from './modals/ClientModal';
+import { useState } from 'react';
+import ClientModalTrigger from './ClientModalTrigger';
 
 
 export default function TodayOverview() {
+  const [isOpen, setIsOpen] = useState(false);
+
   // 1. Get the current date object
   const now = new Date();
 
@@ -232,13 +237,12 @@ export default function TodayOverview() {
               <Package className="w-5 h-5 mr-3" />
               Ajouter Stock
             </Button>
-            <ClientModal
-              trigger={
-                <Button variant="outline" className="w-full rounded-full py-6 justify-start px-6  dark:border-gray-700 dark:hover:bg-gray-800 transition-all hover:scale-[1.02]">
-                  <Users className="w-5 h-5 mr-3 text-purple-500" />
-                  Nouvelle Cliente
-                </Button>
-              } />
+            <ClientModalTrigger>
+              <Button variant="outline" className="w-full rounded-full py-6 justify-start px-6  dark:border-gray-700 dark:hover:bg-gray-800 transition-all hover:scale-[1.02]">
+                <Users className="w-5 h-5 mr-3 text-purple-500" />
+                Nouvelle Cliente
+              </Button>
+            </ClientModalTrigger>
             <Button variant="outline" className="w-full rounded-full py-6 justify-start px-6  dark:border-gray-700 dark:hover:bg-gray-800 transition-all hover:scale-[1.02]">
               <Clock className="w-5 h-5 mr-3 text-blue-500" />
               Voir Planning
@@ -360,14 +364,14 @@ export default function TodayOverview() {
 
       {/* Popular Services Today */}
       <Card className="border-0 shadow-lg rounded-2xl p-5 sm:p-6 bg-white dark:bg-gray-950 dark:border dark:border-pink-900/30">
-        <h3 className="text-lg sm:text-xl text-gray-900 dark:text-gray-100  mb-6">Services Populaires Aujourd'hui</h3>
+        <h3 className="text-lg sm:text-xl text-gray-900 dark:text-gray-100  mb-6">Services Populaires</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {popularServices.map((service, idx) => (
             <Card key={idx} className="bg-linear-to-br from-purple-50 to-pink-50 dark:from-purple-900/10 dark:to-pink-900/10 border-0 p-5 shadow-sm transition-all hover:scale-[1.03]">
               <p className="text-lg sm:text-base text-gray-900 dark:text-gray-100  mb-3 truncate">{service.name}</p>
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-2xl sm:text-3xl font-medium text-gray-900 dark:text-gray-100 font-black tracking-tight">{service.count}</p>
+                  <p className="text-2xl sm:text-3xl text-gray-900 dark:text-gray-100 font-black tracking-tight">{service.count}</p>
                   <p className="text-[10px] sm:text-base text-gray-500 dark:text-gray-400  uppercase">Réservations</p>
                 </div>
                 <div className="text-right">

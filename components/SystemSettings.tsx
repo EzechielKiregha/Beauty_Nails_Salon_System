@@ -11,7 +11,7 @@ import { Switch } from './ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { useSalonProfile, useUpdateSalonProfile, useSystemSettings, useUpdateSystemSettings, useUsers } from '@/lib/hooks/useSettings';
 import { toast } from 'sonner';
-import { Edit, Trash2, Plus, Search, Star } from 'lucide-react';
+import { Edit, Trash2, Plus, Search, Star, Loader2 } from 'lucide-react';
 import { useDailyRegisters, usePayments } from '@/lib/hooks/usePayments';
 import { useMembershipPurchases } from '@/lib/hooks/useMemberships';
 import { useReviews } from '@/lib/hooks/useReview';
@@ -128,10 +128,10 @@ export default function SystemSettings() {
     });
   };
 
-  if (profileLoading || settingsLoading) {
+  if (profileLoading || settingsLoading || servicesLoading || clientsLoading || usersLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-gray-500">Chargement...</div>
+      <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+        <Loader2 className="h-8 w-8 animate-spin" />
       </div>
     );
   }
@@ -150,7 +150,7 @@ export default function SystemSettings() {
               });
             }}
             disabled
-            className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white rounded-full"
+            className="bg-linear-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white rounded-full"
           >
             {updatingProfile || updatingSettings ? 'Enregistrement...' : 'Enregistrer'}
           </Button>
@@ -668,7 +668,6 @@ export default function SystemSettings() {
           </Card>
         </TabsContent>
 
-        // Reviews Tab
         <TabsContent value="reviews" className="space-y-6">
           <Card className="p-6 border border-pink-100 dark:border-pink-900/30 bg-white dark:bg-gray-950">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
@@ -746,7 +745,6 @@ export default function SystemSettings() {
           </Card>
         </TabsContent>
 
-// Users Tab
         <TabsContent value="users" className="space-y-6">
           <Card className="p-6 border border-pink-100 dark:border-pink-900/30 bg-white dark:bg-gray-950">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">

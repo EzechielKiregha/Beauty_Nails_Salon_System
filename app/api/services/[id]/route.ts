@@ -17,6 +17,7 @@ export async function PATCH(
         price,
         duration,
         description,
+        commission,
         imageUrl,
         onlineBookable = true,
         isPopular = false,
@@ -28,6 +29,7 @@ export async function PATCH(
       if (category) updateData.category = category;
       if (price) updateData.price = price;
       if (duration) updateData.duration = duration;
+      if (commission) updateData.workerCommission = commission;
       if (description) updateData.description = description;
       if (imageUrl) updateData.imageUrl = imageUrl;
       if (onlineBookable) updateData.onlineBookable = onlineBookable;

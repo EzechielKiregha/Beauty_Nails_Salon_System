@@ -18,7 +18,6 @@ import { useWorker } from '@/lib/hooks/useStaff';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
-import { getNextResetDate } from './modals/StaffModals';
 
 // Define types based on your schema
 interface WorkingHours {
@@ -41,7 +40,7 @@ interface WorkerProfileData {
 
 export default function WorkerProfileSettings({ staffId }: { staffId: string }) {
   const { user } = useAuth()
-  const { data, isLoading: isWorkerLoading, error: workerError, refetch: refetchWorker } = useWorker(staffId);
+  const { refetch: refetchWorker } = useWorker(staffId);
   const { updateProfile, isLoading, profile: workerProfile } = useWorkerProfile(staffId);
 
   const [formData, setFormData] = useState<WorkerProfileData>({
@@ -81,19 +80,6 @@ export default function WorkerProfileSettings({ staffId }: { staffId: string }) 
     setFormData(prev => ({
       ...prev,
       [field]: value
-    }));
-  };
-
-  const handleWorkingHoursChange = (day: string, field: 'startTime' | 'endTime', value: string) => {
-    setFormData(prev => ({
-      ...prev,
-      workingHours: {
-        ...prev.workingHours,
-        [day]: {
-          ...prev.workingHours[day],
-          [field]: value
-        }
-      }
     }));
   };
 

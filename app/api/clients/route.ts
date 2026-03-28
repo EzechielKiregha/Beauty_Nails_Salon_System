@@ -2,7 +2,6 @@
 import { NextRequest } from 'next/server';
 import prisma from '@/lib/prisma';
 import { requireRole, successResponse, errorResponse, handleApiError } from '@/lib/api/helpers';
-import { hash } from 'bcryptjs';
 import { nanoid } from 'nanoid';
 
 export async function GET(request: NextRequest) {
@@ -125,7 +124,7 @@ export async function POST(request: NextRequest) {
             notes,
             birthday: birthday ? new Date(birthday) : undefined,
             address: address || undefined,
-            allergies: allergies || undefined,
+            allergies: Array.isArray(allergies) ? allergies.join(", ") : '' ,
             favoriteServices: Array.isArray(favoriteServices) ? favoriteServices : (favoriteServices ? String(favoriteServices).split(',').map(s=>s.trim()).filter(Boolean) : []),
             prepaymentBalance: prepaymentBalance ? Number(prepaymentBalance) : undefined,
             giftCardBalance: giftCardBalance ? Number(giftCardBalance) : undefined,
@@ -136,59 +135,7 @@ export async function POST(request: NextRequest) {
       include: { clientProfile: true },
     });
 
-    return successResponse({ message: 'Client créé', client: user.clientProfile }, 201);
-  } catch (error: any) {
-    if (error?.code === 'P2002') {
-      return errorResponse('Email ou téléphone déjà utilisé', 400);
-    }
-    return handleApiError(error);
-  }
-}
-
-export async function PUT(request: NextRequest) {
-  try {
-    const body = await request.json();
-    const {
-      id,
-      name,
-      email,
-      phone,
-      tier,
-      notes,
-      birthday,
-      address,
-      allergies,
-      favoriteServices,
-      prepaymentBalance,
-      giftCardBalance,
-      referrals,
-    } = body;
-
-    const user = await prisma.user.update({
-      where: { id },
-      data: {
-        name,
-        email,
-        phone,
-        role: 'client',
-        clientProfile: {
-          update: {
-            tier: tier || 'Regular',
-            notes,
-            birthday: birthday ? new Date(birthday) : undefined,
-            address: address || undefined,
-            allergies: allergies || undefined,
-            favoriteServices: Array.isArray(favoriteServices) ? favoriteServices : (favoriteServices ? String(favoriteServices).split(',').map(s=>s.trim()).filter(Boolean) : []),
-            prepaymentBalance: prepaymentBalance ? Number(prepaymentBalance) : undefined,
-            giftCardBalance: giftCardBalance ? Number(giftCardBalance) : undefined,
-            referrals: referrals ? Number(referrals) : undefined,
-          },
-        },
-      },
-      include: { clientProfile: true },
-    });
-
-    return successResponse({ message: 'Client créé', client: user.clientProfile }, 201);
+    return successResponse({ message: 'Client(e) créé avec success', client: user.clientProfile }, 201);
   } catch (error: any) {
     if (error?.code === 'P2002') {
       return errorResponse('Email ou téléphone déjà utilisé', 400);

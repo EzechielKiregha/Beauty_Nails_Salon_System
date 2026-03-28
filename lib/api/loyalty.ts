@@ -30,6 +30,12 @@ export const loyaltyApi = {
     const { data } = await axiosdb.get('/loyalty/points');
     return data;
   },
+  getAllLoyaltyPoints: async (): Promise<{
+    transactions: LoyaltyTransaction[];
+  }> => {
+    const { data } = await axiosdb.get('/loyalty');
+    return data;
+  },
 
   // Get referral code
   getReferralCode: async (): Promise<{

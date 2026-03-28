@@ -21,7 +21,12 @@ import { Service, ServiceAddOn } from "@/lib/api/services";
 import { useMedias } from "@/lib/hooks/useMedia";
 import { MediaData } from "@/lib/api/media";
 
-export default function CreateServiceModal({ trigger, service }: { trigger?: React.ReactNode, service?: Service; }) {
+export default function CreateServiceModal({ trigger, service, onSubmitRemoveService, onSubmitReftch }: {
+  trigger?: React.ReactNode,
+  service?: Service,
+  onSubmitRemoveService?: (serviceId: string | null) => void
+  onSubmitReftch?: () => void
+}) {
   const [name, setName] = useState(service?.name || "");
   const [category, setCategory] = useState<'onglerie' | 'cils' | 'tresses' | 'maquillage' | ''>(service?.category || '');
   const [description, setDescription] = useState(service?.description || "");
@@ -55,7 +60,7 @@ export default function CreateServiceModal({ trigger, service }: { trigger?: Rea
     ]
   });
 
-  const { isCreating: uploading, createMedia, isLoading, error, refetch } = useMedias();
+  const { createMedia } = useMedias();
 
   const { createService, updateService, isUpdating, isCreating, createdService, updatedService } = useServices();
   const { createAddOn, isCreatingAddOn } = useAddOnMutations();
@@ -91,6 +96,7 @@ export default function CreateServiceModal({ trigger, service }: { trigger?: Rea
         name,
         category,
         price: Number(price),
+        commission: Number(commission),
         duration: Number(duration),
         description,
         imageUrl: imageUrl || undefined,
@@ -143,6 +149,7 @@ export default function CreateServiceModal({ trigger, service }: { trigger?: Rea
 
     // Close the modal and reset
     setIsOpen(false);
+    if (onSubmitRemoveService) onSubmitRemoveService(null)
     resetForm();
   };
 
@@ -363,14 +370,27 @@ export default function CreateServiceModal({ trigger, service }: { trigger?: Rea
               </DialogClose>
               {!service ?
                 <Button
-                  onClick={onSubmit}
+                  onClick={() => {
+                    onSubmit()
+
+                    if (onSubmitRemoveService && onSubmitReftch) {
+                      onSubmitReftch()
+                      onSubmitRemoveService(null)
+                    }
+                  }}
                   disabled={isCreating}
                 >
                   {isCreating ? "Création..." : "Créer"}
                 </Button>
                 :
                 <Button
-                  onClick={onUpdate}
+                  onClick={() => {
+                    onUpdate()
+                    if (onSubmitRemoveService && onSubmitReftch) {
+                      onSubmitRemoveService(null)
+                      onSubmitReftch()
+                    }
+                  }}
                   disabled={isUpdating}
                 >
                   {isUpdating ? "Updating..." : "Update"}

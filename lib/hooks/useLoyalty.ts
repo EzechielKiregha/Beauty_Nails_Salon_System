@@ -2,6 +2,22 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { loyaltyApi } from '../api/loyalty';
 import { toast } from 'sonner';
 
+export function useLoyaltyTransactions() {
+
+  const {
+    data,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ['transactions'],
+    queryFn: loyaltyApi.getAllLoyaltyPoints,
+  });
+  return {
+    isLoading,
+    error,
+    transactions : data?.transactions || []
+  }
+}
 export function useLoyalty() {
   const queryClient = useQueryClient();
   const {

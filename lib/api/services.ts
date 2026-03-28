@@ -1,4 +1,3 @@
-import { ReferralStatus, Tier } from '@/prisma/generated/enums';
 import axiosdb from '../axios';
 
 export interface Service {

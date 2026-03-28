@@ -7,15 +7,14 @@ import { Textarea } from './ui/textarea';
 import { Badge } from './ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Switch } from './ui/switch';
-import { Scissors, Clock, DollarSign, Sparkles, Package, Percent, Globe, Search, ShoppingBag, Filter, Trash2, Plus } from 'lucide-react';
-import { useAddOnMutations, useAddOns, useService, useServices } from '@/lib/hooks/useServices';
+import { Scissors, Clock, DollarSign, Sparkles, Package, Percent, Globe, Search, Trash2, Plus } from 'lucide-react';
+import { useAddOnMutations, useAddOns, useServices } from '@/lib/hooks/useServices';
 import { usePackages } from '@/lib/hooks/usePackages';
-import { useCampaigns, useDiscounts } from '@/lib/hooks/useMarketing';
-import { ServiceModal, PackageModal, PromoModal } from './modals/ServicePackagePromoModal';
-import { CreateServiceData, Service } from '@/lib/api/services';
-import { ServicePackage, CreatePackageData } from '@/lib/api/packages';
+import { useDiscounts } from '@/lib/hooks/useMarketing';
+import { PackageModal, PromoModal } from './modals/ServicePackagePromoModal';
+import { Service } from '@/lib/api/services';
+import { ServicePackage } from '@/lib/api/packages';
 import { DiscountCode } from '@/lib/api/marketing';
-import { AddProductModal } from './modals/InventoryModals';
 import CreateServiceModal from './modals/CreateServiceModal';
 import { toast } from 'sonner';
 import { Label } from './ui/label';
@@ -25,11 +24,11 @@ interface ServiceCategoryMap {
   [key: string]: Service[];
 }
 
-export default function ServiceManagement({ showMock }: { showMock?: boolean }) {
+export default function ServiceManagement() {
   const [selectedServiceId, setSelectedServiceId] = useState<string | null>(null);
 
   // Fetch data using hooks
-  const { services: apiServices = [], isLoading: servicesLoading, error: servicesError } = useServices();
+  const { services: apiServices = [], isLoading: servicesLoading, error: servicesError, refetch: refetchServices } = useServices();
   const { packages: apiPackages = [], isLoading: packagesLoading, error: packagesError } = usePackages();
   const { discounts: apiDiscounts = [], isLoading: discountsLoading, error: discountsError } = useDiscounts();
 
@@ -165,6 +164,8 @@ export default function ServiceManagement({ showMock }: { showMock?: boolean }) 
               <Input placeholder="Rechercher un service..." className="pl-9 rounded-full bg-white" />
             </div>
             <CreateServiceModal
+              // onSubmitRemoveService={setSelectedServiceId}
+              onSubmitReftch={refetchServices}
               trigger={
                 <Button className="bg-linear-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white rounded-full py-3 transition-all">
                   + Nouveau Service
@@ -238,9 +239,15 @@ export default function ServiceManagement({ showMock }: { showMock?: boolean }) 
                       <Input value={selectedService.name} readOnly className="rounded-xl bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 dark:text-gray-100 focus:ring-pink-500" />
                     </div>
 
-                    <div>
-                      <label className="block text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">Catégorie</label>
-                      <Input value={selectedService.category} readOnly className="rounded-xl bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 dark:text-gray-100" />
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">Catégorie</label>
+                        <Input value={selectedService.category} readOnly className="rounded-xl bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 dark:text-gray-100" />
+                      </div>
+                      <div>
+                        <label className="block text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">Commission</label>
+                        <Input value={selectedService.workerCommission} readOnly className="rounded-xl bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 dark:text-gray-100" />
+                      </div>
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
@@ -342,7 +349,7 @@ export default function ServiceManagement({ showMock }: { showMock?: boolean }) 
                         <Button
                           onClick={handleAddAddOn}
                           disabled={isCreatingAddOn}
-                          className="mt-3 w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-full py-2"
+                          className="mt-3 w-full bg-linear-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-full py-2"
                         >
                           <Plus className="w-4 h-4 mr-2" />
                           {isCreatingAddOn ? 'Ajout...' : 'Ajouter'}
@@ -353,6 +360,8 @@ export default function ServiceManagement({ showMock }: { showMock?: boolean }) 
                     <div className="flex flex-col sm:flex-row gap-3 pt-4">
                       <CreateServiceModal
                         service={selectedService}
+                        onSubmitRemoveService={setSelectedServiceId}
+                        onSubmitReftch={refetchServices}
                         trigger={
                           <Button className="flex-1 bg-linear-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white rounded-full py-3 transition-all">
                             Modifier
@@ -367,7 +376,7 @@ export default function ServiceManagement({ showMock }: { showMock?: boolean }) 
                 </Card>
               </div>
             ) : (
-              <Card className="p-12 hover:shadow-lg transition-all border border-pink-100 dark:border-pink-900 shadow-xl rounded-2xl bg-white dark:bg-gray-950 flex items-center justify-center min-h-[400px]">
+              <Card className="p-12 hover:shadow-lg transition-all border border-pink-100 dark:border-pink-900 shadow-xl rounded-2xl bg-white dark:bg-gray-950 flex items-center justify-center min-h-100">
                 <div className="text-center">
                   <div className="w-20 h-20 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-6">
                     <Scissors className="w-10 h-10 text-gray-300 dark:text-gray-600" />
@@ -388,7 +397,7 @@ export default function ServiceManagement({ showMock }: { showMock?: boolean }) 
             </div>
             <AddProductModal
               trigger={
-                <Button className="bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-full shadow-md hover:shadow-lg">
+                <Button className="bg-linear-to-r from-amber-500 to-orange-500 text-white rounded-full shadow-md hover:shadow-lg">
                   + Nouveau Produit
                 </Button>
               }
@@ -421,7 +430,7 @@ export default function ServiceManagement({ showMock }: { showMock?: boolean }) 
             </div>
             <PackageModal
               trigger={
-                <Button className="bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full shadow-md">
+                <Button className="bg-linear-to-r from-purple-500 to-pink-500 text-white rounded-full shadow-md">
                   + Créer Nouveau Forfait
                 </Button>
               }
