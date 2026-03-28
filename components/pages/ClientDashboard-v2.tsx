@@ -102,7 +102,7 @@ export default function ClientDashboardV2() {
   // Use API data first, fallback to mock only when showMock is true
   const selectedClient = (c) ? {
     id: c.id || c.user?.id || String(c.user?.name ?? c.user?.email ?? 'unknown'),
-    userId: c.user?.id || undefined,
+    userId: c.userId || c.user?.id || undefined,
     name: c.user?.name || c.user?.email || 'Platform User',
     phone: c.user?.phone || '',
     email: c.user?.email || '',
