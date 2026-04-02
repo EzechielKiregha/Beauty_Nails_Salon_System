@@ -188,7 +188,7 @@ export default function TodayOverview() {
                 <div key={idx} className="flex flex-col sm:flex-row sm:items-center gap-4 p-4 bg-linear-to-r from-pink-50 to-purple-50 dark:from-pink-900/10 dark:to-purple-900/10 rounded-xl border border-pink-100/50 dark:border-pink-900/20">
                   <div className="flex items-center gap-4">
                     <div className="text-center min-w-15 bg-white dark:bg-gray-800 p-2 rounded-lg shadow-sm">
-                      <p className="text-base sm:text-lg text-gray-900 dark:text-gray-100 font-black">{format(apt?.date, 'HH:mm')}</p>
+                      <p className="text-base sm:text-lg text-gray-900 dark:text-gray-100 font-black">{apt.time}</p>
                       <p className="text-[10px] sm:text-base text-gray-500 dark:text-gray-400  uppercase">{apt.duration} min</p>
                     </div>
                     <div className="flex-1 min-w-0">

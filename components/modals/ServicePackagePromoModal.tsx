@@ -174,7 +174,7 @@ export function ServiceModal({ service, trigger, onSubmit }: ServiceModalProps) 
           <Button
             onClick={handleSubmit}
             disabled={isCreating || isUpdating}
-            className="w-full sm:w-auto bg-gradient-to-r from-pink-500 to-purple-500 text-white"
+            className="w-full sm:w-auto bg-linear-to-r from-pink-500 to-purple-500 text-white"
           >
             {isCreating || isUpdating ? 'Chargement...' : service ? 'Enregistrer Modifications' : 'Créer Service'}
           </Button>
@@ -421,7 +421,7 @@ export function PromoModal({ promo, trigger, onSubmit }: PromoModalProps) {
             </div>
           </div>
 
-          <div className="bg-gray-50 p-4 rounded-xl space-y-4 border">
+          <div className="bg-linear-to-br from-purple-50 to-pink-50 dark:from-gray-950 dark:to-gray-950 p-4 rounded-2xl text-center shadow-sm hover:shadow-lg transition-shadow border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400 space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-3">
                 <Label className="text-lg sm:text-base">Valeur</Label>
@@ -498,7 +498,7 @@ export function PromoModal({ promo, trigger, onSubmit }: PromoModalProps) {
           <Button
             onClick={handleSubmit}
             disabled={isCreating || isUpdating}
-            className="w-full sm:w-auto bg-gradient-to-r from-amber-500 to-orange-500 text-white"
+            className="w-full sm:w-auto bg-linear-to-r from-amber-500 to-orange-500 text-white"
           >
             {isCreating || isUpdating ? 'Chargement...' : 'Lancer Promotion'}
           </Button>

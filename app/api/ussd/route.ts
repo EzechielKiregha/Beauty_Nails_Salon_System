@@ -36,6 +36,7 @@ Confirmer paiement?
 1. Oui
 2. Annuler`;
     }
+    console.log("Current Response:", response);
   }
 
   // STEP 2 CONFIRM
@@ -60,6 +61,7 @@ Confirmer paiement?
       response = `END ✅ Paiement réussi!
 Ref: TX-${Date.now()}`;
     }
+    console.log("Current Response:", response);
   }
 
   else {

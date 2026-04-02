@@ -40,6 +40,7 @@ import { useClient } from '@/lib/hooks/useClients';
 import { useLoyalty } from '@/lib/hooks/useLoyalty';
 import axiosdb from '@/lib/axios';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import { e } from '@vercel/blob/dist/create-folder-D-Qslm5_.cjs';
 
 export default function AppointmentsV3() {
   const router = useRouter();
@@ -276,7 +277,7 @@ export default function AppointmentsV3() {
       ) {
         try {
           const res = await axiosdb.post("/payments/initiate", {
-            phoneNumber: payerPhone,
+            phoneNumber: `${countryCode}${payerPhone}`,
             amount: total,
             serviceId: selectedServiceId,
             workerId: selectedWorker,
@@ -290,7 +291,11 @@ export default function AppointmentsV3() {
       }
     };
 
-    initiate();
+    if (payerPhone.length === 9 && payerPhone.length <= 13) {
+      initiate();
+    } else {
+      setPaymentIntentId(null);
+    }
   }, [
     selectedMethod,
     payerPhone,
@@ -312,7 +317,7 @@ export default function AppointmentsV3() {
   const handleUSSDPayment = async () => {
     try {
       const res = await axiosdb.get(`/payments/status`, {
-        params: { phone: payerPhone },
+        params: { phone: `${countryCode}${payerPhone}` },
       });
 
       if (res.data.paid) {
@@ -981,19 +986,19 @@ export default function AppointmentsV3() {
                     </p>
                     <div className="flex items-center justify-between gap-4 mt-2">
                       <p className="text-2xl font-bold text-pink-600 dark:text-pink-400 tracking-wider">
-                        *384*3366#
+                        *384*333666#
                       </p>
                       <div className="flex items-center gap-8">
                         <button
                           onClick={() => {
-                            navigator.clipboard.writeText("*384*3366#");
+                            navigator.clipboard.writeText("*384*333666#");
                             toast.success("Code copié. Composez-le sur votre téléphone.");
                           }}
                           className="flex items-center cursor-pointer gap-2 text-sm text-pink-600 dark:text-pink-400 hover:text-pink-700"
                         >
                           <Copy className="h-4 w-4" /> Copier
                         </button>
-                        <a href="tel:*384*3366#" className="flex cursor-pointer items-center gap-2 text-sm text-pink-600 dark:text-pink-400 hover:text-pink-700">
+                        <a href="tel:*384*333666#" className="flex cursor-pointer items-center gap-2 text-sm text-pink-600 dark:text-pink-400 hover:text-pink-700">
                           <Phone className="h-4 w-4" /> Appeler
                         </a>
                       </div>
