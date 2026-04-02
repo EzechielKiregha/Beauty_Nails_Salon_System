@@ -22,7 +22,10 @@ import {
   HardHatIcon,
   RefreshCcw,
   Info,
-  CheckCircle
+  CheckCircle,
+  Phone,
+  Copy,
+  Wallet
 } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { Button } from '../ui/button';
@@ -35,6 +38,8 @@ import LoaderBN from '../Loader-BN';
 import { clearBookingProgress, loadBookingProgress, saveBookingProgress } from '@/lib/local/booking-storage';
 import { useClient } from '@/lib/hooks/useClients';
 import { useLoyalty } from '@/lib/hooks/useLoyalty';
+import axiosdb from '@/lib/axios';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 
 export default function AppointmentsV3() {
   const router = useRouter();
@@ -71,6 +76,11 @@ export default function AppointmentsV3() {
   const [discountCode, setDiscountCode] = useState("");
   const [tip, setTip] = useState(0);
   const [selectedMethod, setSelectedMethod] = useState<"mobile" | "card" | "cash" | "prepaid" | "giftcard" | "free-service">("mobile");
+  const [paymentMeta, setPaymentMeta] = useState<{
+    transactionId?: string;
+  }>({});
+  const [paymentIntentId, setPaymentIntentId] = useState<string | null>(null);
+  const [countryCode, setCountryCode] = useState("+250"); // Default Rwanda
 
   const TAX_RATE = 0.16; // 16% tax
 
@@ -238,7 +248,7 @@ export default function AppointmentsV3() {
     refBonusApplied: refBonus > 0, // Flag to process backend reductions
     status: 'completed',
     receipt: `RCT-${Date.now()}`,
-    transactionId: null
+    transactionId: paymentMeta.transactionId || null
   }), [
     discountCode,
     subtotal,
@@ -256,10 +266,68 @@ export default function AppointmentsV3() {
     refBonus
   ]);
 
+  useEffect(() => {
+    const initiate = async () => {
+      if (
+        selectedMethod === "mobile" &&
+        payerPhone &&
+        total > 0 &&
+        !paymentIntentId
+      ) {
+        try {
+          const res = await axiosdb.post("/payments/initiate", {
+            phoneNumber: payerPhone,
+            amount: total,
+            serviceId: selectedServiceId,
+            workerId: selectedWorker,
+          });
+
+          setPaymentIntentId(res.data.paymentIntent.id);
+
+        } catch (err) {
+          console.error(err);
+        }
+      }
+    };
+
+    initiate();
+  }, [
+    selectedMethod,
+    payerPhone,
+    total,
+    selectedServiceId,
+    selectedWorker,
+  ]);
+
+  useEffect(() => {
+    setPaymentIntentId(null);
+  }, [payerPhone]);
+
   if (servicesLoading || staffLoading || appointmentLoading || discountsLoading) {
     return (
       <LoaderBN />
     )
+  }
+
+  const handleUSSDPayment = async () => {
+    try {
+      const res = await axiosdb.get(`/payments/status`, {
+        params: { phone: payerPhone },
+      });
+
+      if (res.data.paid) {
+        setIsPaid(true);
+
+        // optional: store transactionId
+        setPaymentMeta({
+          transactionId: res.data.transactionId,
+        });
+      } else {
+        toast("Paiement non encore reçu");
+      }
+    } catch (err) {
+      toast.error("Erreur lors de la vérification");
+    }
   }
 
   const handleSubmit = () => {
@@ -294,6 +362,11 @@ export default function AppointmentsV3() {
         refBonusApplied: refBonus > 0 && !canUseFreeService,
         paymentInfo,
       };
+
+      if (selectedMethod === "mobile" && !isPaid) {
+        toast.error("Veuillez confirmer le paiement avant de continuer");
+        return;
+      }
 
       createAppointment(appointmentData);
 
@@ -354,6 +427,28 @@ export default function AppointmentsV3() {
   const filteredServices = selectedCategory
     ? services.filter((s: Service) => s.category === selectedCategory)
     : [];
+
+  const countries = [
+    { code: '+250', name: 'Rwanda', placeholder: '78xxxxxxx' },
+    { code: '+243', name: 'DRC', placeholder: '8xxxxxxx' },
+    { code: '+254', name: 'Kenya', placeholder: '7xx xxx xxx' },
+    { code: '+256', name: 'Uganda', placeholder: '7xx xxx xxx' },
+  ];
+
+  // Helper to format phone input
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value.replace(/\D/g, ''); // Remove non-digits
+
+    // Auto remove leading zero for RW/DRC if input exists
+    if ((countryCode === '+250' || countryCode === '+243') && value.startsWith('0')) {
+      value = value.substring(1);
+    }
+
+    setPayerPhone(value);
+  };
+
+  const fullPhoneNumber = `${countryCode}${payerPhone.startsWith('0') ? payerPhone.substring(1) : payerPhone}`;
+
 
   return (
     <div className="min-h-screen bg-background dark:bg-gray-950">
@@ -688,7 +783,7 @@ export default function AppointmentsV3() {
 
         {/* Payment Info */}
         {user && location && (
-          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-lg p-6">
+          <div className="border border-pink-100 dark:border-pink-900 shadow-xl rounded-2xl bg-white dark:bg-gray-950 p-6">
             <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Informations de Paiement</h3>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -703,7 +798,7 @@ export default function AppointmentsV3() {
               </div>
 
               {/* Conditionally hide tip if free service or gift card is used */}
-              {!(isFreeService || isGiftCard) && (
+              {/* {!(isFreeService || isGiftCard) && (
                 <div>
                   <label className="block text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">Pourboire</label>
                   <input
@@ -714,7 +809,7 @@ export default function AppointmentsV3() {
                     className="w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 p-3 focus:ring-2 focus:ring-purple-500 focus:outline-none"
                   />
                 </div>
-              )}
+              )} */}
             </div>
 
             <div className="mb-4 space-y-4">
@@ -858,78 +953,128 @@ export default function AppointmentsV3() {
               </div>
             )}
 
-            {/* 📱 MOBILE MONEY (Keep your existing Mobile Money code here) */}
+            {/* 📱 MOBILE MONEY */}
             {selectedMethod === "mobile" && (
-              <div className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-xl p-6 transition-all duration-300">
-                <div className="flex justify-between items-center mb-5">
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                    💳 Mobile Money
+              <div className="border border-pink-100 dark:border-pink-900 shadow-xl rounded-2xl bg-white dark:bg-gray-950 p-6">
+                <div className="flex justify-between items-center mb-6">
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                    <span className='p-2 rounded-full bg-pink-100 dark:bg-pink-900/30 text-pink-600 dark:text-pink-300'>
+                      <Wallet className="h-6 w-6" />
+                    </span>
+                    Mobile Money
                   </h3>
 
                   <button
                     type="button"
-                    onClick={() => setIsPaid(true)}
-                    className="flex flex-row gap-2 text-lg px-3 py-1.5 rounded-lg border border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+                    onClick={handleUSSDPayment}
+                    className="flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-full border border-pink-200 dark:border-pink-900 text-pink-700 dark:text-pink-300 hover:bg-pink-50 dark:hover:bg-pink-900/30 transition-all"
                   >
-                    <RefreshCcw className='h-5 w-5' /> Rafraîchir
+                    <RefreshCcw className='h-4 w-4' /> Rafraîchir
                   </button>
                 </div>
 
-                <div className="space-y-4 text-lg text-gray-700 dark:text-gray-300">
-
-                  <div>
-                    <p className="text-base uppercase tracking-wide text-gray-500 dark:text-gray-400">
-                      Numéro à payer
+                <div className="space-y-5 text-gray-700 dark:text-gray-300">
+                  {/* USSD Code Section */}
+                  <div className="bg-gray-50 dark:bg-gray-800/50 p-4 rounded-2xl border border-gray-100 dark:border-gray-700">
+                    <p className="text-sm uppercase tracking-wider text-gray-500 dark:text-gray-400 font-medium">
+                      Code USSD
                     </p>
-                    <p className="text-xl font-semibold tracking-wide mt-1">
-                      +243 978 87148
-                    </p>
+                    <div className="flex items-center justify-between gap-4 mt-2">
+                      <p className="text-2xl font-bold text-pink-600 dark:text-pink-400 tracking-wider">
+                        *384*3366#
+                      </p>
+                      <div className="flex items-center gap-8">
+                        <button
+                          onClick={() => {
+                            navigator.clipboard.writeText("*384*3366#");
+                            toast.success("Code copié. Composez-le sur votre téléphone.");
+                          }}
+                          className="flex items-center cursor-pointer gap-2 text-sm text-pink-600 dark:text-pink-400 hover:text-pink-700"
+                        >
+                          <Copy className="h-4 w-4" /> Copier
+                        </button>
+                        <a href="tel:*384*3366#" className="flex cursor-pointer items-center gap-2 text-sm text-pink-600 dark:text-pink-400 hover:text-pink-700">
+                          <Phone className="h-4 w-4" /> Appeler
+                        </a>
+                      </div>
+                    </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
+                  {/* Merchant Info */}
+                  <div className="grid grid-cols-2 gap-4 text-lg bg-pink-50 dark:bg-pink-950/30 p-4 rounded-2xl">
                     <div>
-                      <p className="text-base text-gray-500 dark:text-gray-400">Nom</p>
-                      <p className="font-medium">Therese Zawadi</p>
+                      <p className="text-gray-500 dark:text-gray-400">Nom</p>
+                      <p className="font-semibold text-gray-900 dark:text-white">Therese Zawadi</p>
                     </div>
-
                     <div>
-                      <p className="text-base text-gray-500 dark:text-gray-400">MoMoPay</p>
-                      <p className="font-medium">66666 (TIGer-6)</p>
+                      <p className="text-gray-500 dark:text-gray-400">MoMoPay</p>
+                      <p className="font-semibold text-gray-900 dark:text-white">66666 (TIGer-6)</p>
                     </div>
                   </div>
 
-                  {/* Payer Phone Field */}
-                  <div className="pt-4 border-t border-gray-200 dark:border-gray-800">
-                    <label className="block text-base mb-1 text-gray-500 dark:text-gray-400">
-                      Numéro utilisé pour le paiement
+                  {/* Payer Phone Field with Country Code */}
+                  <div className="space-y-2">
+                    <label className="block text-lg font-medium text-gray-700 dark:text-gray-300">
+                      Numéro de téléphone
                     </label>
-                    <input
-                      type="text"
-                      value={payerPhone}
-                      onChange={(e) => setPayerPhone(e.target.value)}
-                      placeholder="Ex: 0790XXXXXX"
-                      className="w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 p-3 text-gray-900 dark:text-white focus:ring-2 focus:ring-pink-500 focus:outline-none"
-                    />
+                    <div className="flex gap-2">
+                      <Select
+                        value={countryCode}
+                        onValueChange={(value) => setCountryCode(value)}
+                      >
+                        <SelectTrigger className="w-44 rounded-2xl border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-lg focus:ring-2 focus:ring-pink-300 focus:border-pink-500">
+                          <SelectValue placeholder="Code" />
+                        </SelectTrigger>
+                        <SelectContent className="rounded-2xl border-pink-100 dark:border-pink-900 shadow-xl">
+                          {countries.map((c) => (
+                            <SelectItem
+                              key={c.code}
+                              value={c.code}
+                              className="text-lg p-2 focus:bg-pink-50 dark:focus:bg-pink-950/30 focus:text-pink-700 dark:focus:text-pink-300 cursor-pointer"
+                            >
+                              <span className="flex items-center gap-2">
+                                {c.code} <span className="text-sm opacity-70">({c.name})</span>
+                              </span>
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <input
+                        type="text"
+                        value={payerPhone}
+                        onChange={handlePhoneChange}
+                        placeholder={countries.find(c => c.code === countryCode)?.placeholder || "78xxxxxxx"}
+                        className="grow rounded-2xl text-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 p-2 text-gray-900 dark:text-white focus:ring-2 focus:ring-pink-300 focus:border-pink-500 focus:outline-none"
+                      />
+                    </div>
+                    <p className="text-lg text-gray-500 dark:text-gray-400 flex items-center gap-1">
+                      <Phone className='h-3 w-3' /> Final: {fullPhoneNumber}
+                    </p>
+
+                    {paymentIntentId && (
+                      <p className="text-lg text-pink-600 dark:text-pink-400 font-medium flex items-center gap-1.5 pt-2">
+                        <CheckCircle className="h-4 w-4" /> Paiement prêt. Composez le code.
+                      </p>
+                    )}
                   </div>
 
                   {/* Status */}
-                  <div className="pt-4">
+                  <div className="pt-2">
                     {isPaid ? (
-                      <div className="flex justify-between items-center rounded-lg bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 px-4 py-3">
-                        <span className="text-green-700 dark:text-green-400 text-lg font-medium">
-                          Paiement confirmé
+                      <div className="flex justify-between items-center rounded-2xl bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 px-4 py-3">
+                        <span className="text-green-700 dark:text-green-400 font-medium flex items-center gap-2">
+                          <CheckCircle className="h-5 w-5" /> Paiement confirmé
                         </span>
-                        <span className="font-bold text-green-600 dark:text-green-400">
+                        <span className="font-bold text-green-700 dark:text-green-300">
                           {total.toLocaleString()} CDF
                         </span>
                       </div>
                     ) : (
-                      <div className="text-lg text-gray-500 dark:text-gray-400">
-                        En attente de confirmation...
+                      <div className="text-center text-lg text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 rounded-xl py-2">
+                        En attente de paiement...
                       </div>
                     )}
                   </div>
-
                 </div>
               </div>
             )}

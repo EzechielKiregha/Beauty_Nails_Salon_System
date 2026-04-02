@@ -70,6 +70,7 @@ export const ModelName = {
   Sale: 'Sale',
   SaleItem: 'SaleItem',
   Payment: 'Payment',
+  PaymentIntent: 'PaymentIntent',
   DailyRegister: 'DailyRegister',
   Commission: 'Commission',
   InventoryItem: 'InventoryItem',
@@ -430,6 +431,20 @@ export const PaymentScalarFieldEnum = {
 } as const
 
 export type PaymentScalarFieldEnum = (typeof PaymentScalarFieldEnum)[keyof typeof PaymentScalarFieldEnum]
+
+
+export const PaymentIntentScalarFieldEnum = {
+  id: 'id',
+  phoneNumber: 'phoneNumber',
+  amount: 'amount',
+  status: 'status',
+  serviceId: 'serviceId',
+  workerId: 'workerId',
+  createdAt: 'createdAt',
+  transactionId: 'transactionId'
+} as const
+
+export type PaymentIntentScalarFieldEnum = (typeof PaymentIntentScalarFieldEnum)[keyof typeof PaymentIntentScalarFieldEnum]
 
 
 export const DailyRegisterScalarFieldEnum = {

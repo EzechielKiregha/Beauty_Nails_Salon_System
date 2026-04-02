@@ -113,6 +113,11 @@ export type SaleItem = Prisma.SaleItemModel
  */
 export type Payment = Prisma.PaymentModel
 /**
+ * Model PaymentIntent
+ * 
+ */
+export type PaymentIntent = Prisma.PaymentIntentModel
+/**
  * Model DailyRegister
  * 
  */

@@ -78,6 +78,7 @@ export async function POST(request: NextRequest) {
             referralCode: nanoid(8).toUpperCase(),
             tier: "Regular",
             referredBy: referrerName || null,
+            loyaltyPoints: 500,
           },
         },
       },

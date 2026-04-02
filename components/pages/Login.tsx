@@ -14,8 +14,10 @@ import {
 } from "../ui/tabs";
 import Link from "next/link";
 import { Logo } from "../Logo";
-import { handleLogin } from "@/app/(auth)/auth/login/actions";
+import { handleLogin, handleOTPVerification } from "@/app/(auth)/auth/login/actions";
 import { useRouter, useSearchParams } from "next/navigation";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog";
+import { Loader2 } from "lucide-react";
 
 
 export default function Login() {
@@ -25,21 +27,45 @@ export default function Login() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirect = searchParams.get("redirect");
+  const [otpDialogOpen, setOtpDialogOpen] = useState(false);
+  const [otp, setOtp] = useState("");
+  const [isVerifyingOtp, setIsVerifyingOtp] = useState(false);
+  const [expectedOtp, setExpectedOtp] = useState("");
+  const [redirectUrl, setRedirectUrl] = useState("");
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>, role: string) {
     e.preventDefault();
     startTransition(async () => {
       const result = await handleLogin(new FormData(e.currentTarget), role, redirect);
       if (result?.success) {
-        toast.success('Connecté avec succès');
-        router.push(result.redirectUrl);
-        router.refresh();
+        setExpectedOtp(result.expectedOtp || "");
+        setRedirectUrl(result.redirectUrl);
+        toast.success(result.message);
+        setOtpDialogOpen(true);
       }
       else {
         toast.error(result.error);
       }
     }
     )
+  }
+
+  const handleOtp = async () => {
+
+    setIsVerifyingOtp(true);
+
+    const res = await handleOTPVerification(otp.trim(), expectedOtp, redirectUrl);
+    if (res?.success) {
+      setTimeout(() => {
+        router.push(res.redirectUrl);
+        setOtpDialogOpen(false);
+        setIsVerifyingOtp(false);
+      }, 9000);
+    } else {
+      toast.error(res.error);
+      setIsVerifyingOtp(false);
+    }
+
   }
 
   return (
@@ -217,6 +243,36 @@ export default function Login() {
           </Link>
         </p>
       </div>
+      {/* Cancel Appointment Dialog */}
+      <Dialog open={otpDialogOpen} onOpenChange={setOtpDialogOpen}>
+        <DialogContent className="sm:max-w-2xl w-[90vw] bg-linear-to-br from-purple-50 to-pink-50 dark:from-gray-950 dark:to-gray-950 p-4 rounded-2xl text-center shadow-sm hover:shadow-lg transition-shadow border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400">
+          <DialogHeader>
+            <DialogTitle>Beauty Nails One-Time-Password (OTP)</DialogTitle>
+            <DialogDescription>
+              Un code OTP a été envoyé à votre numéro de téléphone. Veuillez entrer le code pour vérifier votre identité et accéder à votre tableau de bord.
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
+                Si vous ne recevez pas le code, veuillez vérifier avec ce code par defaut : {expectedOtp}.
+              </p>
+            </DialogDescription>
+          </DialogHeader>
+
+          <Input
+            type="text"
+            value={otp}
+            onChange={(e) => setOtp(e.target.value)}
+            placeholder="Entrez votre OTP"
+            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
+          />
+          <DialogFooter>
+            <Button
+              disabled={isVerifyingOtp}
+              onClick={handleOtp}
+            >
+              {isVerifyingOtp ? <Loader2 className="animate-spin" /> : 'Vérifier OTP'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

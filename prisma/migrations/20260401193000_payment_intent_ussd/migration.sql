@@ -2,10 +2,22 @@
 CREATE TYPE "UserRole" AS ENUM ('client', 'worker', 'admin');
 
 -- CreateEnum
+CREATE TYPE "MediaType" AS ENUM ('IMAGE', 'VIDEO', 'DOCUMENT');
+
+-- CreateEnum
 CREATE TYPE "Tier" AS ENUM ('Regular', 'VIP', 'Premium');
 
 -- CreateEnum
 CREATE TYPE "LeaveStatus" AS ENUM ('pending', 'approved', 'rejected');
+
+-- CreateEnum
+CREATE TYPE "TaskType" AS ENUM ('general', 'client_followup', 'inventory', 'maintenance', 'appointment', 'admin');
+
+-- CreateEnum
+CREATE TYPE "TaskStatus" AS ENUM ('open', 'in_progress', 'blocked', 'completed', 'cancelled');
+
+-- CreateEnum
+CREATE TYPE "TaskPriority" AS ENUM ('low', 'medium', 'high', 'urgent');
 
 -- CreateEnum
 CREATE TYPE "Category" AS ENUM ('onglerie', 'cils', 'tresses', 'maquillage');
@@ -26,7 +38,7 @@ CREATE TYPE "LoyaltyType" AS ENUM ('earned_appointment', 'earned_referral', 'red
 CREATE TYPE "ReferralStatus" AS ENUM ('pending', 'completed', 'rewarded');
 
 -- CreateEnum
-CREATE TYPE "PaymentMethod" AS ENUM ('cash', 'card', 'mobile', 'mixed');
+CREATE TYPE "PaymentMethod" AS ENUM ('cash', 'card', 'mobile', 'mixed', 'giftcard', 'prepaid');
 
 -- CreateEnum
 CREATE TYPE "PaymentStatus" AS ENUM ('pending', 'completed', 'failed', 'refunded');
@@ -44,7 +56,7 @@ CREATE TYPE "TransactionType" AS ENUM ('purchase', 'usage', 'adjustment', 'retur
 CREATE TYPE "ReorderStatus" AS ENUM ('pending', 'ordered', 'received', 'cancelled');
 
 -- CreateEnum
-CREATE TYPE "NotificationType" AS ENUM ('appointment_reminder', 'appointment_confirmed', 'appointment_cancelled', 'payment_received', 'loyalty_reward', 'marketing', 'system', 'birthday');
+CREATE TYPE "NotificationType" AS ENUM ('appointment_created', 'appointment_assigned', 'appointment_reminder', 'appointment_confirmed', 'appointment_cancelled', 'payment_received', 'loyalty_reward', 'marketing', 'system', 'birthday');
 
 -- CreateEnum
 CREATE TYPE "CampaignType" AS ENUM ('email', 'sms', 'both');
@@ -69,6 +81,10 @@ CREATE TABLE "users" (
     "avatar" TEXT,
     "role" "UserRole" NOT NULL DEFAULT 'client',
     "isActive" BOOLEAN NOT NULL DEFAULT true,
+    "resetToken" TEXT,
+    "resetTokenExpires" TIMESTAMP(3),
+    "otpSecret" TEXT,
+    "otpSecretExpires" TIMESTAMP(3),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -76,38 +92,19 @@ CREATE TABLE "users" (
 );
 
 -- CreateTable
-CREATE TABLE "accounts" (
+CREATE TABLE "Media" (
     "id" TEXT NOT NULL,
-    "userId" TEXT NOT NULL,
-    "type" TEXT NOT NULL,
-    "provider" TEXT NOT NULL,
-    "providerAccountId" TEXT NOT NULL,
-    "refresh_token" TEXT,
-    "access_token" TEXT,
-    "expires_at" INTEGER,
-    "token_type" TEXT,
-    "scope" TEXT,
-    "id_token" TEXT,
-    "session_state" TEXT,
+    "name" TEXT NOT NULL,
+    "url" TEXT NOT NULL,
+    "type" "MediaType" NOT NULL,
+    "mimeType" TEXT,
+    "clientId" TEXT,
+    "appointmentId" TEXT,
+    "workerId" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "accounts_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "sessions" (
-    "id" TEXT NOT NULL,
-    "sessionToken" TEXT NOT NULL,
-    "userId" TEXT NOT NULL,
-    "expires" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "sessions_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "verification_tokens" (
-    "identifier" TEXT NOT NULL,
-    "token" TEXT NOT NULL,
-    "expires" TIMESTAMP(3) NOT NULL
+    CONSTRAINT "Media_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -117,11 +114,21 @@ CREATE TABLE "client_profiles" (
     "tier" "Tier" NOT NULL DEFAULT 'Regular',
     "loyaltyPoints" INTEGER NOT NULL DEFAULT 0,
     "totalAppointments" INTEGER NOT NULL DEFAULT 0,
-    "totalSpent" DECIMAL(10,2) NOT NULL DEFAULT 0,
+    "totalSpent" DOUBLE PRECISION NOT NULL DEFAULT 0,
     "referralCode" TEXT NOT NULL,
     "referredBy" TEXT,
+    "refBonus" INTEGER NOT NULL DEFAULT 0,
     "preferences" JSONB,
     "notes" TEXT,
+    "birthday" TIMESTAMP(3),
+    "address" TEXT,
+    "favoriteServices" TEXT[],
+    "allergies" TEXT,
+    "prepaymentBalance" DOUBLE PRECISION NOT NULL DEFAULT 0,
+    "giftCardBalance" DOUBLE PRECISION NOT NULL DEFAULT 0,
+    "giftCardCount" DOUBLE PRECISION NOT NULL DEFAULT 0,
+    "freeServiceCount" DOUBLE PRECISION NOT NULL DEFAULT 0,
+    "referrals" INTEGER NOT NULL DEFAULT 0,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -134,12 +141,19 @@ CREATE TABLE "worker_profiles" (
     "userId" TEXT NOT NULL,
     "position" TEXT NOT NULL,
     "specialties" TEXT[],
-    "commissionRate" DECIMAL(5,2) NOT NULL DEFAULT 0,
-    "rating" DECIMAL(3,2) NOT NULL DEFAULT 0,
+    "commissionRate" DOUBLE PRECISION NOT NULL DEFAULT 0,
+    "rating" DOUBLE PRECISION NOT NULL DEFAULT 0,
     "totalReviews" INTEGER NOT NULL DEFAULT 0,
     "isAvailable" BOOLEAN NOT NULL DEFAULT true,
     "workingHours" JSONB,
     "hireDate" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "bio" TEXT,
+    "commissionType" TEXT,
+    "commissionFrequency" TEXT,
+    "commissionDay" INTEGER,
+    "minimumPayout" DOUBLE PRECISION,
+    "lastCommissionPaidAt" TIMESTAMP(3),
+    "payoutThresholdMetAt" TIMESTAMP(3),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -175,11 +189,34 @@ CREATE TABLE "worker_leaves" (
 );
 
 -- CreateTable
+CREATE TABLE "tasks" (
+    "id" TEXT NOT NULL,
+    "title" TEXT NOT NULL,
+    "description" TEXT,
+    "type" "TaskType" NOT NULL DEFAULT 'general',
+    "status" "TaskStatus" NOT NULL DEFAULT 'open',
+    "priority" "TaskPriority" NOT NULL DEFAULT 'medium',
+    "assignedToWorkerId" TEXT,
+    "clientId" TEXT,
+    "appointmentId" TEXT,
+    "createdById" TEXT,
+    "dueAt" TIMESTAMP(3),
+    "scheduledAt" TIMESTAMP(3),
+    "completedAt" TIMESTAMP(3),
+    "metadata" JSONB,
+    "isPrivate" BOOLEAN NOT NULL DEFAULT false,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "tasks_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "services" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "category" "Category" NOT NULL,
-    "price" DECIMAL(10,2) NOT NULL,
+    "price" DOUBLE PRECISION NOT NULL,
     "duration" INTEGER NOT NULL,
     "description" TEXT NOT NULL,
     "imageUrl" TEXT,
@@ -187,6 +224,7 @@ CREATE TABLE "services" (
     "isPopular" BOOLEAN NOT NULL DEFAULT false,
     "isActive" BOOLEAN NOT NULL DEFAULT true,
     "displayOrder" INTEGER NOT NULL DEFAULT 0,
+    "workerCommission" DOUBLE PRECISION NOT NULL DEFAULT 45,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -198,9 +236,11 @@ CREATE TABLE "service_add_ons" (
     "id" TEXT NOT NULL,
     "serviceId" TEXT NOT NULL,
     "name" TEXT NOT NULL,
-    "price" DECIMAL(10,2) NOT NULL,
+    "price" DOUBLE PRECISION NOT NULL,
     "duration" INTEGER NOT NULL,
     "description" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "service_add_ons_pkey" PRIMARY KEY ("id")
 );
@@ -210,8 +250,8 @@ CREATE TABLE "service_packages" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT NOT NULL,
-    "price" DECIMAL(10,2) NOT NULL,
-    "discount" DECIMAL(5,2) NOT NULL DEFAULT 0,
+    "price" DOUBLE PRECISION NOT NULL,
+    "discount" DOUBLE PRECISION NOT NULL DEFAULT 0,
     "isActive" BOOLEAN NOT NULL DEFAULT true,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -230,7 +270,7 @@ CREATE TABLE "appointments" (
     "duration" INTEGER NOT NULL,
     "status" "AppointmentStatus" NOT NULL DEFAULT 'pending',
     "location" "Location" NOT NULL DEFAULT 'salon',
-    "price" DECIMAL(10,2) NOT NULL,
+    "price" DOUBLE PRECISION NOT NULL,
     "addOns" TEXT[],
     "notes" TEXT,
     "cancelReason" TEXT,
@@ -260,8 +300,8 @@ CREATE TABLE "memberships" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "duration" INTEGER NOT NULL,
-    "price" DECIMAL(10,2) NOT NULL,
-    "discount" DECIMAL(5,2) NOT NULL,
+    "price" DOUBLE PRECISION NOT NULL,
+    "discount" DOUBLE PRECISION NOT NULL,
     "benefits" JSONB NOT NULL,
     "isActive" BOOLEAN NOT NULL DEFAULT true,
     "displayOrder" INTEGER NOT NULL DEFAULT 0,
@@ -318,11 +358,11 @@ CREATE TABLE "sales" (
     "id" TEXT NOT NULL,
     "appointmentId" TEXT,
     "clientId" TEXT NOT NULL,
-    "total" DECIMAL(10,2) NOT NULL,
-    "subtotal" DECIMAL(10,2) NOT NULL,
-    "discount" DECIMAL(10,2) NOT NULL DEFAULT 0,
-    "tax" DECIMAL(10,2) NOT NULL DEFAULT 0,
-    "tip" DECIMAL(10,2) NOT NULL DEFAULT 0,
+    "total" DOUBLE PRECISION NOT NULL,
+    "subtotal" DOUBLE PRECISION NOT NULL,
+    "discount" DOUBLE PRECISION NOT NULL DEFAULT 0,
+    "tax" DOUBLE PRECISION NOT NULL DEFAULT 0,
+    "tip" DOUBLE PRECISION NOT NULL DEFAULT 0,
     "paymentMethod" "PaymentMethod" NOT NULL,
     "paymentStatus" "PaymentStatus" NOT NULL DEFAULT 'pending',
     "discountCode" TEXT,
@@ -341,8 +381,8 @@ CREATE TABLE "sale_items" (
     "saleId" TEXT NOT NULL,
     "serviceId" TEXT NOT NULL,
     "quantity" INTEGER NOT NULL DEFAULT 1,
-    "price" DECIMAL(10,2) NOT NULL,
-    "discount" DECIMAL(10,2) NOT NULL DEFAULT 0,
+    "price" DOUBLE PRECISION NOT NULL,
+    "discount" DOUBLE PRECISION NOT NULL DEFAULT 0,
 
     CONSTRAINT "sale_items_pkey" PRIMARY KEY ("id")
 );
@@ -351,7 +391,7 @@ CREATE TABLE "sale_items" (
 CREATE TABLE "payments" (
     "id" TEXT NOT NULL,
     "saleId" TEXT NOT NULL,
-    "amount" DECIMAL(10,2) NOT NULL,
+    "amount" DOUBLE PRECISION NOT NULL,
     "method" "PaymentMethod" NOT NULL,
     "transactionId" TEXT,
     "status" "PaymentStatus" NOT NULL DEFAULT 'completed',
@@ -361,17 +401,31 @@ CREATE TABLE "payments" (
 );
 
 -- CreateTable
+CREATE TABLE "payment_intents" (
+    "id" TEXT NOT NULL,
+    "phoneNumber" TEXT NOT NULL,
+    "amount" INTEGER NOT NULL,
+    "status" TEXT NOT NULL DEFAULT 'pending',
+    "serviceId" TEXT NOT NULL,
+    "workerId" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "transactionId" TEXT,
+
+    CONSTRAINT "payment_intents_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "daily_registers" (
     "id" TEXT NOT NULL,
     "date" TIMESTAMP(3) NOT NULL,
-    "openingCash" DECIMAL(10,2) NOT NULL,
-    "closingCash" DECIMAL(10,2) NOT NULL,
-    "expectedCash" DECIMAL(10,2) NOT NULL,
-    "discrepancy" DECIMAL(10,2) NOT NULL,
-    "totalSales" DECIMAL(10,2) NOT NULL,
-    "cashSales" DECIMAL(10,2) NOT NULL,
-    "cardSales" DECIMAL(10,2) NOT NULL,
-    "mobileSales" DECIMAL(10,2) NOT NULL,
+    "openingCash" DOUBLE PRECISION NOT NULL,
+    "closingCash" DOUBLE PRECISION NOT NULL,
+    "expectedCash" DOUBLE PRECISION NOT NULL,
+    "discrepancy" DOUBLE PRECISION NOT NULL,
+    "totalSales" DOUBLE PRECISION NOT NULL,
+    "cashSales" DOUBLE PRECISION NOT NULL,
+    "cardSales" DOUBLE PRECISION NOT NULL,
+    "mobileSales" DOUBLE PRECISION NOT NULL,
     "notes" TEXT,
     "closedBy" TEXT,
     "closedAt" TIMESTAMP(3),
@@ -385,10 +439,13 @@ CREATE TABLE "commissions" (
     "id" TEXT NOT NULL,
     "workerId" TEXT NOT NULL,
     "period" TEXT NOT NULL,
-    "totalRevenue" DECIMAL(10,2) NOT NULL,
-    "commissionRate" DECIMAL(5,2) NOT NULL,
-    "commissionAmount" DECIMAL(10,2) NOT NULL,
+    "totalRevenue" DOUBLE PRECISION NOT NULL,
+    "commissionRate" DOUBLE PRECISION NOT NULL,
+    "commissionAmount" DOUBLE PRECISION NOT NULL,
     "appointmentsCount" INTEGER NOT NULL,
+    "businessEarnings" DOUBLE PRECISION NOT NULL DEFAULT 0,
+    "materialsCost" DOUBLE PRECISION NOT NULL DEFAULT 0,
+    "operationalCost" DOUBLE PRECISION NOT NULL DEFAULT 0,
     "status" "CommissionStatus" NOT NULL DEFAULT 'pending',
     "paidAt" TIMESTAMP(3),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -402,11 +459,12 @@ CREATE TABLE "inventory_items" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "category" TEXT NOT NULL,
+    "description" TEXT,
     "currentStock" INTEGER NOT NULL,
     "minStock" INTEGER NOT NULL,
     "maxStock" INTEGER,
     "unit" TEXT NOT NULL,
-    "cost" DECIMAL(10,2) NOT NULL,
+    "cost" DOUBLE PRECISION NOT NULL,
     "supplier" TEXT,
     "sku" TEXT,
     "lastRestocked" TIMESTAMP(3),
@@ -423,7 +481,7 @@ CREATE TABLE "inventory_transactions" (
     "itemId" TEXT NOT NULL,
     "quantity" INTEGER NOT NULL,
     "type" "TransactionType" NOT NULL,
-    "cost" DECIMAL(10,2),
+    "cost" DECIMAL(65,30),
     "notes" TEXT,
     "performedBy" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -449,7 +507,7 @@ CREATE TABLE "reorder_requests" (
     "itemId" TEXT NOT NULL,
     "quantity" INTEGER NOT NULL,
     "supplier" TEXT NOT NULL,
-    "estimatedCost" DECIMAL(10,2),
+    "estimatedCost" DECIMAL(65,30),
     "status" "ReorderStatus" NOT NULL DEFAULT 'pending',
     "orderedAt" TIMESTAMP(3),
     "receivedAt" TIMESTAMP(3),
@@ -485,8 +543,8 @@ CREATE TABLE "marketing_campaigns" (
     "scheduledDate" TIMESTAMP(3),
     "sentDate" TIMESTAMP(3),
     "recipients" INTEGER NOT NULL DEFAULT 0,
-    "openRate" DECIMAL(5,2) DEFAULT 0,
-    "clickRate" DECIMAL(5,2) DEFAULT 0,
+    "openRate" DECIMAL(65,30) DEFAULT 0,
+    "clickRate" DECIMAL(65,30) DEFAULT 0,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -498,8 +556,8 @@ CREATE TABLE "discount_codes" (
     "id" TEXT NOT NULL,
     "code" TEXT NOT NULL,
     "type" "DiscountType" NOT NULL,
-    "value" DECIMAL(10,2) NOT NULL,
-    "minPurchase" DECIMAL(10,2),
+    "value" DOUBLE PRECISION NOT NULL,
+    "minPurchase" DECIMAL(65,30),
     "maxUses" INTEGER,
     "usedCount" INTEGER NOT NULL DEFAULT 0,
     "startDate" TIMESTAMP(3) NOT NULL,
@@ -611,18 +669,6 @@ CREATE INDEX "users_phone_idx" ON "users"("phone");
 CREATE INDEX "users_role_idx" ON "users"("role");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "accounts_provider_providerAccountId_key" ON "accounts"("provider", "providerAccountId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "sessions_sessionToken_key" ON "sessions"("sessionToken");
-
--- CreateIndex
-CREATE UNIQUE INDEX "verification_tokens_token_key" ON "verification_tokens"("token");
-
--- CreateIndex
-CREATE UNIQUE INDEX "verification_tokens_identifier_token_key" ON "verification_tokens"("identifier", "token");
-
--- CreateIndex
 CREATE UNIQUE INDEX "client_profiles_userId_key" ON "client_profiles"("userId");
 
 -- CreateIndex
@@ -651,6 +697,15 @@ CREATE INDEX "worker_leaves_workerId_idx" ON "worker_leaves"("workerId");
 
 -- CreateIndex
 CREATE INDEX "worker_leaves_startDate_endDate_idx" ON "worker_leaves"("startDate", "endDate");
+
+-- CreateIndex
+CREATE INDEX "tasks_assignedToWorkerId_idx" ON "tasks"("assignedToWorkerId");
+
+-- CreateIndex
+CREATE INDEX "tasks_status_idx" ON "tasks"("status");
+
+-- CreateIndex
+CREATE INDEX "tasks_priority_idx" ON "tasks"("priority");
 
 -- CreateIndex
 CREATE INDEX "services_category_idx" ON "services"("category");
@@ -716,7 +771,7 @@ CREATE INDEX "loyalty_transactions_type_idx" ON "loyalty_transactions"("type");
 CREATE INDEX "loyalty_transactions_createdAt_idx" ON "loyalty_transactions"("createdAt");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "referrals_referrerId_key" ON "referrals"("referrerId");
+CREATE UNIQUE INDEX "referrals_referredId_key" ON "referrals"("referredId");
 
 -- CreateIndex
 CREATE INDEX "referrals_referrerId_idx" ON "referrals"("referrerId");
@@ -753,6 +808,15 @@ CREATE INDEX "payments_saleId_idx" ON "payments"("saleId");
 
 -- CreateIndex
 CREATE INDEX "payments_status_idx" ON "payments"("status");
+
+-- CreateIndex
+CREATE INDEX "payment_intents_workerId_idx" ON "payment_intents"("workerId");
+
+-- CreateIndex
+CREATE INDEX "payment_intents_status_idx" ON "payment_intents"("status");
+
+-- CreateIndex
+CREATE INDEX "payment_intents_phoneNumber_idx" ON "payment_intents"("phoneNumber");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "daily_registers_date_key" ON "daily_registers"("date");
@@ -863,12 +927,6 @@ CREATE INDEX "audit_logs_createdAt_idx" ON "audit_logs"("createdAt");
 CREATE INDEX "_PackageServices_B_index" ON "_PackageServices"("B");
 
 -- AddForeignKey
-ALTER TABLE "accounts" ADD CONSTRAINT "accounts_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "sessions" ADD CONSTRAINT "sessions_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "client_profiles" ADD CONSTRAINT "client_profiles_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -879,6 +937,18 @@ ALTER TABLE "worker_schedules" ADD CONSTRAINT "worker_schedules_workerId_fkey" F
 
 -- AddForeignKey
 ALTER TABLE "worker_leaves" ADD CONSTRAINT "worker_leaves_workerId_fkey" FOREIGN KEY ("workerId") REFERENCES "worker_profiles"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "tasks" ADD CONSTRAINT "tasks_assignedToWorkerId_fkey" FOREIGN KEY ("assignedToWorkerId") REFERENCES "worker_profiles"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "tasks" ADD CONSTRAINT "tasks_clientId_fkey" FOREIGN KEY ("clientId") REFERENCES "client_profiles"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "tasks" ADD CONSTRAINT "tasks_appointmentId_fkey" FOREIGN KEY ("appointmentId") REFERENCES "appointments"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "tasks" ADD CONSTRAINT "tasks_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "service_add_ons" ADD CONSTRAINT "service_add_ons_serviceId_fkey" FOREIGN KEY ("serviceId") REFERENCES "services"("id") ON DELETE CASCADE ON UPDATE CASCADE;

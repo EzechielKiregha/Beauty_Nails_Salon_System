@@ -150,6 +150,7 @@ export type PaymentMethod = (typeof PaymentMethod)[keyof typeof PaymentMethod]
 
 
 export const PaymentStatus = {
+  confirmed: 'confirmed',
   pending: 'pending',
   completed: 'completed',
   failed: 'failed',

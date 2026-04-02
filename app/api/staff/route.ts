@@ -187,14 +187,15 @@ export async function POST(request: NextRequest) {
       }
   
       // Hash password
-      // const hashedPassword = await hash(password, 10);
+      const hashedPassword = await hash(password, 10);
       
       let dataClause: any = {
         name,
         email,
         phone,
-        password,
+        password: hashedPassword,
         role,
+        isActive: true,
         emailVerified: new Date(),
         clientProfile: {
           create: {

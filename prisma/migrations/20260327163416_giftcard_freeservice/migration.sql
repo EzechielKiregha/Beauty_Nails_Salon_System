@@ -1,3 +1,0 @@
--- AlterTable
-ALTER TABLE "client_profiles" ADD COLUMN     "freeServiceCount" DOUBLE PRECISION NOT NULL DEFAULT 0,
-ADD COLUMN     "giftCardCount" DOUBLE PRECISION NOT NULL DEFAULT 0;

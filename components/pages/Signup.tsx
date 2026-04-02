@@ -12,15 +12,21 @@ import { Logo } from '../Logo';
 import { useTransition } from "react";
 import { handleSignup } from '@/app/(auth)/auth/signup/actions';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import { Eye, EyeOff, Info, Loader2, ShieldCheck, Sparkles } from 'lucide-react';
+import { useUsers } from '@/lib/hooks/useSettings';
+import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
 
 
 export default function Signup() {
+  const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     phone: '',
     password: '',
     confirmPassword: '',
+    countryCode: '+250', // Default to Rwanda
     acceptTerms: false,
     refCode: typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('ref') : 'new_account',
   });
@@ -28,6 +34,10 @@ export default function Signup() {
   const redirect = searchParams.get("redirect");
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
+  const { data: users, isLoading: usersLoading } = useUsers();
+
+  // Check if this is the very first account on the system
+  const isFirstAdmin = !usersLoading && (!users || users.length === 0);
 
   const refCode = typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('ref') : 'new_account';
 
@@ -35,7 +45,7 @@ export default function Signup() {
     e.preventDefault();
 
     startTransition(async () => {
-      const result = await handleSignup(new FormData(e.currentTarget), refCode, redirect);
+      const result = await handleSignup(new FormData(e.currentTarget), refCode, redirect, isFirstAdmin);
       if (result?.success) {
         toast.success('Connecté avec succès');
         router.push(result?.redirectUrl);
@@ -94,49 +104,98 @@ export default function Signup() {
                 />
               </div>
 
-              <div>
+              <div className="sm:col-span-2">
                 <Label htmlFor="phone" className="dark:text-gray-200">Téléphone</Label>
-                <Input
-                  id="phone"
-                  name="phone"
-                  type="tel"
-                  placeholder="+243 123 456 789"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  className="mt-2 rounded-xl dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"
-                />
-              </div>
+                <div className="flex gap-2 mt-2">
+                  {/* Shadcn Select for Country Code */}
+                  <Select
+                    value={formData.countryCode}
+                    onValueChange={(value) => setFormData({ ...formData, countryCode: value })}
+                  >
+                    <SelectTrigger className="w-32 rounded-xl border-gray-300 dark:border-gray-700 focus:ring-pink-500">
+                      <SelectValue placeholder="Code" />
+                    </SelectTrigger>
+                    <SelectContent className="rounded-xl border-pink-100 dark:border-pink-900">
+                      <SelectItem value="+250">🇷🇼 +250</SelectItem>
+                      <SelectItem value="+243">🇨🇩 +243</SelectItem>
+                      <SelectItem value="+254">🇰🇪 +254</SelectItem>
+                      <SelectItem value="+256">🇺🇬 +256</SelectItem>
+                    </SelectContent>
+                  </Select>
 
-              <div>
-                <Label htmlFor="password" className="dark:text-gray-200">Mot de passe</Label>
-                <Input
-                  id="password"
-                  name="password"
-                  type="password"
-                  placeholder="••••••••"
-                  value={formData.password}
-                  onChange={handleChange}
-                  className="mt-2 rounded-xl dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"
-                />
-                <p className="text-base text-gray-500 dark:text-gray-400 mt-1">
-                  Minimum 8 caractères
+                  {/* Input for Phone Number */}
+                  <div className="relative flex-1">
+                    <Input
+                      id="phone"
+                      name="phone"
+                      type="tel"
+                      placeholder="78XXXXXXX"
+                      value={formData.phone}
+                      onChange={(e) => {
+                        let val = e.target.value.replace(/\D/g, ''); // Numeric only
+                        // Auto-remove leading zero for Rwanda/DRC
+                        if ((['+250', '+243'].includes(formData.countryCode)) && val.startsWith('0')) {
+                          val = val.substring(1);
+                        }
+                        setFormData({ ...formData, phone: val });
+                      }}
+                      className="rounded-xl dark:bg-gray-800 dark:border-gray-700 focus:ring-pink-500"
+                    />
+                  </div>
+                </div>
+
+                {/* Visual Preview */}
+                <p className="text-xs font-medium text-pink-600 dark:text-pink-400 mt-2 ml-1">
+                  Numéro enregistré : <span className="underline">{formData.countryCode}{formData.phone}</span>
                 </p>
               </div>
 
-              <div className="sm:col-span-2">
-                <Label htmlFor="confirmPassword" className="dark:text-gray-200">
-                  Confirmer le mot de passe
-                </Label>
-                <Input
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  type="password"
-                  placeholder="••••••••"
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                  className="mt-2 rounded-xl dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"
-                />
+              <div className="sm:col-span-2 space-y-4">
+                {/* Password Field */}
+                <div>
+                  <Label htmlFor="password" title="password" className="dark:text-gray-200">Mot de passe</Label>
+                  <div className="relative mt-2">
+                    <Input
+                      id="password"
+                      name="password"
+                      type={showPassword ? "text" : "password"}
+                      placeholder="••••••••"
+                      value={formData.password}
+                      onChange={handleChange}
+                      className="pr-12 rounded-xl dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100 focus:ring-pink-500"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-pink-500 transition-colors"
+                    >
+                      {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                    </button>
+                  </div>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-1.5 ml-1">
+                    Minimum 8 caractères
+                  </p>
+                </div>
+
+                {/* Confirm Password Field */}
+                <div>
+                  <Label htmlFor="confirmPassword" title="confirmPassword" className="dark:text-gray-200">
+                    Confirmer le mot de passe
+                  </Label>
+                  <div className="relative mt-2">
+                    <Input
+                      id="confirmPassword"
+                      name="confirmPassword"
+                      type={showPassword ? "text" : "password"}
+                      placeholder="••••••••"
+                      value={formData.confirmPassword}
+                      onChange={handleChange}
+                      className="pr-12 rounded-xl dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100 focus:ring-pink-500"
+                    />
+                  </div>
+                </div>
               </div>
+
 
               {formData.refCode && (
                 <div className="sm:col-span-2 mt-2">
@@ -174,6 +233,56 @@ export default function Signup() {
                 </Link>
               </label>
             </div>
+
+
+            {usersLoading ? (
+              <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+                <Loader2 className="h-8 w-8 animate-spin" />
+              </div>
+            ) : isFirstAdmin && (
+              <div className="space-y-6 mb-8 animate-in fade-in slide-in-from-top-4 duration-500">
+                <Alert className="border-amber-200 bg-amber-50 dark:bg-amber-950/30 dark:border-amber-900 shadow-sm rounded-2xl p-6">
+                  <Sparkles className="h-6 w-6 text-amber-600 dark:text-amber-400" />
+                  <AlertTitle className="text-xl font-bold text-amber-800 dark:text-amber-200 ml-2">
+                    Configuration du Premier Administrateur
+                  </AlertTitle>
+                  <AlertDescription className="mt-3 text-amber-700 dark:text-amber-300 space-y-2">
+                    <p className="font-medium text-lg">
+                      Bienvenue dans <strong>Beauty Nails Salon Management</strong>.
+                      Aucun utilisateur n'a été détecté : vous créez actuellement le **compte maître** du système.
+                    </p>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                      <div className="flex items-start gap-2 text-sm bg-white/50 dark:bg-black/20 p-3 rounded-xl border border-amber-100 dark:border-amber-800">
+                        <ShieldCheck className="h-5 w-5 mt-0.5 text-amber-600" />
+                        <span><strong>Contrôle Total :</strong> Gestion des services, prix et stocks.</span>
+                      </div>
+                      <div className="flex items-start gap-2 text-sm bg-white/50 dark:bg-black/20 p-3 rounded-xl border border-amber-100 dark:border-amber-800">
+                        <Info className="h-5 w-5 mt-0.5 text-amber-600" />
+                        <span><strong>Supervision :</strong> Approbation des réservations et accès aux rapports financiers.</span>
+                      </div>
+                    </div>
+                  </AlertDescription>
+                </Alert>
+
+                {/* Hidden Role Field or Read-only Display */}
+                <div className="group relative">
+                  <Label className="text-pink-600 dark:text-pink-400 font-bold uppercase tracking-widest text-xs">
+                    Rôle Attribué
+                  </Label>
+                  <div className="mt-2 flex items-center gap-3 p-4 bg-linear-to-r from-pink-50 to-purple-50 dark:from-pink-950/20 dark:to-purple-950/20 border border-pink-200 dark:border-pink-900 rounded-2xl">
+                    <div className="p-2 bg-pink-500 rounded-lg text-white shadow-lg shadow-pink-200 dark:shadow-none">
+                      <ShieldCheck size={20} />
+                    </div>
+                    <div>
+                      <p className="font-bold text-gray-900 dark:text-white">Propriétaire / Administrateur Système</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">Permissions maximales activées par défaut</p>
+                    </div>
+                  </div>
+                  {/* Ensure the role is sent to the backend */}
+                  <input type="hidden" name="role" value="admin" />
+                </div>
+              </div>
+            )}
 
             <Button
               type="submit"

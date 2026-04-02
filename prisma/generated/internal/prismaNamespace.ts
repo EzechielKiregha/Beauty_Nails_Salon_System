@@ -403,6 +403,7 @@ export const ModelName = {
   Sale: 'Sale',
   SaleItem: 'SaleItem',
   Payment: 'Payment',
+  PaymentIntent: 'PaymentIntent',
   DailyRegister: 'DailyRegister',
   Commission: 'Commission',
   InventoryItem: 'InventoryItem',
@@ -432,7 +433,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "media" | "clientProfile" | "workerProfile" | "workerSchedule" | "workerLeave" | "task" | "service" | "serviceAddOn" | "servicePackage" | "appointment" | "review" | "membership" | "membershipPurchase" | "loyaltyTransaction" | "referral" | "sale" | "saleItem" | "payment" | "dailyRegister" | "commission" | "inventoryItem" | "inventoryTransaction" | "inventoryUsage" | "reorderRequest" | "notification" | "marketingCampaign" | "discountCode" | "report" | "salonProfile" | "systemSetting" | "integration" | "auditLog"
+    modelProps: "user" | "media" | "clientProfile" | "workerProfile" | "workerSchedule" | "workerLeave" | "task" | "service" | "serviceAddOn" | "servicePackage" | "appointment" | "review" | "membership" | "membershipPurchase" | "loyaltyTransaction" | "referral" | "sale" | "saleItem" | "payment" | "paymentIntent" | "dailyRegister" | "commission" | "inventoryItem" | "inventoryTransaction" | "inventoryUsage" | "reorderRequest" | "notification" | "marketingCampaign" | "discountCode" | "report" | "salonProfile" | "systemSetting" | "integration" | "auditLog"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1842,6 +1843,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    PaymentIntent: {
+      payload: Prisma.$PaymentIntentPayload<ExtArgs>
+      fields: Prisma.PaymentIntentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PaymentIntentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentIntentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PaymentIntentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentIntentPayload>
+        }
+        findFirst: {
+          args: Prisma.PaymentIntentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentIntentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PaymentIntentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentIntentPayload>
+        }
+        findMany: {
+          args: Prisma.PaymentIntentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentIntentPayload>[]
+        }
+        create: {
+          args: Prisma.PaymentIntentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentIntentPayload>
+        }
+        createMany: {
+          args: Prisma.PaymentIntentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PaymentIntentCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentIntentPayload>[]
+        }
+        delete: {
+          args: Prisma.PaymentIntentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentIntentPayload>
+        }
+        update: {
+          args: Prisma.PaymentIntentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentIntentPayload>
+        }
+        deleteMany: {
+          args: Prisma.PaymentIntentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PaymentIntentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PaymentIntentUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentIntentPayload>[]
+        }
+        upsert: {
+          args: Prisma.PaymentIntentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentIntentPayload>
+        }
+        aggregate: {
+          args: Prisma.PaymentIntentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePaymentIntent>
+        }
+        groupBy: {
+          args: Prisma.PaymentIntentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PaymentIntentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PaymentIntentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PaymentIntentCountAggregateOutputType> | number
+        }
+      }
+    }
     DailyRegister: {
       payload: Prisma.$DailyRegisterPayload<ExtArgs>
       fields: Prisma.DailyRegisterFieldRefs
@@ -3247,6 +3322,20 @@ export const PaymentScalarFieldEnum = {
 export type PaymentScalarFieldEnum = (typeof PaymentScalarFieldEnum)[keyof typeof PaymentScalarFieldEnum]
 
 
+export const PaymentIntentScalarFieldEnum = {
+  id: 'id',
+  phoneNumber: 'phoneNumber',
+  amount: 'amount',
+  status: 'status',
+  serviceId: 'serviceId',
+  workerId: 'workerId',
+  createdAt: 'createdAt',
+  transactionId: 'transactionId'
+} as const
+
+export type PaymentIntentScalarFieldEnum = (typeof PaymentIntentScalarFieldEnum)[keyof typeof PaymentIntentScalarFieldEnum]
+
+
 export const DailyRegisterScalarFieldEnum = {
   id: 'id',
   date: 'date',
@@ -4072,6 +4161,7 @@ export type GlobalOmitConfig = {
   sale?: Prisma.SaleOmit
   saleItem?: Prisma.SaleItemOmit
   payment?: Prisma.PaymentOmit
+  paymentIntent?: Prisma.PaymentIntentOmit
   dailyRegister?: Prisma.DailyRegisterOmit
   commission?: Prisma.CommissionOmit
   inventoryItem?: Prisma.InventoryItemOmit

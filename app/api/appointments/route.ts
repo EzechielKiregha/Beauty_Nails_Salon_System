@@ -280,7 +280,7 @@ export async function POST(request: NextRequest) {
           tax: taxAmount,
           tip: paymentInfo.tip || 0,
           paymentMethod: paymentInfo.method || 'cash',
-          paymentStatus: paymentInfo.status || 'pending', // Will be updated based on payment processing
+          paymentStatus: paymentInfo.status === "completed" ? "confirmed" : "pending",
           discountCode: paymentInfo.discountCode || null,
           receiptNumber: `RCT-${Date.now()}`,
           notes: paymentInfo.notes || '',
@@ -334,7 +334,7 @@ export async function POST(request: NextRequest) {
         data: {
           amount: finalTotal,
           method: paymentInfo.method || 'cash',
-          status: paymentInfo.status || 'pending',
+          status: paymentInfo.status === "confirmed" ? "confirmed" : "pending",
           saleId: sale.id,
           transactionId: paymentInfo.transactionId || null,
         },

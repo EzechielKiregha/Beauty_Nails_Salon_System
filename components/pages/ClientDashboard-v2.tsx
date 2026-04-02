@@ -261,8 +261,8 @@ export default function ClientDashboardV2() {
         });
 
         // 2. Immediate Toast Notification
-        toast.success(`Joyeux Anniversaire ${user?.name}! 🎉`, {
-          description: "Profitez de 20% de réduction ce mois-ci.",
+        toast.success(`Félicitations ! ${user?.name}! 🎉`, {
+          description: "Profitez de 10% de réduction ce mois-ci.",
           duration: 5000,
         });
 
@@ -270,7 +270,7 @@ export default function ClientDashboardV2() {
         createNotification({
           userId: user?.id ?? '',
           type: 'marketing',
-          title: `Joyeux Anniversaire ${user?.name}!`,
+          title: `Félicitations ! ${user?.name}!`,
           message: `Profitez de 10% de réduction sur tous nos services.`,
         });
       }
@@ -744,12 +744,12 @@ export default function ClientDashboardV2() {
                   <div>
                     <p className="text-lg text-gray-900 dark:text-gray-300">Parrainages</p>
                     <p className="text-2xl sm:text-3xl font-medium text-gray-900 dark:text-gray-100">{referrals?.length}</p>
-                    <p className="text-base text-gray-500 dark:text-gray-400">{nextFreeReferral} pour service gratuit</p>
+                    <p className="text-base text-gray-500 dark:text-gray-400">{nextFreeReferral > 0 ? `${nextFreeReferral} pour service gratuit` : `reclamez votre 10% de réduction`}</p>
                   </div>
                 </Card>
               </PopoverTrigger>
               <PopoverContent className="w-64 bg-linear-to-br from-purple-50 to-pink-50 dark:from-gray-950 dark:to-gray-950 p-4 rounded-2xl text-center shadow-sm hover:shadow-lg transition border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400">
-                <p className="text-sm">Invitez vos amis ! Pour chaque 5 parrainages terminés, recevez un service 100% gratuit.</p>
+                <p className="text-sm">Invitez vos amis ! Pour chaque 5 parrainages terminés, Profitez de 10% de réduction ce mois-ci.</p>
               </PopoverContent>
             </Popover>
 
@@ -1674,16 +1674,16 @@ export default function ClientDashboardV2() {
                       <div className="space-y-4">
                         <div className="flex justify-between items-center">
                           <span className="text-base text-gray-700 dark:text-gray-400 font-medium">Points actuels</span>
-                          <span className="text-2xl font-medium text-gray-900 dark:text-gray-100 font-black">{selectedClient?.loyaltyPoints || 0} pts</span>
+                          <span className="text-2xl text-gray-900 dark:text-gray-100 font-black">{selectedClient?.loyaltyPoints || 0} pts</span>
                         </div>
                         <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
                           <div
                             className="bg-linear-to-r from-amber-500 to-orange-500 h-full rounded-full transition-all duration-500"
-                            style={{ width: `${(selectedClient?.loyaltyPoints / 500) * 100}%` }}
+                            style={{ width: `${(loyaltyPoints / selectedClient?.loyaltyPoints) * 100}%` }}
                           />
                         </div>
                         <p className="text-base text-gray-600 dark:text-gray-400 italic">
-                          Encore {500 - (selectedClient?.loyaltyPoints || 0)} points pour votre prochaine récompense !
+                          Encore {selectedClient?.loyaltyPoints - (loyaltyPoints || 0)} points pour votre prochaine récompense !
                         </p>
                       </div>
                     </Card>
@@ -1800,16 +1800,17 @@ export default function ClientDashboardV2() {
                           </div>
                         </div>
                       </div>
-                    </div>
-                    <div className="grid grid-cols-2 gap-3 w-full sm:w-auto">
-
                       <ClientModalTrigger client={selectedClient} edit={true}>
                         <Button variant="outline" className="rounded-full py-5 px-6 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300  transition-all text-lg">
-                          Modifier
+                          Editer Profil
                         </Button>
                       </ClientModalTrigger>
-
                     </div>
+                    {/* <div className="grid grid-cols-2 gap-3 w-full sm:w-auto">
+
+                      
+
+                    </div> */}
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="space-y-4">

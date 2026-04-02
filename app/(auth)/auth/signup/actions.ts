@@ -3,14 +3,14 @@
 import { signIn } from "@/lib/auth/auth";
 import axiosdb from "@/lib/axios";
 
-export async function handleSignup(formData: FormData, refCodeParam: string | null, redirect?: string | null) {
+export async function handleSignup(formData: FormData, refCodeParam: string | null, redirect?: string | null, isFirstAdmin = false) {
   const name = formData.get("name") as string;
   const email = formData.get("email") as string;
   const phone = formData.get("phone") as string;
   const password = formData.get("password") as string;
   const confirmPassword = formData.get("confirmPassword") as string;
   // const acceptTerms = !!formData.get("acceptTerms");
-  const role = "client";
+  const role = isFirstAdmin ? "admin" : "client";
 
   if (!name || !email || !phone || !password) {
     return { error: "Veuillez remplir tous les champs" };

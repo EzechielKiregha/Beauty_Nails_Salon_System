@@ -586,6 +586,22 @@ model Payment {
   @@map("payments")
 }
 
+model PaymentIntent {
+  id            String   @id @default(uuid())
+  phoneNumber   String
+  amount        Int
+  status        String   @default("pending") // pending | success
+  serviceId     String
+  workerId      String
+  createdAt     DateTime @default(now())
+  transactionId String?
+
+  @@index([workerId])
+  @@index([status])
+  @@index([phoneNumber])
+  @@map("payment_intents")
+}
+
 enum PaymentMethod {
   cash
   card
@@ -596,6 +612,7 @@ enum PaymentMethod {
 }
 
 enum PaymentStatus {
+  confirmed
   pending
   completed
   failed
