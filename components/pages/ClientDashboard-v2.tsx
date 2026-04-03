@@ -74,12 +74,13 @@ import { useReviews } from "@/lib/hooks/useReview";
 import confetti from "canvas-confetti";
 import { motion, AnimatePresence } from "framer-motion";
 import ClientModalTrigger from "../ClientModalTrigger";
+import { Appointment } from "@/lib/api/appointments";
 
 export default function ClientDashboardV2() {
   const [notificationOpen, setNotificationOpen] = useState(false);
   const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
   const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
-  const [selectedAppointment, setSelectedAppointment] = useState<any>(null);
+  const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
   const [rating, setRating] = useState(0);
   const [reviewText, setReviewText] = useState("");
   const [selectedWorker, setSelectedWorker] = useState<string | null>(null);
@@ -167,6 +168,31 @@ export default function ClientDashboardV2() {
     appointmentDateTime.setSeconds(0);
 
     return appointmentDateTime < new Date();
+  };
+
+  const handleMissedAutoCancel = (appointment: Appointment) => {
+    const amount = Number(appointment.price || 0);
+
+    cancelAppointment(
+      {
+        id: appointment.id,
+        reason:
+          "Rendez-vous manqué. Le client ne s'est pas présenté dans les 10 minutes suivant l'heure prévue.",
+      },
+      {
+        onSuccess: () => {
+          toast.info("Rendez-vous annulé automatiquement");
+
+          // 🔔 Notification
+          createNotification({
+            userId: user?.id ?? "",
+            type: "appointment_reminder",
+            title: "Rendez-vous manqué 😔",
+            message: `Votre rendez-vous a été annulé automatiquement après 10 minutes d'absence. Le montant (${amount} CDF) peut être converti en solde prépayé.`,
+          });
+        },
+      }
+    );
   };
 
   // Get loyalty data
@@ -940,6 +966,8 @@ export default function ClientDashboardV2() {
                             <AppointmentCountdown
                               date={appointment.date}
                               time={appointment.time}
+                              appointment={appointment}
+                              onMissedAutoCancel={handleMissedAutoCancel}
                             />
                             {missed && appointment.status !== "cancelled" && (
                               <Popover>
@@ -1153,6 +1181,8 @@ export default function ClientDashboardV2() {
                           <AppointmentCountdown
                             date={appointment.date}
                             time={appointment.time}
+                            appointment={appointment}
+                            onMissedAutoCancel={handleMissedAutoCancel}
                           />
                           {missed && appointment.status !== "cancelled" && (
                             <Popover>
@@ -1441,7 +1471,7 @@ export default function ClientDashboardV2() {
                   </p>
                 ) : (
                   <div className="rounded-xl border overflow-hidden">
-                    <div className="max-h-[400px] overflow-y-auto">
+                    <div className="max-h-100 overflow-y-auto">
 
                       <table className="w-full text-lg">
                         <thead className="bg-muted sticky top-0 z-10">

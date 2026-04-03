@@ -988,7 +988,7 @@ export default function AppointmentsV3() {
                       <p className="text-2xl font-bold text-pink-600 dark:text-pink-400 tracking-wider">
                         *384*333666#
                       </p>
-                      <div className="flex items-center gap-8">
+                      <div className="flex flex-col items-center gap-8">
                         <button
                           onClick={() => {
                             navigator.clipboard.writeText("*384*333666#");
@@ -998,7 +998,7 @@ export default function AppointmentsV3() {
                         >
                           <Copy className="h-4 w-4" /> Copier
                         </button>
-                        <a href="tel:*384*333666#" className="flex cursor-pointer items-center gap-2 text-sm text-pink-600 dark:text-pink-400 hover:text-pink-700">
+                        <a href="tel:*384*333666#" className=" hidden cursor-pointer items-center gap-2 text-sm text-pink-600 dark:text-pink-400 hover:text-pink-700">
                           <Phone className="h-4 w-4" /> Appeler
                         </a>
                       </div>
@@ -1038,7 +1038,7 @@ export default function AppointmentsV3() {
                               className="text-lg p-2 focus:bg-pink-50 dark:focus:bg-pink-950/30 focus:text-pink-700 dark:focus:text-pink-300 cursor-pointer"
                             >
                               <span className="flex items-center gap-2">
-                                {c.code} <span className="text-sm opacity-70">({c.name})</span>
+                                {c.code} <span className="hidden text-sm opacity-70">({c.name})</span>
                               </span>
                             </SelectItem>
                           ))}
@@ -1049,7 +1049,7 @@ export default function AppointmentsV3() {
                         value={payerPhone}
                         onChange={handlePhoneChange}
                         placeholder={countries.find(c => c.code === countryCode)?.placeholder || "78xxxxxxx"}
-                        className="grow rounded-2xl text-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 p-2 text-gray-900 dark:text-white focus:ring-2 focus:ring-pink-300 focus:border-pink-500 focus:outline-none"
+                        className="w-full rounded-xl text-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 py-1 text-gray-900 dark:text-white focus:ring-2 focus:ring-pink-300 focus:border-pink-500 focus:outline-none"
                       />
                     </div>
                     <p className="text-lg text-gray-500 dark:text-gray-400 flex items-center gap-1">
