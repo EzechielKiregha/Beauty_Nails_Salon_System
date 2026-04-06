@@ -91,6 +91,7 @@ export async function GET(request: NextRequest) {
             },
           },
         },
+        paymentIntent: true,
       },
       orderBy: [{ date: 'asc' }],
       cacheStrategy: { 
@@ -124,8 +125,11 @@ export async function POST(request: NextRequest) {
       isGiftCardUsed,
       isFreeServiceUsed,
       refBonusApplied,
-      paymentInfo = {}, // Removed decidedToPay since it's no longer used
+      paymentIntentId,
+      paymentInfo = {},
     } = body;
+
+    console.log("Received appointment creation request with data:", body);
     
     // Only clients and admins can create appointments
     if (!['client', 'admin'].includes(user.role)) {
@@ -236,11 +240,53 @@ export async function POST(request: NextRequest) {
     // Calculate final total
     const taxAmount = (totalPrice - discountAmount) * 0.16; // 16% tax
     const finalTotal = wasRefBonusUsed(isFreeServiceUsed ? 0 : (totalPrice - discountAmount + taxAmount + (paymentInfo.tip || 0)));
-    
+
+
     // Create appointment in a single transaction
     const result =await prisma.$transaction(async (tx) => {
       // Create appointment
-      const appointment = await tx.appointment.create({
+      let appointment;
+      let transactionId = null;
+
+      if (paymentIntentId && paymentInfo.method === 'mobile'){
+        const paymentIntent = await tx.paymentIntent.findFirst({
+          where: { id: paymentIntentId, status: "success" },
+          orderBy: { createdAt: 'desc'}
+        })
+        if (!paymentIntent) return errorResponse("NO PAYMENT MADE")
+
+        transactionId = paymentIntent.transactionId;
+        appointment = await tx.appointment.create({
+        data: {
+          date: new Date(date),
+          time,
+          location,
+          price: finalTotal,
+          duration: service.duration,
+          client: {connect: { id: clientId }} ,
+          worker: { connect: { id: workerId } },
+          service: { connect: { id: serviceId }},
+          paymentIntent: { connect : { id : paymentIntent.id} },
+          notes,
+          status: 'confirmed',
+          addOns,
+        },
+        include: {
+          service: true,
+          client: {
+            include: {
+              user: true
+            }
+          },
+          worker: {
+            include: {
+              user: true
+            }
+          }
+        }
+      });
+      } else {
+        appointment = await tx.appointment.create({
         data: {
           date: new Date(date),
           time,
@@ -268,6 +314,7 @@ export async function POST(request: NextRequest) {
           }
         }
       });
+      }
       
       // Create sale record
       const sale = await tx.sale.create({
@@ -336,10 +383,9 @@ export async function POST(request: NextRequest) {
           method: paymentInfo.method || 'cash',
           status: paymentInfo.status || "pending",
           saleId: sale.id,
-          transactionId: paymentInfo.transactionId || null,
+          transactionId: transactionId || null,
         },
       });
-
       
       // Update client loyalty points
       const loyaltyPointsEarned = Math.floor(finalTotal / 1000); // 1 point per 1000 CDF

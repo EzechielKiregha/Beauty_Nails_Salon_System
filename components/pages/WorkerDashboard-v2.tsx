@@ -675,6 +675,7 @@ export default function WorkerDashboardV2() {
                       <AppointmentCountdown
                         date={appointment.date}
                         time={appointment.time}
+                        appointment={appointment}
                       />
                     </div>
                   ))}

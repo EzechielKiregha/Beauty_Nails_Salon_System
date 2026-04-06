@@ -357,12 +357,15 @@ model Appointment {
   updatedAt    DateTime          @updatedAt
 
   // Relations
+  paymentIntentId String?
+  paymentIntent   PaymentIntent? @relation(fields: [paymentIntentId], references: [id])
   client  ClientProfile @relation(fields: [clientId], references: [id], onDelete: Cascade)
   service Service       @relation(fields: [serviceId], references: [id])
   worker  WorkerProfile @relation(fields: [workerId], references: [id])
   reviews  Review[]     @relation("appointment_reviews")
   sale    Sale?
   tasks   Task[] // new: tasks assigned to this worker
+
 
   @@index([clientId])
   @@index([workerId])
@@ -596,6 +599,7 @@ model PaymentIntent {
   createdAt     DateTime @default(now())
   transactionId String?
 
+  appointments Appointment[]
   @@index([workerId])
   @@index([status])
   @@index([phoneNumber])

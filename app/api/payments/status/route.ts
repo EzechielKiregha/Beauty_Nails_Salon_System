@@ -10,6 +10,9 @@ export async function GET(req: NextRequest) {
     where: {
       phoneNumber: phone!,
       status: "success",
+      createdAt: {
+        gte: new Date(Date.now() - 20 * 60 * 1000),
+      },
     },
     orderBy: { createdAt: "desc" },
   });
@@ -17,6 +20,6 @@ export async function GET(req: NextRequest) {
   return successResponse({
     paid: !!payment,
     amount: payment?.amount || 0,
-    transactionId: payment?.transactionId,
+    paymentIntent: payment,
   });
 }

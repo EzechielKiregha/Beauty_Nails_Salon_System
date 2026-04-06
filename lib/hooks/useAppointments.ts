@@ -29,21 +29,6 @@ export function useAppointments(params?: {
   // Create appointment
   const createMutation = useMutation({
     mutationFn: appointmentsApi.createAppointment,
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['appointments'] });
-      toast.success("Rendez-vous créé avec succès!", {
-          description: `Votre rendez-vous est prévu le ${data.appointment.date} à ${data.appointment.time}`,
-        });
-
-        setTimeout(() => {
-          if (user?.role === 'client') {
-            router.push("/dashboard/client");
-          }
-        }, 2000);
-    },
-    onError: (error: any) => {
-      toast.error(error.response?.data?.error?.message || 'Erreur lors de la création');
-    },
   });
   // Create appointment
   const createMutationAsAdmin = useMutation({

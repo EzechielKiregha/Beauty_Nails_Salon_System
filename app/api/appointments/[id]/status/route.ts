@@ -72,8 +72,8 @@ export async function PUT(
             totalRevenue: appointment.price,
             period: `${format(new Date(appointment.date), "EEEE d MMMM 'à' HH'h'mm", { locale: fr })}`,
             businessEarnings: appointment.price - (appointment.price * appointment.service.workerCommission / 100),
-            materialsCost: (appointment.price - (appointment.price * appointment.service.workerCommission / 100)) * 0.5,
-            operationalCost: (appointment.price - (appointment.price * appointment.service.workerCommission / 100)) * 0.5
+            materialsCost: (appointment.price - (appointment.price * appointment.service.workerCommission / 100)) * 0.05,
+            operationalCost: (appointment.price - (appointment.price * appointment.service.workerCommission / 100)) * 0.05
           }
         })
       ]);

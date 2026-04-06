@@ -31,14 +31,13 @@ export default function AppointmentCountdown({
 
       const diff = appointmentDate.getTime() - now.getTime()
 
+      const abs = Math.abs(diff)
+      const days = Math.floor(abs / (1000 * 60 * 60 * 24))
+      const hours = Math.floor((abs / (1000 * 60 * 60)) % 24)
+      const minutes = Math.floor((abs / (1000 * 60)) % 60)
       if (diff > 0) {
         // BEFORE appointment
         setMissed(false)
-
-        const abs = diff
-        const days = Math.floor(abs / (1000 * 60 * 60 * 24))
-        const hours = Math.floor((abs / (1000 * 60 * 60)) % 24)
-        const minutes = Math.floor((abs / (1000 * 60)) % 60)
 
         if (days > 0) setDisplay(`${days}j ${hours}h ${minutes}m`)
         else if (hours > 0) setDisplay(`${hours}h ${minutes}m`)
@@ -66,8 +65,12 @@ export default function AppointmentCountdown({
         const remMin = Math.max(0, Math.floor((remaining / (1000 * 60)) % 60))
         const remSec = Math.max(0, Math.floor((remaining / 1000) % 60))
 
-        setDisplay(`+${missedMin}m ${missedSec}s`)
-        setGrace(`${remMin}m ${remSec}s`)
+        if (remaining > 0) {
+          setDisplay(`+${missedMin}m ${missedSec}s`)
+          setGrace(`${remMin}m ${remSec}s`)
+        } else {
+          setDisplay(`${days}j ${hours}h`)
+        }
       }
     }, 1000)
 
@@ -79,7 +82,7 @@ export default function AppointmentCountdown({
       className={`rounded-xl p-4 text-center border 
       ${missed
           ? "bg-red-50 border-red-200 text-red-600 dark:bg-red-950 dark:border-red-900"
-          : "bg-pink-50 border-pink-200 text-pink-600 dark:bg-pink-950 dark:border-pink-900"
+          : "bg-pink-50 border-pink-200 text-purple-600 dark:bg-purple-950 dark:border-purple-900"
         }`}
     >
       <p className="text-base uppercase tracking-wide opacity-70">

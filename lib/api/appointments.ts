@@ -20,6 +20,7 @@ export interface Appointment {
   service?: any;
   worker?: any;
   review?: any;
+  paymentIntent?: any
 }
 
 export interface CreateAppointmentData {

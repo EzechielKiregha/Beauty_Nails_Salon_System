@@ -41,6 +41,7 @@ import { useLoyalty } from '@/lib/hooks/useLoyalty';
 import axiosdb from '@/lib/axios';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { e } from '@vercel/blob/dist/create-folder-D-Qslm5_.cjs';
+import { useQueryClient } from '@tanstack/react-query';
 
 export default function AppointmentsV3() {
   const router = useRouter();
@@ -72,6 +73,7 @@ export default function AppointmentsV3() {
   const [service, setService] = useState<Service | null>(null);
   const [addOnsTotalPrice, setAddOnsTotalPrice] = useState<number>(0);
   const [baseServicePrice, setBaseServicePrice] = useState<number>(0);
+  const [params, setParams] = useState<URLSearchParams>(new URLSearchParams());
   const [isPaid, setIsPaid] = useState(false);
   const [payerPhone, setPayerPhone] = useState("");
   const [discountCode, setDiscountCode] = useState("");
@@ -81,7 +83,9 @@ export default function AppointmentsV3() {
     transactionId?: string;
   }>({});
   const [paymentIntentId, setPaymentIntentId] = useState<string | null>(null);
+  const [remainingTime, setRemainingTime] = useState<number | null>(null);
   const [countryCode, setCountryCode] = useState("+250"); // Default Rwanda
+  const [url, setUrl] = useState("");
 
   const TAX_RATE = 0.16; // 16% tax
 
@@ -96,6 +100,7 @@ export default function AppointmentsV3() {
     workerId: selectedWorker ? selectedWorker : "",
   })
   const { data: selectedClient } = useClient(user?.clientProfile?.id!)
+  const queryClient = useQueryClient();
 
   // Fetch add-ons for selected service
   const { data: addOns = [], isLoading: addOnsLoading } = useAddOns(selectedServiceId);
@@ -267,6 +272,8 @@ export default function AppointmentsV3() {
     refBonus
   ]);
 
+  // console.log("Payment Info:", paymentInfo);
+
   useEffect(() => {
     const initiate = async () => {
       if (
@@ -284,6 +291,22 @@ export default function AppointmentsV3() {
           });
 
           setPaymentIntentId(res.data.paymentIntent.id);
+          setPaymentMeta({
+            transactionId: res.data.paymentIntent.transactionId,
+          });
+          setRemainingTime(15 * 60); // 15 minutes countdown
+          setParams(new URLSearchParams({
+            serviceName: service?.name || '',
+            workerName: selectedWorkerName || '',
+            clientName: user?.name || '',
+            phone: fullPhoneNumber,
+            transactionId: res.data.paymentIntent.transactionId || paymentMeta.transactionId || '',
+            subtotal: String(paymentInfo.subtotal),
+            discount: String(paymentInfo.discount),
+            tax: String(paymentInfo.tax),
+            tip: String(paymentInfo.tip),
+            total: String(paymentInfo.total),
+          }));
 
         } catch (err) {
           console.error(err);
@@ -291,10 +314,11 @@ export default function AppointmentsV3() {
       }
     };
 
-    if (payerPhone.length === 9 && payerPhone.length <= 13) {
+    if (payerPhone.length === 9) {
       initiate();
     } else {
       setPaymentIntentId(null);
+      setRemainingTime(null);
     }
   }, [
     selectedMethod,
@@ -306,7 +330,19 @@ export default function AppointmentsV3() {
 
   useEffect(() => {
     setPaymentIntentId(null);
+    setRemainingTime(null);
   }, [payerPhone]);
+
+  // Countdown timer for payment
+  useEffect(() => {
+    if (remainingTime === null || remainingTime <= 0) return;
+
+    const timer = setTimeout(() => {
+      setRemainingTime(prev => prev! - 1);
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, [remainingTime]);
 
   if (servicesLoading || staffLoading || appointmentLoading || discountsLoading) {
     return (
@@ -322,12 +358,26 @@ export default function AppointmentsV3() {
 
       if (res.data.paid) {
         setIsPaid(true);
+        setRemainingTime(null); // Stop countdown when paid
 
         // optional: store transactionId
         setPaymentMeta({
-          transactionId: res.data.transactionId,
+          transactionId: res.data.paymentIntent.transactionId,
         });
+        setParams(new URLSearchParams({
+          serviceName: service?.name || '',
+          workerName: selectedWorkerName || '',
+          clientName: user?.name || '',
+          phone: fullPhoneNumber,
+          transactionId: res.data.paymentIntent.transactionId || paymentMeta.transactionId || '',
+          subtotal: String(paymentInfo.subtotal),
+          discount: String(paymentInfo.discount),
+          tax: String(paymentInfo.tax),
+          tip: String(paymentInfo.tip),
+          total: String(paymentInfo.total),
+        }));
       } else {
+        setIsPaid(false);
         toast("Paiement non encore reçu");
       }
     } catch (err) {
@@ -335,7 +385,7 @@ export default function AppointmentsV3() {
     }
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!user) {
       toast.error("Veuillez vous connecter pour réserver");
       router.push("/auth/login");
@@ -365,6 +415,7 @@ export default function AppointmentsV3() {
         isGiftCardUsed: isGiftCard && canUseGiftCard,
         isFreeServiceUsed: isFreeService && canUseFreeService,
         refBonusApplied: refBonus > 0 && !canUseFreeService,
+        paymentIntentId,
         paymentInfo,
       };
 
@@ -373,9 +424,37 @@ export default function AppointmentsV3() {
         return;
       }
 
-      createAppointment(appointmentData);
+      if (!paymentMeta.transactionId) {
+        toast.error("Aucun identifiant de transaction trouvé. Veuillez vérifier votre paiement.");
+        return;
+      }
 
-      clearBookingProgress();
+      console.log("Final Payment Info to submit:", appointmentData);
+
+      const url = `/api/receipt-gen?${params.toString()}`;
+      createAppointment(appointmentData, {
+        onSuccess: (data) => {
+          queryClient.invalidateQueries({ queryKey: ['appointments'] });
+          toast.success("Rendez-vous créé avec succès!", {
+            description: `Votre rendez-vous est prévu le ${data.appointment.date} à ${data.appointment.time}`,
+          });
+
+          setTimeout(() => {
+            if (user?.role === 'client') {
+              router.push(`/dashboard/client?url=${encodeURIComponent(url)}`);
+            }
+          }, 2000);
+
+          clearBookingProgress();
+        },
+        onError: (error: any) => {
+          toast.error(error.response?.data?.error?.message || 'Erreur lors de la création');
+        },
+      });
+
+      // await axiosdb.get(`/receipt-gen?${params.toString()}`)
+
+
     } else {
       if (
         !selectedWorker ||
@@ -1049,7 +1128,7 @@ export default function AppointmentsV3() {
                         value={payerPhone}
                         onChange={handlePhoneChange}
                         placeholder={countries.find(c => c.code === countryCode)?.placeholder || "78xxxxxxx"}
-                        className="w-full rounded-xl text-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 py-1 text-gray-900 dark:text-white focus:ring-2 focus:ring-pink-300 focus:border-pink-500 focus:outline-none"
+                        className="w-full rounded-xl text-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 p-1 text-gray-900 dark:text-white focus:ring-2 focus:ring-pink-300 focus:border-pink-500 focus:outline-none"
                       />
                     </div>
                     <p className="text-lg text-gray-500 dark:text-gray-400 flex items-center gap-1">
@@ -1057,9 +1136,21 @@ export default function AppointmentsV3() {
                     </p>
 
                     {paymentIntentId && (
-                      <p className="text-lg text-pink-600 dark:text-pink-400 font-medium flex items-center gap-1.5 pt-2">
-                        <CheckCircle className="h-4 w-4" /> Paiement prêt. Composez le code.
-                      </p>
+                      <div className="flex flex-col gap-2 pt-2">
+                        <p className="text-lg text-pink-600 dark:text-pink-400 font-medium flex items-center gap-1.5">
+                          <CheckCircle className="h-4 w-4" /> Paiement prêt. Composez le code.
+                        </p>
+                        {remainingTime !== null && remainingTime > 0 && (
+                          <Badge variant="secondary" className="w-fit text-sm">
+                            Complétez le paiement dans {Math.floor(remainingTime / 60)}:{(remainingTime % 60).toString().padStart(2, '0')}
+                          </Badge>
+                        )}
+                        {remainingTime === 0 && (
+                          <Badge variant="destructive" className="w-fit text-sm">
+                            Temps écoulé - Veuillez réessayer
+                          </Badge>
+                        )}
+                      </div>
                     )}
                   </div>
 
@@ -1078,6 +1169,18 @@ export default function AppointmentsV3() {
                       <div className="text-center text-lg text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 rounded-xl py-2">
                         En attente de paiement...
                       </div>
+                    )}
+                    {isPaid && paymentMeta.transactionId && (
+                      <button
+                        onClick={() => {
+                          const url = `/api/receipt-gen?${params.toString()}`;
+
+                          window.open(url, "_blank");
+                        }}
+                        className="mt-4 px-4 py-2 rounded-lg bg-pink-500 text-white"
+                      >
+                        Télécharger le reçu
+                      </button>
                     )}
                   </div>
                 </div>

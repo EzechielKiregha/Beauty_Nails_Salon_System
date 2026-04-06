@@ -15,7 +15,7 @@ export async function DELETE(
     const { reason } = body;
 
     const appointment = await prisma.appointment.findUnique({
-      where: { id},
+      where: { id, status: { not: 'cancelled' } },
     });
 
     if (!appointment) {

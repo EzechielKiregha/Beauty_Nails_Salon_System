@@ -4,6 +4,8 @@ import FloatingBubbles from "@/components/FloatingBubbles";
 import { useAppointments } from "@/lib/hooks/useAppointments";
 import { useAuth } from "@/lib/hooks/useAuth";
 import { useClientReferrals } from "@/lib/hooks/useServices";
+import FloatingSearch from "./searchEngine/FloatingSearch";
+import FloatingReceipt from "./FloatingReceipt";
 
 export default function AppClientLayer() {
   const { appointments = [] } = useAppointments();
@@ -23,11 +25,13 @@ export default function AppClientLayer() {
 
   return (
     <>
+      <FloatingReceipt />
       <FloatingBubbles
         appointments={ongoingAppointments}
         user={user}
         referralList={referrals || []}
       />
+      <FloatingSearch />
     </>
   );
 }

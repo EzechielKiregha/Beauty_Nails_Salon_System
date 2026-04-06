@@ -173,6 +173,7 @@ export default function ClientDashboardV2() {
   const handleMissedAutoCancel = (appointment: Appointment) => {
     const amount = Number(appointment.price || 0);
 
+    if (isAppointmentMissed(appointment.date, appointment.time) && appointment.status === "cancelled") return;
     cancelAppointment(
       {
         id: appointment.id,
@@ -242,7 +243,7 @@ export default function ClientDashboardV2() {
     (apt) => (apt.status === "confirmed") && new Date(apt.date).getDate() >= new Date().getDate(),
   );
   const missedAppointments = appointments.filter(
-    (apt) => (apt.status === "confirmed" || apt.status === "pending") && new Date(apt.date).getDate() <= new Date().getDate(),
+    (apt) => (apt.status === "cancelled") && new Date(apt.date).getDate() <= new Date().getDate(),
   );
 
   const appointmentHistory = appointments.filter(
@@ -410,7 +411,7 @@ export default function ClientDashboardV2() {
   }
 
 
-  const canClaimGiftCard = loyaltyPoints === selectedClient.loyaltyPoints;
+  const canClaimGiftCard = loyaltyPoints >= selectedClient.loyaltyPoints;
   const canClaimFreeService = nextFreeService === 0;
 
   // Animation variant for claimable cards
@@ -541,14 +542,7 @@ export default function ClientDashboardV2() {
 
   const handleRefuseAndConvertToPrepaid = (appointment: any) => {
     const amount = Number(appointment.price || 0);
-
-    // 🔁 Prototype logic (frontend simulation only)
-    console.log("Convert to prepaid:", amount);
-
-    // TODO (backend):
-    // - increment client.prepaymentBalance
-    // - mark appointment as cancelled + non-rebookable
-    if (!selectedAppointment) return;
+    if (!selectedAppointment || selectedAppointment.status !== "cancelled") return;
 
     cancelAppointment(
       { id: selectedAppointment.id, reason: "<rendez-vous Re-programmer> refusé par le client, le montant payé pour ce service sera versé dans son solte prépayé." },
@@ -969,7 +963,7 @@ export default function ClientDashboardV2() {
                               appointment={appointment}
                               onMissedAutoCancel={handleMissedAutoCancel}
                             />
-                            {missed && appointment.status !== "cancelled" && (
+                            {missed && appointment.status === "cancelled" && (
                               <Popover>
                                 <PopoverTrigger asChild>
                                   <Button
@@ -1074,13 +1068,13 @@ export default function ClientDashboardV2() {
 
                                   {/* 🔘 Actions */}
                                   <div className="flex gap-2">
-                                    <Button
+                                    {/* <Button
                                       variant="outline"
                                       className="text-red-600"
                                       onClick={() => handleRefuseAndConvertToPrepaid(appointment)}
                                     >
                                       Refuser
-                                    </Button>
+                                    </Button> */}
 
                                     <Button
                                       disabled={!selectedDate || !selectedTime}
@@ -1184,7 +1178,7 @@ export default function ClientDashboardV2() {
                             appointment={appointment}
                             onMissedAutoCancel={handleMissedAutoCancel}
                           />
-                          {missed && appointment.status !== "cancelled" && (
+                          {missed && appointment.status === "cancelled" && (
                             <Popover>
                               <PopoverTrigger asChild>
                                 <Button
@@ -1702,19 +1696,30 @@ export default function ClientDashboardV2() {
                       Programme de Fidélité
                     </h4> */}
                       <div className="space-y-4">
-                        <div className="flex justify-between items-center">
-                          <span className="text-base text-gray-700 dark:text-gray-400 font-medium">Points actuels</span>
-                          <span className="text-2xl text-gray-900 dark:text-gray-100 font-black">{selectedClient?.loyaltyPoints || 0} pts</span>
-                        </div>
-                        <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
-                          <div
-                            className="bg-linear-to-r from-amber-500 to-orange-500 h-full rounded-full transition-all duration-500"
-                            style={{ width: `${(loyaltyPoints / selectedClient?.loyaltyPoints) * 100}%` }}
-                          />
-                        </div>
-                        <p className="text-base text-gray-600 dark:text-gray-400 italic">
-                          Encore {selectedClient?.loyaltyPoints - (loyaltyPoints || 0)} points pour votre prochaine récompense !
-                        </p>
+                        {canClaimGiftCard ? (
+                          <>
+                            <p className="text-base text-gray-400 mb-3">Vous avez accumulé plus des {selectedClient?.loyaltyPoints || 0} points, vous pouvez réclamer des cartes cadeaux.</p>
+                            <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold" onClick={handleApplyLoyaltyBonus}>
+                              Claim free gift card 🎁
+                            </Button>
+                          </>
+                        ) : (
+                          <>
+                            <div className="flex justify-between items-center">
+                              <span className="text-base text-gray-700 dark:text-gray-400 font-medium">Points actuels</span>
+                              <span className="text-2xl text-gray-900 dark:text-gray-100 font-black">{selectedClient?.loyaltyPoints || 0} pts</span>
+                            </div>
+                            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+                              <div
+                                className="bg-linear-to-r from-amber-500 to-orange-500 h-full rounded-full transition-all duration-500"
+                                style={{ width: `${(loyaltyPoints / selectedClient?.loyaltyPoints) * 100}%` }}
+                              />
+                            </div>
+                            <p className="text-base text-gray-600 dark:text-gray-400 italic">
+                              Encore {selectedClient?.loyaltyPoints - (loyaltyPoints || 0)} points pour votre prochaine récompense !
+                            </p>
+                            <p className="text-base mb-3">Accumulez des points à chaque service pour débloquer des cartes cadeaux.</p>
+                          </>)}
                       </div>
                     </Card>
                   </Card>
