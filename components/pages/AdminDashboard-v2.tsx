@@ -107,7 +107,7 @@ export default function AdminDashboardV2() {
     avgRating: staffList.reduce((acc: number, w: any) => acc + (w.rating || 0), 0) / (staffList.length || 1),
     completedAppointments: allAppointments.filter((apt: any) => apt.status === 'completed').length,
     pendingAppointments: allAppointments.filter((apt: any) => apt.status === 'pending' || apt.status === 'confirmed').length,
-    lowStockItems: inventoryList.filter((item: any) => item.status === 'low' || item.status === 'critical').length,
+    lowStockItems: inventoryList.filter((item: any) => item.status === 'low' || item.status === 'critical' || item.currentStock <= item.minStock).length,
     newClients: clientAnalytics?.newClients || 0,
   };
 

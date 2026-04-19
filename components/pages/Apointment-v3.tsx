@@ -233,7 +233,6 @@ export default function AppointmentsV3() {
   const isPrepaid = selectedMethod === "prepaid";
   const isCash = selectedMethod === "cash";
 
-  // ⚠️ define your total cost properly (service + tip - discount etc.)
   const activeTip = isFreeService || isGiftCard ? 0 : Number(tip || 0);
   const totalCost = Number(total || 0) + activeTip;
   const canUsePrepaid = prepaid > totalCost;
@@ -271,8 +270,6 @@ export default function AppointmentsV3() {
     canUseFreeService,
     refBonus
   ]);
-
-  // console.log("Payment Info:", paymentInfo);
 
   useEffect(() => {
     const initiate = async () => {
@@ -314,7 +311,7 @@ export default function AppointmentsV3() {
       }
     };
 
-    if (payerPhone.length === 9) {
+    if (payerPhone.length > 8 && payerPhone.length < 10 ) {
       initiate();
     } else {
       setPaymentIntentId(null);
@@ -404,6 +401,22 @@ export default function AppointmentsV3() {
         return;
       }
 
+      let url = ''
+
+      if (selectedMethod === "mobile"){
+        if (!isPaid) {
+          toast.error("Veuillez confirmer le paiement avant de continuer");
+          return;
+        }
+
+        if (!paymentMeta.transactionId) {
+          toast.error("Aucun identifiant de transaction trouvé. Veuillez vérifier votre paiement.");
+          return;
+        }
+
+        url = `/api/receipt-gen?${params.toString()}`;
+      }
+
       const appointmentData = {
         serviceId: selectedServiceId,
         workerId: selectedWorker,
@@ -416,44 +429,12 @@ export default function AppointmentsV3() {
         isFreeServiceUsed: isFreeService && canUseFreeService,
         refBonusApplied: refBonus > 0 && !canUseFreeService,
         paymentIntentId,
+        receiptUrl: url,
         paymentInfo,
       };
-
-      if (selectedMethod === "mobile" && !isPaid) {
-        toast.error("Veuillez confirmer le paiement avant de continuer");
-        return;
-      }
-
-      if (!paymentMeta.transactionId) {
-        toast.error("Aucun identifiant de transaction trouvé. Veuillez vérifier votre paiement.");
-        return;
-      }
-
-      console.log("Final Payment Info to submit:", appointmentData);
-
-      const url = `/api/receipt-gen?${params.toString()}`;
-      createAppointment(appointmentData, {
-        onSuccess: (data) => {
-          queryClient.invalidateQueries({ queryKey: ['appointments'] });
-          toast.success("Rendez-vous créé avec succès!", {
-            description: `Votre rendez-vous est prévu le ${data.appointment.date} à ${data.appointment.time}`,
-          });
-
-          setTimeout(() => {
-            if (user?.role === 'client') {
-              router.push(`/dashboard/client?url=${encodeURIComponent(url)}`);
-            }
-          }, 2000);
-
-          clearBookingProgress();
-        },
-        onError: (error: any) => {
-          toast.error(error.response?.data?.error?.message || 'Erreur lors de la création');
-        },
-      });
-
-      // await axiosdb.get(`/receipt-gen?${params.toString()}`)
-
+      
+      createAppointment(appointmentData)
+      clearBookingProgress();
 
     } else {
       if (

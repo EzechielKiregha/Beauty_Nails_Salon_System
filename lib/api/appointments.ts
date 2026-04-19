@@ -110,9 +110,16 @@ export const appointmentsApi = {
   },
 
   // Create appointment
-  createAppointment: async (appointmentData: CreateAppointmentData): Promise<{ appointment: Appointment; message: string }> => {
+  createAppointment: async (appointmentData: CreateAppointmentData): Promise<{ 
+    appointment: Appointment;
+    sale: any;
+    payment: any;
+    canGenerateReceipt: boolean;
+    receiptUrl: string 
+  }> => {
 
     const { data } = await axiosdb.post('/appointments', appointmentData);
+    console.log("Response from create appointment API:", data);
     return data;
   },
 

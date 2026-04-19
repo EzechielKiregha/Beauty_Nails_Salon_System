@@ -34,8 +34,17 @@ export async function handleLogin(formData: FormData, expectedRole: string, redi
       redirectUrl: `/dashboard/${expectedRole}`,
     };
     } else {
+      const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
+
+      const otpResponse = await axiosdb.post("/auth/send-otp", {
+        phoneNumber: "+250790802201",
+        otp: otpCode,
+      });
+
       return {
       success: true,
+      expectedOtp: otpCode,
+      message: otpResponse.data.message,
       redirectUrl: `/${redirect}`,
     };
     }

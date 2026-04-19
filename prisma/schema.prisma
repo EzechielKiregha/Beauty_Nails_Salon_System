@@ -689,6 +689,7 @@ model InventoryItem {
   category      String
   description   String?     @db.Text
   currentStock  Int
+  imageUrl      String?
   minStock      Int
   maxStock      Int?
   unit          String // "pièce", "ml", "kg"

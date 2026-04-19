@@ -125,7 +125,7 @@ export default function CatalogPage() {
   const [selectedService, setSelectedService] = useState<any>(null);
   // Fetch data using hooks
   const { services, isLoading: servicesLoading } = useServices();
-  const { inventory: products, isLoading: productsLoading } = useInventory(); // Placeholder hook
+  const { inventory: products, isLoading: productsLoading } = useInventory();
   const { packages, isLoading: packagesLoading } = usePackages();
   const { discounts, isLoading: discountsLoading } = useDiscounts();
   const { points: loyaltyPoints, tier: loyaltyTier, transactions: loyaltyTransactions, isLoading: loyaltyLoading } = useLoyalty();
@@ -137,10 +137,10 @@ export default function CatalogPage() {
     appointmentsForReward: 5,
     referralsForReward: 5,
     rewards: [
-      { points: 300, reward: 'Manucure gratuite' },
-      { points: 550, reward: 'Extension cils gratuite' },
-      { points: 750, reward: '50% sur tous services' },
-      { points: 1000, reward: 'Journée beauté complète gratuite' }
+      { points: 3000, reward: 'Manucure gratuite' },
+      { points: 5500, reward: 'Extension cils gratuite' },
+      { points: 7500, reward: '50% sur tous services' },
+      { points: 10000, reward: 'Journée beauté complète gratuite' }
     ]
   };
 
@@ -265,29 +265,88 @@ export default function CatalogPage() {
             )}
 
             {/* Products Tab */}
-            <TabsContent value="products" className="space-y-12">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {products.map(product => (
-                  <Card key={product.id} className="group overflow-hidden border-0 shadow-lg rounded-3xl transition-all hover:-translate-y-1">
-                    <div className="h-48 bg-gray-100 relative overflow-hidden">
-                      <img src={product.name || 'https://placehold.co/400x400'} alt={product.name} className="w-full h-full object-cover transition-transform group-hover:scale-110" />
-                      <Badge className="absolute top-2 right-2 bg-white text-gray-900 hover:bg-white">{product.currentStock} en stock</Badge>
-                    </div>
-                    <div className="p-4">
-                      <p className="text-base text-amber-600  uppercase tracking-wider mb-1">{product.name}</p>
-                      <h3 className=" text-gray-900 mb-1">{product.name}</h3>
-                      <p className="text-gray-500 text-lg mb-3">{product.category}</p>
-                      <div className="flex items-center justify-between">
-                        <span className=" text-lg">{product.cost.toLocaleString()} CDF</span>
-                        <Button variant="ghost" size="icon" className="rounded-full hover:bg-amber-50 text-gray-400 hover:text-amber-600">
-                          <ShoppingBag className="w-4 h-4" />
+            <TabsContent value="products" className="space-y-8 mt-6">
+              {/* Header Section for the Tab */}
+              {/* <div className="flex justify-between items-end mb-6">
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Catalogue Produits</h2>
+                  <p className="text-sm text-gray-500">Gérez vos articles et suivez les niveaux de stock en temps réel.</p>
+                </div>
+                <Badge variant="outline" className="rounded-full px-4 py-1 border-gray-200 dark:border-gray-800">
+                  {products.length} Articles au total
+                </Badge>
+              </div> */}
+
+              {/* Grid Layout */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                {products.map((product) => (
+                  <Card 
+                    key={product.id} 
+                    className="group relative overflow-hidden border-0 shadow-xl hover:shadow-2xl transition-all duration-500 rounded-[2.5rem] bg-white dark:bg-gray-900/50 backdrop-blur-sm"
+                  >
+                    {/* Image Container with Premium Effects */}
+                    <div className="h-64 relative overflow-hidden m-3 rounded-[2rem]">
+                      <img 
+                        src={product.imageUrl || 'https://unsplash.com'} 
+                        alt={product.name} 
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
+                      />
+                      
+                      {/* Top Badges Overlay */}
+                      <div className="absolute top-3 left-3 flex flex-col gap-2">
+                        <Badge className="bg-black/60 dark:bg-white/10 backdrop-blur-md text-white border-0 py-1 px-3 text-[10px] uppercase tracking-widest rounded-full">
+                          {product.category}
+                        </Badge>
+                      </div>
+
+                      <div className="absolute top-3 right-3">
+                        <Badge className={`backdrop-blur-md border-0 py-1.5 px-4 rounded-full shadow-lg font-bold ${
+                            product.currentStock <= product.minStock 
+                            ? 'bg-red-500/90 text-white' 
+                            : 'bg-white/90 text-gray-900'
+                        }`}>
+                          {product.currentStock} {product.unit}
+                        </Badge>
+                      </div>
+
+                      {/* Hover Quick Action */}
+                      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-3">
+                        <Button size="icon" className="bg-white text-black hover:bg-gray-100 rounded-full h-12 w-12 shadow-2xl scale-90 group-hover:scale-100 transition-transform duration-300">
+                          <ShoppingBag className="w-5 h-5" />
                         </Button>
+                      </div>
+                    </div>
+
+                    {/* Content Section */}
+                    <div className="p-6 pt-2">
+                      <div className="mb-4">
+                        <h3 className="text-xl font-bold text-gray-900 dark:text-white tracking-tight group-hover:text-amber-600 transition-colors">
+                          {product.name}
+                        </h3>
+                        <p className="text-xs text-gray-400 mt-1 uppercase tracking-tighter font-semibold">
+                          SKU: {product.sku || 'N/A'}
+                        </p>
+                      </div>
+
+                      <div className="flex items-center justify-between mt-auto bg-gray-50 dark:bg-white/5 p-4 rounded-2xl">
+                        <div className="flex flex-col">
+                          <span className="text-[10px] text-gray-400 uppercase font-black">Prix Unitaire</span>
+                          <span className="text-lg font-black text-gray-900 dark:text-white leading-none">
+                            {product.cost.toLocaleString()} <small className="text-[10px] opacity-60">CDF</small>
+                          </span>
+                        </div>
+                        
+                        {/* Minimalist Visual Indicator */}
+                        <div className={`h-2 w-2 rounded-full shadow-[0_0_8px] ${
+                          product.currentStock <= product.minStock ? 'bg-red-500 shadow-red-500' : 'bg-emerald-500 shadow-emerald-500'
+                        }`} />
                       </div>
                     </div>
                   </Card>
                 ))}
               </div>
             </TabsContent>
+
 
             {/* Packages Tab */}
             <TabsContent value="packages" className="space-y-12">

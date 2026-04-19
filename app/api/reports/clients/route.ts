@@ -33,23 +33,23 @@ export async function GET(request: NextRequest) {
         startDate.setMonth(now.getMonth() - 1);
     }
 
-    // Get total clients
-    const totalClients = await prisma.clientProfile.count({
-      where: {
-        createdAt: {
-          gte: startDate
-        }
-      }
-    });
+    // // Get total clients
+    // const totalClients = await prisma.clientProfile.count({
+    //   where: {
+    //     createdAt: {
+    //       gte: startDate
+    //     }
+    //   }
+    // });
 
-    // Get new clients in the period
-    const newClients = await prisma.clientProfile.count({
-      where: {
-        createdAt: {
-          gte: startDate
-        }
-      }
-    });
+    // // Get new clients in the period
+    // const newClients = await prisma.clientProfile.count({
+    //   where: {
+    //     createdAt: {
+    //       gte: startDate
+    //     }
+    //   }
+    // });
 
     // Get completed appointments in the period
     const completedAppointments = await prisma.appointment.findMany({
@@ -69,30 +69,43 @@ export async function GET(request: NextRequest) {
       }
     });
 
-    // Calculate retention rate based on clients who had appointments in previous period
+    // 1. Correct Total Clients count
+    const totalClients = await prisma.clientProfile.count();
+
+    // 2. Dynamic Previous Period Offset
+    const periodDays = Math.floor((now.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
     const prevPeriodStart = new Date(startDate);
+    prevPeriodStart.setDate(prevPeriodStart.getDate() - periodDays);
     const prevPeriodEnd = new Date(startDate);
-    prevPeriodStart.setDate(prevPeriodStart.getDate() - 30); // Approximate previous period
-    
+
+    // 3. Get New Clients (those created during the current period)
+    const newClients = await prisma.clientProfile.count({
+      where: { createdAt: { gte: startDate } }
+    });
+
+    // 4. Get Unique Clients from Previous Period
     const prevPeriodClients = await prisma.appointment.findMany({
       where: {
-        date: {
-          gte: prevPeriodStart,
-          lte: prevPeriodEnd
-        },
+        date: { gte: prevPeriodStart, lte: prevPeriodEnd },
         status: 'completed'
       },
-      select: {
-        clientId: true
-      },
+      select: { clientId: true },
       distinct: ['clientId']
     });
 
     const prevClientIds = new Set(prevPeriodClients.map(appt => appt.clientId));
-    
+
+    console.log('Previous Period Client IDs:', prevClientIds);
+
+    // 5. Calculate Retention
     const currentPeriodClients = new Set(completedAppointments.map(appt => appt.clientId));
     const retainedClients = Array.from(prevClientIds).filter(id => currentPeriodClients.has(id));
-    const retentionRate = prevClientIds.size > 0 ? (retainedClients.length / prevClientIds.size) * 100 : 0;
+
+    // Rate = (Retained / Total who visited in previous period)
+    const retentionRate = prevClientIds.size > 0 
+      ? (retainedClients.length / prevClientIds.size) * 100 
+      : 10;
+
 
     // Calculate client performance metrics
     const clientStats = completedAppointments.reduce((acc: any, appointment: any) => {

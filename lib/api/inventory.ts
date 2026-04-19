@@ -1,21 +1,5 @@
+import { InventoryItem } from '@/prisma/generated/client';
 import axiosdb from '../axios';
-
-export interface InventoryItem {
-  id: string;
-  name: string;
-  category: string;
-  currentStock: number;
-  minStock: number;
-  maxStock?: number;
-  unit: string;
-  cost: number;
-  supplier?: string;
-  sku?: string;
-  lastRestocked?: string;
-  status: 'good' | 'low' | 'critical' | 'out_of_stock';
-  createdAt: string;
-  updatedAt: string;
-}
 
 export interface UpdateStockData {
   quantity: number;

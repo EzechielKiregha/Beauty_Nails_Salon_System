@@ -565,8 +565,8 @@ export default function ClientDashboardV2() {
   }
 
   // Redirect if not authenticated
-  if (!user) {
-    router.push("/auth/login");
+  if (!user || user.role !== "client") {
+    router.push("/");
   }
 
   return (

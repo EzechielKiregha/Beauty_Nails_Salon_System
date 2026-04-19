@@ -5,7 +5,7 @@ import { requireRole, successResponse, handleApiError } from '@/lib/api/helpers'
 
 export async function GET(request: NextRequest) {
   try {
-    await requireRole(['admin', 'worker']);
+    await requireRole(['admin', 'worker', 'client']);
 
     const { searchParams } = new URL(request.url);
     const category = searchParams.get('category');
@@ -32,6 +32,9 @@ export async function GET(request: NextRequest) {
         },
       },
       orderBy: { currentStock: 'asc' },
+      cacheStrategy:{
+        ttl: 60, // Cache for 60 seconds
+      }
     });
 
     return successResponse(items);
@@ -42,7 +45,7 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    await requireRole(['admin']);
+    await requireRole(['admin', 'worker']);
     const body = await request.json();
     const {
       name,
@@ -50,11 +53,11 @@ export async function POST(request: NextRequest) {
       description,
       sku,
       minStock,
+      currentStock,
       unit,
       cost,
       supplier,
       status = 'good',
-      initialStock,
       maxStock,
     } = body;
 
@@ -63,7 +66,7 @@ export async function POST(request: NextRequest) {
         name,
         category,
         description,
-        currentStock: initialStock || 0,
+        currentStock ,
         minStock,
         maxStock,
         cost,

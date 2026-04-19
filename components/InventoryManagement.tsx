@@ -9,20 +9,22 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Package, AlertCircle, TrendingUp, ShoppingCart, Phone, Mail, Search, Users } from 'lucide-react';
 import { AddProductModal, AdjustStockModal, OrderModal } from './modals/InventoryModals';
 import CreateInventoryModal from './modals/CreateInventoryModal';
+import { InventoryItem } from '@/prisma/generated/client';
+import { InventoryCard } from './InventoryCard';
 
-interface InventoryItem {
-  id: string;
-  name: string;
-  category: string;
-  stock: number;
-  minStock: number;
-  unit: string;
-  cost: string;
-  supplier: string;
-  lastRestock: string;
-  usageRate: string;
-  status: 'good' | 'low' | 'critical' | 'out';
-}
+// interface InventoryItem {
+//   id: string;
+//   name: string;
+//   category: string;
+//   stock: number;
+//   minStock: number;
+//   unit: string;
+//   cost: string;
+//   supplier: string;
+//   lastRestock: string;
+//   usageRate: string;
+//   status: 'good' | 'low' | 'critical' | 'out';
+// }
 
 interface Supplier {
   id: string;
@@ -34,32 +36,16 @@ interface Supplier {
   rating: number;
 }
 
-export default function InventoryManagement({ showMock }: { showMock?: boolean }) {
+export default function InventoryManagement() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
 
-  const { inventory: apiInventory = [], isLoading: inventoryLoading } = useInventory();
-
-  const MOCK_INVENTORY: InventoryItem[] = [
-    {
-      id: '1',
-      name: 'Vernis Gel - Rouge Passion',
-      category: 'Onglerie',
-      stock: 45,
-      minStock: 30,
-      unit: 'unités',
-      cost: '15 000 CDF',
-      supplier: 'Beauty Supplies DRC',
-      lastRestock: '2024-11-15',
-      usageRate: '8 unités/semaine',
-      status: 'good'
-    }
-  ];
+  const { inventory: apiInventory = [] } = useInventory();
 
   const inventory: InventoryItem[] = useMemo(() => {
     if (apiInventory && apiInventory.length) return apiInventory as unknown as InventoryItem[];
-    return showMock ? MOCK_INVENTORY : [];
-  }, [apiInventory, showMock]);
+    return [];
+  }, [apiInventory]);
 
   const suppliers: Supplier[] = [
     {
@@ -108,7 +94,7 @@ export default function InventoryManagement({ showMock }: { showMock?: boolean }
     { item: 'Fils Tresses', used: 24, revenue: '192 000 CDF', trend: 'stable' }
   ];
 
-  const categories = ['Onglerie', 'Cils', 'Tresses', 'Maquillage'];
+  const categories = ['onglerie', 'cils', 'tresses', 'maquillage'];
 
   const filteredInventory = inventory.filter(item => {
     const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase());
@@ -116,7 +102,7 @@ export default function InventoryManagement({ showMock }: { showMock?: boolean }
     return matchesSearch && matchesCategory;
   });
 
-  const alertItems = inventory.filter(item => item.status === 'low' || item.status === 'critical' || item.status === 'out');
+  const alertItems = inventory.filter(item => item.status === 'low' || item.status === 'critical' || item.status === 'out_of_stock' || item.currentStock <= item.minStock);
 
   return (
     <div className="space-y-6">
@@ -146,10 +132,10 @@ export default function InventoryManagement({ showMock }: { showMock?: boolean }
               </p>
               <div className="flex flex-wrap gap-2">
                 {alertItems.map((item) => (
-                  <Badge key={item.id} className={`${item.status === 'out' ? 'bg-red-600 dark:bg-red-700' :
+                  <Badge key={item.id} className={`${item.status === 'out_of_stock' ? 'bg-red-600 dark:bg-red-700' :
                     item.status === 'critical' ? 'bg-orange-600 dark:bg-orange-700' : 'bg-amber-600 dark:bg-amber-700'
                     } text-white border-0 shadow-sm`}>
-                    {item.name} ({item.stock} {item.unit})
+                    {item.name} ({item.currentStock} {item.unit})
                   </Badge>
                 ))}
               </div>
@@ -204,97 +190,7 @@ export default function InventoryManagement({ showMock }: { showMock?: boolean }
         <TabsContent value="stock">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredInventory.map((item) => (
-              <Card key={item.id} className={`p-4 sm:p-6 hover:shadow-lg transition-all border-2 shadow-xl rounded-2xl ${item.status === 'out' ? 'border-red-200 bg-red-50 dark:bg-red-950/20 dark:border-red-900' :
-                item.status === 'critical' ? 'border-orange-200 bg-orange-50 dark:bg-orange-950/20 dark:border-orange-900' :
-                  item.status === 'low' ? 'border-amber-200 bg-amber-50 dark:bg-amber-950/20 dark:border-amber-900' :
-                    'border-green-200 bg-green-50 dark:bg-green-950/20 dark:border-green-900'
-                }`}>
-                <div className="flex items-start justify-between mb-4">
-                  <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shadow-sm ${item.status === 'out' ? 'bg-red-100 dark:bg-red-900/40' :
-                    item.status === 'critical' ? 'bg-orange-100 dark:bg-orange-900/40' :
-                      item.status === 'low' ? 'bg-amber-100 dark:bg-amber-900/40' : 'bg-green-100 dark:bg-green-900/40'
-                    }`}>
-                    <Package className={`w-7 h-7 ${item.status === 'out' ? 'text-red-600 dark:text-red-400' :
-                      item.status === 'critical' ? 'text-orange-600 dark:text-orange-400' :
-                        item.status === 'low' ? 'text-amber-600 dark:text-amber-400' : 'text-green-600 dark:text-green-400'
-                      }`} />
-                  </div>
-                  <Badge className="text-[10px] sm:text-base  uppercase tracking-wider bg-white/80 dark:bg-black/20 text-gray-600 dark:text-gray-300 border-0">
-                    {item.category}
-                  </Badge>
-                </div>
-
-                <h3 className="text-lg  text-gray-900 dark:text-gray-100 mb-4">{item.name}</h3>
-
-                <div className="space-y-3 mb-6 p-4 bg-white/50 dark:bg-black/10 rounded-xl">
-                  <div className="flex justify-between items-center text-lg">
-                    <span className="text-gray-600 dark:text-gray-400">Stock actuel:</span>
-                    <span className=" text-gray-900 dark:text-gray-100">
-                      {item.stock} {item.unit}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center text-lg">
-                    <span className="text-gray-600 dark:text-gray-400">Stock minimum:</span>
-                    <span className=" text-gray-900 dark:text-gray-100">
-                      {item.minStock} {item.unit}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center text-lg">
-                    <span className="text-gray-600 dark:text-gray-400">Prix unitaire:</span>
-                    <span className=" text-gray-900 dark:text-gray-100">{item.cost}</span>
-                  </div>
-                  <div className="flex justify-between items-center text-lg">
-                    <span className="text-gray-600 dark:text-gray-400">Utilisation:</span>
-                    <span className=" text-gray-900 dark:text-gray-100">{item.usageRate}</span>
-                  </div>
-                </div>
-
-                <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 mb-6 overflow-hidden">
-                  <div
-                    className={`h-full rounded-full transition-all duration-1000 ${item.status === 'out' ? 'bg-red-600' :
-                      item.status === 'critical' ? 'bg-orange-600' :
-                        item.status === 'low' ? 'bg-amber-600' : 'bg-green-600'
-                      }`}
-                    style={{ width: `${Math.min((item.stock / item.minStock) * 100, 100)}%` }}
-                  />
-                </div>
-
-                <div className="grid grid-cols-1 gap-2 mb-6">
-                  <div className="flex items-center gap-2 text-base text-gray-600 dark:text-gray-400">
-                    <div className="w-1.5 h-1.5 rounded-full bg-gray-400" />
-                    Fournisseur: <span className="font-semibold text-gray-800 dark:text-gray-200 ml-1">{item.supplier}</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-base text-gray-600 dark:text-gray-400">
-                    <div className="w-1.5 h-1.5 rounded-full bg-gray-400" />
-                    Dernier réappro: <span className="font-semibold text-gray-800 dark:text-gray-200 ml-1">{item.lastRestock}</span>
-                  </div>
-                </div>
-
-                <div className="flex flex-col sm:flex-row gap-2 mt-auto">
-                  {(item.status === 'low' || item.status === 'critical' || item.status === 'out') && (
-
-                    <OrderModal
-                      productName={item.name}
-                      supplierName={item.supplier}
-                      trigger={
-                        <Button size="sm" className="flex-1 bg-orange-600 hover:bg-orange-700 text-white rounded-full">
-                          <ShoppingCart className="w-3 h-3 mr-1" />
-                          Commander
-                        </Button>
-                      }
-                    />
-                  )}
-                  <AdjustStockModal
-                    productName={item.name}
-                    currentStock={item.stock}
-                    trigger={
-                      <Button size="sm" variant="outline" className="flex-1 rounded-full py-5 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800">
-                        Ajuster
-                      </Button>
-                    }
-                  />
-                </div>
-              </Card>
+              <InventoryCard item={item} />
             ))}
           </div>
         </TabsContent>

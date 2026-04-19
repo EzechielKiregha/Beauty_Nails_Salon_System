@@ -1,4 +1,6 @@
 import prisma from "@/lib/prisma";
+import { errorResponse } from "@/lib/api/helpers";
+import africastalking from "africastalking";
 
 export async function POST(req: Request) {
   const body = await req.formData();
@@ -6,9 +8,8 @@ export async function POST(req: Request) {
   const phoneNumber = body.get("phoneNumber") as string;
   const text = (body.get("text") as string) || "";
 
+  let transaction = "";
   let response = "";
-
-  const inputs = text.split("*");
 
   // STEP 0
   if (text === "") {
@@ -50,19 +51,38 @@ Confirmer paiement?
       response = `END ❌ Paiement introuvable`;
     } else {
       // Simulate payment success
+      transaction = `TX-${Date.now()}`;
       await prisma.paymentIntent.update({
         where: { id: payment.id },
         data: {
           status: "success",
-          transactionId: `TX-${Date.now()}`,
+          transactionId: transaction,
         },
       });
 
-      response = `END ✅ Paiement réussi!
-Ref: TX-${Date.now()}`;
+      const client = africastalking({
+        apiKey: 'atsk_de6f7b54323a236020e997bb28112d583da1c2271ef818684e0446c645e0b00039be6d0e',
+        username: "sandbox",
+      });
+
+      const sms = client.SMS;
+
+      const res = await sms.send({
+        to: ['+250790802201'],
+        message: `Votre paiement de ${transaction} a été confirmé. Alors veillez confirmer votre rendez-vous
+        Merci de votre confiance!
+        Veuillez présenter ce message lors de votre rendez-vous pour une expérience beauté exceptionnelle!`,
+        from: "BEAUTY_NAILS_FINANCE",
+      })
+
+      if (res.Message === "InvalidSenderId") {
+        console.error("Failed to send SMS:", res);
+        return errorResponse("Failed to send SMS notification");
+      }
     }
-    console.log("Current Response:", response);
-  }
+  response = `END ✅ Paiement réussi!
+Ref: ${transaction}`;
+    }
 
   else {
     response = `END Choix invalide`;

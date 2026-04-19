@@ -121,12 +121,13 @@ export async function POST(request: NextRequest) {
       location = 'salon',
       addOns = [],
       notes,
-      isPrepaidUsed = false,
+      isPrepaidUsed,
       isGiftCardUsed,
       isFreeServiceUsed,
       refBonusApplied,
       paymentIntentId,
       paymentInfo = {},
+      receiptUrl,
     } = body;
 
     console.log("Received appointment creation request with data:", body);
@@ -253,7 +254,7 @@ export async function POST(request: NextRequest) {
           where: { id: paymentIntentId, status: "success" },
           orderBy: { createdAt: 'desc'}
         })
-        if (!paymentIntent) return errorResponse("NO PAYMENT MADE")
+        if (!paymentIntent) throw new Error("NO PAYMENT MADE")
 
         transactionId = paymentIntent.transactionId;
         appointment = await tx.appointment.create({
@@ -333,7 +334,7 @@ export async function POST(request: NextRequest) {
           notes: paymentInfo.notes || '',
         },
       });
-      const addOnsData = await prisma.serviceAddOn.findMany({
+      const addOnsData = await tx.serviceAddOn.findMany({
         where: {
           id: { in: addOns },
           serviceId: serviceId,
@@ -399,8 +400,8 @@ export async function POST(request: NextRequest) {
         }
       })
 
-      if (clientToUpdate && isPrepaidUsed && clientToUpdate.prepaymentBalance < appointment.price) return errorResponse("Balance prepaye est insufisant.")
-      if (clientToUpdate && isPrepaidUsed && clientToUpdate.giftCardBalance < appointment.price) return errorResponse("Balance carte cadeau est insufisant.")
+      if (clientToUpdate && isPrepaidUsed && clientToUpdate.prepaymentBalance < appointment.price) throw new Error("Balance prepaye est insufisant.");
+      if (clientToUpdate && isGiftCardUsed && clientToUpdate.giftCardBalance < appointment.price) throw new Error("Balance carte cadeau est insufisant.")
 
       if (isPrepaidUsed) {
         clientUpdateData.data = {
@@ -417,10 +418,11 @@ export async function POST(request: NextRequest) {
             create: {
               points: loyaltyPointsEarned,
               type: 'earned_appointment',
-              description: `Bonus pour avoir réservé ${service.name}`,
+              description: `Bonus pour avoir réservé ${service.name} et vous avez utilisé votre solde prépayé`,
             },
           },
         }
+        console.log("Client update data for free service:", clientUpdateData.data)
       } else if (isGiftCardUsed) {
         clientUpdateData.data = {
           // loyaltyPoints: {
@@ -439,10 +441,11 @@ export async function POST(request: NextRequest) {
             create: {
               points: loyaltyPointsEarned,
               type: 'earned_appointment',
-              description: `Bonus pour avoir réservé ${service.name}`,
+              description: `Bonus pour avoir réservé ${service.name} et vous avez utilisé votre carte cadeau`,
             },
           },
         }
+        console.log("Client update data for free service:", clientUpdateData.data)
       } else if (isFreeServiceUsed){
         clientUpdateData.data = {
           // loyaltyPoints: {
@@ -458,10 +461,11 @@ export async function POST(request: NextRequest) {
             create: {
               points: loyaltyPointsEarned,
               type: 'earned_appointment',
-              description: `Bonus pour avoir réservé ${service.name}`,
+              description: `Bonus pour avoir réservé ${service.name} et vous avez utilisé votre prestation gratuite`,
             },
           },
         }
+        console.log("Client update data for free service:", clientUpdateData.data)
       } else {
         clientUpdateData.data = {
           // loyaltyPoints: {
@@ -478,6 +482,7 @@ export async function POST(request: NextRequest) {
             },
           },
         }
+        console.log("Client update data :", clientUpdateData.data)
       }
       const updateClient = await tx.clientProfile.update({
         where: { id: clientId },
@@ -550,10 +555,17 @@ export async function POST(request: NextRequest) {
         payment
       };
     });
+
+    console.log("Result from appointment creation transaction:", {
+      ...result,
+      canGenerateReceipt: receiptUrl.length > 0 && paymentInfo.method === 'mobile',
+      receiptUrl 
+    });
     
     return successResponse({
       ...result,
-      message: 'Rendez-vous créé avec succès',
+      canGenerateReceipt: receiptUrl.length > 0 && paymentInfo.method === 'mobile',
+      receiptUrl 
     });
   } catch (error) {
     return handleApiError(error);

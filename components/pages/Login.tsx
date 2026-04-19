@@ -103,12 +103,11 @@ export default function Login() {
                 className="space-y-4"
               >
                 <div>
-                  <Label htmlFor="email" className="dark:text-gray-200">Email</Label>
+                  <Label htmlFor="email" className="dark:text-gray-200">Email ou Telephone</Label>
                   <Input
                     id="email"
                     type="email"
                     name="email"
-                    placeholder="votre@email.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="mt-2 rounded-xl dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"
@@ -122,7 +121,6 @@ export default function Login() {
                     id="password"
                     type="password"
                     name="password"
-                    placeholder="••••••••"
                     value={password}
                     onChange={(e) =>
                       setPassword(e.target.value)
@@ -145,12 +143,11 @@ export default function Login() {
                 className="space-y-4"
               >
                 <div>
-                  <Label htmlFor="email" className="dark:text-gray-200">Email</Label>
+                  <Label htmlFor="email" className="dark:text-gray-200">Email ou Telephone</Label>
                   <Input
                     id="email"
                     type="email"
                     name="email"
-                    placeholder="votre@email.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="mt-2 rounded-xl dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"
@@ -164,7 +161,6 @@ export default function Login() {
                     id="password"
                     type="password"
                     name="password"
-                    placeholder="••••••••"
                     value={password}
                     onChange={(e) =>
                       setPassword(e.target.value)
@@ -187,12 +183,11 @@ export default function Login() {
                 className="space-y-4"
               >
                 <div>
-                  <Label htmlFor="email" className="dark:text-gray-200">Email</Label>
+                  <Label htmlFor="email" className="dark:text-gray-200">Email ou Telephone</Label>
                   <Input
                     id="email"
                     type="email"
                     name="email"
-                    placeholder="admin@beautynails.cd"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="mt-2 rounded-xl dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"
@@ -206,7 +201,6 @@ export default function Login() {
                     id="password"
                     type="password"
                     name="password"
-                    placeholder="••••••••"
                     value={password}
                     onChange={(e) =>
                       setPassword(e.target.value)

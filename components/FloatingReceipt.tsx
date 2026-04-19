@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
 import { useEffect, useState } from "react";
-import { CheckCircle, DockIcon, Download, Gift, X } from "lucide-react"; // Import Gift icon
+import { CheckCircle, Download } from "lucide-react";
 import confetti from "canvas-confetti";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -13,30 +13,35 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Badge } from "./ui/badge";
 
 export default function FloatingReceipt() {
-
   const storage = typeof window !== "undefined" ? window.localStorage : null;
   storage?.setItem("time", "5");
 
-  const [remainingTime, setRemainingTime] = useState<number | null>(Number(storage?.getItem("time")) * 60); // 5 minutes countdown
+  const [remainingTime, setRemainingTime] = useState<number | null>(
+    Number(storage?.getItem("time")) * 60
+  );
 
   const router = useRouter();
   const params = useSearchParams();
   const url = decodeURIComponent(params.get("url") || "");
 
-  const isUrlValid = url && url.startsWith("/api/");
-  const [visible, setVisible] = useState(isUrlValid)
+  const [visible, setVisible] = useState(false );
 
-  // Countdown timer for payment
+  useEffect(() => {
+    const isUrlValid = (url && url.startsWith("/api/")) ? true : false;
+    setVisible(isUrlValid)
+  }, [url]);
+
+  // ⏳ Countdown
   useEffect(() => {
     if (remainingTime === null || remainingTime <= 0) {
       setRemainingTime(null);
       setVisible(false);
-      router.replace("/dashboard/client"); // Redirect to dashboard after countdown
+      router.replace("/dashboard/client");
       return;
-    };
+    }
 
     const timer = setTimeout(() => {
-      setRemainingTime(prev => prev! - 1);
+      setRemainingTime((prev) => prev! - 1);
     }, 1000);
 
     return () => clearTimeout(timer);
@@ -49,9 +54,7 @@ export default function FloatingReceipt() {
   return (
     <div className="fixed bottom-4 left-4 flex flex-col gap-3 z-50">
       <AnimatePresence>
-
-        {/* 🎁 BONUS BUBBLE (Logic: Claimable OR has active bonus percentage) */}
-        {(visible || isUrlValid) && (
+        {(visible) && (
           <motion.div
             initial={{ scale: 0, x: 50 }}
             animate={{ scale: 1, x: 0 }}
@@ -62,50 +65,93 @@ export default function FloatingReceipt() {
               <PopoverTrigger asChild>
                 <div
                   onClick={visible ? triggerConfetti : undefined}
-                  className={`relative flex flex-col items-center justify-center w-24 h-24 rounded-full shadow-2xl cursor-pointer border-4 border-white dark:border-gray-800 text-white
-                    ${visible && "bg-linear-to-br from-pink-500 to-purple-600 animate-bounce"}
+                  className={`
+                    relative flex flex-col items-center justify-center
+                    w-24 h-24 rounded-full cursor-pointer
+                    text-white transition-all duration-300
+
+                    border border-pink-500/30
+
+                    shadow-[0_10px_30px_rgba(0,0,0,0.6)]
+
+                    ${
+                      visible
+                        ? `
+                          bg-gradient-to-br from-pink-600 via-purple-600 to-indigo-600
+                          animate-bounce
+                        `
+                        : `
+                          bg-gray-900 text-gray-400
+                        `
+                    }
                   `}
                 >
-                  <Download className="w-8 h-8 mb-1" />
-                  <span className="text-xs font-black uppercase tracking-tighter">
-                    {visible ? "Réçu prêt" : "Voir reçu"}
+                  <Download className="w-7 h-7 mb-1" />
+
+                  <span className="text-[10px] font-bold uppercase tracking-tight">
+                    {visible ? "Reçu prêt" : "Voir reçu"}
                   </span>
 
-                  {/* Small pulse ring for attention */}
+                  {/* Glow pulse */}
                   {visible && (
-                    <span className="absolute inset-0 rounded-full bg-pink-400 animate-ping opacity-25"></span>
+                    <span className="absolute inset-0 rounded-full bg-pink-500/30 blur-xl animate-pulse"></span>
                   )}
                 </div>
               </PopoverTrigger>
-              <PopoverContent side="left" className="w-72 bg-linear-to-br from-purple-50 to-pink-50 dark:from-gray-950 dark:to-gray-950 p-4 rounded-2xl text-center shadow-sm hover:shadow-lg transition border border-pink-100 hover:border-pink-400 dark:border-pink-900 dark:hover:border-pink-400">
-                {visible && (
-                  <div className="flex flex-col gap-2 pt-2">
-                    <p className="text-lg text-pink-600 dark:text-pink-400 font-medium flex items-center gap-1.5">
-                      <CheckCircle className="h-4 w-4" /> Votre reçu est prêt.
-                    </p>
-                    {remainingTime !== null && remainingTime > 0 && (
-                      <Badge variant="secondary" className="w-fit text-sm">
-                        Télécharger votre reçu dans {Math.floor(remainingTime / 60)}:{(remainingTime % 60).toString().padStart(2, '0')}
-                      </Badge>
 
+              <PopoverContent
+                side="left"
+                className="
+                  w-72 p-4 rounded-2xl text-center
+
+                  bg-[#0f0f11]
+
+                  border border-pink-500/20
+
+                  shadow-[0_10px_40px_rgba(0,0,0,0.8)]
+                "
+              >
+                {visible && (
+                  <div className="flex flex-col gap-3 pt-2">
+                    {/* Title */}
+                    <p className="text-sm font-medium flex items-center justify-center gap-2 text-pink-400">
+                      <CheckCircle className="h-4 w-4" />
+                      Votre reçu est prêt
+                    </p>
+
+                    {/* Timer */}
+                    {remainingTime !== null && remainingTime > 0 && (
+                      <Badge className="w-fit mx-auto text-xs bg-gray-800 text-gray-300 border border-gray-700">
+                        ⏳ {Math.floor(remainingTime / 60)}:
+                        {(remainingTime % 60)
+                          .toString()
+                          .padStart(2, "0")}
+                      </Badge>
                     )}
+
+                    {/* Action */}
                     <button
-                      onClick={() => {
-                        window.open(url, "_blank");
-                      }}
-                      className="mt-4 px-4 py-2 rounded-lg bg-pink-500 text-white"
+                      onClick={() => window.open(url, "_blank")}
+                      className="
+                        mt-2 px-4 py-2 rounded-lg font-medium
+
+                        bg-gradient-to-r from-pink-600 to-purple-600
+                        hover:from-pink-700 hover:to-purple-700
+
+                        text-white
+
+                        shadow-lg shadow-pink-500/20
+                        transition
+                      "
                     >
-                      Télécharger le reçu
+                      Télécharger
                     </button>
                   </div>
-
                 )}
               </PopoverContent>
             </Popover>
           </motion.div>
         )}
-
-        {/* 🧾 RECEIPT BUBBLE */}
       </AnimatePresence>
     </div>
   );

@@ -29,6 +29,17 @@ export function useAppointments(params?: {
   // Create appointment
   const createMutation = useMutation({
     mutationFn: appointmentsApi.createAppointment,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['appointments'] });
+      toast.success("Rendez-vous créé avec succès!", {
+        description: `Votre rendez-vous est prévu le ${data.appointment.date} à ${data.appointment.time}`,
+      });
+      if (data.canGenerateReceipt) router.push(`dashboard/client?url=${encodeURIComponent(data.receiptUrl)}`);
+      else router.push('/dashboard/client');
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.error?.message || 'Erreur lors de la création');
+    },
   });
   // Create appointment
   const createMutationAsAdmin = useMutation({
@@ -53,6 +64,7 @@ export function useAppointments(params?: {
       toast.success(data.message);
     },
     onError: (error: any) => {
+      console.log("Error updating appointment status:", error);
       toast.error(error.response?.data?.error?.message || 'Erreur de mise à jour');
     },
   });

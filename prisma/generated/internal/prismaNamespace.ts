@@ -3383,6 +3383,7 @@ export const InventoryItemScalarFieldEnum = {
   category: 'category',
   description: 'description',
   currentStock: 'currentStock',
+  imageUrl: 'imageUrl',
   minStock: 'minStock',
   maxStock: 'maxStock',
   unit: 'unit',
