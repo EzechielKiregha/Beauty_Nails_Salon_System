@@ -1,9 +1,18 @@
 import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
-import { handleApiError, errorResponse, getAuthenticatedUser } from "@/lib/api/helpers";
-import { 
-  startOfDay, endOfDay, addDays, addMonths, 
-  getDay, setDate, format 
+import {
+  handleApiError,
+  errorResponse,
+  getAuthenticatedUser,
+} from "@/lib/api/helpers";
+import {
+  startOfDay,
+  endOfDay,
+  addDays,
+  addMonths,
+  getDay,
+  setDate,
+  format,
 } from "date-fns";
 import { fr } from "date-fns/locale";
 import { CommissionReportHtmlV2 } from "@/lib/pdf/CommissionReportHtmlV2";
@@ -14,6 +23,22 @@ export async function GET(request: NextRequest) {
     const user = await getAuthenticatedUser();
     if (!user) {
       return errorResponse("Non authentifié", 401);
+    }
+
+    const { searchParams } = new URL(request.url);
+    const fromParam = searchParams.get("from");
+    const toParam = searchParams.get("to");
+
+    if (!fromParam || !toParam) {
+      return errorResponse("Dates requises", 400);
+    }
+
+    // 1. Convert params to Date objects, then force start/end of day
+    const reqfrom = startOfDay(new Date(fromParam));
+    const reqto = endOfDay(new Date(toParam));
+
+    if (isNaN(reqfrom.getTime()) || isNaN(reqto.getTime())) {
+      return errorResponse("Dates invalides", 400);
     }
 
     // 👤 Get worker profile
@@ -27,7 +52,13 @@ export async function GET(request: NextRequest) {
     }
 
     // 📅 Calculate payment period based on commissionFrequency
-    const { from, to, periodLabel, nextPaymentDate } = calculatePaymentPeriod(workerProfile);
+    const { from, to, periodLabel, nextPaymentDate } = calculatePaymentPeriod(
+      workerProfile,
+      {
+        from: reqfrom,
+        to: reqto,
+      },
+    );
 
     // 📊 Fetch ALL commissions in this period (paid + pending)
     const commissions = await prisma.commission.findMany({
@@ -61,24 +92,25 @@ export async function GET(request: NextRequest) {
         commissionRate: workerProfile.commissionRate || 0,
         pendingCount: 0,
         paidCount: 0,
-      }
+      },
     );
 
     // 📋 Fetch appointments for proof section (only if there are pending commissions)
-    const appointments = aggregated.pendingCount > 0 
-      ? await prisma.appointment.findMany({
-          where: {
-            workerId: workerProfile.id,
-            date: { gte: from, lte: to },
-            status: "completed",
-          },
-          include: {
-            service: { select: { name: true } },
-            client: { include: { user: { select: { name: true } } } },
-          },
-          orderBy: { date: "desc" },
-        })
-      : [];
+    const appointments =
+      aggregated.pendingCount > 0
+        ? await prisma.appointment.findMany({
+            where: {
+              workerId: workerProfile.id,
+              date: { gte: from, lte: to },
+              status: "completed",
+            },
+            include: {
+              service: { select: { name: true } },
+              client: { include: { user: { select: { name: true } } } },
+            },
+            orderBy: { date: "desc" },
+          })
+        : [];
 
     const appointmentData = appointments.map((apt: any) => ({
       id: apt.id,
@@ -91,8 +123,10 @@ export async function GET(request: NextRequest) {
     }));
 
     // 🎨 Generate HTML
-    const generatedAt = format(new Date(), "EEEE d MMMM yyyy 'à' HH:mm", { locale: fr });
-    
+    const generatedAt = format(new Date(), "EEEE d MMMM yyyy 'à' HH:mm", {
+      locale: fr,
+    });
+
     const html = CommissionReportHtmlV2({
       worker: {
         name: workerProfile.user.name,
@@ -110,14 +144,14 @@ export async function GET(request: NextRequest) {
       appointments: appointmentData,
       generatedAt,
       isWithinPaymentWindow: new Date() <= to,
-      nextPaymentDate: nextPaymentDate 
-        ? format(nextPaymentDate, "EEEE d MMMM yyyy", { locale: fr }) 
+      nextPaymentDate: nextPaymentDate
+        ? format(nextPaymentDate, "EEEE d MMMM yyyy", { locale: fr })
         : undefined,
     });
 
     // 📄 Return as HTML or PDF based on query param
     const wantPdf = request.nextUrl.searchParams.get("pdf") === "true";
-    
+
     if (wantPdf) {
       // 🚀 Puppeteer for PDF (lazy load to avoid cold start)
       const puppeteer = await import("puppeteer");
@@ -147,28 +181,33 @@ export async function GET(request: NextRequest) {
         "Content-Type": "text/html; charset=utf-8",
       },
     });
-
   } catch (error) {
     return handleApiError(error);
   }
 }
 
 // 🧮 Helper: Calculate payment period based on worker's commissionFrequency
-function calculatePaymentPeriod(worker: {
-  commissionFrequency?: string | null;
-  commissionDay?: number | null;
-  lastCommissionPaidAt?: Date | null;
-  createdAt: Date;
-}) {
+function calculatePaymentPeriod(
+  worker: {
+    commissionFrequency?: string | null;
+    commissionDay?: number | null;
+    lastCommissionPaidAt?: Date | null;
+    createdAt: Date;
+  },
+  period: {
+    from: Date;
+    to: Date;
+  },
+) {
   const now = new Date();
-  const frequency = worker.commissionFrequency || "daily";
+  const frequency = worker.commissionFrequency || "weekly";
   const commissionDay = worker.commissionDay;
-  
+
   // Start from last paid date, or createdAt if never paid
-  let periodStart = worker.lastCommissionPaidAt 
-    ? new Date(worker.lastCommissionPaidAt) 
-    : new Date(worker.createdAt);
-  
+  let periodStart = worker.lastCommissionPaidAt
+    ? new Date(worker.lastCommissionPaidAt)
+    : new Date(period.from);
+
   let periodEnd: Date;
   let periodLabel: string;
   let nextPaymentDate: Date | undefined;
@@ -178,7 +217,7 @@ function calculatePaymentPeriod(worker: {
       // Weekly: from last paid (or start) to next commissionDay (1-7, Monday=1)
       const targetDay = commissionDay || 1; // Default to Monday
       periodStart = startOfDay(periodStart);
-      
+
       // Find next commissionDay
       let candidate = new Date(periodStart);
       while (getDay(candidate) !== targetDay) {
@@ -186,16 +225,16 @@ function calculatePaymentPeriod(worker: {
       }
       periodEnd = endOfDay(candidate);
       nextPaymentDate = periodEnd;
-      
+
       periodLabel = `Hebdomadaire • Semaine ${format(periodStart, "w", { locale: fr })}`;
       break;
     }
-    
+
     case "monthly": {
       // Monthly: from last paid (or start) to commissionDay of month (1-31)
       const targetDate = commissionDay || 1; // Default to 1st
       periodStart = startOfDay(periodStart);
-      
+
       // Find next commissionDay in current or next month
       let candidate = new Date(periodStart);
       candidate = setDate(candidate, targetDate);
@@ -205,11 +244,11 @@ function calculatePaymentPeriod(worker: {
       }
       periodEnd = endOfDay(candidate);
       nextPaymentDate = periodEnd;
-      
+
       periodLabel = `Mensuel • ${format(periodStart, "MMMM yyyy", { locale: fr })}`;
       break;
     }
-    
+
     case "daily":
     default: {
       // Daily: last 24 hours from now
