@@ -1,3 +1,4 @@
+import { ClientProfile, PaymentIntent, Review, Service, User, WorkerProfile } from '@/prisma/generated/client';
 import axiosdb from '../axios';
 
 export interface Appointment {
@@ -17,10 +18,11 @@ export interface Appointment {
   createdAt: string;
   updatedAt: string;
   client?: any;
-  service?: any;
+  service?: Service;
   worker?: any;
-  review?: any;
-  paymentIntent?: any
+  review?: Review;
+  paymentIntent?: PaymentIntent
+  sale?: any;
 }
 
 export interface CreateAppointmentData {

@@ -1,16 +1,26 @@
 import { NextRequest } from "next/server";
 import prisma from "@/lib/prisma";
-import { errorResponse, successResponse } from "@/lib/api/helpers";
+import { errorResponse, getAuthenticatedUser, successResponse } from "@/lib/api/helpers";
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-
+    const user = await getAuthenticatedUser();
+    if (!user) return errorResponse("Unauthorized", 401);
+    const clientId = user.clientProfile?.id;
     const {
       phoneNumber,
       amount,
       serviceId,
       workerId,
+      serviceName,
+      workerName,
+      clientName,
+      subtotal,
+      discount,
+      tax,
+      tip,
+      total,
     } = body;
 
     if (!phoneNumber || !amount) {
@@ -42,6 +52,23 @@ export async function POST(req: NextRequest) {
         serviceId,
         workerId,
         status: "pending",
+        serviceName,
+        workerName,
+        clientName,
+        subtotal,
+        discount,
+        tax,
+        tip,
+        total,
+      },
+    });
+
+    await prisma.clientProfile.update({
+      where: { id: clientId },
+      data: {
+        prepaymentBalance:{
+          increment: total
+        }
       },
     });
 

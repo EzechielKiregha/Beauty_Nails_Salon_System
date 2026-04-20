@@ -14,7 +14,6 @@ import { Badge } from "./ui/badge";
 
 export default function FloatingReceipt() {
   const storage = typeof window !== "undefined" ? window.localStorage : null;
-  storage?.setItem("time", "5");
 
   const [remainingTime, setRemainingTime] = useState<number | null>(
     Number(storage?.getItem("time")) * 60
@@ -77,7 +76,7 @@ export default function FloatingReceipt() {
                     ${
                       visible
                         ? `
-                          bg-gradient-to-br from-pink-600 via-purple-600 to-indigo-600
+                          bg-linear-to-br from-pink-600 via-purple-600 to-indigo-600
                           animate-bounce
                         `
                         : `
@@ -135,7 +134,7 @@ export default function FloatingReceipt() {
                       className="
                         mt-2 px-4 py-2 rounded-lg font-medium
 
-                        bg-gradient-to-r from-pink-600 to-purple-600
+                        bg-linear-to-r from-pink-600 to-purple-600
                         hover:from-pink-700 hover:to-purple-700
 
                         text-white

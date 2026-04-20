@@ -85,7 +85,6 @@ export default function AppointmentsV3() {
   const [paymentIntentId, setPaymentIntentId] = useState<string | null>(null);
   const [remainingTime, setRemainingTime] = useState<number | null>(null);
   const [countryCode, setCountryCode] = useState("+250"); // Default Rwanda
-  const [url, setUrl] = useState("");
 
   const TAX_RATE = 0.16; // 16% tax
 
@@ -285,6 +284,14 @@ export default function AppointmentsV3() {
             amount: total,
             serviceId: selectedServiceId,
             workerId: selectedWorker,
+            serviceName: service?.name || '',
+            workerName: selectedWorkerName || '',
+            clientName: user?.name || '',
+            subtotal: paymentInfo.subtotal,
+            discount: paymentInfo.discount,
+            tax: paymentInfo.tax,
+            tip: paymentInfo.tip,
+            total: paymentInfo.total,
           });
 
           setPaymentIntentId(res.data.paymentIntent.id);
@@ -513,7 +520,6 @@ export default function AppointmentsV3() {
   };
 
   const fullPhoneNumber = `${countryCode}${payerPhone.startsWith('0') ? payerPhone.substring(1) : payerPhone}`;
-
 
   return (
     <div className="min-h-screen bg-background dark:bg-gray-950">

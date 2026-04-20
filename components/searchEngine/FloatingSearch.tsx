@@ -49,7 +49,7 @@ function SearchModal({ onClose }: { onClose: () => void }) {
     ? ["appointments", "payments", "services", "workers", "clients"]
     : isWorker
       ? ["appointments", "payments"]
-      : ["appointments"]
+      : ["appointments", "services"]
 
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
@@ -72,7 +72,9 @@ function SearchModal({ onClose }: { onClose: () => void }) {
                 : "bg-gray-200 dark:bg-zinc-800"
                 }`}
             >
-              {f}
+              {f === "appointments" ? "Rendez-vous et paiements" :
+                f === "payments" ? "Paiements" :
+                  f === "services" ? "Services" : "Inconnu"}
             </button>
           ))}
         </div>
@@ -82,7 +84,7 @@ function SearchModal({ onClose }: { onClose: () => void }) {
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Enter transaction ID..."
+            placeholder="Enter transaction ID or search appointments, services, workers"
             className="flex-1 p-2 border rounded-lg"
           />
 
@@ -145,7 +147,7 @@ function SearchResults({ query, filter }: any) {
   // 🔎 FILTERING LOGIC
   const filtered = {
     appointments: appointments?.filter((a: Appointment) =>
-      a.paymentIntent?.transactionId?.includes(query)
+    (a.paymentIntent?.transactionId?.includes(query) || a.id.includes(query) || a.service?.name.toLowerCase().includes(query.toLowerCase()) || a.worker?.user?.name.toLowerCase().includes(query.toLowerCase()) || a.client?.user?.name.toLowerCase().includes(query.toLowerCase()))
     ),
     payments: payments?.filter((p: any) =>
       p.transactionId?.includes(query)

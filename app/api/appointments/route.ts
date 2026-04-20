@@ -92,6 +92,16 @@ export async function GET(request: NextRequest) {
           },
         },
         paymentIntent: true,
+        sale: {
+          include: {
+            payments: {
+              select: {
+                method: true,
+                amount: true,
+              }
+            },
+          }
+        }
       },
       orderBy: [{ date: 'asc' }],
       cacheStrategy: { 
@@ -484,6 +494,13 @@ export async function POST(request: NextRequest) {
         }
         console.log("Client update data :", clientUpdateData.data)
       }
+
+      if (paymentInfo.method === 'mobile') {
+        clientUpdateData.data.prepaymentBalance = {
+          decrement: finalTotal
+        }
+      }
+
       const updateClient = await tx.clientProfile.update({
         where: { id: clientId },
         data: clientUpdateData.data,

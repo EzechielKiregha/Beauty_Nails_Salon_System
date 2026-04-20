@@ -34,7 +34,11 @@ export function useAppointments(params?: {
       toast.success("Rendez-vous créé avec succès!", {
         description: `Votre rendez-vous est prévu le ${data.appointment.date} à ${data.appointment.time}`,
       });
-      if (data.canGenerateReceipt) router.push(`dashboard/client?url=${encodeURIComponent(data.receiptUrl)}`);
+      if (data.canGenerateReceipt) {
+        const storage = typeof window !== "undefined" ? window.localStorage : null;
+        storage?.setItem("time", "5");
+        router.push(`dashboard/client?url=${encodeURIComponent(data.receiptUrl)}`);
+      }
       else router.push('/dashboard/client');
     },
     onError: (error: any) => {

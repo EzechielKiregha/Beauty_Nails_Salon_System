@@ -596,6 +596,14 @@ model PaymentIntent {
   status        String   @default("pending") // pending | success
   serviceId     String
   workerId      String
+  serviceName   String   @default("-")
+  workerName    String   @default("-")
+  clientName    String   @default("-")
+  subtotal      Float    @default(0)
+  discount      Float    @default(0)
+  tax           Float    @default(0)
+  tip           Float    @default(0)
+  total         Float    @default(0)
   createdAt     DateTime @default(now())
   transactionId String?
 

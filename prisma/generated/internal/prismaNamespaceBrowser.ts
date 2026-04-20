@@ -441,6 +441,14 @@ export const PaymentIntentScalarFieldEnum = {
   status: 'status',
   serviceId: 'serviceId',
   workerId: 'workerId',
+  serviceName: 'serviceName',
+  workerName: 'workerName',
+  clientName: 'clientName',
+  subtotal: 'subtotal',
+  discount: 'discount',
+  tax: 'tax',
+  tip: 'tip',
+  total: 'total',
   createdAt: 'createdAt',
   transactionId: 'transactionId'
 } as const

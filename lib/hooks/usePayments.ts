@@ -25,6 +25,12 @@ export function usePayments(params?: {
     queryKey: ['payments'],
     queryFn: () => paymentsApi.getPayments(),
   });
+  const {
+    data: paymentIntents = [],
+  } = useQuery({
+    queryKey: ['paymentIntents'],
+    queryFn: () => paymentsApi.getPaymentIntents(),
+  });
 
   // Process payment
   const processPaymentMutation = useMutation({
@@ -80,6 +86,7 @@ export function usePayments(params?: {
   return {
     sales,
     payments,
+    paymentIntents,
     paymentsLoading,
     isLoading,
     error,

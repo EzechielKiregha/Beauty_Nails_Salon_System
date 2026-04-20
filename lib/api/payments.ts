@@ -107,6 +107,27 @@ export const paymentsApi = {
     const { data } = await axiosdb.get('/payments', );
     return data;
   },
+  getPaymentIntents: async (): Promise<{
+    status: string;
+    id: string;
+    total: number;
+    subtotal: number;
+    discount: number;
+    tax: number;
+    tip: number;
+    createdAt: Date;
+    serviceName: string;
+    workerName: string;
+    clientName: string;
+    phoneNumber: string;
+    amount: number;
+    serviceId: string;
+    workerId: string;
+    transactionId: string | null;
+  }[]> => {
+    const { data } = await axiosdb.get('/payments/intents', );
+    return data;
+  },
   getRegisters: async (): Promise<{
     id: string;
     date: Date;
