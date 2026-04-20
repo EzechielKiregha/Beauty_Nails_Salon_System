@@ -1,12 +1,13 @@
 {
   "compilerOptions": {
+    "ignoreDeprecations": "6.0",
     "lib": [
       "dom",
       "dom.iterable",
       "esnext"
     ],
     "module": "commonjs",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "target": "es2018",
     "strict": true,
     "esModuleInterop": true,

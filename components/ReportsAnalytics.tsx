@@ -10,7 +10,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { TrendingUp, Download, Calendar, DollarSign, Users, Award, Clock, Target, Loader2, Sparkles, BarChart2 } from 'lucide-react';
 import { useRevenueReport, useClientAnalytics, useServicePerformance, useStaffReport, usePeakHours, useMembershipAnalytics, useMarketingCampaigns, useDownloadPdf } from '../lib/hooks/useReports';
-import { useAppointments } from '@/lib/hooks/useAppointments';
 
 export default function ReportsAnalytics() {
   const [period, setPeriod] = useState('month');

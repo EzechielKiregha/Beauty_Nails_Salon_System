@@ -1,9 +1,8 @@
 "use client"
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { appointmentsApi, CreateAppointmentData, UpdateAppointmentStatusData, RescheduleAppointmentData } from '../api/appointments';
+import { appointmentsApi, UpdateAppointmentStatusData, RescheduleAppointmentData } from '../api/appointments';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
-import { useAuth } from './useAuth';
 
 export function useAppointments(params?: {
   date?: Date | string;
@@ -12,7 +11,6 @@ export function useAppointments(params?: {
   clientId?: string;
 }) {
   const queryClient = useQueryClient();
-  const { user } = useAuth();
   const router = useRouter();
 
   // Get appointments

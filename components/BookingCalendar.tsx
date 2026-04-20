@@ -301,11 +301,14 @@ export default function BookingCalendar() {
                                       <Badge className={`text-base ${apt.status === 'confirmed' ? 'bg-green-500' :
                                         apt.status === 'pending' ? 'bg-amber-500' :
                                           apt.status === 'completed' ? 'bg-blue-500' :
+                                            apt.status === 'in_progress' ? 'bg-purple-500' :
                                             'bg-red-500'
                                         } text-white`}>
                                         {apt.status === 'confirmed' ? 'Confirmé' :
                                           apt.status === 'pending' ? 'En attente' :
-                                            apt.status === 'completed' ? 'Complété' : 'Annulé'}
+                                            apt.status === 'completed' ? 'Complété' : 
+                                            apt.status === 'in_progress' ? 'En cours' : 'Annulé'
+                                            }
                                       </Badge>
                                     </div>
                                     <p className="text-lg text-gray-900 dark:text-white">{apt.clientName}</p>

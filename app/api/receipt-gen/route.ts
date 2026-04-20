@@ -26,19 +26,6 @@ export async function GET(req: NextRequest) {
 
     const phoneNumber = phone.replace(/\D/g, "+"); // Remove non-digit characters
 
-    // console.log("Generating receipt for:", {
-    //   phoneNumber,
-    //   transactionId,
-    //   subtotal,
-    //   discount,
-    //   tax,
-    //   tip,
-    //   total,
-    //   serviceName,
-    //   workerName,
-    //   clientName
-    // });
-
     // 🔍 Find payment intent FIRST (source of truth)
     const paymentIntent = await prisma.paymentIntent.findFirst({
       where: {

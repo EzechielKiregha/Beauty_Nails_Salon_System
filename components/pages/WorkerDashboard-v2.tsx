@@ -9,7 +9,7 @@ import { Sheet, SheetContent, SheetTrigger } from '../ui/sheet';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
 import { ScrollArea } from '../ui/scroll-area';
 import { format } from 'date-fns';
-import { fr } from 'date-fns/locale';
+import { fr, tr } from 'date-fns/locale';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import {
   CalendarIcon, Clock, CheckCircle, Star, TrendingUp, Award,
@@ -51,7 +51,6 @@ export default function WorkerDashboardV2() {
   const { user, isLoading: isAuthLoading } = useAuth();
   const { data: worker, isLoading: isWorkerLoading } = useWorker(user?.workerProfile?.id || '');
 
-
   const { profile: workerProfile, isLoading: isWorkerProfileLoading, error: workerProfileError } = useWorkerProfile(user?.workerProfile?.id || '');
   const { data: currentPeriodCommissionData, isLoading: isCurrentPeriodCommissionLoading } = useWorkerCommission(user?.workerProfile?.id || '', workerProfile?.commissionFrequency);
   const { commissions: allCommissions, isLoading: isAllCommissionsLoading } = useCommission(); // Fetch all commissions for history
@@ -79,7 +78,7 @@ export default function WorkerDashboardV2() {
   const weekStart = new Date();
   weekStart.setDate(weekStart.getDate() - weekStart.getDay());
 
-  const [selectedPeriod, setSelectedPeriod] = useState<string>('current'); // Default to current period
+  const [selectedPeriod, setSelectedPeriod] = useState<string>(user?.workerProfile?.commissionFrequency || 'daily');
 
   // Filter commissions for the current worker if using the global hook
   const workerCommissions = allCommissions?.filter(c => c.workerId === user?.workerProfile?.id) || [];
@@ -206,10 +205,11 @@ export default function WorkerDashboardV2() {
         statusData: { status: newStatus as any },
       },
       {
-        onSuccess: async () => {
+        onSuccess: () => {
           toast.success('Statut mis à jour');
           setDetailsOpen(false);
-          await refetch()
+          refetch()
+          router.refresh();
         },
       }
     );
@@ -285,6 +285,27 @@ export default function WorkerDashboardV2() {
     });
   };
 
+  // derive from/to ISO strings from the selected period
+    const { from, to } = useMemo(() => {
+      const getPeriodRange = (p: string) => {
+        const now = new Date();
+        const to = now.toISOString();
+        let fromDate = new Date();
+        switch (p) {
+          case 'weekly':
+            fromDate.setDate(now.getDate() - 7);
+            break;
+          case 'monthly':
+            fromDate.setMonth(now.getMonth() - 1);
+            break;
+          default:
+            fromDate.setDate(now.getDate() - 1); // Last 24 hours
+        }
+        return { from: fromDate.toISOString(), to };
+      };
+      return getPeriodRange(selectedPeriod);
+    }, [selectedPeriod]); // Only recalculate when period changes
+
   // Calculate service statistics from appointments
   // const serviceStats = (() => {
   //   const serviceCounts: Record<string, number> = {};
@@ -316,6 +337,33 @@ export default function WorkerDashboardV2() {
   if (!user || user.role !== 'worker') {
     router.push('/');
   }
+
+  const printCommission = (commission: any) => {
+    const params = new URLSearchParams({
+      commissionId: commission.id,
+    });
+
+    window.open(`/api/commissions/receipt?${params.toString()}`, "_blank");
+  };
+  const printCommissionReport = (commission: any) => {
+    const params = new URLSearchParams({
+      commissionId: commission.id,
+      from,
+      to,
+    });
+
+    window.open(`/api/commissions/worker-report?${params.toString()}`, "_blank");
+  };
+  const printCommissionReportV2 = () => {
+  // No need to pass commissionId - route calculates period automatically
+  const params = new URLSearchParams({
+    from,  // optional: override calculated period
+    to,    // optional: override calculated period
+    pdf: "true", // to get PDF directly
+  });
+
+  window.open(`/api/commissions/worker-report-v2?${params.toString()}`, "_blank");
+};
 
   return (
     <div className="min-h-screen py-8 bg-linear-to-br from-purple-50 via-pink-50 to-white dark:from-gray-950 dark:via-gray-950 dark:to-gray-950">
@@ -958,15 +1006,23 @@ export default function WorkerDashboardV2() {
                           <SelectValue placeholder="Sélectionner période" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="current">Période en cours</SelectItem>
-                          <SelectItem value="last">Dernière période</SelectItem>
-                          <SelectItem value="all">Tout l'historique</SelectItem>
+                          <SelectItem value="daily">Commission quotidienne</SelectItem>
+                          <SelectItem value="weekly">Commission hebdomadaire</SelectItem>
+                          <SelectItem value="monthly">Commission mensuelle</SelectItem>
                           {/* Add more options based on actual available periods */}
                         </SelectContent>
                       </Select>
-                      <Button variant="outline" size="sm">
+                      <Button variant="outline" size="sm" onClick={() =>{
+                        if (workerCommissions.length === 0) {
+                          toast(
+                            "Aucune commission disponible",
+                            {
+                              description: "Il n'y a pas de commissions à imprimer pour le moment.",
+                            });
+                        } else  printCommissionReportV2();
+                      }}>
                         <Download className="h-4 w-4 mr-2" />
-                        Rapport
+                        Rapport 
                       </Button>
                     </div>
                   </div>
@@ -1008,7 +1064,12 @@ export default function WorkerDashboardV2() {
                                   {commission.status === 'paid' ? 'Payé' :
                                     commission.status === 'pending' ? 'En attente' : 'Inconnu'}
                                 </Badge>
-                                <Button variant="ghost" size="sm">
+                                <Button
+                                  variant="ghost"
+                                  className='ml-2 cursor-pointer'
+                                  size="sm"
+                                  onClick={() => printCommissionReport(commission)}
+                                >
                                   <Download className="h-4 w-4" />
                                 </Button>
                               </div>

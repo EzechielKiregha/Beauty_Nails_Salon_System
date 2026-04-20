@@ -1,68 +1,83 @@
-import { errorResponse, getAuthenticatedUser, handleApiError, requireRole, successResponse } from "@/lib/api/helpers";
+import {
+  errorResponse,
+  handleApiError,
+  requireRole,
+  successResponse,
+} from "@/lib/api/helpers";
 import prisma from "@/lib/prisma";
-import { Review } from "@/prisma/generated/client";
 import { NextRequest } from "next/server";
 
-export async function POST(
-  request: NextRequest,
-){
+export async function POST(request: NextRequest) {
   try {
+    const body = await request.json();
 
-  const body = await request.json();
-
-  const {
-    appointmentId,
-    rating,
-    comment = '',
-  } = body
-
-  console.log(body)
-
-  if (!rating || !appointmentId ) return errorResponse('something went wrong!')
-
-  const appointment = await prisma.appointment.findUnique({
-    where: {
-      id : appointmentId,
-      status: 'completed'
-    },
-  });
-
-  if (!appointment) return errorResponse("Echec de noter ce service")
-
-
-  const review = await prisma.review.create({
-    data: {
-      appointment: { connect : { id : appointment.id}},
-      client: { connect : { id : appointment.clientId} },
-      worker: { connect : { id : appointment.workerId}},
+    const {
+      appointmentId,
       rating,
-      comment,
-      isPublished: false,
-    }
-  })
+      comment = "",
+    } = body;
 
-  const workerReviews = await prisma.review.findMany({
-    where:{
-      clientId : review.clientId
+    if (!rating || !appointmentId) {
+      return errorResponse("Something went wrong!");
     }
-  })
-  if (workerReviews.length > 0) {
-    const stars = workerReviews.reduce((sumOfStars, rev) => sumOfStars + rev.rating ,0)
-    const ratings = stars / workerReviews.length
 
-    await prisma.workerProfile.update({
-      where: { id : review.clientId},
-      data: {
-        rating: ratings,
-        totalReviews: workerReviews.length
+    const result = await prisma.$transaction(async (tx) => {
+      // 1️⃣ Validate appointment
+      const appointment = await tx.appointment.findUnique({
+        where: {
+          id: appointmentId,
+          status: "completed",
+        },
+      });
+
+      if (!appointment) {
+        throw new Error("Echec de noter ce service");
       }
-    })
-  }
 
-  return successResponse(review);
-  }
+      // 2️⃣ Create review
+      const review = await tx.review.create({
+        data: {
+          appointment: { connect: { id: appointment.id } },
+          client: { connect: { id: appointment.clientId } },
+          worker: { connect: { id: appointment.workerId } },
+          rating,
+          comment,
+          isPublished: true,
+        },
+      });
 
-  catch (error: any) {
+      // 3️⃣ Get updated reviews
+      const workerReviews = await tx.review.findMany({
+        where: {
+          workerId: review.workerId,
+        },
+      });
+
+      // 4️⃣ Recalculate rating
+      const totalReviews = workerReviews.length;
+
+      if (totalReviews > 0) {
+        const totalStars = workerReviews.reduce(
+          (sum, rev) => sum + rev.rating,
+          0
+        );
+
+        const newRating = totalStars / totalReviews;
+
+        await tx.workerProfile.update({
+          where: { id: review.workerId },
+          data: {
+            rating: newRating,
+            totalReviews,
+          },
+        });
+      }
+
+      return review;
+    });
+
+    return successResponse({ message: "Merci pour votre avis !", review: result });
+  } catch (error: any) {
     console.error('Error rating the appointment:', error);
     return errorResponse(error.message || 'An error occurred while rescheduling', 500);
   }

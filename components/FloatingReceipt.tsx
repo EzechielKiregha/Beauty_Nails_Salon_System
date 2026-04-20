@@ -35,6 +35,7 @@ export default function FloatingReceipt() {
     if (remainingTime === null || remainingTime <= 0) {
       setRemainingTime(null);
       setVisible(false);
+      storage?.removeItem("time");
       router.replace("/dashboard/client");
       return;
     }
@@ -130,7 +131,12 @@ export default function FloatingReceipt() {
 
                     {/* Action */}
                     <button
-                      onClick={() => window.open(url, "_blank")}
+                      onClick={() => {
+                        storage?.removeItem("time");
+                        setRemainingTime(null);
+                        window.open(url, "_blank");
+                        router.replace("/dashboard/client");
+                      }}
                       className="
                         mt-2 px-4 py-2 rounded-lg font-medium
 

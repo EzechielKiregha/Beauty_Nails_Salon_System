@@ -658,7 +658,7 @@ model DailyRegister {
 model Commission {
   id                String           @id @default(cuid())
   workerId          String
-  period            String // "2024-01"
+  period            String
   totalRevenue      Float
   commissionRate    Float
   commissionAmount  Float
