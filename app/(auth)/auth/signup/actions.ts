@@ -3,7 +3,12 @@
 import { signIn } from "@/lib/auth/auth";
 import axiosdb from "@/lib/axios";
 
-export async function handleSignup(formData: FormData, refCodeParam: string | null, redirect?: string | null, isFirstAdmin = false) {
+export async function handleSignup(
+  formData: FormData,
+  refCodeParam: string | null,
+  redirect?: string | null,
+  isFirstAdmin = false,
+) {
   const name = formData.get("name") as string;
   const email = formData.get("email") as string;
   const phone = formData.get("phone") as string;
@@ -23,18 +28,17 @@ export async function handleSignup(formData: FormData, refCodeParam: string | nu
   // if (!acceptTerms) {
   //   return { error: "Veuillez accepter les conditions d'utilisation" };
   // }
-  try
-  {
-    const res = await axiosdb.post("/auth/register",{
+  try {
+    const res = await axiosdb.post("/auth/register", {
       name,
       email,
       phone,
       password,
       role,
-      refCode: refCodeParam
-    })
+      refCode: refCodeParam,
+    });
 
-    if(res.status === 202){
+    if (res.status === 202) {
       return { error: "Email ou téléphone déjà utilisé" };
     }
 
@@ -47,15 +51,26 @@ export async function handleSignup(formData: FormData, refCodeParam: string | nu
     if (result?.error) {
       return { error: "Email ou mot de passe incorrect" };
     }
-  }catch(e) {
-    return { error: "Incorrect Email or Password, verifier votre role et essayez encore une fois..." };
+  } catch (e) {
+    return {
+      error:
+        "Incorrect Email or Password, verifier votre role et essayez encore une fois...",
+    };
   }
 
-  if(!redirect){
+  const res = await axiosdb.post("/mail/welcome", { email: email });
+
+  // if (!res.data.success) {
+  //   return {
+  //     error: "Échec de l'envoi du mail de bienvenue. Veuillez réessayer.",
+  //   };
+  // }
+
+  if (!redirect) {
     return {
-    success: true,
-    redirectUrl: `/dashboard/${role}`,
-  }
+      success: true,
+      redirectUrl: `/dashboard/${role}`,
+    };
   } else {
     return {
       success: true,
