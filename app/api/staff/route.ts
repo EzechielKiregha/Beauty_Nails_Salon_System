@@ -210,7 +210,7 @@ export async function POST(request: NextRequest) {
             commissionRate,
             workingHours,
             hireDate: new Date(),
-            isAvailable: false,
+            isAvailable: true,
           },
         }
       };

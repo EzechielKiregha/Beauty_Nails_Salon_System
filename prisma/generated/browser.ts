@@ -73,6 +73,11 @@ export type ServicePackage = Prisma.ServicePackageModel
  */
 export type Appointment = Prisma.AppointmentModel
 /**
+ * Model AppointmentTransfer
+ * 
+ */
+export type AppointmentTransfer = Prisma.AppointmentTransferModel
+/**
  * Model Review
  * 
  */

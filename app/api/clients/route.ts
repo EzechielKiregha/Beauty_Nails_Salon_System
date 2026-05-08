@@ -83,7 +83,7 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    await requireRole(['admin']);
+    await requireRole(['admin', 'worker']);
 
     const body = await request.json();
     const {

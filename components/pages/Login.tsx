@@ -64,7 +64,7 @@ export default function Login() {
       expectedOtp,
       redirectUrl,
     );
-    if (res?.success) {
+    if (res?.success && res.redirectUrl) {
       setTimeout(() => {
         router.push(res.redirectUrl);
         setOtpDialogOpen(false);

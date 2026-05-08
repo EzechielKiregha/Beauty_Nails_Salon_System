@@ -395,6 +395,7 @@ export const ModelName = {
   ServiceAddOn: 'ServiceAddOn',
   ServicePackage: 'ServicePackage',
   Appointment: 'Appointment',
+  AppointmentTransfer: 'AppointmentTransfer',
   Review: 'Review',
   Membership: 'Membership',
   MembershipPurchase: 'MembershipPurchase',
@@ -433,7 +434,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "media" | "clientProfile" | "workerProfile" | "workerSchedule" | "workerLeave" | "task" | "service" | "serviceAddOn" | "servicePackage" | "appointment" | "review" | "membership" | "membershipPurchase" | "loyaltyTransaction" | "referral" | "sale" | "saleItem" | "payment" | "paymentIntent" | "dailyRegister" | "commission" | "inventoryItem" | "inventoryTransaction" | "inventoryUsage" | "reorderRequest" | "notification" | "marketingCampaign" | "discountCode" | "report" | "salonProfile" | "systemSetting" | "integration" | "auditLog"
+    modelProps: "user" | "media" | "clientProfile" | "workerProfile" | "workerSchedule" | "workerLeave" | "task" | "service" | "serviceAddOn" | "servicePackage" | "appointment" | "appointmentTransfer" | "review" | "membership" | "membershipPurchase" | "loyaltyTransaction" | "referral" | "sale" | "saleItem" | "payment" | "paymentIntent" | "dailyRegister" | "commission" | "inventoryItem" | "inventoryTransaction" | "inventoryUsage" | "reorderRequest" | "notification" | "marketingCampaign" | "discountCode" | "report" | "salonProfile" | "systemSetting" | "integration" | "auditLog"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1248,6 +1249,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.AppointmentCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.AppointmentCountAggregateOutputType> | number
+        }
+      }
+    }
+    AppointmentTransfer: {
+      payload: Prisma.$AppointmentTransferPayload<ExtArgs>
+      fields: Prisma.AppointmentTransferFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AppointmentTransferFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AppointmentTransferPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AppointmentTransferFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AppointmentTransferPayload>
+        }
+        findFirst: {
+          args: Prisma.AppointmentTransferFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AppointmentTransferPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AppointmentTransferFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AppointmentTransferPayload>
+        }
+        findMany: {
+          args: Prisma.AppointmentTransferFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AppointmentTransferPayload>[]
+        }
+        create: {
+          args: Prisma.AppointmentTransferCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AppointmentTransferPayload>
+        }
+        createMany: {
+          args: Prisma.AppointmentTransferCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AppointmentTransferCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AppointmentTransferPayload>[]
+        }
+        delete: {
+          args: Prisma.AppointmentTransferDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AppointmentTransferPayload>
+        }
+        update: {
+          args: Prisma.AppointmentTransferUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AppointmentTransferPayload>
+        }
+        deleteMany: {
+          args: Prisma.AppointmentTransferDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AppointmentTransferUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AppointmentTransferUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AppointmentTransferPayload>[]
+        }
+        upsert: {
+          args: Prisma.AppointmentTransferUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AppointmentTransferPayload>
+        }
+        aggregate: {
+          args: Prisma.AppointmentTransferAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAppointmentTransfer>
+        }
+        groupBy: {
+          args: Prisma.AppointmentTransferGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AppointmentTransferGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AppointmentTransferCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AppointmentTransferCountAggregateOutputType> | number
         }
       }
     }
@@ -3203,6 +3278,23 @@ export const AppointmentScalarFieldEnum = {
 export type AppointmentScalarFieldEnum = (typeof AppointmentScalarFieldEnum)[keyof typeof AppointmentScalarFieldEnum]
 
 
+export const AppointmentTransferScalarFieldEnum = {
+  id: 'id',
+  appointmentId: 'appointmentId',
+  originalWorkerId: 'originalWorkerId',
+  newWorkerId: 'newWorkerId',
+  transferReason: 'transferReason',
+  transferFeePercentage: 'transferFeePercentage',
+  transferFeeAmount: 'transferFeeAmount',
+  status: 'status',
+  requestedAt: 'requestedAt',
+  completedAt: 'completedAt',
+  notes: 'notes'
+} as const
+
+export type AppointmentTransferScalarFieldEnum = (typeof AppointmentTransferScalarFieldEnum)[keyof typeof AppointmentTransferScalarFieldEnum]
+
+
 export const ReviewScalarFieldEnum = {
   id: 'id',
   appointmentId: 'appointmentId',
@@ -3849,6 +3941,20 @@ export type ListEnumLocationFieldRefInput<$PrismaModel> = FieldRefInputType<$Pri
 
 
 /**
+ * Reference to a field of type 'TransferStatus'
+ */
+export type EnumTransferStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TransferStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'TransferStatus[]'
+ */
+export type ListEnumTransferStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TransferStatus[]'>
+    
+
+
+/**
  * Reference to a field of type 'MembershipStatus'
  */
 export type EnumMembershipStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MembershipStatus'>
@@ -4163,6 +4269,7 @@ export type GlobalOmitConfig = {
   serviceAddOn?: Prisma.ServiceAddOnOmit
   servicePackage?: Prisma.ServicePackageOmit
   appointment?: Prisma.AppointmentOmit
+  appointmentTransfer?: Prisma.AppointmentTransferOmit
   review?: Prisma.ReviewOmit
   membership?: Prisma.MembershipOmit
   membershipPurchase?: Prisma.MembershipPurchaseOmit

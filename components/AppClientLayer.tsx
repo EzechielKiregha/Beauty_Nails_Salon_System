@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import FloatingBubbles from "@/components/FloatingBubbles";
 import { useAppointments } from "@/lib/hooks/useAppointments";
@@ -25,7 +25,7 @@ export default function AppClientLayer() {
 
   return (
     <>
-      <FloatingReceipt />
+      {user.role === "client" && <FloatingReceipt />}
       <FloatingBubbles
         appointments={ongoingAppointments}
         user={user}

@@ -64,6 +64,11 @@ export async function PUT(
           client: { include: { user: true } },
           worker: true,
           service: true,
+          transfer: {
+            include: {
+              newWorker: true,
+            }
+          },
         },
       });
 
@@ -125,6 +130,66 @@ export async function PUT(
                   updatedAppointment.service.workerCommission / 100)) * 0.05,
           },
         });
+
+        // After marking appointment as completed, handle transfer commission
+        if (updatedAppointment.transfer && updatedAppointment.transfer.status === 'accepted') {
+          // Calculate commission distribution
+          const originalWorkerCommission = updatedAppointment.transfer.transferFeeAmount;
+          const newWorkerCommission = (updatedAppointment.price * (1 - updatedAppointment.transfer.transferFeePercentage / 100));
+          
+          // Update commissions for both workers
+          await prisma.$transaction([
+            // Original worker gets reduced commission
+            prisma.commission.upsert({
+              where: {
+                workerId_period: {
+                  workerId: updatedAppointment.transfer.originalWorkerId,
+                  period: format(updatedAppointment.date, 'yyyy-MM')
+                }
+              },
+              update: {
+                totalRevenue: { increment: originalWorkerCommission },
+                appointmentsCount: { increment: 1 }
+              },
+              create: {
+                workerId: updatedAppointment.transfer.originalWorkerId,
+                period: format(updatedAppointment.date, 'yyyy-MM'),
+                totalRevenue: originalWorkerCommission,
+                commissionRate: updatedAppointment.worker?.commissionRate || 0,
+                commissionAmount: originalWorkerCommission * ((updatedAppointment.worker?.commissionRate || 0) / 100),
+                appointmentsCount: 1
+              }
+            }),
+            
+            // New worker gets transfer fee as bonus
+            prisma.commission.upsert({
+              where: {
+                workerId_period: {
+                  workerId: updatedAppointment.transfer.newWorkerId,
+                  period: format(updatedAppointment.date, 'yyyy-MM')
+                }
+              },
+              update: {
+                totalRevenue: { increment: newWorkerCommission },
+                appointmentsCount: { increment: 1 }
+              },
+              create: {
+                workerId: updatedAppointment.transfer.newWorkerId,
+                period: format(updatedAppointment.date, 'yyyy-MM'),
+                totalRevenue: newWorkerCommission,
+                commissionRate: updatedAppointment.transfer.newWorker?.commissionRate || 0,
+                commissionAmount: newWorkerCommission * ((updatedAppointment.transfer.newWorker?.commissionRate || 0) / 100),
+                appointmentsCount: 1
+              }
+            }),
+            
+            // Mark transfer as completed
+            prisma.appointmentTransfer.update({
+              where: { appointmentId: updatedAppointment.id },
+              data: { status: 'completed' }
+            })
+          ]);
+        }
       }
 
       return updatedAppointment;

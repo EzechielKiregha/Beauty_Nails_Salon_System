@@ -128,10 +128,10 @@ export async function PUT(request: NextRequest,
     // Also potentially update user details if provided in the request
     // Only allow updating name, email, phone, avatar through this specific endpoint if intended
     // Be careful about allowing sensitive changes like email/phone without verification here.
-    if (body.name || body.email || body.phone) {
+    if (body.name || body.email || body.phone || body.isActive) {
       await prisma.user.update({
         where: { id: updatedWorkerProfile.userId },
-        data: { name: body.name, email: body.email, phone: body.phone }
+        data: { name: body.name, email: body.email, phone: body.phone, isActive: body.isActive }
       });
     }
 

@@ -343,6 +343,8 @@ export type WorkerProfileWhereInput = {
   reviews?: Prisma.ReviewListRelationFilter
   leaves?: Prisma.WorkerLeaveListRelationFilter
   tasks?: Prisma.TaskListRelationFilter
+  appointmentTransfers?: Prisma.AppointmentTransferListRelationFilter
+  newWorkerAppointmentTransfers?: Prisma.AppointmentTransferListRelationFilter
 }
 
 export type WorkerProfileOrderByWithRelationInput = {
@@ -372,6 +374,8 @@ export type WorkerProfileOrderByWithRelationInput = {
   reviews?: Prisma.ReviewOrderByRelationAggregateInput
   leaves?: Prisma.WorkerLeaveOrderByRelationAggregateInput
   tasks?: Prisma.TaskOrderByRelationAggregateInput
+  appointmentTransfers?: Prisma.AppointmentTransferOrderByRelationAggregateInput
+  newWorkerAppointmentTransfers?: Prisma.AppointmentTransferOrderByRelationAggregateInput
 }
 
 export type WorkerProfileWhereUniqueInput = Prisma.AtLeast<{
@@ -404,6 +408,8 @@ export type WorkerProfileWhereUniqueInput = Prisma.AtLeast<{
   reviews?: Prisma.ReviewListRelationFilter
   leaves?: Prisma.WorkerLeaveListRelationFilter
   tasks?: Prisma.TaskListRelationFilter
+  appointmentTransfers?: Prisma.AppointmentTransferListRelationFilter
+  newWorkerAppointmentTransfers?: Prisma.AppointmentTransferListRelationFilter
 }, "id" | "userId">
 
 export type WorkerProfileOrderByWithAggregationInput = {
@@ -484,6 +490,8 @@ export type WorkerProfileCreateInput = {
   reviews?: Prisma.ReviewCreateNestedManyWithoutWorkerInput
   leaves?: Prisma.WorkerLeaveCreateNestedManyWithoutWorkerInput
   tasks?: Prisma.TaskCreateNestedManyWithoutAssignedToInput
+  appointmentTransfers?: Prisma.AppointmentTransferCreateNestedManyWithoutOriginalWorkerInput
+  newWorkerAppointmentTransfers?: Prisma.AppointmentTransferCreateNestedManyWithoutNewWorkerInput
 }
 
 export type WorkerProfileUncheckedCreateInput = {
@@ -512,6 +520,8 @@ export type WorkerProfileUncheckedCreateInput = {
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutWorkerInput
   leaves?: Prisma.WorkerLeaveUncheckedCreateNestedManyWithoutWorkerInput
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssignedToInput
+  appointmentTransfers?: Prisma.AppointmentTransferUncheckedCreateNestedManyWithoutOriginalWorkerInput
+  newWorkerAppointmentTransfers?: Prisma.AppointmentTransferUncheckedCreateNestedManyWithoutNewWorkerInput
 }
 
 export type WorkerProfileUpdateInput = {
@@ -540,6 +550,8 @@ export type WorkerProfileUpdateInput = {
   reviews?: Prisma.ReviewUpdateManyWithoutWorkerNestedInput
   leaves?: Prisma.WorkerLeaveUpdateManyWithoutWorkerNestedInput
   tasks?: Prisma.TaskUpdateManyWithoutAssignedToNestedInput
+  appointmentTransfers?: Prisma.AppointmentTransferUpdateManyWithoutOriginalWorkerNestedInput
+  newWorkerAppointmentTransfers?: Prisma.AppointmentTransferUpdateManyWithoutNewWorkerNestedInput
 }
 
 export type WorkerProfileUncheckedUpdateInput = {
@@ -568,6 +580,8 @@ export type WorkerProfileUncheckedUpdateInput = {
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutWorkerNestedInput
   leaves?: Prisma.WorkerLeaveUncheckedUpdateManyWithoutWorkerNestedInput
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutAssignedToNestedInput
+  appointmentTransfers?: Prisma.AppointmentTransferUncheckedUpdateManyWithoutOriginalWorkerNestedInput
+  newWorkerAppointmentTransfers?: Prisma.AppointmentTransferUncheckedUpdateManyWithoutNewWorkerNestedInput
 }
 
 export type WorkerProfileCreateManyInput = {
@@ -838,6 +852,34 @@ export type WorkerProfileUpdateOneRequiredWithoutAppointmentsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.WorkerProfileUpdateToOneWithWhereWithoutAppointmentsInput, Prisma.WorkerProfileUpdateWithoutAppointmentsInput>, Prisma.WorkerProfileUncheckedUpdateWithoutAppointmentsInput>
 }
 
+export type WorkerProfileCreateNestedOneWithoutAppointmentTransfersInput = {
+  create?: Prisma.XOR<Prisma.WorkerProfileCreateWithoutAppointmentTransfersInput, Prisma.WorkerProfileUncheckedCreateWithoutAppointmentTransfersInput>
+  connectOrCreate?: Prisma.WorkerProfileCreateOrConnectWithoutAppointmentTransfersInput
+  connect?: Prisma.WorkerProfileWhereUniqueInput
+}
+
+export type WorkerProfileCreateNestedOneWithoutNewWorkerAppointmentTransfersInput = {
+  create?: Prisma.XOR<Prisma.WorkerProfileCreateWithoutNewWorkerAppointmentTransfersInput, Prisma.WorkerProfileUncheckedCreateWithoutNewWorkerAppointmentTransfersInput>
+  connectOrCreate?: Prisma.WorkerProfileCreateOrConnectWithoutNewWorkerAppointmentTransfersInput
+  connect?: Prisma.WorkerProfileWhereUniqueInput
+}
+
+export type WorkerProfileUpdateOneRequiredWithoutAppointmentTransfersNestedInput = {
+  create?: Prisma.XOR<Prisma.WorkerProfileCreateWithoutAppointmentTransfersInput, Prisma.WorkerProfileUncheckedCreateWithoutAppointmentTransfersInput>
+  connectOrCreate?: Prisma.WorkerProfileCreateOrConnectWithoutAppointmentTransfersInput
+  upsert?: Prisma.WorkerProfileUpsertWithoutAppointmentTransfersInput
+  connect?: Prisma.WorkerProfileWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.WorkerProfileUpdateToOneWithWhereWithoutAppointmentTransfersInput, Prisma.WorkerProfileUpdateWithoutAppointmentTransfersInput>, Prisma.WorkerProfileUncheckedUpdateWithoutAppointmentTransfersInput>
+}
+
+export type WorkerProfileUpdateOneRequiredWithoutNewWorkerAppointmentTransfersNestedInput = {
+  create?: Prisma.XOR<Prisma.WorkerProfileCreateWithoutNewWorkerAppointmentTransfersInput, Prisma.WorkerProfileUncheckedCreateWithoutNewWorkerAppointmentTransfersInput>
+  connectOrCreate?: Prisma.WorkerProfileCreateOrConnectWithoutNewWorkerAppointmentTransfersInput
+  upsert?: Prisma.WorkerProfileUpsertWithoutNewWorkerAppointmentTransfersInput
+  connect?: Prisma.WorkerProfileWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.WorkerProfileUpdateToOneWithWhereWithoutNewWorkerAppointmentTransfersInput, Prisma.WorkerProfileUpdateWithoutNewWorkerAppointmentTransfersInput>, Prisma.WorkerProfileUncheckedUpdateWithoutNewWorkerAppointmentTransfersInput>
+}
+
 export type WorkerProfileCreateNestedOneWithoutReviewsInput = {
   create?: Prisma.XOR<Prisma.WorkerProfileCreateWithoutReviewsInput, Prisma.WorkerProfileUncheckedCreateWithoutReviewsInput>
   connectOrCreate?: Prisma.WorkerProfileCreateOrConnectWithoutReviewsInput
@@ -891,6 +933,8 @@ export type WorkerProfileCreateWithoutUserInput = {
   reviews?: Prisma.ReviewCreateNestedManyWithoutWorkerInput
   leaves?: Prisma.WorkerLeaveCreateNestedManyWithoutWorkerInput
   tasks?: Prisma.TaskCreateNestedManyWithoutAssignedToInput
+  appointmentTransfers?: Prisma.AppointmentTransferCreateNestedManyWithoutOriginalWorkerInput
+  newWorkerAppointmentTransfers?: Prisma.AppointmentTransferCreateNestedManyWithoutNewWorkerInput
 }
 
 export type WorkerProfileUncheckedCreateWithoutUserInput = {
@@ -918,6 +962,8 @@ export type WorkerProfileUncheckedCreateWithoutUserInput = {
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutWorkerInput
   leaves?: Prisma.WorkerLeaveUncheckedCreateNestedManyWithoutWorkerInput
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssignedToInput
+  appointmentTransfers?: Prisma.AppointmentTransferUncheckedCreateNestedManyWithoutOriginalWorkerInput
+  newWorkerAppointmentTransfers?: Prisma.AppointmentTransferUncheckedCreateNestedManyWithoutNewWorkerInput
 }
 
 export type WorkerProfileCreateOrConnectWithoutUserInput = {
@@ -961,6 +1007,8 @@ export type WorkerProfileUpdateWithoutUserInput = {
   reviews?: Prisma.ReviewUpdateManyWithoutWorkerNestedInput
   leaves?: Prisma.WorkerLeaveUpdateManyWithoutWorkerNestedInput
   tasks?: Prisma.TaskUpdateManyWithoutAssignedToNestedInput
+  appointmentTransfers?: Prisma.AppointmentTransferUpdateManyWithoutOriginalWorkerNestedInput
+  newWorkerAppointmentTransfers?: Prisma.AppointmentTransferUpdateManyWithoutNewWorkerNestedInput
 }
 
 export type WorkerProfileUncheckedUpdateWithoutUserInput = {
@@ -988,6 +1036,8 @@ export type WorkerProfileUncheckedUpdateWithoutUserInput = {
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutWorkerNestedInput
   leaves?: Prisma.WorkerLeaveUncheckedUpdateManyWithoutWorkerNestedInput
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutAssignedToNestedInput
+  appointmentTransfers?: Prisma.AppointmentTransferUncheckedUpdateManyWithoutOriginalWorkerNestedInput
+  newWorkerAppointmentTransfers?: Prisma.AppointmentTransferUncheckedUpdateManyWithoutNewWorkerNestedInput
 }
 
 export type WorkerProfileCreateWithoutSchedulesInput = {
@@ -1015,6 +1065,8 @@ export type WorkerProfileCreateWithoutSchedulesInput = {
   reviews?: Prisma.ReviewCreateNestedManyWithoutWorkerInput
   leaves?: Prisma.WorkerLeaveCreateNestedManyWithoutWorkerInput
   tasks?: Prisma.TaskCreateNestedManyWithoutAssignedToInput
+  appointmentTransfers?: Prisma.AppointmentTransferCreateNestedManyWithoutOriginalWorkerInput
+  newWorkerAppointmentTransfers?: Prisma.AppointmentTransferCreateNestedManyWithoutNewWorkerInput
 }
 
 export type WorkerProfileUncheckedCreateWithoutSchedulesInput = {
@@ -1042,6 +1094,8 @@ export type WorkerProfileUncheckedCreateWithoutSchedulesInput = {
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutWorkerInput
   leaves?: Prisma.WorkerLeaveUncheckedCreateNestedManyWithoutWorkerInput
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssignedToInput
+  appointmentTransfers?: Prisma.AppointmentTransferUncheckedCreateNestedManyWithoutOriginalWorkerInput
+  newWorkerAppointmentTransfers?: Prisma.AppointmentTransferUncheckedCreateNestedManyWithoutNewWorkerInput
 }
 
 export type WorkerProfileCreateOrConnectWithoutSchedulesInput = {
@@ -1085,6 +1139,8 @@ export type WorkerProfileUpdateWithoutSchedulesInput = {
   reviews?: Prisma.ReviewUpdateManyWithoutWorkerNestedInput
   leaves?: Prisma.WorkerLeaveUpdateManyWithoutWorkerNestedInput
   tasks?: Prisma.TaskUpdateManyWithoutAssignedToNestedInput
+  appointmentTransfers?: Prisma.AppointmentTransferUpdateManyWithoutOriginalWorkerNestedInput
+  newWorkerAppointmentTransfers?: Prisma.AppointmentTransferUpdateManyWithoutNewWorkerNestedInput
 }
 
 export type WorkerProfileUncheckedUpdateWithoutSchedulesInput = {
@@ -1112,6 +1168,8 @@ export type WorkerProfileUncheckedUpdateWithoutSchedulesInput = {
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutWorkerNestedInput
   leaves?: Prisma.WorkerLeaveUncheckedUpdateManyWithoutWorkerNestedInput
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutAssignedToNestedInput
+  appointmentTransfers?: Prisma.AppointmentTransferUncheckedUpdateManyWithoutOriginalWorkerNestedInput
+  newWorkerAppointmentTransfers?: Prisma.AppointmentTransferUncheckedUpdateManyWithoutNewWorkerNestedInput
 }
 
 export type WorkerProfileCreateWithoutLeavesInput = {
@@ -1139,6 +1197,8 @@ export type WorkerProfileCreateWithoutLeavesInput = {
   commissions?: Prisma.CommissionCreateNestedManyWithoutWorkerInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutWorkerInput
   tasks?: Prisma.TaskCreateNestedManyWithoutAssignedToInput
+  appointmentTransfers?: Prisma.AppointmentTransferCreateNestedManyWithoutOriginalWorkerInput
+  newWorkerAppointmentTransfers?: Prisma.AppointmentTransferCreateNestedManyWithoutNewWorkerInput
 }
 
 export type WorkerProfileUncheckedCreateWithoutLeavesInput = {
@@ -1166,6 +1226,8 @@ export type WorkerProfileUncheckedCreateWithoutLeavesInput = {
   commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutWorkerInput
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutWorkerInput
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssignedToInput
+  appointmentTransfers?: Prisma.AppointmentTransferUncheckedCreateNestedManyWithoutOriginalWorkerInput
+  newWorkerAppointmentTransfers?: Prisma.AppointmentTransferUncheckedCreateNestedManyWithoutNewWorkerInput
 }
 
 export type WorkerProfileCreateOrConnectWithoutLeavesInput = {
@@ -1209,6 +1271,8 @@ export type WorkerProfileUpdateWithoutLeavesInput = {
   commissions?: Prisma.CommissionUpdateManyWithoutWorkerNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutWorkerNestedInput
   tasks?: Prisma.TaskUpdateManyWithoutAssignedToNestedInput
+  appointmentTransfers?: Prisma.AppointmentTransferUpdateManyWithoutOriginalWorkerNestedInput
+  newWorkerAppointmentTransfers?: Prisma.AppointmentTransferUpdateManyWithoutNewWorkerNestedInput
 }
 
 export type WorkerProfileUncheckedUpdateWithoutLeavesInput = {
@@ -1236,6 +1300,8 @@ export type WorkerProfileUncheckedUpdateWithoutLeavesInput = {
   commissions?: Prisma.CommissionUncheckedUpdateManyWithoutWorkerNestedInput
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutWorkerNestedInput
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutAssignedToNestedInput
+  appointmentTransfers?: Prisma.AppointmentTransferUncheckedUpdateManyWithoutOriginalWorkerNestedInput
+  newWorkerAppointmentTransfers?: Prisma.AppointmentTransferUncheckedUpdateManyWithoutNewWorkerNestedInput
 }
 
 export type WorkerProfileCreateWithoutTasksInput = {
@@ -1263,6 +1329,8 @@ export type WorkerProfileCreateWithoutTasksInput = {
   commissions?: Prisma.CommissionCreateNestedManyWithoutWorkerInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutWorkerInput
   leaves?: Prisma.WorkerLeaveCreateNestedManyWithoutWorkerInput
+  appointmentTransfers?: Prisma.AppointmentTransferCreateNestedManyWithoutOriginalWorkerInput
+  newWorkerAppointmentTransfers?: Prisma.AppointmentTransferCreateNestedManyWithoutNewWorkerInput
 }
 
 export type WorkerProfileUncheckedCreateWithoutTasksInput = {
@@ -1290,6 +1358,8 @@ export type WorkerProfileUncheckedCreateWithoutTasksInput = {
   commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutWorkerInput
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutWorkerInput
   leaves?: Prisma.WorkerLeaveUncheckedCreateNestedManyWithoutWorkerInput
+  appointmentTransfers?: Prisma.AppointmentTransferUncheckedCreateNestedManyWithoutOriginalWorkerInput
+  newWorkerAppointmentTransfers?: Prisma.AppointmentTransferUncheckedCreateNestedManyWithoutNewWorkerInput
 }
 
 export type WorkerProfileCreateOrConnectWithoutTasksInput = {
@@ -1333,6 +1403,8 @@ export type WorkerProfileUpdateWithoutTasksInput = {
   commissions?: Prisma.CommissionUpdateManyWithoutWorkerNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutWorkerNestedInput
   leaves?: Prisma.WorkerLeaveUpdateManyWithoutWorkerNestedInput
+  appointmentTransfers?: Prisma.AppointmentTransferUpdateManyWithoutOriginalWorkerNestedInput
+  newWorkerAppointmentTransfers?: Prisma.AppointmentTransferUpdateManyWithoutNewWorkerNestedInput
 }
 
 export type WorkerProfileUncheckedUpdateWithoutTasksInput = {
@@ -1360,6 +1432,8 @@ export type WorkerProfileUncheckedUpdateWithoutTasksInput = {
   commissions?: Prisma.CommissionUncheckedUpdateManyWithoutWorkerNestedInput
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutWorkerNestedInput
   leaves?: Prisma.WorkerLeaveUncheckedUpdateManyWithoutWorkerNestedInput
+  appointmentTransfers?: Prisma.AppointmentTransferUncheckedUpdateManyWithoutOriginalWorkerNestedInput
+  newWorkerAppointmentTransfers?: Prisma.AppointmentTransferUncheckedUpdateManyWithoutNewWorkerNestedInput
 }
 
 export type WorkerProfileCreateWithoutAppointmentsInput = {
@@ -1387,6 +1461,8 @@ export type WorkerProfileCreateWithoutAppointmentsInput = {
   reviews?: Prisma.ReviewCreateNestedManyWithoutWorkerInput
   leaves?: Prisma.WorkerLeaveCreateNestedManyWithoutWorkerInput
   tasks?: Prisma.TaskCreateNestedManyWithoutAssignedToInput
+  appointmentTransfers?: Prisma.AppointmentTransferCreateNestedManyWithoutOriginalWorkerInput
+  newWorkerAppointmentTransfers?: Prisma.AppointmentTransferCreateNestedManyWithoutNewWorkerInput
 }
 
 export type WorkerProfileUncheckedCreateWithoutAppointmentsInput = {
@@ -1414,6 +1490,8 @@ export type WorkerProfileUncheckedCreateWithoutAppointmentsInput = {
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutWorkerInput
   leaves?: Prisma.WorkerLeaveUncheckedCreateNestedManyWithoutWorkerInput
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssignedToInput
+  appointmentTransfers?: Prisma.AppointmentTransferUncheckedCreateNestedManyWithoutOriginalWorkerInput
+  newWorkerAppointmentTransfers?: Prisma.AppointmentTransferUncheckedCreateNestedManyWithoutNewWorkerInput
 }
 
 export type WorkerProfileCreateOrConnectWithoutAppointmentsInput = {
@@ -1457,6 +1535,8 @@ export type WorkerProfileUpdateWithoutAppointmentsInput = {
   reviews?: Prisma.ReviewUpdateManyWithoutWorkerNestedInput
   leaves?: Prisma.WorkerLeaveUpdateManyWithoutWorkerNestedInput
   tasks?: Prisma.TaskUpdateManyWithoutAssignedToNestedInput
+  appointmentTransfers?: Prisma.AppointmentTransferUpdateManyWithoutOriginalWorkerNestedInput
+  newWorkerAppointmentTransfers?: Prisma.AppointmentTransferUpdateManyWithoutNewWorkerNestedInput
 }
 
 export type WorkerProfileUncheckedUpdateWithoutAppointmentsInput = {
@@ -1484,6 +1564,272 @@ export type WorkerProfileUncheckedUpdateWithoutAppointmentsInput = {
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutWorkerNestedInput
   leaves?: Prisma.WorkerLeaveUncheckedUpdateManyWithoutWorkerNestedInput
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutAssignedToNestedInput
+  appointmentTransfers?: Prisma.AppointmentTransferUncheckedUpdateManyWithoutOriginalWorkerNestedInput
+  newWorkerAppointmentTransfers?: Prisma.AppointmentTransferUncheckedUpdateManyWithoutNewWorkerNestedInput
+}
+
+export type WorkerProfileCreateWithoutAppointmentTransfersInput = {
+  id?: string
+  position: string
+  specialties?: Prisma.WorkerProfileCreatespecialtiesInput | string[]
+  commissionRate?: number
+  rating?: number
+  totalReviews?: number
+  isAvailable?: boolean
+  workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  hireDate?: Date | string
+  bio?: string | null
+  commissionType?: string | null
+  commissionFrequency?: string | null
+  commissionDay?: number | null
+  minimumPayout?: number | null
+  lastCommissionPaidAt?: Date | string | null
+  payoutThresholdMetAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutWorkerProfileInput
+  appointments?: Prisma.AppointmentCreateNestedManyWithoutWorkerInput
+  schedules?: Prisma.WorkerScheduleCreateNestedManyWithoutWorkerInput
+  commissions?: Prisma.CommissionCreateNestedManyWithoutWorkerInput
+  reviews?: Prisma.ReviewCreateNestedManyWithoutWorkerInput
+  leaves?: Prisma.WorkerLeaveCreateNestedManyWithoutWorkerInput
+  tasks?: Prisma.TaskCreateNestedManyWithoutAssignedToInput
+  newWorkerAppointmentTransfers?: Prisma.AppointmentTransferCreateNestedManyWithoutNewWorkerInput
+}
+
+export type WorkerProfileUncheckedCreateWithoutAppointmentTransfersInput = {
+  id?: string
+  userId: string
+  position: string
+  specialties?: Prisma.WorkerProfileCreatespecialtiesInput | string[]
+  commissionRate?: number
+  rating?: number
+  totalReviews?: number
+  isAvailable?: boolean
+  workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  hireDate?: Date | string
+  bio?: string | null
+  commissionType?: string | null
+  commissionFrequency?: string | null
+  commissionDay?: number | null
+  minimumPayout?: number | null
+  lastCommissionPaidAt?: Date | string | null
+  payoutThresholdMetAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutWorkerInput
+  schedules?: Prisma.WorkerScheduleUncheckedCreateNestedManyWithoutWorkerInput
+  commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutWorkerInput
+  reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutWorkerInput
+  leaves?: Prisma.WorkerLeaveUncheckedCreateNestedManyWithoutWorkerInput
+  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssignedToInput
+  newWorkerAppointmentTransfers?: Prisma.AppointmentTransferUncheckedCreateNestedManyWithoutNewWorkerInput
+}
+
+export type WorkerProfileCreateOrConnectWithoutAppointmentTransfersInput = {
+  where: Prisma.WorkerProfileWhereUniqueInput
+  create: Prisma.XOR<Prisma.WorkerProfileCreateWithoutAppointmentTransfersInput, Prisma.WorkerProfileUncheckedCreateWithoutAppointmentTransfersInput>
+}
+
+export type WorkerProfileCreateWithoutNewWorkerAppointmentTransfersInput = {
+  id?: string
+  position: string
+  specialties?: Prisma.WorkerProfileCreatespecialtiesInput | string[]
+  commissionRate?: number
+  rating?: number
+  totalReviews?: number
+  isAvailable?: boolean
+  workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  hireDate?: Date | string
+  bio?: string | null
+  commissionType?: string | null
+  commissionFrequency?: string | null
+  commissionDay?: number | null
+  minimumPayout?: number | null
+  lastCommissionPaidAt?: Date | string | null
+  payoutThresholdMetAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutWorkerProfileInput
+  appointments?: Prisma.AppointmentCreateNestedManyWithoutWorkerInput
+  schedules?: Prisma.WorkerScheduleCreateNestedManyWithoutWorkerInput
+  commissions?: Prisma.CommissionCreateNestedManyWithoutWorkerInput
+  reviews?: Prisma.ReviewCreateNestedManyWithoutWorkerInput
+  leaves?: Prisma.WorkerLeaveCreateNestedManyWithoutWorkerInput
+  tasks?: Prisma.TaskCreateNestedManyWithoutAssignedToInput
+  appointmentTransfers?: Prisma.AppointmentTransferCreateNestedManyWithoutOriginalWorkerInput
+}
+
+export type WorkerProfileUncheckedCreateWithoutNewWorkerAppointmentTransfersInput = {
+  id?: string
+  userId: string
+  position: string
+  specialties?: Prisma.WorkerProfileCreatespecialtiesInput | string[]
+  commissionRate?: number
+  rating?: number
+  totalReviews?: number
+  isAvailable?: boolean
+  workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  hireDate?: Date | string
+  bio?: string | null
+  commissionType?: string | null
+  commissionFrequency?: string | null
+  commissionDay?: number | null
+  minimumPayout?: number | null
+  lastCommissionPaidAt?: Date | string | null
+  payoutThresholdMetAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutWorkerInput
+  schedules?: Prisma.WorkerScheduleUncheckedCreateNestedManyWithoutWorkerInput
+  commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutWorkerInput
+  reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutWorkerInput
+  leaves?: Prisma.WorkerLeaveUncheckedCreateNestedManyWithoutWorkerInput
+  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssignedToInput
+  appointmentTransfers?: Prisma.AppointmentTransferUncheckedCreateNestedManyWithoutOriginalWorkerInput
+}
+
+export type WorkerProfileCreateOrConnectWithoutNewWorkerAppointmentTransfersInput = {
+  where: Prisma.WorkerProfileWhereUniqueInput
+  create: Prisma.XOR<Prisma.WorkerProfileCreateWithoutNewWorkerAppointmentTransfersInput, Prisma.WorkerProfileUncheckedCreateWithoutNewWorkerAppointmentTransfersInput>
+}
+
+export type WorkerProfileUpsertWithoutAppointmentTransfersInput = {
+  update: Prisma.XOR<Prisma.WorkerProfileUpdateWithoutAppointmentTransfersInput, Prisma.WorkerProfileUncheckedUpdateWithoutAppointmentTransfersInput>
+  create: Prisma.XOR<Prisma.WorkerProfileCreateWithoutAppointmentTransfersInput, Prisma.WorkerProfileUncheckedCreateWithoutAppointmentTransfersInput>
+  where?: Prisma.WorkerProfileWhereInput
+}
+
+export type WorkerProfileUpdateToOneWithWhereWithoutAppointmentTransfersInput = {
+  where?: Prisma.WorkerProfileWhereInput
+  data: Prisma.XOR<Prisma.WorkerProfileUpdateWithoutAppointmentTransfersInput, Prisma.WorkerProfileUncheckedUpdateWithoutAppointmentTransfersInput>
+}
+
+export type WorkerProfileUpdateWithoutAppointmentTransfersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  position?: Prisma.StringFieldUpdateOperationsInput | string
+  specialties?: Prisma.WorkerProfileUpdatespecialtiesInput | string[]
+  commissionRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  rating?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalReviews?: Prisma.IntFieldUpdateOperationsInput | number
+  isAvailable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  hireDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionFrequency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionDay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  minimumPayout?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  lastCommissionPaidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  payoutThresholdMetAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutWorkerProfileNestedInput
+  appointments?: Prisma.AppointmentUpdateManyWithoutWorkerNestedInput
+  schedules?: Prisma.WorkerScheduleUpdateManyWithoutWorkerNestedInput
+  commissions?: Prisma.CommissionUpdateManyWithoutWorkerNestedInput
+  reviews?: Prisma.ReviewUpdateManyWithoutWorkerNestedInput
+  leaves?: Prisma.WorkerLeaveUpdateManyWithoutWorkerNestedInput
+  tasks?: Prisma.TaskUpdateManyWithoutAssignedToNestedInput
+  newWorkerAppointmentTransfers?: Prisma.AppointmentTransferUpdateManyWithoutNewWorkerNestedInput
+}
+
+export type WorkerProfileUncheckedUpdateWithoutAppointmentTransfersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  position?: Prisma.StringFieldUpdateOperationsInput | string
+  specialties?: Prisma.WorkerProfileUpdatespecialtiesInput | string[]
+  commissionRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  rating?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalReviews?: Prisma.IntFieldUpdateOperationsInput | number
+  isAvailable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  hireDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionFrequency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionDay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  minimumPayout?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  lastCommissionPaidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  payoutThresholdMetAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutWorkerNestedInput
+  schedules?: Prisma.WorkerScheduleUncheckedUpdateManyWithoutWorkerNestedInput
+  commissions?: Prisma.CommissionUncheckedUpdateManyWithoutWorkerNestedInput
+  reviews?: Prisma.ReviewUncheckedUpdateManyWithoutWorkerNestedInput
+  leaves?: Prisma.WorkerLeaveUncheckedUpdateManyWithoutWorkerNestedInput
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutAssignedToNestedInput
+  newWorkerAppointmentTransfers?: Prisma.AppointmentTransferUncheckedUpdateManyWithoutNewWorkerNestedInput
+}
+
+export type WorkerProfileUpsertWithoutNewWorkerAppointmentTransfersInput = {
+  update: Prisma.XOR<Prisma.WorkerProfileUpdateWithoutNewWorkerAppointmentTransfersInput, Prisma.WorkerProfileUncheckedUpdateWithoutNewWorkerAppointmentTransfersInput>
+  create: Prisma.XOR<Prisma.WorkerProfileCreateWithoutNewWorkerAppointmentTransfersInput, Prisma.WorkerProfileUncheckedCreateWithoutNewWorkerAppointmentTransfersInput>
+  where?: Prisma.WorkerProfileWhereInput
+}
+
+export type WorkerProfileUpdateToOneWithWhereWithoutNewWorkerAppointmentTransfersInput = {
+  where?: Prisma.WorkerProfileWhereInput
+  data: Prisma.XOR<Prisma.WorkerProfileUpdateWithoutNewWorkerAppointmentTransfersInput, Prisma.WorkerProfileUncheckedUpdateWithoutNewWorkerAppointmentTransfersInput>
+}
+
+export type WorkerProfileUpdateWithoutNewWorkerAppointmentTransfersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  position?: Prisma.StringFieldUpdateOperationsInput | string
+  specialties?: Prisma.WorkerProfileUpdatespecialtiesInput | string[]
+  commissionRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  rating?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalReviews?: Prisma.IntFieldUpdateOperationsInput | number
+  isAvailable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  hireDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionFrequency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionDay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  minimumPayout?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  lastCommissionPaidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  payoutThresholdMetAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutWorkerProfileNestedInput
+  appointments?: Prisma.AppointmentUpdateManyWithoutWorkerNestedInput
+  schedules?: Prisma.WorkerScheduleUpdateManyWithoutWorkerNestedInput
+  commissions?: Prisma.CommissionUpdateManyWithoutWorkerNestedInput
+  reviews?: Prisma.ReviewUpdateManyWithoutWorkerNestedInput
+  leaves?: Prisma.WorkerLeaveUpdateManyWithoutWorkerNestedInput
+  tasks?: Prisma.TaskUpdateManyWithoutAssignedToNestedInput
+  appointmentTransfers?: Prisma.AppointmentTransferUpdateManyWithoutOriginalWorkerNestedInput
+}
+
+export type WorkerProfileUncheckedUpdateWithoutNewWorkerAppointmentTransfersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  position?: Prisma.StringFieldUpdateOperationsInput | string
+  specialties?: Prisma.WorkerProfileUpdatespecialtiesInput | string[]
+  commissionRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  rating?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalReviews?: Prisma.IntFieldUpdateOperationsInput | number
+  isAvailable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  workingHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  hireDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionFrequency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commissionDay?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  minimumPayout?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  lastCommissionPaidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  payoutThresholdMetAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutWorkerNestedInput
+  schedules?: Prisma.WorkerScheduleUncheckedUpdateManyWithoutWorkerNestedInput
+  commissions?: Prisma.CommissionUncheckedUpdateManyWithoutWorkerNestedInput
+  reviews?: Prisma.ReviewUncheckedUpdateManyWithoutWorkerNestedInput
+  leaves?: Prisma.WorkerLeaveUncheckedUpdateManyWithoutWorkerNestedInput
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutAssignedToNestedInput
+  appointmentTransfers?: Prisma.AppointmentTransferUncheckedUpdateManyWithoutOriginalWorkerNestedInput
 }
 
 export type WorkerProfileCreateWithoutReviewsInput = {
@@ -1511,6 +1857,8 @@ export type WorkerProfileCreateWithoutReviewsInput = {
   commissions?: Prisma.CommissionCreateNestedManyWithoutWorkerInput
   leaves?: Prisma.WorkerLeaveCreateNestedManyWithoutWorkerInput
   tasks?: Prisma.TaskCreateNestedManyWithoutAssignedToInput
+  appointmentTransfers?: Prisma.AppointmentTransferCreateNestedManyWithoutOriginalWorkerInput
+  newWorkerAppointmentTransfers?: Prisma.AppointmentTransferCreateNestedManyWithoutNewWorkerInput
 }
 
 export type WorkerProfileUncheckedCreateWithoutReviewsInput = {
@@ -1538,6 +1886,8 @@ export type WorkerProfileUncheckedCreateWithoutReviewsInput = {
   commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutWorkerInput
   leaves?: Prisma.WorkerLeaveUncheckedCreateNestedManyWithoutWorkerInput
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssignedToInput
+  appointmentTransfers?: Prisma.AppointmentTransferUncheckedCreateNestedManyWithoutOriginalWorkerInput
+  newWorkerAppointmentTransfers?: Prisma.AppointmentTransferUncheckedCreateNestedManyWithoutNewWorkerInput
 }
 
 export type WorkerProfileCreateOrConnectWithoutReviewsInput = {
@@ -1581,6 +1931,8 @@ export type WorkerProfileUpdateWithoutReviewsInput = {
   commissions?: Prisma.CommissionUpdateManyWithoutWorkerNestedInput
   leaves?: Prisma.WorkerLeaveUpdateManyWithoutWorkerNestedInput
   tasks?: Prisma.TaskUpdateManyWithoutAssignedToNestedInput
+  appointmentTransfers?: Prisma.AppointmentTransferUpdateManyWithoutOriginalWorkerNestedInput
+  newWorkerAppointmentTransfers?: Prisma.AppointmentTransferUpdateManyWithoutNewWorkerNestedInput
 }
 
 export type WorkerProfileUncheckedUpdateWithoutReviewsInput = {
@@ -1608,6 +1960,8 @@ export type WorkerProfileUncheckedUpdateWithoutReviewsInput = {
   commissions?: Prisma.CommissionUncheckedUpdateManyWithoutWorkerNestedInput
   leaves?: Prisma.WorkerLeaveUncheckedUpdateManyWithoutWorkerNestedInput
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutAssignedToNestedInput
+  appointmentTransfers?: Prisma.AppointmentTransferUncheckedUpdateManyWithoutOriginalWorkerNestedInput
+  newWorkerAppointmentTransfers?: Prisma.AppointmentTransferUncheckedUpdateManyWithoutNewWorkerNestedInput
 }
 
 export type WorkerProfileCreateWithoutCommissionsInput = {
@@ -1635,6 +1989,8 @@ export type WorkerProfileCreateWithoutCommissionsInput = {
   reviews?: Prisma.ReviewCreateNestedManyWithoutWorkerInput
   leaves?: Prisma.WorkerLeaveCreateNestedManyWithoutWorkerInput
   tasks?: Prisma.TaskCreateNestedManyWithoutAssignedToInput
+  appointmentTransfers?: Prisma.AppointmentTransferCreateNestedManyWithoutOriginalWorkerInput
+  newWorkerAppointmentTransfers?: Prisma.AppointmentTransferCreateNestedManyWithoutNewWorkerInput
 }
 
 export type WorkerProfileUncheckedCreateWithoutCommissionsInput = {
@@ -1662,6 +2018,8 @@ export type WorkerProfileUncheckedCreateWithoutCommissionsInput = {
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutWorkerInput
   leaves?: Prisma.WorkerLeaveUncheckedCreateNestedManyWithoutWorkerInput
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssignedToInput
+  appointmentTransfers?: Prisma.AppointmentTransferUncheckedCreateNestedManyWithoutOriginalWorkerInput
+  newWorkerAppointmentTransfers?: Prisma.AppointmentTransferUncheckedCreateNestedManyWithoutNewWorkerInput
 }
 
 export type WorkerProfileCreateOrConnectWithoutCommissionsInput = {
@@ -1705,6 +2063,8 @@ export type WorkerProfileUpdateWithoutCommissionsInput = {
   reviews?: Prisma.ReviewUpdateManyWithoutWorkerNestedInput
   leaves?: Prisma.WorkerLeaveUpdateManyWithoutWorkerNestedInput
   tasks?: Prisma.TaskUpdateManyWithoutAssignedToNestedInput
+  appointmentTransfers?: Prisma.AppointmentTransferUpdateManyWithoutOriginalWorkerNestedInput
+  newWorkerAppointmentTransfers?: Prisma.AppointmentTransferUpdateManyWithoutNewWorkerNestedInput
 }
 
 export type WorkerProfileUncheckedUpdateWithoutCommissionsInput = {
@@ -1732,6 +2092,8 @@ export type WorkerProfileUncheckedUpdateWithoutCommissionsInput = {
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutWorkerNestedInput
   leaves?: Prisma.WorkerLeaveUncheckedUpdateManyWithoutWorkerNestedInput
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutAssignedToNestedInput
+  appointmentTransfers?: Prisma.AppointmentTransferUncheckedUpdateManyWithoutOriginalWorkerNestedInput
+  newWorkerAppointmentTransfers?: Prisma.AppointmentTransferUncheckedUpdateManyWithoutNewWorkerNestedInput
 }
 
 
@@ -1746,6 +2108,8 @@ export type WorkerProfileCountOutputType = {
   reviews: number
   leaves: number
   tasks: number
+  appointmentTransfers: number
+  newWorkerAppointmentTransfers: number
 }
 
 export type WorkerProfileCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1755,6 +2119,8 @@ export type WorkerProfileCountOutputTypeSelect<ExtArgs extends runtime.Types.Ext
   reviews?: boolean | WorkerProfileCountOutputTypeCountReviewsArgs
   leaves?: boolean | WorkerProfileCountOutputTypeCountLeavesArgs
   tasks?: boolean | WorkerProfileCountOutputTypeCountTasksArgs
+  appointmentTransfers?: boolean | WorkerProfileCountOutputTypeCountAppointmentTransfersArgs
+  newWorkerAppointmentTransfers?: boolean | WorkerProfileCountOutputTypeCountNewWorkerAppointmentTransfersArgs
 }
 
 /**
@@ -1809,6 +2175,20 @@ export type WorkerProfileCountOutputTypeCountTasksArgs<ExtArgs extends runtime.T
   where?: Prisma.TaskWhereInput
 }
 
+/**
+ * WorkerProfileCountOutputType without action
+ */
+export type WorkerProfileCountOutputTypeCountAppointmentTransfersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AppointmentTransferWhereInput
+}
+
+/**
+ * WorkerProfileCountOutputType without action
+ */
+export type WorkerProfileCountOutputTypeCountNewWorkerAppointmentTransfersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AppointmentTransferWhereInput
+}
+
 
 export type WorkerProfileSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1837,6 +2217,8 @@ export type WorkerProfileSelect<ExtArgs extends runtime.Types.Extensions.Interna
   reviews?: boolean | Prisma.WorkerProfile$reviewsArgs<ExtArgs>
   leaves?: boolean | Prisma.WorkerProfile$leavesArgs<ExtArgs>
   tasks?: boolean | Prisma.WorkerProfile$tasksArgs<ExtArgs>
+  appointmentTransfers?: boolean | Prisma.WorkerProfile$appointmentTransfersArgs<ExtArgs>
+  newWorkerAppointmentTransfers?: boolean | Prisma.WorkerProfile$newWorkerAppointmentTransfersArgs<ExtArgs>
   _count?: boolean | Prisma.WorkerProfileCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["workerProfile"]>
 
@@ -1917,6 +2299,8 @@ export type WorkerProfileInclude<ExtArgs extends runtime.Types.Extensions.Intern
   reviews?: boolean | Prisma.WorkerProfile$reviewsArgs<ExtArgs>
   leaves?: boolean | Prisma.WorkerProfile$leavesArgs<ExtArgs>
   tasks?: boolean | Prisma.WorkerProfile$tasksArgs<ExtArgs>
+  appointmentTransfers?: boolean | Prisma.WorkerProfile$appointmentTransfersArgs<ExtArgs>
+  newWorkerAppointmentTransfers?: boolean | Prisma.WorkerProfile$newWorkerAppointmentTransfersArgs<ExtArgs>
   _count?: boolean | Prisma.WorkerProfileCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type WorkerProfileIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1936,6 +2320,8 @@ export type $WorkerProfilePayload<ExtArgs extends runtime.Types.Extensions.Inter
     reviews: Prisma.$ReviewPayload<ExtArgs>[]
     leaves: Prisma.$WorkerLeavePayload<ExtArgs>[]
     tasks: Prisma.$TaskPayload<ExtArgs>[]
+    appointmentTransfers: Prisma.$AppointmentTransferPayload<ExtArgs>[]
+    newWorkerAppointmentTransfers: Prisma.$AppointmentTransferPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2358,6 +2744,8 @@ export interface Prisma__WorkerProfileClient<T, Null = never, ExtArgs extends ru
   reviews<T extends Prisma.WorkerProfile$reviewsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorkerProfile$reviewsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   leaves<T extends Prisma.WorkerProfile$leavesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorkerProfile$leavesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WorkerLeavePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   tasks<T extends Prisma.WorkerProfile$tasksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorkerProfile$tasksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  appointmentTransfers<T extends Prisma.WorkerProfile$appointmentTransfersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorkerProfile$appointmentTransfersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AppointmentTransferPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  newWorkerAppointmentTransfers<T extends Prisma.WorkerProfile$newWorkerAppointmentTransfersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorkerProfile$newWorkerAppointmentTransfersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AppointmentTransferPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2943,6 +3331,54 @@ export type WorkerProfile$tasksArgs<ExtArgs extends runtime.Types.Extensions.Int
   take?: number
   skip?: number
   distinct?: Prisma.TaskScalarFieldEnum | Prisma.TaskScalarFieldEnum[]
+}
+
+/**
+ * WorkerProfile.appointmentTransfers
+ */
+export type WorkerProfile$appointmentTransfersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AppointmentTransfer
+   */
+  select?: Prisma.AppointmentTransferSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AppointmentTransfer
+   */
+  omit?: Prisma.AppointmentTransferOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AppointmentTransferInclude<ExtArgs> | null
+  where?: Prisma.AppointmentTransferWhereInput
+  orderBy?: Prisma.AppointmentTransferOrderByWithRelationInput | Prisma.AppointmentTransferOrderByWithRelationInput[]
+  cursor?: Prisma.AppointmentTransferWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AppointmentTransferScalarFieldEnum | Prisma.AppointmentTransferScalarFieldEnum[]
+}
+
+/**
+ * WorkerProfile.newWorkerAppointmentTransfers
+ */
+export type WorkerProfile$newWorkerAppointmentTransfersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AppointmentTransfer
+   */
+  select?: Prisma.AppointmentTransferSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AppointmentTransfer
+   */
+  omit?: Prisma.AppointmentTransferOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AppointmentTransferInclude<ExtArgs> | null
+  where?: Prisma.AppointmentTransferWhereInput
+  orderBy?: Prisma.AppointmentTransferOrderByWithRelationInput | Prisma.AppointmentTransferOrderByWithRelationInput[]
+  cursor?: Prisma.AppointmentTransferWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AppointmentTransferScalarFieldEnum | Prisma.AppointmentTransferScalarFieldEnum[]
 }
 
 /**

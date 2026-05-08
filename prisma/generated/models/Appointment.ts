@@ -311,6 +311,7 @@ export type AppointmentWhereInput = {
   reviews?: Prisma.ReviewListRelationFilter
   sale?: Prisma.XOR<Prisma.SaleNullableScalarRelationFilter, Prisma.SaleWhereInput> | null
   tasks?: Prisma.TaskListRelationFilter
+  transfer?: Prisma.XOR<Prisma.AppointmentTransferNullableScalarRelationFilter, Prisma.AppointmentTransferWhereInput> | null
 }
 
 export type AppointmentOrderByWithRelationInput = {
@@ -337,6 +338,7 @@ export type AppointmentOrderByWithRelationInput = {
   reviews?: Prisma.ReviewOrderByRelationAggregateInput
   sale?: Prisma.SaleOrderByWithRelationInput
   tasks?: Prisma.TaskOrderByRelationAggregateInput
+  transfer?: Prisma.AppointmentTransferOrderByWithRelationInput
 }
 
 export type AppointmentWhereUniqueInput = Prisma.AtLeast<{
@@ -366,6 +368,7 @@ export type AppointmentWhereUniqueInput = Prisma.AtLeast<{
   reviews?: Prisma.ReviewListRelationFilter
   sale?: Prisma.XOR<Prisma.SaleNullableScalarRelationFilter, Prisma.SaleWhereInput> | null
   tasks?: Prisma.TaskListRelationFilter
+  transfer?: Prisma.XOR<Prisma.AppointmentTransferNullableScalarRelationFilter, Prisma.AppointmentTransferWhereInput> | null
 }, "id">
 
 export type AppointmentOrderByWithAggregationInput = {
@@ -434,6 +437,7 @@ export type AppointmentCreateInput = {
   reviews?: Prisma.ReviewCreateNestedManyWithoutAppointmentInput
   sale?: Prisma.SaleCreateNestedOneWithoutAppointmentInput
   tasks?: Prisma.TaskCreateNestedManyWithoutAppointmentInput
+  transfer?: Prisma.AppointmentTransferCreateNestedOneWithoutAppointmentInput
 }
 
 export type AppointmentUncheckedCreateInput = {
@@ -456,6 +460,7 @@ export type AppointmentUncheckedCreateInput = {
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutAppointmentInput
   sale?: Prisma.SaleUncheckedCreateNestedOneWithoutAppointmentInput
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAppointmentInput
+  transfer?: Prisma.AppointmentTransferUncheckedCreateNestedOneWithoutAppointmentInput
 }
 
 export type AppointmentUpdateInput = {
@@ -478,6 +483,7 @@ export type AppointmentUpdateInput = {
   reviews?: Prisma.ReviewUpdateManyWithoutAppointmentNestedInput
   sale?: Prisma.SaleUpdateOneWithoutAppointmentNestedInput
   tasks?: Prisma.TaskUpdateManyWithoutAppointmentNestedInput
+  transfer?: Prisma.AppointmentTransferUpdateOneWithoutAppointmentNestedInput
 }
 
 export type AppointmentUncheckedUpdateInput = {
@@ -500,6 +506,7 @@ export type AppointmentUncheckedUpdateInput = {
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutAppointmentNestedInput
   sale?: Prisma.SaleUncheckedUpdateOneWithoutAppointmentNestedInput
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutAppointmentNestedInput
+  transfer?: Prisma.AppointmentTransferUncheckedUpdateOneWithoutAppointmentNestedInput
 }
 
 export type AppointmentCreateManyInput = {
@@ -799,6 +806,20 @@ export type AppointmentUpdateaddOnsInput = {
   push?: string | string[]
 }
 
+export type AppointmentCreateNestedOneWithoutTransferInput = {
+  create?: Prisma.XOR<Prisma.AppointmentCreateWithoutTransferInput, Prisma.AppointmentUncheckedCreateWithoutTransferInput>
+  connectOrCreate?: Prisma.AppointmentCreateOrConnectWithoutTransferInput
+  connect?: Prisma.AppointmentWhereUniqueInput
+}
+
+export type AppointmentUpdateOneRequiredWithoutTransferNestedInput = {
+  create?: Prisma.XOR<Prisma.AppointmentCreateWithoutTransferInput, Prisma.AppointmentUncheckedCreateWithoutTransferInput>
+  connectOrCreate?: Prisma.AppointmentCreateOrConnectWithoutTransferInput
+  upsert?: Prisma.AppointmentUpsertWithoutTransferInput
+  connect?: Prisma.AppointmentWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AppointmentUpdateToOneWithWhereWithoutTransferInput, Prisma.AppointmentUpdateWithoutTransferInput>, Prisma.AppointmentUncheckedUpdateWithoutTransferInput>
+}
+
 export type AppointmentCreateNestedOneWithoutReviewsInput = {
   create?: Prisma.XOR<Prisma.AppointmentCreateWithoutReviewsInput, Prisma.AppointmentUncheckedCreateWithoutReviewsInput>
   connectOrCreate?: Prisma.AppointmentCreateOrConnectWithoutReviewsInput
@@ -890,6 +911,7 @@ export type AppointmentCreateWithoutClientInput = {
   reviews?: Prisma.ReviewCreateNestedManyWithoutAppointmentInput
   sale?: Prisma.SaleCreateNestedOneWithoutAppointmentInput
   tasks?: Prisma.TaskCreateNestedManyWithoutAppointmentInput
+  transfer?: Prisma.AppointmentTransferCreateNestedOneWithoutAppointmentInput
 }
 
 export type AppointmentUncheckedCreateWithoutClientInput = {
@@ -911,6 +933,7 @@ export type AppointmentUncheckedCreateWithoutClientInput = {
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutAppointmentInput
   sale?: Prisma.SaleUncheckedCreateNestedOneWithoutAppointmentInput
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAppointmentInput
+  transfer?: Prisma.AppointmentTransferUncheckedCreateNestedOneWithoutAppointmentInput
 }
 
 export type AppointmentCreateOrConnectWithoutClientInput = {
@@ -980,6 +1003,7 @@ export type AppointmentCreateWithoutWorkerInput = {
   reviews?: Prisma.ReviewCreateNestedManyWithoutAppointmentInput
   sale?: Prisma.SaleCreateNestedOneWithoutAppointmentInput
   tasks?: Prisma.TaskCreateNestedManyWithoutAppointmentInput
+  transfer?: Prisma.AppointmentTransferCreateNestedOneWithoutAppointmentInput
 }
 
 export type AppointmentUncheckedCreateWithoutWorkerInput = {
@@ -1001,6 +1025,7 @@ export type AppointmentUncheckedCreateWithoutWorkerInput = {
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutAppointmentInput
   sale?: Prisma.SaleUncheckedCreateNestedOneWithoutAppointmentInput
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAppointmentInput
+  transfer?: Prisma.AppointmentTransferUncheckedCreateNestedOneWithoutAppointmentInput
 }
 
 export type AppointmentCreateOrConnectWithoutWorkerInput = {
@@ -1048,6 +1073,7 @@ export type AppointmentCreateWithoutTasksInput = {
   worker: Prisma.WorkerProfileCreateNestedOneWithoutAppointmentsInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutAppointmentInput
   sale?: Prisma.SaleCreateNestedOneWithoutAppointmentInput
+  transfer?: Prisma.AppointmentTransferCreateNestedOneWithoutAppointmentInput
 }
 
 export type AppointmentUncheckedCreateWithoutTasksInput = {
@@ -1069,6 +1095,7 @@ export type AppointmentUncheckedCreateWithoutTasksInput = {
   paymentIntentId?: string | null
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutAppointmentInput
   sale?: Prisma.SaleUncheckedCreateNestedOneWithoutAppointmentInput
+  transfer?: Prisma.AppointmentTransferUncheckedCreateNestedOneWithoutAppointmentInput
 }
 
 export type AppointmentCreateOrConnectWithoutTasksInput = {
@@ -1106,6 +1133,7 @@ export type AppointmentUpdateWithoutTasksInput = {
   worker?: Prisma.WorkerProfileUpdateOneRequiredWithoutAppointmentsNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutAppointmentNestedInput
   sale?: Prisma.SaleUpdateOneWithoutAppointmentNestedInput
+  transfer?: Prisma.AppointmentTransferUpdateOneWithoutAppointmentNestedInput
 }
 
 export type AppointmentUncheckedUpdateWithoutTasksInput = {
@@ -1127,6 +1155,7 @@ export type AppointmentUncheckedUpdateWithoutTasksInput = {
   paymentIntentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutAppointmentNestedInput
   sale?: Prisma.SaleUncheckedUpdateOneWithoutAppointmentNestedInput
+  transfer?: Prisma.AppointmentTransferUncheckedUpdateOneWithoutAppointmentNestedInput
 }
 
 export type AppointmentCreateWithoutServiceInput = {
@@ -1148,6 +1177,7 @@ export type AppointmentCreateWithoutServiceInput = {
   reviews?: Prisma.ReviewCreateNestedManyWithoutAppointmentInput
   sale?: Prisma.SaleCreateNestedOneWithoutAppointmentInput
   tasks?: Prisma.TaskCreateNestedManyWithoutAppointmentInput
+  transfer?: Prisma.AppointmentTransferCreateNestedOneWithoutAppointmentInput
 }
 
 export type AppointmentUncheckedCreateWithoutServiceInput = {
@@ -1169,6 +1199,7 @@ export type AppointmentUncheckedCreateWithoutServiceInput = {
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutAppointmentInput
   sale?: Prisma.SaleUncheckedCreateNestedOneWithoutAppointmentInput
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAppointmentInput
+  transfer?: Prisma.AppointmentTransferUncheckedCreateNestedOneWithoutAppointmentInput
 }
 
 export type AppointmentCreateOrConnectWithoutServiceInput = {
@@ -1197,6 +1228,110 @@ export type AppointmentUpdateManyWithWhereWithoutServiceInput = {
   data: Prisma.XOR<Prisma.AppointmentUpdateManyMutationInput, Prisma.AppointmentUncheckedUpdateManyWithoutServiceInput>
 }
 
+export type AppointmentCreateWithoutTransferInput = {
+  id?: string
+  date: Date | string
+  time: string
+  duration: number
+  status?: $Enums.AppointmentStatus
+  location?: $Enums.Location
+  price: number
+  addOns?: Prisma.AppointmentCreateaddOnsInput | string[]
+  notes?: string | null
+  cancelReason?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  paymentIntent?: Prisma.PaymentIntentCreateNestedOneWithoutAppointmentsInput
+  client: Prisma.ClientProfileCreateNestedOneWithoutAppointmentsInput
+  service: Prisma.ServiceCreateNestedOneWithoutAppointmentsInput
+  worker: Prisma.WorkerProfileCreateNestedOneWithoutAppointmentsInput
+  reviews?: Prisma.ReviewCreateNestedManyWithoutAppointmentInput
+  sale?: Prisma.SaleCreateNestedOneWithoutAppointmentInput
+  tasks?: Prisma.TaskCreateNestedManyWithoutAppointmentInput
+}
+
+export type AppointmentUncheckedCreateWithoutTransferInput = {
+  id?: string
+  clientId: string
+  serviceId: string
+  workerId: string
+  date: Date | string
+  time: string
+  duration: number
+  status?: $Enums.AppointmentStatus
+  location?: $Enums.Location
+  price: number
+  addOns?: Prisma.AppointmentCreateaddOnsInput | string[]
+  notes?: string | null
+  cancelReason?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  paymentIntentId?: string | null
+  reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutAppointmentInput
+  sale?: Prisma.SaleUncheckedCreateNestedOneWithoutAppointmentInput
+  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAppointmentInput
+}
+
+export type AppointmentCreateOrConnectWithoutTransferInput = {
+  where: Prisma.AppointmentWhereUniqueInput
+  create: Prisma.XOR<Prisma.AppointmentCreateWithoutTransferInput, Prisma.AppointmentUncheckedCreateWithoutTransferInput>
+}
+
+export type AppointmentUpsertWithoutTransferInput = {
+  update: Prisma.XOR<Prisma.AppointmentUpdateWithoutTransferInput, Prisma.AppointmentUncheckedUpdateWithoutTransferInput>
+  create: Prisma.XOR<Prisma.AppointmentCreateWithoutTransferInput, Prisma.AppointmentUncheckedCreateWithoutTransferInput>
+  where?: Prisma.AppointmentWhereInput
+}
+
+export type AppointmentUpdateToOneWithWhereWithoutTransferInput = {
+  where?: Prisma.AppointmentWhereInput
+  data: Prisma.XOR<Prisma.AppointmentUpdateWithoutTransferInput, Prisma.AppointmentUncheckedUpdateWithoutTransferInput>
+}
+
+export type AppointmentUpdateWithoutTransferInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  time?: Prisma.StringFieldUpdateOperationsInput | string
+  duration?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
+  location?: Prisma.EnumLocationFieldUpdateOperationsInput | $Enums.Location
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  addOns?: Prisma.AppointmentUpdateaddOnsInput | string[]
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  paymentIntent?: Prisma.PaymentIntentUpdateOneWithoutAppointmentsNestedInput
+  client?: Prisma.ClientProfileUpdateOneRequiredWithoutAppointmentsNestedInput
+  service?: Prisma.ServiceUpdateOneRequiredWithoutAppointmentsNestedInput
+  worker?: Prisma.WorkerProfileUpdateOneRequiredWithoutAppointmentsNestedInput
+  reviews?: Prisma.ReviewUpdateManyWithoutAppointmentNestedInput
+  sale?: Prisma.SaleUpdateOneWithoutAppointmentNestedInput
+  tasks?: Prisma.TaskUpdateManyWithoutAppointmentNestedInput
+}
+
+export type AppointmentUncheckedUpdateWithoutTransferInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientId?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceId?: Prisma.StringFieldUpdateOperationsInput | string
+  workerId?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  time?: Prisma.StringFieldUpdateOperationsInput | string
+  duration?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
+  location?: Prisma.EnumLocationFieldUpdateOperationsInput | $Enums.Location
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  addOns?: Prisma.AppointmentUpdateaddOnsInput | string[]
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  paymentIntentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviews?: Prisma.ReviewUncheckedUpdateManyWithoutAppointmentNestedInput
+  sale?: Prisma.SaleUncheckedUpdateOneWithoutAppointmentNestedInput
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutAppointmentNestedInput
+}
+
 export type AppointmentCreateWithoutReviewsInput = {
   id?: string
   date: Date | string
@@ -1216,6 +1351,7 @@ export type AppointmentCreateWithoutReviewsInput = {
   worker: Prisma.WorkerProfileCreateNestedOneWithoutAppointmentsInput
   sale?: Prisma.SaleCreateNestedOneWithoutAppointmentInput
   tasks?: Prisma.TaskCreateNestedManyWithoutAppointmentInput
+  transfer?: Prisma.AppointmentTransferCreateNestedOneWithoutAppointmentInput
 }
 
 export type AppointmentUncheckedCreateWithoutReviewsInput = {
@@ -1237,6 +1373,7 @@ export type AppointmentUncheckedCreateWithoutReviewsInput = {
   paymentIntentId?: string | null
   sale?: Prisma.SaleUncheckedCreateNestedOneWithoutAppointmentInput
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAppointmentInput
+  transfer?: Prisma.AppointmentTransferUncheckedCreateNestedOneWithoutAppointmentInput
 }
 
 export type AppointmentCreateOrConnectWithoutReviewsInput = {
@@ -1274,6 +1411,7 @@ export type AppointmentUpdateWithoutReviewsInput = {
   worker?: Prisma.WorkerProfileUpdateOneRequiredWithoutAppointmentsNestedInput
   sale?: Prisma.SaleUpdateOneWithoutAppointmentNestedInput
   tasks?: Prisma.TaskUpdateManyWithoutAppointmentNestedInput
+  transfer?: Prisma.AppointmentTransferUpdateOneWithoutAppointmentNestedInput
 }
 
 export type AppointmentUncheckedUpdateWithoutReviewsInput = {
@@ -1295,6 +1433,7 @@ export type AppointmentUncheckedUpdateWithoutReviewsInput = {
   paymentIntentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sale?: Prisma.SaleUncheckedUpdateOneWithoutAppointmentNestedInput
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutAppointmentNestedInput
+  transfer?: Prisma.AppointmentTransferUncheckedUpdateOneWithoutAppointmentNestedInput
 }
 
 export type AppointmentCreateWithoutSaleInput = {
@@ -1316,6 +1455,7 @@ export type AppointmentCreateWithoutSaleInput = {
   worker: Prisma.WorkerProfileCreateNestedOneWithoutAppointmentsInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutAppointmentInput
   tasks?: Prisma.TaskCreateNestedManyWithoutAppointmentInput
+  transfer?: Prisma.AppointmentTransferCreateNestedOneWithoutAppointmentInput
 }
 
 export type AppointmentUncheckedCreateWithoutSaleInput = {
@@ -1337,6 +1477,7 @@ export type AppointmentUncheckedCreateWithoutSaleInput = {
   paymentIntentId?: string | null
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutAppointmentInput
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAppointmentInput
+  transfer?: Prisma.AppointmentTransferUncheckedCreateNestedOneWithoutAppointmentInput
 }
 
 export type AppointmentCreateOrConnectWithoutSaleInput = {
@@ -1374,6 +1515,7 @@ export type AppointmentUpdateWithoutSaleInput = {
   worker?: Prisma.WorkerProfileUpdateOneRequiredWithoutAppointmentsNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutAppointmentNestedInput
   tasks?: Prisma.TaskUpdateManyWithoutAppointmentNestedInput
+  transfer?: Prisma.AppointmentTransferUpdateOneWithoutAppointmentNestedInput
 }
 
 export type AppointmentUncheckedUpdateWithoutSaleInput = {
@@ -1395,6 +1537,7 @@ export type AppointmentUncheckedUpdateWithoutSaleInput = {
   paymentIntentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutAppointmentNestedInput
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutAppointmentNestedInput
+  transfer?: Prisma.AppointmentTransferUncheckedUpdateOneWithoutAppointmentNestedInput
 }
 
 export type AppointmentCreateWithoutPaymentIntentInput = {
@@ -1416,6 +1559,7 @@ export type AppointmentCreateWithoutPaymentIntentInput = {
   reviews?: Prisma.ReviewCreateNestedManyWithoutAppointmentInput
   sale?: Prisma.SaleCreateNestedOneWithoutAppointmentInput
   tasks?: Prisma.TaskCreateNestedManyWithoutAppointmentInput
+  transfer?: Prisma.AppointmentTransferCreateNestedOneWithoutAppointmentInput
 }
 
 export type AppointmentUncheckedCreateWithoutPaymentIntentInput = {
@@ -1437,6 +1581,7 @@ export type AppointmentUncheckedCreateWithoutPaymentIntentInput = {
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutAppointmentInput
   sale?: Prisma.SaleUncheckedCreateNestedOneWithoutAppointmentInput
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAppointmentInput
+  transfer?: Prisma.AppointmentTransferUncheckedCreateNestedOneWithoutAppointmentInput
 }
 
 export type AppointmentCreateOrConnectWithoutPaymentIntentInput = {
@@ -1502,6 +1647,7 @@ export type AppointmentUpdateWithoutClientInput = {
   reviews?: Prisma.ReviewUpdateManyWithoutAppointmentNestedInput
   sale?: Prisma.SaleUpdateOneWithoutAppointmentNestedInput
   tasks?: Prisma.TaskUpdateManyWithoutAppointmentNestedInput
+  transfer?: Prisma.AppointmentTransferUpdateOneWithoutAppointmentNestedInput
 }
 
 export type AppointmentUncheckedUpdateWithoutClientInput = {
@@ -1523,6 +1669,7 @@ export type AppointmentUncheckedUpdateWithoutClientInput = {
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutAppointmentNestedInput
   sale?: Prisma.SaleUncheckedUpdateOneWithoutAppointmentNestedInput
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutAppointmentNestedInput
+  transfer?: Prisma.AppointmentTransferUncheckedUpdateOneWithoutAppointmentNestedInput
 }
 
 export type AppointmentUncheckedUpdateManyWithoutClientInput = {
@@ -1580,6 +1727,7 @@ export type AppointmentUpdateWithoutWorkerInput = {
   reviews?: Prisma.ReviewUpdateManyWithoutAppointmentNestedInput
   sale?: Prisma.SaleUpdateOneWithoutAppointmentNestedInput
   tasks?: Prisma.TaskUpdateManyWithoutAppointmentNestedInput
+  transfer?: Prisma.AppointmentTransferUpdateOneWithoutAppointmentNestedInput
 }
 
 export type AppointmentUncheckedUpdateWithoutWorkerInput = {
@@ -1601,6 +1749,7 @@ export type AppointmentUncheckedUpdateWithoutWorkerInput = {
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutAppointmentNestedInput
   sale?: Prisma.SaleUncheckedUpdateOneWithoutAppointmentNestedInput
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutAppointmentNestedInput
+  transfer?: Prisma.AppointmentTransferUncheckedUpdateOneWithoutAppointmentNestedInput
 }
 
 export type AppointmentUncheckedUpdateManyWithoutWorkerInput = {
@@ -1658,6 +1807,7 @@ export type AppointmentUpdateWithoutServiceInput = {
   reviews?: Prisma.ReviewUpdateManyWithoutAppointmentNestedInput
   sale?: Prisma.SaleUpdateOneWithoutAppointmentNestedInput
   tasks?: Prisma.TaskUpdateManyWithoutAppointmentNestedInput
+  transfer?: Prisma.AppointmentTransferUpdateOneWithoutAppointmentNestedInput
 }
 
 export type AppointmentUncheckedUpdateWithoutServiceInput = {
@@ -1679,6 +1829,7 @@ export type AppointmentUncheckedUpdateWithoutServiceInput = {
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutAppointmentNestedInput
   sale?: Prisma.SaleUncheckedUpdateOneWithoutAppointmentNestedInput
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutAppointmentNestedInput
+  transfer?: Prisma.AppointmentTransferUncheckedUpdateOneWithoutAppointmentNestedInput
 }
 
 export type AppointmentUncheckedUpdateManyWithoutServiceInput = {
@@ -1736,6 +1887,7 @@ export type AppointmentUpdateWithoutPaymentIntentInput = {
   reviews?: Prisma.ReviewUpdateManyWithoutAppointmentNestedInput
   sale?: Prisma.SaleUpdateOneWithoutAppointmentNestedInput
   tasks?: Prisma.TaskUpdateManyWithoutAppointmentNestedInput
+  transfer?: Prisma.AppointmentTransferUpdateOneWithoutAppointmentNestedInput
 }
 
 export type AppointmentUncheckedUpdateWithoutPaymentIntentInput = {
@@ -1757,6 +1909,7 @@ export type AppointmentUncheckedUpdateWithoutPaymentIntentInput = {
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutAppointmentNestedInput
   sale?: Prisma.SaleUncheckedUpdateOneWithoutAppointmentNestedInput
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutAppointmentNestedInput
+  transfer?: Prisma.AppointmentTransferUncheckedUpdateOneWithoutAppointmentNestedInput
 }
 
 export type AppointmentUncheckedUpdateManyWithoutPaymentIntentInput = {
@@ -1841,6 +1994,7 @@ export type AppointmentSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   reviews?: boolean | Prisma.Appointment$reviewsArgs<ExtArgs>
   sale?: boolean | Prisma.Appointment$saleArgs<ExtArgs>
   tasks?: boolean | Prisma.Appointment$tasksArgs<ExtArgs>
+  transfer?: boolean | Prisma.Appointment$transferArgs<ExtArgs>
   _count?: boolean | Prisma.AppointmentCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["appointment"]>
 
@@ -1918,6 +2072,7 @@ export type AppointmentInclude<ExtArgs extends runtime.Types.Extensions.Internal
   reviews?: boolean | Prisma.Appointment$reviewsArgs<ExtArgs>
   sale?: boolean | Prisma.Appointment$saleArgs<ExtArgs>
   tasks?: boolean | Prisma.Appointment$tasksArgs<ExtArgs>
+  transfer?: boolean | Prisma.Appointment$transferArgs<ExtArgs>
   _count?: boolean | Prisma.AppointmentCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type AppointmentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1943,6 +2098,7 @@ export type $AppointmentPayload<ExtArgs extends runtime.Types.Extensions.Interna
     reviews: Prisma.$ReviewPayload<ExtArgs>[]
     sale: Prisma.$SalePayload<ExtArgs> | null
     tasks: Prisma.$TaskPayload<ExtArgs>[]
+    transfer: Prisma.$AppointmentTransferPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2362,6 +2518,7 @@ export interface Prisma__AppointmentClient<T, Null = never, ExtArgs extends runt
   reviews<T extends Prisma.Appointment$reviewsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Appointment$reviewsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   sale<T extends Prisma.Appointment$saleArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Appointment$saleArgs<ExtArgs>>): Prisma.Prisma__SaleClient<runtime.Types.Result.GetResult<Prisma.$SalePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   tasks<T extends Prisma.Appointment$tasksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Appointment$tasksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  transfer<T extends Prisma.Appointment$transferArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Appointment$transferArgs<ExtArgs>>): Prisma.Prisma__AppointmentTransferClient<runtime.Types.Result.GetResult<Prisma.$AppointmentTransferPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2886,6 +3043,25 @@ export type Appointment$tasksArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   distinct?: Prisma.TaskScalarFieldEnum | Prisma.TaskScalarFieldEnum[]
+}
+
+/**
+ * Appointment.transfer
+ */
+export type Appointment$transferArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AppointmentTransfer
+   */
+  select?: Prisma.AppointmentTransferSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AppointmentTransfer
+   */
+  omit?: Prisma.AppointmentTransferOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AppointmentTransferInclude<ExtArgs> | null
+  where?: Prisma.AppointmentTransferWhereInput
 }
 
 /**

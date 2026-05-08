@@ -108,6 +108,17 @@ export const Location = {
 export type Location = (typeof Location)[keyof typeof Location]
 
 
+export const TransferStatus = {
+  pending: 'pending',
+  accepted: 'accepted',
+  rejected: 'rejected',
+  completed: 'completed',
+  cancelled: 'cancelled'
+} as const
+
+export type TransferStatus = (typeof TransferStatus)[keyof typeof TransferStatus]
+
+
 export const MembershipStatus = {
   active: 'active',
   expired: 'expired',
@@ -205,6 +216,9 @@ export const NotificationType = {
   appointment_reminder: 'appointment_reminder',
   appointment_confirmed: 'appointment_confirmed',
   appointment_cancelled: 'appointment_cancelled',
+  appointment_transfer_request: 'appointment_transfer_request',
+  appointment_transfer_accepted: 'appointment_transfer_accepted',
+  appointment_transfer_rejected: 'appointment_transfer_rejected',
   payment_received: 'payment_received',
   loyalty_reward: 'loyalty_reward',
   marketing: 'marketing',

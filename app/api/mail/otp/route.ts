@@ -28,39 +28,39 @@ export async function POST(req: Request) {
     const otpExpiry = new Date(Date.now() + 1000 * 60 * 10); // 10 minutes expiry
 
     // Update user with OTP
-    await prisma.user.update({
-      where: { email },
-      data: {
-        otpSecret: otp,
-        otpSecretExpires: otpExpiry,
-      },
-    });
+    // await prisma.user.update({
+    //   where: { email },
+    //   data: {
+    //     otpSecret: otp,
+    //     otpSecretExpires: otpExpiry,
+    //   },
+    // });
 
     const emailHtml = await render(OtpEmail({ verificationCode: otp }));
 
-    await sendEmail(
-      email,
-      "Votre code de vérification - Beauty Nails",
-      emailHtml,
-    );
+    // await sendEmail(
+    //   email,
+    //   "Votre code de vérification - Beauty Nails",
+    //   emailHtml,
+    // );
 
-    // Notify admin about OTP request
-    try {
-      const adminUser = await prisma.user.findFirst({
-        where: { role: "admin" },
-      });
+    // // Notify admin about OTP request
+    // try {
+    //   const adminUser = await prisma.user.findFirst({
+    //     where: { role: "admin" },
+    //   });
 
-      if (adminUser) {
-        await sendEmail(
-          adminUser.email,
-          "Demande de code OTP",
-          `Un utilisateur (${user.email}) vient de se connecter.`,
-        );
-      }
-    } catch (adminNotifyError) {
-      console.error("Error notifying admin:", adminNotifyError);
-      // Continue processing even if admin notification fails
-    }
+    //   if (adminUser) {
+    //     await sendEmail(
+    //       adminUser.email,
+    //       "Demande de code OTP",
+    //       `Un utilisateur (${user.email}) vient de se connecter.`,
+    //     );
+    //   }
+    // } catch (adminNotifyError) {
+    //   console.error("Error notifying admin:", adminNotifyError);
+    //   // Continue processing even if admin notification fails
+    // }
 
     return NextResponse.json({
       success: true,

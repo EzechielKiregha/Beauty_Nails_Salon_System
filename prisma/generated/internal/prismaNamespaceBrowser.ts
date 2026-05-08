@@ -62,6 +62,7 @@ export const ModelName = {
   ServiceAddOn: 'ServiceAddOn',
   ServicePackage: 'ServicePackage',
   Appointment: 'Appointment',
+  AppointmentTransfer: 'AppointmentTransfer',
   Review: 'Review',
   Membership: 'Membership',
   MembershipPurchase: 'MembershipPurchase',
@@ -312,6 +313,23 @@ export const AppointmentScalarFieldEnum = {
 } as const
 
 export type AppointmentScalarFieldEnum = (typeof AppointmentScalarFieldEnum)[keyof typeof AppointmentScalarFieldEnum]
+
+
+export const AppointmentTransferScalarFieldEnum = {
+  id: 'id',
+  appointmentId: 'appointmentId',
+  originalWorkerId: 'originalWorkerId',
+  newWorkerId: 'newWorkerId',
+  transferReason: 'transferReason',
+  transferFeePercentage: 'transferFeePercentage',
+  transferFeeAmount: 'transferFeeAmount',
+  status: 'status',
+  requestedAt: 'requestedAt',
+  completedAt: 'completedAt',
+  notes: 'notes'
+} as const
+
+export type AppointmentTransferScalarFieldEnum = (typeof AppointmentTransferScalarFieldEnum)[keyof typeof AppointmentTransferScalarFieldEnum]
 
 
 export const ReviewScalarFieldEnum = {
